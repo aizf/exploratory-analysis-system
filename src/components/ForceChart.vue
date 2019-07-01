@@ -22,7 +22,9 @@ export default {
       nodeData: [],
       vis: d3.selectAll(),
       simulation: {},
-      brushG: d3.selectAll()
+      brushG: d3.selectAll(),
+      opacityNodes: d3.selectAll(),
+      opacityLinks: d3.selectAll()
     };
   },
 
@@ -81,7 +83,7 @@ export default {
     },
     update(nodeData, linkData) {
       let color = function(d) {
-        const scale = d3.schemeCategory10;
+        const scale = d3.schemeSet2;
         return scale[d.group]; // FIXME 指定group
       };
       this.load(nodeData, linkData);
@@ -104,9 +106,16 @@ export default {
         .attr("r", 4)
         .attr("class", "display")
         .attr("fill", color);
-      this.node.append("title").text(function(d) {
-        return d.id; // FIXME 指定id
-      });
+      // this.node.append("title").text(d => d.id);
+      this.node.append("text")
+      .attr("dy", "0.31em")
+      .attr("dx", "0.31em")
+      .attr("text-anchor", "end")
+      .text(d => d.id);
+      // .text(d => d.data.name);
+      // this.node.append("title").text(function(d) {
+      //   return d.id; // FIXME 指定id
+      // });
 
       this.simulation.nodes(this.node.data()).on("tick", this.ticked);
       this.simulation.force("link").links(this.link.data());
@@ -172,68 +181,76 @@ export default {
         }
       }
     },
-    //   mouseover(d) {
-    //     if (!mouseoverable) return;
-    //     opacityNodes = null;
-    //     opacityLinks = null;
-    //     var thisId = d.id;
-    //     // console.log(thisId);
-    //     opacityLinks = link.filter(function(d) {
-    //       return d.source.id !== thisId && d.target.id !== thisId;
-    //     });
-    //     displayLinks = link.filter(function(d) {
-    //       return d.source.id === thisId || d.target.id === thisId;
-    //     });
-    //     opacityNodes = this.node.filter(function(d) {
-    //       // console.log("d",d);
-    //       var displayLinksData = displayLinks.data();
-    //       for (var i in displayLinksData) {
-    //         // console.log(i);
-    //         if (
-    //           d.id === displayLinksData[i].source.id ||
-    //           d.id === displayLinksData[i].target.id
-    //         ) {
-    //           return false;
-    //         }
-    //       }
-    //       return true;
-    //     });
-    //     displayNodes = this.node.filter(function(d) {
-    //       var displayLinksData = displayLinks.data();
-    //       for (var i in displayLinksData) {
-    //         // console.log(i);
-    //         if (
-    //           d.id === displayLinksData[i].source.id ||
-    //           d.id === displayLinksData[i].target.id
-    //         ) {
-    //           return true;
-    //         }
-    //       }
-    //       return false;
-    //     });
+    mouseover(d) {
+      if (!this.visMouseover) return;
+      let displayNodes = null;
+      // let opacityNodes = null;
+      let displayLinks = null;
+      // let opacityLinks = null;
+      var thisId = d.id;
+      // console.log(thisId);
+      this.opacityLinks = this.link.filter(function(d) {
+        return d.source.id !== thisId && d.target.id !== thisId;
+      });
+      displayLinks = this.link.filter(function(d) {
+        return d.source.id === thisId || d.target.id === thisId;
+      });
+      this.opacityNodes = this.node.filter(function(d) {
+        // console.log("d",d);
+        let displayLinksData = displayLinks.data();
+        for (let i in displayLinksData) {
+          // console.log(i);
+          if (
+            d.id === displayLinksData[i].source.id ||
+            d.id === displayLinksData[i].target.id
+          ) {
+            return false;
+          }
+        }
+        return true;
+      });
+      displayNodes = this.node.filter(function(d) {
+        let displayLinksData = displayLinks.data();
+        for (let i in displayLinksData) {
+          // console.log(i);
+          if (
+            d.id === displayLinksData[i].source.id ||
+            d.id === displayLinksData[i].target.id
+          ) {
+            return true;
+          }
+        }
+        return false;
+      });
 
-    //     // log(opacityNodes);
-
-    //     opacityNodes.style("fill-opacity", 0);
-    //     opacityNodes.style("stroke-opacity", 0);
-    //     opacityLinks.style("stroke-opacity", 0);
-    //     displayNodes
-    //       .append("text")
-    //       .attr("x", 6)
-    //       .attr("dy", "0.31em")
-    //       .text(d => d.id)
-    //       .clone(true)
-    //       .lower()
-    //       .attr("text-anchor", "end")
-    //       .attr("stroke", "white");
-    //   },
-    //   mouseout() {
-    //     if (!mouseoverable) return;
-    //     opacityNodes.style("fill-opacity", null);
-    //     opacityNodes.style("stroke-opacity", null);
-    //     opacityLinks.style("stroke-opacity", null);
-    //     displayNodes.selectAll("text").remove();
-    //   },
+      this.opacityNodes
+        .transition()
+        .style("fill-opacity", 0)
+        .style("stroke-opacity", 0);
+      this.opacityLinks.transition().style("stroke-opacity", 0);
+      // displayNodes
+      //   .append("text")
+      //   .attr("x", 6)
+      //   .attr("dy", "0.31em")
+      //   .text(d => d.id)
+      //   .clone(true)
+      //   .lower()
+      //   .attr("text-anchor", "end")
+      //   .attr("stroke", "white");
+    },
+    mouseout() {
+      if (!this.visMouseover) return;
+      this.opacityNodes
+        .transition()
+        .delay(200)
+        .style("fill-opacity", null)
+        .style("stroke-opacity", null);
+      this.opacityLinks
+        .transition()
+        .delay(200)
+        .style("stroke-opacity", null);
+      // displayNodes.selectAll("text").remove();
+    },
     test() {
       d3.json("./static/miserables.json")
         .then(res => {
@@ -248,9 +265,9 @@ export default {
               .on("drag", this.dragged)
               .on("end", this.dragended)
           );
-          // this.node.on("mouseover", this.mouseover);
-          // this.node.on("mouseout", this.mouseout);
           this.node.on("click", this.clickSelect);
+          this.node.on("mouseover", this.mouseover);
+          this.node.on("mouseout", this.mouseout);
         })
         .catch(err => {
           console.log(err);
