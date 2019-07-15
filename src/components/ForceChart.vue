@@ -1,8 +1,9 @@
 <template>
-  <svg :width="this.chartWidth" :height="this.chartHeight" :style="{border:'1px solid #305dff'}"></svg>
+  <svg :width="this.chartWidth" :height="this.chartHeight" :style="{border:'1px solid #305dff'}" />
 </template>
 <script>
 import * as d3 from "d3";
+import func from "../../vue-temp/vue-editor-bridge";
 // import * as _ from "lodash";
 export default {
   name: "ForceChart",
@@ -10,7 +11,8 @@ export default {
     visClick: Boolean,
     visBrush: Boolean,
     visDrag: Boolean,
-    visMouseover: Boolean
+    visMouseover: Boolean,
+    visShowIds: Boolean
   },
   data() {
     return {
@@ -24,7 +26,8 @@ export default {
       simulation: {},
       brushG: d3.selectAll(),
       opacityNodes: d3.selectAll(),
-      opacityLinks: d3.selectAll()
+      opacityLinks: d3.selectAll(),
+      text: d3.selectAll()
     };
   },
 
@@ -73,6 +76,10 @@ export default {
       ? this.brushG.style("display", "inline")
       : this.brushG.style("display", "none");
 
+    this.link = this.vis.append("g").attr("class", "links");
+    this.node = this.vis.append("g").attr("class", "nodes");
+    this.text = this.vis.append("g").attr("class", "texts");
+
     this.test();
   },
 
@@ -87,18 +94,13 @@ export default {
         return scale[d.group]; // FIXME 指定group
       };
       this.load(nodeData, linkData);
-      this.link = this.vis
-        .append("g")
-        .attr("class", "links")
+      this.link
         .selectAll("line")
         .data(this.linkData)
         .enter()
         .append("line");
 
-      // this.originalNode =
-      this.node = this.vis
-        .append("g")
-        .attr("class", "nodes")
+      this.node
         .selectAll("circle")
         .data(this.nodeData)
         .enter()
@@ -106,16 +108,7 @@ export default {
         .attr("r", 4)
         .attr("class", "display")
         .attr("fill", color);
-      // this.node.append("title").text(d => d.id);
-      this.node.append("text")
-      .attr("dy", "0.31em")
-      .attr("dx", "0.31em")
-      .attr("text-anchor", "end")
-      .text(d => d.id);
-      // .text(d => d.data.name);
-      // this.node.append("title").text(function(d) {
-      //   return d.id; // FIXME 指定id
-      // });
+      this.node.append("title").text(d => d.id);
 
       this.simulation.nodes(this.node.data()).on("tick", this.ticked);
       this.simulation.force("link").links(this.link.data());
@@ -251,6 +244,16 @@ export default {
         .style("stroke-opacity", null);
       // displayNodes.selectAll("text").remove();
     },
+    // showids() {
+    //   this.text
+    //     .data(this.node.nodes())
+    //     .enter()
+    //     .append("text")
+    //     .attr("dy", ".35em")
+    //     .attr("x", d => console.log(d3.select(d)))
+    //     .attr("text-anchor", "middle")
+    //     .text(() => 1);
+    // },
     test() {
       d3.json("./static/miserables.json")
         .then(res => {
@@ -280,7 +283,10 @@ export default {
       val
         ? this.brushG.style("display", "inline")
         : this.brushG.style("display", "none");
-    }
+    },
+    // showIds: function(val) {
+    //   // val?
+    // }
   }
 };
 </script>
