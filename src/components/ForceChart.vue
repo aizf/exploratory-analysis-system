@@ -3,7 +3,6 @@
 </template>
 <script>
 import * as d3 from "d3";
-import func from "../../vue-temp/vue-editor-bridge";
 // import * as _ from "lodash";
 export default {
   name: "ForceChart",
@@ -76,6 +75,7 @@ export default {
       ? this.brushG.style("display", "inline")
       : this.brushG.style("display", "none");
 
+    // 初始化为<g>，再指向selectAll()，防止update()产生多个<g>
     this.link = this.vis.append("g").attr("class", "links");
     this.node = this.vis.append("g").attr("class", "nodes");
     this.text = this.vis.append("g").attr("class", "texts");
@@ -94,13 +94,13 @@ export default {
         return scale[d.group]; // FIXME 指定group
       };
       this.load(nodeData, linkData);
-      this.link
+      this.link = this.link
         .selectAll("line")
         .data(this.linkData)
         .enter()
         .append("line");
 
-      this.node
+      this.node = this.node
         .selectAll("circle")
         .data(this.nodeData)
         .enter()
@@ -108,7 +108,23 @@ export default {
         .attr("r", 4)
         .attr("class", "display")
         .attr("fill", color);
-      this.node.append("title").text(d => d.id);
+      // this.node.append("title").text(d => d.id);
+
+      this.text = this.text
+        .selectAll("text")
+        .data(this.node.data())
+        .enter()
+        .append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "Avenir")
+        .attr("font-size", "10")
+        .attr("dy","-0.5em")
+        .text(d => d.id)
+        .attr("fill", color)
+        .style("-webkit-user-select", "none") // 字体不被选中
+        .style("-moz-user-select", "none")
+        .style("-ms-user-select", "none")
+        .style("user-select", "none");
 
       this.simulation.nodes(this.node.data()).on("tick", this.ticked);
       this.simulation.force("link").links(this.link.data());
@@ -135,6 +151,10 @@ export default {
         .attr("cy", function(d) {
           return d.y;
         });
+
+      if (this.visShowIds) {
+        this.text.attr("x", d => d.x).attr("y", d => d.y);
+      }
     },
     brushed() {
       var extent = d3.event.selection;
@@ -221,15 +241,6 @@ export default {
         .style("fill-opacity", 0)
         .style("stroke-opacity", 0);
       this.opacityLinks.transition().style("stroke-opacity", 0);
-      // displayNodes
-      //   .append("text")
-      //   .attr("x", 6)
-      //   .attr("dy", "0.31em")
-      //   .text(d => d.id)
-      //   .clone(true)
-      //   .lower()
-      //   .attr("text-anchor", "end")
-      //   .attr("stroke", "white");
     },
     mouseout() {
       if (!this.visMouseover) return;
@@ -242,18 +253,7 @@ export default {
         .transition()
         .delay(200)
         .style("stroke-opacity", null);
-      // displayNodes.selectAll("text").remove();
     },
-    // showids() {
-    //   this.text
-    //     .data(this.node.nodes())
-    //     .enter()
-    //     .append("text")
-    //     .attr("dy", ".35em")
-    //     .attr("x", d => console.log(d3.select(d)))
-    //     .attr("text-anchor", "middle")
-    //     .text(() => 1);
-    // },
     test() {
       d3.json("./static/miserables.json")
         .then(res => {
@@ -284,9 +284,11 @@ export default {
         ? this.brushG.style("display", "inline")
         : this.brushG.style("display", "none");
     },
-    // showIds: function(val) {
-    //   // val?
-    // }
+    visShowIds: function(val) {
+      val
+        ? this.text.attr("display", "inline")
+        : this.text.attr("display", "none");
+    }
   }
 };
 </script>
