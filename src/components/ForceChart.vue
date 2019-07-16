@@ -26,6 +26,7 @@ export default {
       brushG: d3.selectAll(),
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
+      opacityTexts: d3.selectAll(),
       text: d3.selectAll()
     };
   },
@@ -50,12 +51,7 @@ export default {
 
     this.simulation = d3
       .forceSimulation()
-      .force(
-        "link",
-        d3.forceLink().id(function(d) {
-          return d.id;
-        })
-      )
+      .force("link", d3.forceLink().id(d => d.id))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2));
     // console.log(this.simulation);
@@ -85,15 +81,17 @@ export default {
 
   methods: {
     load(nodeData, linkData) {
+      // 加载数据,后期拓展
       this.nodeData = nodeData;
       this.linkData = linkData;
     },
-    update(nodeData, linkData) {
-      let color = function(d) {
+    update() {
+      // 更新数据
+      let color = d => {
         const scale = d3.schemeSet2;
         return scale[d.group]; // FIXME 指定group
       };
-      this.load(nodeData, linkData);
+      // this.load(nodeData, linkData);
       this.link = this.link
         .selectAll("line")
         .data(this.linkData)
@@ -118,7 +116,7 @@ export default {
         .attr("text-anchor", "middle")
         .attr("font-family", "Avenir")
         .attr("font-size", "10")
-        .attr("dy","-0.5em")
+        .attr("dy", "-0.5em")
         .text(d => d.id)
         .attr("fill", color)
         .style("-webkit-user-select", "none") // 字体不被选中
@@ -129,36 +127,53 @@ export default {
       this.simulation.nodes(this.node.data()).on("tick", this.ticked);
       this.simulation.force("link").links(this.link.data());
     },
+    bindEvents() {
+      // 更新后绑定事件
+      this.node.call(
+        d3
+          .drag()
+          .on("start", this.dragstarted)
+          .on("drag", this.dragged)
+          .on("end", this.dragended)
+      );
+      this.node.on("click", this.clickSelect);
+      this.node.on("mouseover", this.mouseover);
+      this.node.on("mouseout", this.mouseout);
+      let node = this.node;
+
+      this.text.call(
+        d3
+          .drag()
+          .on("start", this.dragstarted)
+          .on("drag", this.dragged)
+          .on("end", this.dragended)
+      );
+      this.text.on("click", textEvent2Node);
+      this.text.on("mouseover", textEvent2Node);
+      this.text.on("mouseout", textEvent2Node);
+
+      function textEvent2Node(d) {
+        let theIndex = d.index;
+        let theNode = node.filter(d => d.index === theIndex);
+        theNode.dispatch(d3.event.type);
+      }
+    },
     ticked() {
       this.link
-        .attr("x1", function(d) {
-          return d.source.x;
-        })
-        .attr("y1", function(d) {
-          return d.source.y;
-        })
-        .attr("x2", function(d) {
-          return d.target.x;
-        })
-        .attr("y2", function(d) {
-          return d.target.y;
-        });
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
 
-      this.node
-        .attr("cx", function(d) {
-          return d.x;
-        })
-        .attr("cy", function(d) {
-          return d.y;
-        });
+      this.node.attr("cx", d => d.x).attr("cy", d => d.y);
 
       if (this.visShowIds) {
         this.text.attr("x", d => d.x).attr("y", d => d.y);
       }
     },
     brushed() {
-      var extent = d3.event.selection;
-      this.node.classed("selected", function(d) {
+      let extent = d3.event.selection;
+      this.node.classed("selected", d => {
         return (
           extent[0][0] <= d.x &&
           extent[0][1] <= d.y &&
@@ -200,15 +215,15 @@ export default {
       // let opacityNodes = null;
       let displayLinks = null;
       // let opacityLinks = null;
-      var thisId = d.id;
+      let thisId = d.id;
       // console.log(thisId);
-      this.opacityLinks = this.link.filter(function(d) {
+      this.opacityLinks = this.link.filter(d => {
         return d.source.id !== thisId && d.target.id !== thisId;
       });
-      displayLinks = this.link.filter(function(d) {
+      displayLinks = this.link.filter(d => {
         return d.source.id === thisId || d.target.id === thisId;
       });
-      this.opacityNodes = this.node.filter(function(d) {
+      this.opacityNodes = this.node.filter(d => {
         // console.log("d",d);
         let displayLinksData = displayLinks.data();
         for (let i in displayLinksData) {
@@ -222,7 +237,7 @@ export default {
         }
         return true;
       });
-      displayNodes = this.node.filter(function(d) {
+      displayNodes = this.node.filter(d => {
         let displayLinksData = displayLinks.data();
         for (let i in displayLinksData) {
           // console.log(i);
@@ -236,11 +251,19 @@ export default {
         return false;
       });
 
+      let opacityIndex = this.opacityNodes.data().map(val => val.index);
+      // console.log(opacityIndex);
+      this.opacityTexts = this.text.filter(d =>
+        opacityIndex.find(val => val === d.index)!==undefined   //!==undefined 防止返回0误认为false
+      );
+      // console.log(this.opacityTexts.data());
+
       this.opacityNodes
         .transition()
         .style("fill-opacity", 0)
         .style("stroke-opacity", 0);
       this.opacityLinks.transition().style("stroke-opacity", 0);
+      this.opacityTexts.transition().style("fill-opacity", 0);
     },
     mouseout() {
       if (!this.visMouseover) return;
@@ -253,24 +276,19 @@ export default {
         .transition()
         .delay(200)
         .style("stroke-opacity", null);
+      this.opacityTexts
+        .transition()
+        .delay(200)
+        .style("fill-opacity", null);
     },
     test() {
       d3.json("./static/miserables.json")
         .then(res => {
           // console.log(res);
           // this.originalLinkData = res.links;
-          this.update(res.nodes, res.links);
-
-          this.node.call(
-            d3
-              .drag()
-              .on("start", this.dragstarted)
-              .on("drag", this.dragged)
-              .on("end", this.dragended)
-          );
-          this.node.on("click", this.clickSelect);
-          this.node.on("mouseover", this.mouseover);
-          this.node.on("mouseout", this.mouseout);
+          this.load(res.nodes, res.links);
+          this.update();
+          this.bindEvents();
         })
         .catch(err => {
           console.log(err);
