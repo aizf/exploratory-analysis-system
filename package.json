@@ -20,7 +20,7 @@
     "d3": "^5.9.4",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.14",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {

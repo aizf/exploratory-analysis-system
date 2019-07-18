@@ -260,8 +260,8 @@ export default {
 
       this.opacityNodes
         .transition()
-        .style("fill-opacity", 0)
-        .style("stroke-opacity", 0);
+        .style("fill-opacity", 0.2)
+        .style("stroke-opacity", 0.2);
       this.opacityLinks.transition().style("stroke-opacity", 0);
       this.opacityTexts.transition().style("fill-opacity", 0);
     },

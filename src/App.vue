@@ -120,7 +120,7 @@ export default {
   },
   data() {
     return {
-      collapsed: false,
+      collapsed: false,     // 侧边栏
       visClick: false,
       visBrush: false,
       visDrag: true,
