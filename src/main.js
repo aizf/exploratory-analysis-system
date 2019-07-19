@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 // import Antd from 'ant-design-vue'
 import "ant-design-vue/dist/antd.css";
+
 import {
   Icon,
   Button,
@@ -9,6 +10,8 @@ import {
   Menu,
   Switch,
 } from 'ant-design-vue'
+
+import store from './store'
 
 // Vue.use(Antd);
 Vue.use(Icon);
@@ -20,5 +23,6 @@ Vue.use(Switch);
 Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App),
+  store,
+  render: h => h(App)
 }).$mount('#app');

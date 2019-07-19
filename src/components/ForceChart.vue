@@ -289,6 +289,7 @@ export default {
           this.load(res.nodes, res.links);
           this.update();
           this.bindEvents();
+          console.log(this.$store.state.aaa);
         })
         .catch(err => {
           console.log(err);
