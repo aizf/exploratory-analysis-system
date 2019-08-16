@@ -253,8 +253,8 @@ export default {
 
       let opacityIndex = this.opacityNodes.data().map(val => val.index);
       // console.log(opacityIndex);
-      this.opacityTexts = this.text.filter(d =>
-        opacityIndex.find(val => val === d.index)!==undefined   //!==undefined 防止返回0误认为false
+      this.opacityTexts = this.text.filter(
+        d => opacityIndex.find(val => val === d.index) !== undefined //!==undefined 防止返回0误认为false
       );
       // console.log(this.opacityTexts.data());
 
