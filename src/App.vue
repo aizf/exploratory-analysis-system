@@ -9,28 +9,53 @@
           :defaultSelectedKeys="['1']"
           :style="{ lineHeight: '64px' }"
         >
-          <a-menu-item key="1">Data</a-menu-item>
-          <a-menu-item key="2">View</a-menu-item>
-          <a-menu-item key="3">Analyze</a-menu-item>
+          <a-menu-item key="1" @click="currentPageKey='1'">Data</a-menu-item>
+          <a-menu-item key="2" @click="currentPageKey='2'">View</a-menu-item>
+          <a-menu-item key="3" @click="currentPageKey='3'">Analyze</a-menu-item>
         </a-menu>
       </a-layout-header>
-      <PageView></PageView>
+      <keep-alive>
+        <component :is="currentPage"></component>
+      </keep-alive>
     </a-layout>
   </div>
 </template>
 
 <script>
+import PageData from "./components/PageData.vue";
 import PageView from "./components/PageView.vue";
+import PageAnalyze from "./components/PageAnalyze.vue";
 
 export default {
   name: "app",
   components: {
-    PageView
+    PageData,
+    PageView,
+    PageAnalyze
   },
   data() {
-    return {};
+    return {
+      currentPageKey: "1"
+    };
   },
-  methods: {}
+  methods: {},
+  computed: {
+    currentPage() {
+      switch (this.currentPageKey) {
+        case "1":
+          return "PageData";
+          break;
+        case "2":
+          return "PageView";
+          break;
+        case "3":
+          return "PageAnalyze";
+          break;
+        default:
+          break;
+      }
+    }
+  }
 };
 </script>
 

@@ -9,6 +9,7 @@ import {
   Layout,
   Menu,
   Switch,
+  Tabs
 } from 'ant-design-vue'
 
 import store from './store'
@@ -19,6 +20,7 @@ Vue.use(Button);
 Vue.use(Layout);
 Vue.use(Menu);
 Vue.use(Switch);
+Vue.use(Tabs);
 
 Vue.config.productionTip = false;
 
