@@ -17,10 +17,11 @@
         <a-sub-menu key="sub1">
           <span slot="title">
             <a-icon type="user" />
-            <span>node-link</span>
+            <span>DataSet</span>
           </span>
           <!--  -->
-          <a-menu-item key="1">miserables.json</a-menu-item>
+          <a-menu-item key="1" @click="loadData">miserables.json</a-menu-item>
+          <a-menu-item key="2" @click="loadData">readme.json</a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="sub2">
@@ -29,7 +30,6 @@
             <span>hierarchical</span>
           </span>
 
-          <a-menu-item key="4">readme.json</a-menu-item>
           <a-menu-item key="5">DataFlow</a-menu-item>
           <a-menu-item key="6">OprationFlow</a-menu-item>
         </a-sub-menu>
@@ -49,24 +49,19 @@
 
     <a-layout style="padding: 0 24px 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
-        <a-tabs defaultActiveKey="1" :style="{ height: '200px'}">
-          <a-tab-pane tab="Tab 1" key="1">Content of tab 1</a-tab-pane>
-          <a-tab-pane tab="Tab 2" key="2">Content of tab 2</a-tab-pane>
-          <a-tab-pane tab="Tab 3" key="3">Content of tab 3</a-tab-pane>
-          <a-tab-pane tab="Tab 4" key="4">Content of tab 4</a-tab-pane>
-          <a-tab-pane tab="Tab 5" key="5">Content of tab 5</a-tab-pane>
-          <a-tab-pane tab="Tab 6" key="6">Content of tab 6</a-tab-pane>
-          <a-tab-pane tab="Tab 7" key="7">Content of tab 7</a-tab-pane>
-          <a-tab-pane tab="Tab 8" key="8">Content of tab 8</a-tab-pane>
-          <a-tab-pane tab="Tab 9" key="9">Content of tab 9</a-tab-pane>
-          <a-tab-pane tab="Tab 10" key="10">Content of tab 10</a-tab-pane>
-          <a-tab-pane tab="Tab 11" key="11">Content of tab 11</a-tab-pane>
+        <a-tabs defaultActiveKey="0" :style="{ height: '200px'}">
+          <a-tab-pane
+            v-for="(content, index) in tabContents"
+            :tab="tabs[index]"
+            :key="index+1"
+          >{{content}}</a-tab-pane>
         </a-tabs>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
+import * as d3 from "d3";
 export default {
   name: "PageData",
   components: {},
@@ -74,10 +69,46 @@ export default {
     return {
       // interface
       collapsed: false, // 侧边栏
-      visSwitched: false // 点击开关时，防止双击
+      visSwitched: false, // 点击开关时，防止双击
+      tabs: ["SourceData", "Node-Link", "Hierarchical"],
+      tabContents: []
     };
   },
   methods: {
+    loadData(event) {
+      let that = this;
+      let setPath = "./static/";
+      let setName = "";
+      this.tabContents = []; // 清空数据
+      switch (event.key) {
+        case "1":
+          setName = "miserables.json";
+          __loadData(); // 异步加载数据
+          break;
+        case "2":
+          setName = "readme.json";
+          __loadData();
+          break;
+        default:
+          break;
+      }
+
+      function __loadData() {
+        d3.json(setPath + setName)
+          .then(res => {
+            console.log(JSON.stringify(res, null, "\t"));
+            console.log(res);
+            that.$store.commit("updateSourceData", res);
+            // todo !!!!!!!!!!!!!
+            that.tabContents.push(JSON.stringify(res, null, "\t"));
+            that.tabContents.push("123123123123123");
+            that.tabContents.push("asdsafdhfghdfghsdf");
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    },
     test() {
       console.log("c");
     },

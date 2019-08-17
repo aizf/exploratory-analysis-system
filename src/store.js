@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {
-  hierarchy
-}
-from "d3-hierarchy"
+import * as d3 from "d3";
 
 Vue.use(Vuex)
 
@@ -25,17 +22,16 @@ export default new Vuex.Store({
       recurse(state.sourceData);
 
       // links
-      let links = hierarchy(nodes).links();
+      let links = d3.hierarchy(nodes).links();
 
       return [nodes, links];
-    }
+    },
+
   },
   mutations: {
-    // changeSwitch(state, eventSwitch) {
-    //   state[eventSwitch] = !state[eventSwitch];
-    //   console.log(eventSwitch);
-    //   console.log(state[eventSwitch]);
-    // }
+    updateSourceData: (state, data) => {
+      state.sourceData = data;
+    }
   },
   actions: {
 
