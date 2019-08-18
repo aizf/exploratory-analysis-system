@@ -50,11 +50,9 @@
     <a-layout style="padding: 0 24px 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
         <a-tabs defaultActiveKey="0" :style="{ height: '200px'}">
-          <a-tab-pane
-            v-for="(content, index) in tabContents"
-            :tab="tabs[index]"
-            :key="index+1"
-          >{{content}}</a-tab-pane>
+          <a-tab-pane v-for="(content, index) in tabContents" :tab="tabs[index]" :key="index+1">
+            <codemirror ref="myCm" :value="content" :options="cmOptions"></codemirror>
+          </a-tab-pane>
         </a-tabs>
       </a-layout-content>
     </a-layout>
@@ -62,16 +60,31 @@
 </template>
 <script>
 import * as d3 from "d3";
+
+import { codemirror } from "vue-codemirror";
+import "codemirror/lib/codemirror.css";
+import 'codemirror/theme/lucario.css'
+
 export default {
   name: "PageData",
-  components: {},
+  components: { codemirror },
   data() {
     return {
       // interface
       collapsed: false, // 侧边栏
       visSwitched: false, // 点击开关时，防止双击
       tabs: ["SourceData", "Node-Link", "Hierarchical"],
-      tabContents: []
+      tabContents: [],
+      // codemirror
+      cmOptions: {
+        // codemirror options
+        tabSize: 2,
+        mode: { name: "javascript", json: true },
+        theme: "lucario",
+        lineNumbers: true,
+        line: true
+        // more codemirror options, 更多 codemirror 的高级配置...
+      }
     };
   },
   methods: {
@@ -83,15 +96,14 @@ export default {
       switch (event.key) {
         case "1":
           setName = "miserables.json";
-          __loadData(); // 异步加载数据
           break;
         case "2":
           setName = "readme.json";
-          __loadData();
           break;
         default:
           break;
       }
+      __loadData(); // 异步加载数据
 
       function __loadData() {
         d3.json(setPath + setName)
