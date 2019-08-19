@@ -47,9 +47,9 @@
       </a-menu>
     </a-layout-sider>
 
-    <a-layout style="padding: 0 24px 0 5px">
+    <a-layout style="padding: 0 0px 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
-        <a-tabs defaultActiveKey="0" :style="{ height: '200px'}">
+        <a-tabs defaultActiveKey="0" :style="{ height: '100%'}">
           <a-tab-pane v-for="(content, index) in tabContents" :tab="tabs[index]" :key="index+1">
             <codemirror ref="myCm" :value="content" :options="cmOptions"></codemirror>
           </a-tab-pane>
@@ -63,7 +63,15 @@ import * as d3 from "d3";
 
 import { codemirror } from "vue-codemirror";
 import "codemirror/lib/codemirror.css";
-import 'codemirror/theme/lucario.css'
+// 主题
+import "codemirror/theme/lucario.css";
+// js高亮
+import "codemirror/mode/javascript/javascript";
+// 导入自动提示核心文件及样式
+import "codemirror/addon/hint/show-hint.css";
+import "codemirror/addon/hint/show-hint.js";
+// 导入指定语言的提示文件
+import "codemirror/addon/hint/javascript-hint.js";
 
 export default {
   name: "PageData",
@@ -131,4 +139,10 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+.CodeMirror {
+  border: 1px solid #eee;
+  height: 100vh;
+  width: 35%;
+}
+</style>

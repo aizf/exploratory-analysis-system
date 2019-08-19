@@ -78,7 +78,7 @@
       </a-menu>
     </a-layout-sider>
 
-    <a-layout style="padding: 0 24px 0 5px">
+    <a-layout style="padding: 0 0px 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
         <ForceChart
           :visClick="visClick"
