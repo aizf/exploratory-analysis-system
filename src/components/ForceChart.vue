@@ -1,5 +1,31 @@
 <template>
-  <svg :width="this.chartWidth" :height="this.chartHeight" :style="{border:'1px solid #305dff'}" />
+  <div class="ForceChart">
+    <div style="float:left; margin:5px">
+      <svg
+        :width="this.chartWidth"
+        :height="this.chartHeight"
+        :style="{border:'1px solid #305dff'}"
+      />
+    </div>
+    <div :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
+      <a-slider
+        vertical
+        :min="1"
+        :max="20"
+        :step="0.1"
+        v-model="linkStrength"
+        :style="{margin:'0 0 10px 38px'}"
+      />
+      <a-input-number
+        :min="1"
+        :max="20"
+        :step="0.1"
+        style="margin:0 0 0 0"
+        v-model="linkStrength"
+        :defaultValue="linkStrength"
+      />
+    </div>
+  </div>
 </template>
 <script>
 import * as d3 from "d3";
@@ -27,7 +53,8 @@ export default {
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
-      text: d3.selectAll()
+      text: d3.selectAll(),
+      linkStrength: 1
     };
   },
 
@@ -35,7 +62,7 @@ export default {
     // console.log(d3.version);
     // console.log(_.VERSION);
     console.log(this);
-    let svg = d3.select(this.$el),
+    let svg = d3.select(this.$el).select("svg"),
       width = +this.chartWidth,
       height = +this.chartHeight;
     // console.log(svg);
@@ -54,7 +81,7 @@ export default {
       .force("link", d3.forceLink().id(d => d.id))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2));
-    // console.log(this.simulation);
+    console.log();
 
     // brush
     let brush = d3
@@ -80,16 +107,16 @@ export default {
   },
 
   methods: {
-    load(nodeData, linkData) {
+    load(obj) {
       // 加载数据,后期拓展
-      this.nodeData = nodeData;
-      this.linkData = linkData;
+      this.nodeData = obj.nodes;
+      this.linkData = obj.links;
     },
     update() {
       // 更新数据
       let color = d => {
         const scale = d3.schemeSet2;
-        return scale[d.group]; // FIXME 指定group
+        return d.group ? scale[d.group] : scale[0]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
       this.link = this.link
@@ -282,18 +309,24 @@ export default {
         .style("fill-opacity", null);
     },
     test() {
-      d3.json("./static/miserables.json")
-        .then(res => {
-          // console.log(res);
-          // this.originalLinkData = res.links;
-          this.load(res.nodes, res.links);
-          this.update();
-          this.bindEvents();
-          console.log(this.$store.state.aaa);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      // 测试
+      // d3.json("./static/miserables.json")
+      //   .then(res => {
+      //     // console.log(res);
+      //     // this.originalLinkData = res.links;
+      //     this.load(res.nodes, res.links);
+      //     this.update();
+      //     this.bindEvents();
+      //     console.log(this.$store.state.aaa);
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
+
+      // 正
+      this.load(this.$store.getters.hierarchical2nodeLink);
+      this.update();
+      this.bindEvents();
     }
   },
   computed: {},

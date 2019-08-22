@@ -116,12 +116,16 @@ export default {
       function __loadData() {
         d3.json(setPath + setName)
           .then(res => {
-            console.log(JSON.stringify(res, null, "\t"));
-            console.log(res);
             that.$store.commit("updateSourceData", res);
             // todo !!!!!!!!!!!!!
             that.tabContents.push(JSON.stringify(res, null, "\t"));
-            that.tabContents.push("123123123123123");
+            that.tabContents.push(
+              JSON.stringify(
+                that.$store.getters.hierarchical2nodeLink,
+                null,
+                "\t"
+              )
+            );
             that.tabContents.push("asdsafdhfghdfghsdf");
           })
           .catch(err => {
@@ -142,7 +146,11 @@ export default {
 <style>
 .CodeMirror {
   border: 1px solid #eee;
-  height: 100vh;
-  width: 35%;
+  height: 80vh;
+  width: 45%;
+}
+.CodeMirror-scroll {
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 </style>

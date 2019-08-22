@@ -4,10 +4,15 @@ import App from './App.vue'
 // import Antd from 'ant-design-vue'
 import "ant-design-vue/dist/antd.css";
 import {
-  Icon,
   Button,
+  Col,
+  Icon,
+  Input,
+  InputNumber,
   Layout,
   Menu,
+  Row,
+  Slider,
   Switch,
   Tabs
 } from 'ant-design-vue'
@@ -15,10 +20,15 @@ import {
 import store from './store'
 
 // Vue.use(Antd);
-Vue.use(Icon);
 Vue.use(Button);
+Vue.use(Col);
+Vue.use(Icon);
+Vue.use(Input);
+Vue.use(InputNumber);
 Vue.use(Layout);
 Vue.use(Menu);
+Vue.use(Row);
+Vue.use(Slider);
 Vue.use(Switch);
 Vue.use(Tabs);
 
