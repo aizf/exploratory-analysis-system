@@ -61,13 +61,18 @@ export default {
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
+    let that=this;
     console.log(this);
-    let svg = d3.select(this.$el).select("svg"),
-      width = +this.chartWidth,
+    let svg = d3
+      .select(this.$el)
+      .select("svg")
+      .attr("viewBox", [0, 0, +this.chartWidth, +this.chartHeight]);
+    let width = +this.chartWidth,
       height = +this.chartHeight;
     // console.log(svg);
 
     this.vis = svg.append("g");
+    svg.call(d3.zoom().on("zoom", zoomed));
     this.vis
       .append("rect")
       .attr("width", width)
@@ -104,6 +109,11 @@ export default {
     this.text = this.vis.append("g").attr("class", "texts");
 
     this.test();
+
+    function zoomed() {
+      that.vis.attr("transform", d3.event.transform);
+      // console.log(this.vis);
+    }
   },
 
   methods: {
