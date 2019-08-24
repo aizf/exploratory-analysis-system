@@ -54,6 +54,7 @@ export default {
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
       text: d3.selectAll(),
+      gText: d3.selectAll(),
       linkStrength: 1
     };
   },
@@ -61,7 +62,7 @@ export default {
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
-    let that=this;
+    let that = this;
     console.log(this);
     let svg = d3
       .select(this.$el)
@@ -73,12 +74,12 @@ export default {
 
     this.vis = svg.append("g");
     svg.call(d3.zoom().on("zoom", zoomed));
-    this.vis
-      .append("rect")
-      .attr("width", width)
-      .attr("height", height)
-      .style("fill", "none")
-      .style("pointer-events", "all");
+    // this.vis
+    //   .append("rect")
+    //   .attr("width", width)
+    //   .attr("height", height)
+    //   .style("fill", "none")
+    //   .style("pointer-events", "all");
     // console.log(this.vis);
 
     this.simulation = d3
@@ -93,7 +94,7 @@ export default {
       .brush()
       .extent([[0, 0], [width, height]])
       .on("start brush", this.brushed);
-    this.brushG = this.vis
+    this.brushG = svg
       .append("g")
       .call(brush)
       .attr("class", "brush")
@@ -107,6 +108,10 @@ export default {
     this.link = this.vis.append("g").attr("class", "links");
     this.node = this.vis.append("g").attr("class", "nodes");
     this.text = this.vis.append("g").attr("class", "texts");
+    this.gText = this.text;
+    this.visShowIds
+      ? this.gText.attr("display", "inline")
+      : this.gText.attr("display", "none");
 
     this.test();
 
@@ -203,13 +208,14 @@ export default {
         .attr("y2", d => d.target.y);
 
       this.node.attr("cx", d => d.x).attr("cy", d => d.y);
-
-      if (this.visShowIds) {
-        this.text.attr("x", d => d.x).attr("y", d => d.y);
-      }
+      this.text.attr("x", d => d.x).attr("y", d => d.y);
+      // if (this.visShowIds) {
+      //   this.text.attr("x", d => d.x).attr("y", d => d.y);
+      // }
     },
     brushed() {
       let extent = d3.event.selection;
+      console.log(extent);
       this.node.classed("selected", d => {
         return (
           extent[0][0] <= d.x &&
@@ -348,8 +354,8 @@ export default {
     },
     visShowIds: function(val) {
       val
-        ? this.text.attr("display", "inline")
-        : this.text.attr("display", "none");
+        ? this.gText.attr("display", "inline")
+        : this.gText.attr("display", "none");
     }
   }
 };
