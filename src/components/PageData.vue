@@ -22,6 +22,7 @@
           <!--  -->
           <a-menu-item key="1" @click="loadData">miserables.json</a-menu-item>
           <a-menu-item key="2" @click="loadData">readme.json</a-menu-item>
+          <a-menu-item key="3" @click="loadData">test.json</a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="sub2">
@@ -107,6 +108,9 @@ export default {
           break;
         case "2":
           setName = "readme.json";
+          break;
+        case "3":
+          setName = "test.json";
           break;
         default:
           break;

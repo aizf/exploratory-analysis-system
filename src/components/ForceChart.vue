@@ -5,7 +5,18 @@
         :width="this.chartWidth"
         :height="this.chartHeight"
         :style="{border:'1px solid #305dff'}"
-      />
+      >
+        <defs>
+          <filter id="gaussian" width="2">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="blur" />
+            <feOffset in="blur" result="offsetBlur" />
+            <feMerge>
+              <feMergeNode in="offsetBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+      </svg>
     </div>
     <div :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
       <a-slider
@@ -134,7 +145,7 @@ export default {
       // 更新数据
       let color = d => {
         const scale = d3.schemeSet2;
-        return d.group ? scale[d.group] : scale[0]; // FIXME 指定group
+        return d.group ? scale[d.group] : scale[1]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
       this.link = this.link
@@ -148,9 +159,12 @@ export default {
         .data(this.nodeData)
         .enter()
         .append("circle")
-        .attr("r", 4)
+        .attr("r", d => {
+          return Math.sqrt(d.size) / 10 || 4.5;
+        })
         .attr("class", "display")
-        .attr("fill", color);
+        .attr("fill", color)
+        .attr("filter", "url(#gaussian)");
       // this.node.append("title").text(d => d.id);
 
       this.text = this.text
@@ -353,7 +367,8 @@ export default {
       //   });
 
       // 正
-      this.load(this.$store.getters.hierarchical2nodeLink);
+      // this.load(this.$store.getters.hierarchical2nodeLink);
+      this.load(this.$store.state.sourceData);
       this.update();
       this.bindEvents();
     }
@@ -383,7 +398,8 @@ circle {
   pointer-events: all;
   stroke: none;
   /*描边*/
-  /*fill-opacity: 0.6;*/
+  /* fill-opacity: 0.85; */
+  /* filter:drop-shadow(-25px 25px 25px rgba(0, 243, 53, 0.7)); */
 }
 
 circle.display {

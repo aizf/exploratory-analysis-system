@@ -41,4 +41,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## TODO
 
-增加图的滑动调节引力，放缩，调节尺寸，长宽外部绑定
+调节尺寸，长宽外部绑定
+
+反色(echarts)
