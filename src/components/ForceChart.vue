@@ -64,6 +64,7 @@ export default {
     // console.log(_.VERSION);
     let that = this;
     console.log(this);
+    console.log(d3);
     let svg = d3
       .select(this.$el)
       .select("svg")
@@ -87,7 +88,7 @@ export default {
       .force("link", d3.forceLink().id(d => d.id))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2));
-    console.log();
+    // console.log();
 
     // brush
     let brush = d3
@@ -214,14 +215,19 @@ export default {
       // }
     },
     brushed() {
+      let transform=d3.zoomTransform(this.vis.node());
       let extent = d3.event.selection;
-      console.log(extent);
+      let extentStart=transform.invert(extent[0]);
+      let extentEnd=transform.invert(extent[1]);
+      // console.log(extent);
+      // console.log(this.vis.node());
+      // console.log(d3.zoomTransform(this.vis.node()));
       this.node.classed("selected", d => {
         return (
-          extent[0][0] <= d.x &&
-          extent[0][1] <= d.y &&
-          d.x <= extent[1][0] &&
-          d.y <= extent[1][1]
+          extentStart[0] <= d.x &&
+          extentStart[1] <= d.y &&
+          d.x <= extentEnd[0] &&
+          d.y <= extentEnd[1]
         );
       });
     },
