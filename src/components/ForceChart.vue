@@ -10,19 +10,21 @@
     <div :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
       <a-slider
         vertical
-        :min="1"
-        :max="20"
-        :step="0.1"
+        :min="0.1"
+        :max="4.5"
+        :step="0.01"
         v-model="linkStrength"
         :style="{margin:'0 0 10px 38px'}"
+        @change="forceLinkChange"
       />
       <a-input-number
-        :min="1"
-        :max="20"
-        :step="0.1"
+        :min="0.1"
+        :max="4.5"
+        :step="0.01"
         style="margin:0 0 0 0"
         v-model="linkStrength"
         :defaultValue="linkStrength"
+        @change="forceLinkChange"
       />
     </div>
   </div>
@@ -215,10 +217,10 @@ export default {
       // }
     },
     brushed() {
-      let transform=d3.zoomTransform(this.vis.node());
+      let transform = d3.zoomTransform(this.vis.node());
       let extent = d3.event.selection;
-      let extentStart=transform.invert(extent[0]);
-      let extentEnd=transform.invert(extent[1]);
+      let extentStart = transform.invert(extent[0]);
+      let extentEnd = transform.invert(extent[1]);
       // console.log(extent);
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
@@ -329,6 +331,11 @@ export default {
         .transition()
         .delay(200)
         .style("fill-opacity", null);
+    },
+    forceLinkChange(val) {
+      console.log(this);
+      this.simulation.force("link").strength(+val);
+      this.simulation.alpha(0.5).restart();
     },
     test() {
       // 测试
