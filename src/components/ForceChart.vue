@@ -42,6 +42,7 @@
 </template>
 <script>
 import * as d3 from "d3";
+// import { mapState } from "vuex";
 // import * as _ from "lodash";
 export default {
   name: "ForceChart",
@@ -347,33 +348,50 @@ export default {
         .style("fill-opacity", null);
     },
     forceLinkChange(val) {
-      console.log(this);
-      this.simulation.force("link").strength(+val);
+      // console.log(this.simulation.force("link").strength());
+      this.simulation.force("link").strength(link => {
+        // console.log(link);
+        return (
+          // d3原生的函数乘上一个系数val
+          val /
+          Math.min(
+            this.degreeArray[link.source.index],
+            this.degreeArray[link.target.index]
+          )
+        );
+      });
       this.simulation.alpha(0.5).restart();
     },
     test() {
-      // 测试
-      // d3.json("./static/miserables.json")
-      //   .then(res => {
-      //     // console.log(res);
-      //     // this.originalLinkData = res.links;
-      //     this.load(res.nodes, res.links);
-      //     this.update();
-      //     this.bindEvents();
-      //     console.log(this.$store.state.aaa);
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
-
-      // 正
-      // this.load(this.$store.getters.hierarchical2nodeLink);
-      this.load(this.$store.state.sourceData);
+      this.load(this.visualData);
       this.update();
       this.bindEvents();
     }
   },
-  computed: {},
+  computed: {
+    sourceData() {
+      return this.$store.state.sourceData;
+    },
+    visualData() {
+      return this.$store.state.visualData;
+    },
+    degreeArray() {
+      // 返回一个包含各个节点出入度的数组
+      let nodes = this.simulation.nodes(),
+        links = this.simulation.force("link").links();
+      let n = nodes.length,
+        m = links.length;
+
+      let degree = new Array(n);
+      // links包含source，target，nodes没有
+      for (let link of links) {
+        // console.log(link);
+        degree[link.source.index] = (degree[link.source.index] || 0) + 1;
+        degree[link.target.index] = (degree[link.target.index] || 0) + 1;
+      }
+      return degree;
+    }
+  },
   watch: {
     visBrush: function(val) {
       val

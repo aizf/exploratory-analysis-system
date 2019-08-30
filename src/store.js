@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     sourceData: {},
+    visualData: {},
   },
   getters: {
     hierarchical2nodeLink: (state) => {
@@ -48,6 +49,9 @@ export default new Vuex.Store({
   mutations: {
     updateSourceData: (state, data) => {
       state.sourceData = data;
+    },
+    updateVisualData: (state, data) => {
+      state.visualData = data;
     }
   },
   actions: {

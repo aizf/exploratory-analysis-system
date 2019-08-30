@@ -105,30 +105,48 @@ export default {
       switch (event.key) {
         case "1":
           setName = "miserables.json";
+          __loadNodeLinkData();
           break;
         case "2":
           setName = "readme.json";
+          __loadHierarchicalData();
           break;
         case "3":
           setName = "test.json";
+          __loadHierarchicalData();
           break;
         default:
           break;
       }
-      __loadData(); // 异步加载数据
+      // __loadData(); // 异步加载数据
 
-      function __loadData() {
+      function __loadHierarchicalData() {
         d3.json(setPath + setName)
           .then(res => {
             that.$store.commit("updateSourceData", res);
+            that.$store.commit(
+              "updateVisualData",
+              that.$store.getters.hierarchical2nodeLink
+            );
             // todo !!!!!!!!!!!!!
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(
-              JSON.stringify(
-                that.$store.getters.hierarchical2nodeLink,
-                null,
-                "\t"
-              )
+              JSON.stringify(that.$store.state.visualData, null, "\t")
+            );
+            that.tabContents.push("asdsafdhfghdfghsdf");
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+      function __loadNodeLinkData() {
+        d3.json(setPath + setName)
+          .then(res => {
+            that.$store.commit("updateSourceData", res);
+            that.$store.commit("updateVisualData", res);
+            that.tabContents.push(JSON.stringify(res, null, "\t"));
+            that.tabContents.push(
+              JSON.stringify(that.$store.state.visualData, null, "\t")
             );
             that.tabContents.push("asdsafdhfghdfghsdf");
           })
