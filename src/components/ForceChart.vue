@@ -21,7 +21,7 @@
     <div :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
       <a-slider
         vertical
-        :min="0.1"
+        :min="0.01"
         :max="4.5"
         :step="0.01"
         v-model="linkStrength"
@@ -29,12 +29,32 @@
         @change="forceLinkChange"
       />
       <a-input-number
-        :min="0.1"
+        :min="0.01"
         :max="4.5"
         :step="0.01"
         style="margin:0 0 0 0"
         v-model="linkStrength"
         :defaultValue="linkStrength"
+        @change="forceLinkChange"
+      />
+    </div>
+    <div :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
+      <a-slider
+        vertical
+        :min="0"
+        :max="3"
+        :step="0.01"
+        v-model="linkLength"
+        :style="{margin:'0 0 10px 38px'}"
+        @change="forceLinkChange"
+      />
+      <a-input-number
+        :min="0"
+        :max="3"
+        :step="0.01"
+        style="margin:0 0 0 0"
+        v-model="linkLength"
+        :defaultValue="linkLength"
         @change="forceLinkChange"
       />
     </div>
@@ -69,7 +89,8 @@ export default {
       opacityTexts: d3.selectAll(),
       text: d3.selectAll(),
       gText: d3.selectAll(),
-      linkStrength: 1
+      linkStrength: 1,
+      linkLength: 0
     };
   },
 
@@ -347,17 +368,19 @@ export default {
         .delay(200)
         .style("fill-opacity", null);
     },
-    forceLinkChange(val) {
+    forceLinkChange() {
       // console.log(this.simulation.force("link").strength());
+      // console.log(this.degreeArray);
       this.simulation.force("link").strength(link => {
         // console.log(link);
         return (
           // d3原生的函数乘上一个系数val
-          val /
-          Math.min(
-            this.degreeArray[link.source.index],
-            this.degreeArray[link.target.index]
-          )
+          this.linkStrength /
+            Math.min(
+              this.degreeArray[link.source.index],
+              this.degreeArray[link.target.index]
+            ) +
+          this.linkLength
         );
       });
       this.simulation.alpha(0.5).restart();
