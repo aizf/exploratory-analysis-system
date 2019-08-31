@@ -84,6 +84,7 @@ export default {
       visSwitched: false, // 点击开关时，防止双击
       tabs: ["SourceData", "Node-Link", "Hierarchical"],
       tabContents: [],
+      lastSelect: undefined,
       // codemirror
       cmOptions: {
         // codemirror options
@@ -118,7 +119,6 @@ export default {
         default:
           break;
       }
-      // __loadData(); // 异步加载数据
 
       function __loadHierarchicalData() {
         d3.json(setPath + setName)
@@ -134,6 +134,7 @@ export default {
               JSON.stringify(that.$store.state.visualData, null, "\t")
             );
             that.tabContents.push("asdsafdhfghdfghsdf");
+            changeState();
           })
           .catch(err => {
             console.log(err);
@@ -149,10 +150,18 @@ export default {
               JSON.stringify(that.$store.state.visualData, null, "\t")
             );
             that.tabContents.push("asdsafdhfghdfghsdf");
+            changeState();
           })
           .catch(err => {
             console.log(err);
           });
+      }
+      function changeState() {
+        if (event.key !== that.lastSelect) {
+          console.log("change!");
+          that.lastSelect = event.key;
+          that.$store.commit("updateViewUpdate", true);
+        }
       }
     },
     test() {

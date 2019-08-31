@@ -86,6 +86,7 @@
           :visDrag="visDrag"
           :visMouseover="visMouseover"
           :visShowIds="visShowIds"
+          :viewUpdate="viewUpdate"
         ></ForceChart>
       </a-layout-content>
     </a-layout>
@@ -154,6 +155,11 @@ export default {
     test1(e) {
       console.log(e);
       console.log(e.target);
+    }
+  },
+  computed: {
+    viewUpdate() {
+      return this.$store.state.viewUpdate;
     }
   }
 };

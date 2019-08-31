@@ -71,7 +71,8 @@ export default {
     visBrush: Boolean,
     visDrag: Boolean,
     visMouseover: Boolean,
-    visShowIds: Boolean
+    visShowIds: Boolean,
+    viewUpdate: false
   },
   data() {
     return {
@@ -79,6 +80,8 @@ export default {
       chartHeight: "600",
       link: d3.selectAll(),
       node: d3.selectAll(),
+      gLink: d3.selectAll(),
+      gNode: d3.selectAll(),
       linkData: [],
       nodeData: [],
       vis: d3.selectAll(),
@@ -141,10 +144,9 @@ export default {
       : this.brushG.style("display", "none");
 
     // 初始化为<g>，再指向selectAll()，防止update()产生多个<g>
-    this.link = this.vis.append("g").attr("class", "links");
-    this.node = this.vis.append("g").attr("class", "nodes");
-    this.text = this.vis.append("g").attr("class", "texts");
-    this.gText = this.text;
+    this.gLink = this.vis.append("g").attr("class", "links");
+    this.gNode = this.vis.append("g").attr("class", "nodes");
+    this.gText = this.vis.append("g").attr("class", "texts");
     this.visShowIds
       ? this.gText.attr("display", "inline")
       : this.gText.attr("display", "none");
@@ -170,17 +172,15 @@ export default {
         return d.group ? scale[d.group] : scale[1]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
-      this.link = this.link
+      this.link = this.gLink
         .selectAll("line")
         .data(this.linkData)
-        .enter()
-        .append("line");
+        .join("line");
 
-      this.node = this.node
+      this.node = this.gNode
         .selectAll("circle")
         .data(this.nodeData)
-        .enter()
-        .append("circle")
+        .join("circle")
         .attr("r", d => {
           return Math.sqrt(d.size) / 10 || 4.5;
         })
@@ -189,11 +189,10 @@ export default {
         .attr("filter", "url(#gaussian)");
       // this.node.append("title").text(d => d.id);
 
-      this.text = this.text
+      this.text = this.gText
         .selectAll("text")
         .data(this.node.data())
-        .enter()
-        .append("text")
+        .join("text")
         .attr("text-anchor", "middle")
         .attr("font-family", "Avenir")
         .attr("font-size", "10")
@@ -204,9 +203,14 @@ export default {
         .style("-moz-user-select", "none")
         .style("-ms-user-select", "none")
         .style("user-select", "none");
-
+      // console.log("before simulation");
+      // console.log(this.node);
+      // console.log(this.simulation.nodes());
       this.simulation.nodes(this.node.data()).on("tick", this.ticked);
       this.simulation.force("link").links(this.link.data());
+      // console.log("after simulation");
+      // console.log(this.node);
+      // console.log(this.simulation.nodes());
     },
     bindEvents() {
       // 更新后绑定事件
@@ -234,6 +238,7 @@ export default {
       this.text.on("mouseout", textEvent2Node);
 
       function textEvent2Node(d) {
+        // 将text接受的事件分发给node
         let theIndex = d.index;
         let theNode = node.filter(d => d.index === theIndex);
         theNode.dispatch(d3.event.type);
@@ -383,12 +388,15 @@ export default {
           this.linkLength
         );
       });
-      this.simulation.alpha(0.5).restart();
+      this.simulation.alpha(0.15).restart();
     },
     test() {
       this.load(this.visualData);
       this.update();
       this.bindEvents();
+      this.simulation.alpha(1).restart();
+      this.$store.commit("updateViewUpdate", false);
+      console.log("update!");
     }
   },
   computed: {
@@ -425,6 +433,11 @@ export default {
       val
         ? this.gText.attr("display", "inline")
         : this.gText.attr("display", "none");
+    },
+    viewUpdate: function(val) {
+      if (val) {
+        this.test(); // this.test();有问题 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      }
     }
   }
 };

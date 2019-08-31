@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     sourceData: {},
     visualData: {},
+    viewUpdate: false,
   },
   getters: {
     hierarchical2nodeLink: (state) => {
@@ -52,7 +53,10 @@ export default new Vuex.Store({
     },
     updateVisualData: (state, data) => {
       state.visualData = data;
-    }
+    },
+    updateViewUpdate: (state, data) => {
+      state.viewUpdate = data;
+    },
   },
   actions: {
 
