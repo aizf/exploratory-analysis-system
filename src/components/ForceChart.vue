@@ -95,8 +95,9 @@ export default {
       linkStrength: 1,
       linkLength: 0,
       isDraging: false, // 区分click和drag等
-      mousePoint: [] // 相对于原始坐标系
+      mousePoint: [], // 相对于原始坐标系
       // isBrushing:false,
+      lastBrushNodes: d3.selectAll()
     };
   },
 
@@ -277,15 +278,18 @@ export default {
           d.y <= extentEnd[1]
         );
       });
-      brushNodes.classed("selected", true);
 
       if (d3.event.type === "start") {
         this.$store.commit("addOperation", {
           action: ["brushstart"],
           nodes: []
         });
+        this.lastBrushNodes = d3.selectAll();
         console.log("brush");
       } else if (d3.event.type === "brush") {
+        this.lastBrushNodes.classed("selected", false);
+        brushNodes.classed("selected", true);
+        this.lastBrushNodes=brushNodes;
         this.$store.commit("addOperationByBrush", {
           action: ["brush"],
           nodes: brushNodes.data()
