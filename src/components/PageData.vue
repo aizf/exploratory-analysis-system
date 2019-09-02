@@ -22,7 +22,7 @@
           <!--  -->
           <a-menu-item key="1" @click="loadData">miserables.json</a-menu-item>
           <a-menu-item key="2" @click="loadData">readme.json</a-menu-item>
-          <a-menu-item key="3" @click="loadData">test.json</a-menu-item>
+          <a-menu-item key="3" @click="loadData">test(2196N,2195L)</a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="sub2">

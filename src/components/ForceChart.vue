@@ -93,7 +93,10 @@ export default {
       text: d3.selectAll(),
       gText: d3.selectAll(),
       linkStrength: 1,
-      linkLength: 0
+      linkLength: 0,
+      isDraging: false, // 区分click和drag等
+      mousePoint: [] // 相对于原始坐标系
+      // isBrushing:false,
     };
   },
 
@@ -186,7 +189,8 @@ export default {
         })
         .attr("class", "display")
         .attr("fill", color)
-        .attr("filter", "url(#gaussian)");
+        .attr("filter", "url(#gaussian)")
+        .each(d => (d.attentionTimes = 0));
       // this.node.append("title").text(d => d.id);
 
       this.text = this.gText
@@ -265,7 +269,7 @@ export default {
       // console.log(extent);
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
-      this.node.classed("selected", d => {
+      let brushNodes = this.node.filter(d => {
         return (
           extentStart[0] <= d.x &&
           extentStart[1] <= d.y &&
@@ -273,23 +277,52 @@ export default {
           d.y <= extentEnd[1]
         );
       });
+      brushNodes.classed("selected", true);
+
+      if (d3.event.type === "start") {
+        this.$store.commit("addOperation", {
+          action: ["brushstart"],
+          nodes: []
+        });
+        console.log("brush");
+      } else if (d3.event.type === "brush") {
+        this.$store.commit("addOperationByBrush", {
+          action: ["brush"],
+          nodes: brushNodes.data()
+        });
+      }
+      // console.log(d3.event);
     },
     dragstarted(d) {
       if (!this.visDrag) return;
       if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
+      this.mousePoint = [d3.event.x, d3.event.y];
     },
     dragged(d) {
       if (!this.visDrag) return;
       d.fx = d3.event.x;
       d.fy = d3.event.y;
+      // console.log([d3.event.x,d3.event.y]);
+      if (
+        this.mousePoint[0] !== d3.event.x ||
+        this.mousePoint[1] !== d3.event.y
+      ) {
+        this.isDraging = true;
+      }
     },
     dragended(d) {
       if (!this.visDrag) return;
       if (!d3.event.active) this.simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
+      if (this.isDraging) {
+        d.attentionTimes += 1;
+        this.$store.commit("addOperation", { action: ["drag"], nodes: [d] });
+        this.isDraging = false;
+        console.log("drag", d);
+      }
     },
     clickSelect(d, i, p) {
       if (this.visClick) {
@@ -298,6 +331,9 @@ export default {
           t.classed("selected", false);
         } else {
           t.classed("selected", true);
+          d.attentionTimes += 1;
+          this.$store.commit("addOperation", { action: ["click"], nodes: [d] });
+          console.log("click", d);
         }
       }
     },
@@ -356,6 +392,14 @@ export default {
         .style("stroke-opacity", 0.2);
       this.opacityLinks.transition().style("stroke-opacity", 0);
       this.opacityTexts.transition().style("fill-opacity", 0);
+      if (!this.isDraging) {
+        d.attentionTimes += 1;
+        this.$store.commit("addOperation", {
+          action: ["mouseover"],
+          nodes: [d]
+        });
+        console.log("mouseover", d);
+      }
     },
     mouseout() {
       if (!this.visMouseover) return;
@@ -412,7 +456,7 @@ export default {
         links = this.simulation.force("link").links();
       let n = nodes.length,
         m = links.length;
-
+      // console.log(n, m);
       let degree = new Array(n);
       // links包含source，target，nodes没有
       for (let link of links) {

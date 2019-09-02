@@ -9,12 +9,12 @@ export default new Vuex.Store({
     sourceData: {},
     visualData: {},
     viewUpdate: false,
+    operations: [], // operation={action:["click","brush","drag","mouseover"],nodes:[]}
   },
   getters: {
     hierarchical2nodeLink: (state) => {
       // nodes
-      let nodes = [],
-        i = 0;
+      let nodes = [];
 
       function recurse(node) {
         if (node.children) node.children.forEach(recurse);
@@ -56,6 +56,13 @@ export default new Vuex.Store({
     },
     updateViewUpdate: (state, data) => {
       state.viewUpdate = data;
+    },
+    addOperation: (state, data) => {
+      state.operations.push(data);
+    },
+    addOperationByBrush: (state, data) => {
+      state.operations.pop();
+      state.operations.push(data);
     },
   },
   actions: {
