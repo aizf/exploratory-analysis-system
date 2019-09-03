@@ -1,6 +1,9 @@
 <template>
-  <div class="ForceChart">
-    <div style="float:left; margin:5px">
+  <div
+    class="ForceChart"
+    :style="{margin:'5px',height:+this.chartHeight+5+'px',width:+this.chartWidth+5+2*100+'px'}"
+  >
+    <div style="float:left;">
       <svg
         :width="this.chartWidth"
         :height="this.chartHeight"
@@ -69,6 +72,7 @@ export default {
   props: {
     visClick: Boolean,
     visBrush: Boolean,
+    visInvertBrush: Boolean,
     visDrag: Boolean,
     visMouseover: Boolean,
     visShowIds: Boolean,
@@ -80,8 +84,8 @@ export default {
       chartHeight: "600",
       link: d3.selectAll(),
       node: d3.selectAll(),
-      gLink: d3.selectAll(),
-      gNode: d3.selectAll(),
+      linkG: d3.selectAll(),
+      nodeG: d3.selectAll(),
       linkData: [],
       nodeData: [],
       vis: d3.selectAll(),
@@ -91,13 +95,15 @@ export default {
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
       text: d3.selectAll(),
-      gText: d3.selectAll(),
+      textG: d3.selectAll(),
+      nodesNumber:0,
       linkStrength: 1,
       linkLength: 0,
       isDraging: false, // 区分click和drag等
       mousePoint: [], // 相对于原始坐标系
       // isBrushing:false,
-      lastBrushNodes: d3.selectAll()
+      brushedNodes: d3.selectAll(),
+      invertBrushedNodes: d3.selectAll()
     };
   },
 
@@ -117,13 +123,6 @@ export default {
 
     this.vis = svg.append("g");
     svg.call(d3.zoom().on("zoom", zoomed));
-    // this.vis
-    //   .append("rect")
-    //   .attr("width", width)
-    //   .attr("height", height)
-    //   .style("fill", "none")
-    //   .style("pointer-events", "all");
-    // console.log(this.vis);
 
     this.simulation = d3
       .forceSimulation()
@@ -136,24 +135,37 @@ export default {
     let brush = d3
       .brush()
       .extent([[0, 0], [width, height]])
-      .on("start brush", this.brushed);
+      .on("start brush", this.brushed)
+      .on("end", this.brushEnd);
     this.brushG = svg
       .append("g")
       .call(brush)
-      .attr("class", "brush")
-      .call(brush.move, [[0, 0], [1, 1]]);
+      .attr("class", "brush");
     // console.log(this.brushG);
     this.visBrush
       ? this.brushG.style("display", "inline")
       : this.brushG.style("display", "none");
+    // invertBrush
+    let invertBrush = d3
+      .brush()
+      .extent([[0, 0], [width, height]])
+      .on("start brush", this.brushed)
+      .on("end", this.invertBrushEnd);
+    this.invertBrushG = svg
+      .append("g")
+      .call(invertBrush)
+      .attr("class", "invertBrush");
+    this.visInvertBrush
+      ? this.invertBrushG.style("display", "inline")
+      : this.invertBrushG.style("display", "none");
 
-    // 初始化为<g>，再指向selectAll()，防止update()产生多个<g>
-    this.gLink = this.vis.append("g").attr("class", "links");
-    this.gNode = this.vis.append("g").attr("class", "nodes");
-    this.gText = this.vis.append("g").attr("class", "texts");
+    // 初始化<g>，防止update()产生多个<g>
+    this.linkG = this.vis.append("g").attr("class", "links");
+    this.nodeG = this.vis.append("g").attr("class", "nodes");
+    this.textG = this.vis.append("g").attr("class", "texts");
     this.visShowIds
-      ? this.gText.attr("display", "inline")
-      : this.gText.attr("display", "none");
+      ? this.textG.style("display", "inline")
+      : this.textG.style("display", "none");
 
     this.test();
 
@@ -173,15 +185,15 @@ export default {
       // 更新数据
       let color = d => {
         const scale = d3.schemeSet2;
-        return d.group ? scale[d.group] : scale[1]; // FIXME 指定group
+        return !!d.group ? scale[d.group] : scale[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
-      this.link = this.gLink
+      this.link = this.linkG
         .selectAll("line")
         .data(this.linkData)
         .join("line");
 
-      this.node = this.gNode
+      this.node = this.nodeG
         .selectAll("circle")
         .data(this.nodeData)
         .join("circle")
@@ -193,8 +205,9 @@ export default {
         .attr("filter", "url(#gaussian)")
         .each(d => (d.attentionTimes = 0));
       // this.node.append("title").text(d => d.id);
+      this.nodesNumber=this.node.size();
 
-      this.text = this.gText
+      this.text = this.textG
         .selectAll("text")
         .data(this.node.data())
         .join("text")
@@ -211,11 +224,18 @@ export default {
       // console.log("before simulation");
       // console.log(this.node);
       // console.log(this.simulation.nodes());
-      this.simulation.nodes(this.node.data()).on("tick", this.ticked);
+      this.simulation
+        .nodes(this.node.data())
+        .on("tick", this.ticked)
+        .on("end", this.tickEnd);
       this.simulation.force("link").links(this.link.data());
       // console.log("after simulation");
       // console.log(this.node);
       // console.log(this.simulation.nodes());
+      this.bindEvents(); // 给显示的dom绑定元素
+      this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
+      this.$store.commit("updateViewUpdate", false);
+      console.log("update!");
     },
     bindEvents() {
       // 更新后绑定事件
@@ -247,6 +267,7 @@ export default {
         let theIndex = d.index;
         let theNode = node.filter(d => d.index === theIndex);
         theNode.dispatch(d3.event.type);
+        // console.log(d3.event.type);
       }
     },
     ticked() {
@@ -257,20 +278,28 @@ export default {
         .attr("y2", d => d.target.y);
 
       this.node.attr("cx", d => d.x).attr("cy", d => d.y);
-      this.text.attr("x", d => d.x).attr("y", d => d.y);
-      // if (this.visShowIds) {
-      //   this.text.attr("x", d => d.x).attr("y", d => d.y);
-      // }
+      if (this.visShowIds) {
+        this.text.attr("x", d => d.x).attr("y", d => d.y);
+      }
+    },
+    tickEnd() {
+      if (!this.visShowIds) {
+        this.text.attr("x", d => d.x).attr("y", d => d.y);
+      }
     },
     brushed() {
-      let transform = d3.zoomTransform(this.vis.node());
-      let extent = d3.event.selection;
-      let extentStart = transform.invert(extent[0]);
-      let extentEnd = transform.invert(extent[1]);
+      let transform = d3.zoomTransform(this.vis.node()); //获取<g>的transform
+      let extent = d3.event.selection; // brush的一个事件
+      let extentStart = transform.invert(extent[0]); // brush的开始坐标
+      let extentEnd = transform.invert(extent[1]); // brush的结束坐标
       // console.log(extent);
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
-      let brushNodes = this.node.filter(d => {
+      if (d3.event.type === "start") {
+      }
+
+      let className = this.visBrush ? "brushing" : "invertBrushing";
+      this.node.classed(className, d => {
         return (
           extentStart[0] <= d.x &&
           extentStart[1] <= d.y &&
@@ -278,24 +307,27 @@ export default {
           d.y <= extentEnd[1]
         );
       });
-
-      if (d3.event.type === "start") {
-        this.$store.commit("addOperation", {
-          action: ["brushstart"],
-          nodes: []
-        });
-        this.lastBrushNodes = d3.selectAll();
-        console.log("brush");
-      } else if (d3.event.type === "brush") {
-        this.lastBrushNodes.classed("selected", false);
-        brushNodes.classed("selected", true);
-        this.lastBrushNodes=brushNodes;
-        this.$store.commit("addOperationByBrush", {
-          action: ["brush"],
-          nodes: brushNodes.data()
-        });
-      }
-      // console.log(d3.event);
+    },
+    brushEnd() {
+      this.brushedNodes = this.nodeG.selectAll(".brushing");
+      // console.log(this.brushedNodes);
+      this.brushedNodes.classed("brushing", false).classed("selected", true);
+      this.$store.commit("addOperation", {
+        action: "brush",
+        nodes: this.brushedNodes
+      });
+      console.log("brushEnd",this.brushedNodes);
+    },
+    invertBrushEnd() {
+      this.invertBrushedNodes = this.nodeG.selectAll(".invertBrushing");
+      this.invertBrushedNodes
+        .classed("invertBrushing", false)
+        .classed("selected", false);
+      this.$store.commit("addOperation", {
+        action: "invertBrush",
+        nodes: this.invertBrushedNodes
+      });
+      console.log("invertBrushEnd",this.invertBrushedNodes);
     },
     dragstarted(d) {
       if (!this.visDrag) return;
@@ -310,9 +342,11 @@ export default {
       d.fy = d3.event.y;
       // console.log([d3.event.x,d3.event.y]);
       if (
-        this.mousePoint[0] !== d3.event.x ||
-        this.mousePoint[1] !== d3.event.y
+        // 如果mousePoint没变过，则没有发生drag,当this.isDraging==false时判断
+        !this.isDraging &&
+        (this.mousePoint[0] !== d3.event.x || this.mousePoint[1] !== d3.event.y)
       ) {
+        // console.log("computing !!");
         this.isDraging = true;
       }
     },
@@ -323,9 +357,9 @@ export default {
       d.fy = null;
       if (this.isDraging) {
         d.attentionTimes += 1;
-        this.$store.commit("addOperation", { action: ["drag"], nodes: [d] });
+        this.$store.commit("addOperation", { action: "drag", nodes: t });
         this.isDraging = false;
-        console.log("drag", d);
+        console.log("drag", t);
       }
     },
     clickSelect(d, i, p) {
@@ -336,8 +370,8 @@ export default {
         } else {
           t.classed("selected", true);
           d.attentionTimes += 1;
-          this.$store.commit("addOperation", { action: ["click"], nodes: [d] });
-          console.log("click", d);
+          this.$store.commit("addOperation", { action: "click", nodes: t });
+          console.log("click", t);
         }
       }
     },
@@ -399,10 +433,10 @@ export default {
       if (!this.isDraging) {
         d.attentionTimes += 1;
         this.$store.commit("addOperation", {
-          action: ["mouseover"],
-          nodes: [d]
+          action: "mouseover",
+          nodes: displayNodes
         });
-        console.log("mouseover", d);
+        console.log("mouseover", displayNodes);
       }
     },
     mouseout() {
@@ -441,10 +475,6 @@ export default {
     test() {
       this.load(this.visualData);
       this.update();
-      this.bindEvents();
-      this.simulation.alpha(1).restart();
-      this.$store.commit("updateViewUpdate", false);
-      console.log("update!");
     }
   },
   computed: {
@@ -477,10 +507,15 @@ export default {
         ? this.brushG.style("display", "inline")
         : this.brushG.style("display", "none");
     },
+    visInvertBrush: function(val) {
+      val
+        ? this.invertBrushG.style("display", "inline")
+        : this.invertBrushG.style("display", "none");
+    },
     visShowIds: function(val) {
       val
-        ? this.gText.attr("display", "inline")
-        : this.gText.attr("display", "none");
+        ? this.textG.style("display", "inline")
+        : this.textG.style("display", "none");
     },
     viewUpdate: function(val) {
       if (val) {
@@ -491,12 +526,12 @@ export default {
 };
 </script>
 <style>
-line {
+.ForceChart line {
   stroke: #aaa;
   /*fill-opacity: 0.9;*/
 }
 
-circle {
+.ForceChart circle {
   pointer-events: all;
   stroke: none;
   /*描边*/
@@ -504,20 +539,31 @@ circle {
   /* filter:drop-shadow(-25px 25px 25px rgba(0, 243, 53, 0.7)); */
 }
 
-circle.display {
+.ForceChart circle.display {
   /**/
 }
 
-circle.selected {
+.ForceChart circle.selected {
   /* fill: red; */
   stroke: red;
   stroke-width: 1.5;
 }
 
-circle.saved {
+.ForceChart circle.brushing {
+  /* fill: red; */
+  stroke: red;
+  stroke-width: 1.5;
+}
+
+.ForceChart circle.invertBrushing {
+  stroke: none;
+  stroke-width: 0px;
+}
+
+.ForceChart circle.saved {
   display: none;
 }
 
-circle.thumb {
+.ForceChart circle.thumb {
 }
 </style>

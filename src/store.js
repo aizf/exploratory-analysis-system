@@ -59,10 +59,7 @@ export default new Vuex.Store({
     },
     addOperation: (state, data) => {
       state.operations.push(data);
-    },
-    addOperationByBrush: (state, data) => {
-      state.operations.pop();
-      state.operations.push(data);
+      // let data = { chart: "", time: "", action: "", nodes: {} };
     },
   },
   actions: {

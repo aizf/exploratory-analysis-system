@@ -25,26 +25,32 @@
           </a-menu-item>
           <a-menu-item @click="onVisClick">
             <span>click</span>
-            <span :style="{display:'block',float:'right'}">
-              <a-switch v-model="visClick" @change="visSwitched=true" />
+            <span :style="{display:'block',float:'right'}" @click.stop>
+              <a-switch v-model="visClick" />
             </span>
           </a-menu-item>
           <a-menu-item @click="onVisBrush">
             <span>brush</span>
-            <span :style="{display:'block',float:'right'}">
-              <a-switch v-model="visBrush" @change="visSwitched=true" />
+            <span :style="{display:'block',float:'right'}" @click.stop>
+              <a-switch v-model="visBrush" @change="onVisBrush('switch')" />
+            </span>
+          </a-menu-item>
+          <a-menu-item @click="onVisInvertBrush">
+            <span>invert brush</span>
+            <span :style="{display:'block',float:'right'}" @click.stop>
+              <a-switch v-model="visInvertBrush" @change="onVisInvertBrush('switch')" />
             </span>
           </a-menu-item>
           <a-menu-item key="1" @click="onVisDrag">
             <span>drag</span>
-            <span :style="{display:'block',float:'right'}">
-              <a-switch v-model="visDrag" @change="visSwitched=true" />
+            <span :style="{display:'block',float:'right'}" @click.stop>
+              <a-switch v-model="visDrag" />
             </span>
           </a-menu-item>
           <a-menu-item @click="onVisMouseover">
             <span>mouseover</span>
-            <span :style="{display:'block',float:'right'}">
-              <a-switch v-model="visMouseover" @change="visSwitched=true" />
+            <span :style="{display:'block',float:'right'}" @click.stop>
+              <a-switch v-model="visMouseover" />
             </span>
           </a-menu-item>
         </a-sub-menu>
@@ -56,8 +62,8 @@
           </span>
           <a-menu-item @click="onVisShowIds">
             <span>visShowIds</span>
-            <span :style="{display:'block',float:'right'}">
-              <a-switch v-model="visShowIds" @change="visSwitched=true" />
+            <span :style="{display:'block',float:'right'}" @click.stop>
+              <a-switch v-model="visShowIds" />
             </span>
           </a-menu-item>
           <a-menu-item key="4">OprationView</a-menu-item>
@@ -83,6 +89,7 @@
         <ForceChart
           :visClick="visClick"
           :visBrush="visBrush"
+          :visInvertBrush="visInvertBrush"
           :visDrag="visDrag"
           :visMouseover="visMouseover"
           :visShowIds="visShowIds"
@@ -104,10 +111,10 @@ export default {
     return {
       // interface
       collapsed: false, // 侧边栏
-      visSwitched: false, // 点击开关时，防止双击
       // view
       visClick: false,
       visBrush: false,
+      visInvertBrush: false,
       visDrag: true,
       visMouseover: false,
       visShowIds: false
@@ -115,42 +122,42 @@ export default {
   },
   methods: {
     onVisClick() {
-      if (this.visSwitched) {
-        this.visSwitched = false;
-        return;
-      }
       this.visClick = !this.visClick;
     },
-    onVisBrush() {
-      if (this.visSwitched) {
-        this.visSwitched = false;
-        return;
+    onVisBrush(which) {
+      if (which !== "switch") {
+        // 判断点击的是<a-menu-item>还是<a-switch>
+        this.visBrush = !this.visBrush;
       }
-      this.visBrush = !this.visBrush;
+
+      if (this.visBrush) {
+        this.visInvertBrush = false;
+      }
+    },
+    onVisInvertBrush(which) {
+      if (which !== "switch") {
+        // 判断点击的是<a-menu-item>还是<a-switch>
+        this.visInvertBrush = !this.visInvertBrush;
+      }
+
+      if (this.visInvertBrush) {
+        this.visBrush = false;
+      }
     },
     onVisDrag() {
-      if (this.visSwitched) {
-        this.visSwitched = false;
-        return;
-      }
       this.visDrag = !this.visDrag;
     },
     onVisMouseover() {
-      if (this.visSwitched) {
-        this.visSwitched = false;
-        return;
-      }
       this.visMouseover = !this.visMouseover;
     },
     onVisShowIds() {
-      if (this.visSwitched) {
-        this.visSwitched = false;
-        return;
-      }
       this.visShowIds = !this.visShowIds;
     },
-    test() {
-      console.log("c");
+    test(event, i, a) {
+      console.log(event);
+      console.log(this.$listeners);
+      console.log(a);
+      // console.log(e);
     },
     test1(e) {
       console.log(e);
