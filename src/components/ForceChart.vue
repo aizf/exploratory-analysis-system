@@ -96,7 +96,7 @@ export default {
       opacityTexts: d3.selectAll(),
       text: d3.selectAll(),
       textG: d3.selectAll(),
-      nodesNumber:0,
+      nodesNumber: 0,
       linkStrength: 1,
       linkLength: 0,
       isDraging: false, // 区分click和drag等
@@ -205,7 +205,7 @@ export default {
         .attr("filter", "url(#gaussian)")
         .each(d => (d.attentionTimes = 0));
       // this.node.append("title").text(d => d.id);
-      this.nodesNumber=this.node.size();
+      this.nodesNumber = this.node.size();
 
       this.text = this.textG
         .selectAll("text")
@@ -276,13 +276,20 @@ export default {
         .attr("y1", d => d.source.y)
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
-
       this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+
       if (this.visShowIds) {
         this.text.attr("x", d => d.x).attr("y", d => d.y);
       }
     },
     tickEnd() {
+      // this.link
+      //   .attr("x1", d => d.source.x)
+      //   .attr("y1", d => d.source.y)
+      //   .attr("x2", d => d.target.x)
+      //   .attr("y2", d => d.target.y);
+      // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+
       if (!this.visShowIds) {
         this.text.attr("x", d => d.x).attr("y", d => d.y);
       }
@@ -316,7 +323,7 @@ export default {
         action: "brush",
         nodes: this.brushedNodes
       });
-      console.log("brushEnd",this.brushedNodes);
+      console.log("brushEnd", this.brushedNodes);
     },
     invertBrushEnd() {
       this.invertBrushedNodes = this.nodeG.selectAll(".invertBrushing");
@@ -327,7 +334,7 @@ export default {
         action: "invertBrush",
         nodes: this.invertBrushedNodes
       });
-      console.log("invertBrushEnd",this.invertBrushedNodes);
+      console.log("invertBrushEnd", this.invertBrushedNodes);
     },
     dragstarted(d) {
       if (!this.visDrag) return;
@@ -350,13 +357,14 @@ export default {
         this.isDraging = true;
       }
     },
-    dragended(d) {
+    dragended(d, i, p) {
       if (!this.visDrag) return;
       if (!d3.event.active) this.simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
       if (this.isDraging) {
         d.attentionTimes += 1;
+        let t = p[i];
         this.$store.commit("addOperation", { action: "drag", nodes: t });
         this.isDraging = false;
         console.log("drag", t);
