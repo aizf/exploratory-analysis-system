@@ -121,11 +121,11 @@ export default {
     svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
 
     //axis
+    let x = d3.scaleOrdinal().domain([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]);
     let xAxisCreator = g =>
       g
-        .attr("transform", `translate(0,${this.chartHeight})`)
-        .call(d3.axisBottom(x).tickSizeOuter(0));
-    let x = d3.scaleOrdinal().domain([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]);
+        .attr("transform", "translate(0,650)")
+        .call(d3.axisBottom(x));
     // .tickValues([..."AEIOUY"]);
     let xAxis = svg.append("g").call(xAxisCreator);
     // brush
