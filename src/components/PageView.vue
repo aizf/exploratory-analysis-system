@@ -86,7 +86,7 @@
 
     <a-layout style="padding: 0 0px 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
-        <ForceChart
+        <!-- <ForceChart
           :visClick="visClick"
           :visBrush="visBrush"
           :visInvertBrush="visInvertBrush"
@@ -94,18 +94,28 @@
           :visMouseover="visMouseover"
           :visShowIds="visShowIds"
           :viewUpdate="viewUpdate"
-        ></ForceChart>
+        ></ForceChart> -->
+        <ScatterChart
+          :visClick="visClick"
+          :visBrush="visBrush"
+          :visInvertBrush="visInvertBrush"
+          :visDrag="visDrag"
+          :visMouseover="visMouseover"
+          :visShowIds="visShowIds"
+          :viewUpdate="viewUpdate"
+        ></ScatterChart>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import ForceChart from "./ForceChart.vue";
-
+import ForceChart from "./charts/ForceChart.vue";
+import ScatterChart from "./charts/ScatterChart.vue";
 export default {
   name: "PageView",
   components: {
-    ForceChart
+    ForceChart,
+    ScatterChart
   },
   data() {
     return {

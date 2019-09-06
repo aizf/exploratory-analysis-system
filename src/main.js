@@ -12,6 +12,7 @@ import {
   Layout,
   Menu,
   Row,
+  Select,
   Slider,
   Switch,
   Tabs
@@ -28,6 +29,7 @@ Vue.use(InputNumber);
 Vue.use(Layout);
 Vue.use(Menu);
 Vue.use(Row);
+Vue.use(Select);
 Vue.use(Slider);
 Vue.use(Switch);
 Vue.use(Tabs);

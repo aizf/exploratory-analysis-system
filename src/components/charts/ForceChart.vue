@@ -7,16 +7,11 @@
       <svg
         :width="this.chartWidth"
         :height="this.chartHeight"
-        :style="{border:'1px solid #305dff'}"
+        :style="{border:'1px solid #305dff',background:this.backgroundColor}"
       >
         <defs>
-          <filter id="gaussian" width="2">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="blur" />
-            <feOffset in="blur" result="offsetBlur" />
-            <feMerge>
-              <feMergeNode in="offsetBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
+          <filter id="shadow">
+            <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
           </filter>
         </defs>
       </svg>
@@ -106,7 +101,36 @@ export default {
       invertBrushedNodes: d3.selectAll()
     };
   },
-
+  computed: {
+    sourceData() {
+      return this.$store.state.sourceData;
+    },
+    visualData() {
+      return this.$store.state.visualData;
+    },
+    backgroundColor() {
+      return this.$store.state.backgroundColor;
+    },
+    colorPalette() {
+      return this.$store.state.colorPalette;
+    },
+    degreeArray() {
+      // 返回一个包含各个节点出入度的数组
+      let nodes = this.simulation.nodes(),
+        links = this.simulation.force("link").links();
+      let n = nodes.length,
+        m = links.length;
+      // console.log(n, m);
+      let degree = new Array(n);
+      // links包含source，target，nodes没有
+      for (let link of links) {
+        // console.log(link);
+        degree[link.source.index] = (degree[link.source.index] || 0) + 1;
+        degree[link.target.index] = (degree[link.target.index] || 0) + 1;
+      }
+      return degree;
+    }
+  },
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
@@ -122,7 +146,7 @@ export default {
     // console.log(svg);
 
     this.vis = svg.append("g");
-    svg.call(d3.zoom().on("zoom", zoomed));
+    svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
 
     this.simulation = d3
       .forceSimulation()
@@ -184,8 +208,7 @@ export default {
     update() {
       // 更新数据
       let color = d => {
-        const scale = d3.schemeSet2;
-        return !!d.group ? scale[d.group] : scale[3]; // FIXME 指定group
+        return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
       this.link = this.linkG
@@ -202,7 +225,7 @@ export default {
         })
         .attr("class", "display")
         .attr("fill", color)
-        .attr("filter", "url(#gaussian)")
+        .attr("filter", "url(#shadow)")
         .each(d => (d.attentionTimes = 0));
       // this.node.append("title").text(d => d.id);
       this.nodesNumber = this.node.size();
@@ -295,10 +318,11 @@ export default {
       }
     },
     brushed() {
-      let transform = d3.zoomTransform(this.vis.node()); //获取<g>的transform
+      let transform = this.visTransform();
       let extent = d3.event.selection; // brush的一个事件
       let extentStart = transform.invert(extent[0]); // brush的开始坐标
       let extentEnd = transform.invert(extent[1]); // brush的结束坐标
+      // console.log(transform);
       // console.log(extent);
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
@@ -364,10 +388,11 @@ export default {
       d.fy = null;
       if (this.isDraging) {
         d.attentionTimes += 1;
-        let t = p[i];
+        let t = d3.select(p[i]);
         this.$store.commit("addOperation", { action: "drag", nodes: t });
         this.isDraging = false;
         console.log("drag", t);
+        t.dispatch("mouseout");
       }
     },
     clickSelect(d, i, p) {
@@ -384,7 +409,7 @@ export default {
       }
     },
     mouseover(d) {
-      if (!this.visMouseover) return;
+      if (!this.visMouseover || this.isDraging) return;
       let displayNodes = null;
       // let opacityNodes = null;
       let displayLinks = null;
@@ -448,7 +473,7 @@ export default {
       }
     },
     mouseout() {
-      if (!this.visMouseover) return;
+      if (!this.visMouseover || this.isDraging) return;
       this.opacityNodes
         .transition()
         .delay(200)
@@ -464,6 +489,7 @@ export default {
         .style("fill-opacity", null);
     },
     forceLinkChange() {
+      // 调整Link力的布局函数
       // console.log(this.simulation.force("link").strength());
       // console.log(this.degreeArray);
       this.simulation.force("link").strength(link => {
@@ -480,33 +506,12 @@ export default {
       });
       this.simulation.alpha(0.15).restart();
     },
+    visTransform() {
+      return d3.zoomTransform(this.vis.node());
+    },
     test() {
       this.load(this.visualData);
       this.update();
-    }
-  },
-  computed: {
-    sourceData() {
-      return this.$store.state.sourceData;
-    },
-    visualData() {
-      return this.$store.state.visualData;
-    },
-    degreeArray() {
-      // 返回一个包含各个节点出入度的数组
-      let nodes = this.simulation.nodes(),
-        links = this.simulation.force("link").links();
-      let n = nodes.length,
-        m = links.length;
-      // console.log(n, m);
-      let degree = new Array(n);
-      // links包含source，target，nodes没有
-      for (let link of links) {
-        // console.log(link);
-        degree[link.source.index] = (degree[link.source.index] || 0) + 1;
-        degree[link.target.index] = (degree[link.target.index] || 0) + 1;
-      }
-      return degree;
     }
   },
   watch: {
@@ -527,7 +532,7 @@ export default {
     },
     viewUpdate: function(val) {
       if (val) {
-        this.test(); // this.test();有问题 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        this.test();
       }
     }
   }
