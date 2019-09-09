@@ -22,30 +22,20 @@
         placeholder="Select X Dimension"
         optionFilterProp="children"
         style="width: 160px"
-        @focus="2"
-        @blur="2"
-        @change="2"
+        @change="xDimensionChange"
         :filterOption="filterOption"
       >
-        <a-select-option
-          v-for="i in 25"
-          :key="(i + 9).toString(36) + i"
-        >{{(i + 9).toString(36) + i}}</a-select-option>
+        <a-select-option v-for="i in dimensions" :key="i">{{i}}</a-select-option>
       </a-select>
       <a-select
         showSearch
         placeholder="Select Y Dimension"
         optionFilterProp="children"
         style="width: 160px"
-        @focus="2"
-        @blur="2"
-        @change="2"
+        @change="yDimensionChange"
         :filterOption="filterOption"
       >
-        <a-select-option
-          v-for="i in 25"
-          :key="(i + 9).toString(36) + i"
-        >{{(i + 9).toString(36) + i}}</a-select-option>
+        <a-select-option v-for="i in dimensions" :key="i">{{i}}</a-select-option>
       </a-select>
     </div>
   </div>
@@ -70,18 +60,21 @@ export default {
       chartWidth: "960",
       chartHeight: "600",
 
+      xDimension: "", // x轴选择的维度,key,字符串,数据在computed中
+      yDimension: "",
       node: d3.selectAll(),
       nodeG: d3.selectAll(),
       linkData: [],
       nodeData: [],
       vis: d3.selectAll(),
+      xAxis: d3.selectAll(),
+      yAxis: d3.selectAll(),
       brushG: d3.selectAll(),
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
       text: d3.selectAll(),
       textG: d3.selectAll(),
-      nodesNumber: 0,
       isDraging: false, // 区分click和drag等
       mousePoint: [], // 相对于原始坐标系
       // isBrushing:false,
@@ -102,8 +95,26 @@ export default {
     colorPalette() {
       return this.$store.state.colorPalette;
     },
-    xDimension() {},
-    yDimension() {}
+    nodesNumber() {
+      // 节点的数量
+      return this.node.size();
+    },
+    dimensions() {
+      // 获得node的属性(维度)有哪些
+      let dSet = new Set();
+      this.node.each(d => {
+        dSet = new Set([...dSet, ...Object.keys(d)]);
+      });
+      return [...dSet].sort();
+    },
+    xDimensionData() {
+      // 断绝了数据与节点的关联性，仅当作坐标刻度用
+      return this.node.data().map(i => i[this.xDimension]);
+    },
+    yDimensionData() {
+      //
+      return this.node.data().map(i => i[this.yDimension]);
+    }
   },
   mounted() {
     // console.log(d3.version);
@@ -121,13 +132,7 @@ export default {
     svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
 
     //axis
-    let x = d3.scaleOrdinal().domain([..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"]);
-    let xAxisCreator = g =>
-      g
-        .attr("transform", "translate(0,650)")
-        .call(d3.axisBottom(x));
-    // .tickValues([..."AEIOUY"]);
-    let xAxis = svg.append("g").call(xAxisCreator);
+    this.xAxis = svg.append("g");
     // brush
     let brush = d3
       .brush()
@@ -184,6 +189,16 @@ export default {
         return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
+
+      let x = d3
+        .scaleLinear()
+        .domain(this.xDimensionData)
+        .range([0, +this.chartWidth]);
+      let xAxisCreator = g =>
+        g.attr("transform", "translate(0,400)").call(d3.axisBottom(x));
+      this.xAxis.call(xAxisCreator);
+      // .tickValues([..."AEIOUY"]);
+
       this.link = this.linkG
         .selectAll("line")
         .data(this.linkData)
@@ -201,7 +216,6 @@ export default {
         .attr("filter", "url(#shadow)")
         .each(d => (d.attentionTimes = 0));
       // this.node.append("title").text(d => d.id);
-      this.nodesNumber = this.node.size();
 
       this.text = this.textG
         .selectAll("text")
@@ -430,6 +444,16 @@ export default {
     },
     visTransform() {
       return d3.zoomTransform(this.vis.node());
+    },
+    xDimensionChange(option) {
+      this.xDimension = option;
+      this.update();
+      // console.log(this.xDimensionData);
+    },
+    yDimensionChange(option) {
+      this.yDimension = option;
+      this.update();
+      // console.log(this.yDimensionData);
     },
     test() {
       this.load(this.visualData);

@@ -91,7 +91,6 @@ export default {
       opacityTexts: d3.selectAll(),
       text: d3.selectAll(),
       textG: d3.selectAll(),
-      nodesNumber: 0,
       linkStrength: 1,
       linkLength: 0,
       isDraging: false, // 区分click和drag等
@@ -113,6 +112,10 @@ export default {
     },
     colorPalette() {
       return this.$store.state.colorPalette;
+    },
+    nodesNumber() {
+      // 节点的数量
+      return this.node.size();
     },
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -228,7 +231,6 @@ export default {
         .attr("filter", "url(#shadow)")
         .each(d => (d.attentionTimes = 0));
       // this.node.append("title").text(d => d.id);
-      this.nodesNumber = this.node.size();
 
       this.text = this.textG
         .selectAll("text")
