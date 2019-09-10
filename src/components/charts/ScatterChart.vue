@@ -132,7 +132,12 @@ export default {
     svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
 
     //axis
-    this.xAxis = svg.append("g");
+    this.xAxis = svg
+      .append("g")
+      .attr("transform", "translate(" + 50 + "," + 50 + ")");
+    this.yAxis = svg
+      .append("g")
+      .attr("transform", "translate(" + 50 + "," + 50 + ")");
     // brush
     let brush = d3
       .brush()
@@ -173,7 +178,20 @@ export default {
 
     function zoomed() {
       that.vis.attr("transform", d3.event.transform);
-      // console.log(this.vis);
+      that.xAxis.attr(
+        "transform",
+        that
+          .xAxisTransform()
+          .scale(d3.event.transform.k)
+          .toString()
+      );
+      that.yAxis.attr(
+        "transform",
+        that
+          .yAxisTransform()
+          .scale(d3.event.transform.k)
+          .toString()
+      );
     }
   },
 
@@ -185,19 +203,36 @@ export default {
     },
     update() {
       // 更新数据
+      let that = this;
       let color = d => {
         return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
-
+      let xTicksNum = 30;
       let x = d3
-        .scaleLinear()
+        .scaleOrdinal()
         .domain(this.xDimensionData)
-        .range([0, +this.chartWidth]);
-      let xAxisCreator = g =>
-        g.attr("transform", "translate(0,400)").call(d3.axisBottom(x));
+        .range(
+          // ticks
+          d3.range(xTicksNum).map(function(d) {
+            return (d * +that.chartWidth) / xTicksNum;
+          })
+        );
+      let xAxisCreator = g => g.call(d3.axisTop(x));
       this.xAxis.call(xAxisCreator);
-      // .tickValues([..."AEIOUY"]);
+
+      let yTicksNum = 30;
+      let y = d3
+        .scaleOrdinal()
+        .domain(this.yDimensionData)
+        .range(
+          // ticks
+          d3.range(yTicksNum).map(function(d) {
+            return (d * +that.chartHeight) / yTicksNum;
+          })
+        );
+      let yAxisCreator = g => g.call(d3.axisLeft(y));
+      this.yAxis.call(yAxisCreator);
 
       this.link = this.linkG
         .selectAll("line")
@@ -444,6 +479,12 @@ export default {
     },
     visTransform() {
       return d3.zoomTransform(this.vis.node());
+    },
+    xAxisTransform() {
+      return d3.zoomTransform(this.xAxis.node());
+    },
+    yAxisTransform() {
+      return d3.zoomTransform(this.yAxis.node());
     },
     xDimensionChange(option) {
       this.xDimension = option;
