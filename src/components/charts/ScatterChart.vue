@@ -60,6 +60,7 @@ export default {
       chartWidth: "960",
       chartHeight: "600",
 
+      axisMargin: 50,
       xDimension: "", // x轴选择的维度,key,字符串,数据在computed中
       yDimension: "",
       node: d3.selectAll(),
@@ -69,6 +70,8 @@ export default {
       vis: d3.selectAll(),
       xAxis: d3.selectAll(),
       yAxis: d3.selectAll(),
+      xScale: {},
+      yScale: {},
       brushG: d3.selectAll(),
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
@@ -128,16 +131,23 @@ export default {
       .attr("viewBox", [0, 0, +this.chartWidth, +this.chartHeight]);
     // console.log(svg);
 
-    this.vis = svg.append("g");
-    svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
-
     //axis
     this.xAxis = svg
       .append("g")
-      .attr("transform", "translate(" + 50 + "," + 50 + ")");
+      .attr(
+        "transform",
+        "translate(" + this.axisMargin + "," + this.axisMargin + ")"
+      );
     this.yAxis = svg
       .append("g")
-      .attr("transform", "translate(" + 50 + "," + 50 + ")");
+      .attr(
+        "transform",
+        "translate(" + this.axisMargin + "," + this.axisMargin + ")"
+      );
+
+    this.vis = svg.append("g");
+    svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
+
     // brush
     let brush = d3
       .brush()
@@ -178,18 +188,45 @@ export default {
 
     function zoomed() {
       that.vis.attr("transform", d3.event.transform);
+
+      let visTransformScale=d3.event.transform.k;
+
+      let xTicksNum = this.xDimensionData.length||0;
+      this.xScale = d3
+        .scaleOrdinal()
+        .domain(this.xDimensionData)
+        .range(
+          // ticks
+          d3.range(xTicksNum).map(function(d) {
+            return (d * +that.chartWidth) / xTicksNum;
+          })
+        );
+      // let xAxisCreator = g => g.call(d3.axisTop(x));
+      this.xAxis.call(d3.axisTop(this.xScale));
+
+      let yTicksNum = this.yDimensionData.length||0;
+      this.yScale = d3
+        .scaleOrdinal()
+        .domain(this.yDimensionData)
+        .range(
+          // ticks
+          d3.range(yTicksNum).map(function(d) {
+            return (d * +that.chartHeight) / yTicksNum;
+          })
+        );
+      // let yAxisCreator = g => g.call(d3.axisLeft(y));
+      this.yAxis.call(d3.axisLeft(this.yScale));
+      
       that.xAxis.attr(
         "transform",
-        that
-          .xAxisTransform()
-          .scale(d3.event.transform.k)
+        d3.event.transform
+          .translate(that.axisMargin, that.axisMargin)
           .toString()
       );
       that.yAxis.attr(
         "transform",
-        that
-          .yAxisTransform()
-          .scale(d3.event.transform.k)
+        d3.event.transform
+          .translate(that.axisMargin, that.axisMargin)
           .toString()
       );
     }
@@ -208,8 +245,8 @@ export default {
         return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
-      let xTicksNum = 30;
-      let x = d3
+      let xTicksNum = this.xDimensionData.length||0;
+      this.xScale = d3
         .scaleOrdinal()
         .domain(this.xDimensionData)
         .range(
@@ -218,11 +255,11 @@ export default {
             return (d * +that.chartWidth) / xTicksNum;
           })
         );
-      let xAxisCreator = g => g.call(d3.axisTop(x));
-      this.xAxis.call(xAxisCreator);
+      // let xAxisCreator = g => g.call(d3.axisTop(x));
+      this.xAxis.call(d3.axisTop(this.xScale));
 
-      let yTicksNum = 30;
-      let y = d3
+      let yTicksNum = this.yDimensionData.length||0;
+      this.yScale = d3
         .scaleOrdinal()
         .domain(this.yDimensionData)
         .range(
@@ -231,8 +268,8 @@ export default {
             return (d * +that.chartHeight) / yTicksNum;
           })
         );
-      let yAxisCreator = g => g.call(d3.axisLeft(y));
-      this.yAxis.call(yAxisCreator);
+      // let yAxisCreator = g => g.call(d3.axisLeft(y));
+      this.yAxis.call(d3.axisLeft(this.yScale));
 
       this.link = this.linkG
         .selectAll("line")
@@ -354,9 +391,10 @@ export default {
       if (!this.visDrag) return;
       d.x = d3.event.x;
       d.y = d3.event.y;
+      // console.log(d.x,d.y);
       d3.select(p[i])
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
+        .attr("cx", d.x)
+        .attr("cy", d.y);
       // console.log([d3.event.x,d3.event.y]);
       if (
         // 如果mousePoint没变过，则没有发生drag,当this.isDraging==false时判断
@@ -481,9 +519,11 @@ export default {
       return d3.zoomTransform(this.vis.node());
     },
     xAxisTransform() {
+      // bug???
       return d3.zoomTransform(this.xAxis.node());
     },
     yAxisTransform() {
+      // bug???
       return d3.zoomTransform(this.yAxis.node());
     },
     xDimensionChange(option) {
@@ -526,7 +566,32 @@ export default {
 };
 </script>
 <style>
-.ScatterChart line {
+.ScatterChart .tick line {
   stroke: #aaa;
+}
+
+.ScatterChart .tick text {
+  fill: #aaa;
+}
+
+.ScatterChart path {
+  stroke: #aaa;
+}
+
+.ScatterChart circle.selected {
+  /* fill: red; */
+  stroke: red;
+  stroke-width: 1.5;
+}
+
+.ScatterChart circle.brushing {
+  /* fill: red; */
+  stroke: red;
+  stroke-width: 1.5;
+}
+
+.ScatterChart circle.invertBrushing {
+  stroke: none;
+  stroke-width: 0px;
 }
 </style>
