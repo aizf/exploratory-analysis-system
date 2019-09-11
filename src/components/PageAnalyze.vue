@@ -45,8 +45,8 @@ export default {
     );
     console.log("echarts", this.operationsChart);
     this.option = {
-      backgroundColor: "#404a59",
-      color: ["#dd4444", "#fec42c", "#80F1BE"],
+      backgroundColor: this.$store.state.backgroundColor,
+      color: this.$store.state.colorPalette,
       grid: {
         x: "10%",
         x2: 150,
