@@ -9,7 +9,7 @@ export default new Vuex.Store({
     sourceData: {},
     visualData: {},
     viewUpdate: false,
-    operations: [], // operation={action:["click","brush","drag","mouseover"],nodes:[]}
+    operations: [], // operation={action:["click","brush","drag","mouseover","invertBrush","zoom"],nodes:[]}
     backgroundColor: "#333",
     colorPalette: [
       "#dd6b66",

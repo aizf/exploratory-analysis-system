@@ -15,7 +15,8 @@ import {
   Select,
   Slider,
   Switch,
-  Tabs
+  Tabs,
+  Tooltip
 } from 'ant-design-vue'
 
 import store from './store'
@@ -33,6 +34,7 @@ Vue.use(Select);
 Vue.use(Slider);
 Vue.use(Switch);
 Vue.use(Tabs);
+Vue.use(Tooltip);
 
 Vue.config.productionTip = false;
 

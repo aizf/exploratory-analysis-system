@@ -1,19 +1,9 @@
 <template>
-  <!-- bidirectional data binding（双向数据绑定） -->
-  <codemirror v-model="code" :options="cmOptions"></codemirror>
-
-  <!-- or to manually control the datasynchronization（或者手动控制数据流，需要像这样手动监听changed事件） -->
-  <!-- <codemirror
-    ref="myCm"
-    :value="code"
-    :options="cmOptions"
-    @ready="onCmReady"
-    @focus="onCmFocus"
-    @input="onCmCodeChange"
-  ></codemirror> -->
+  <div class="operations" style="height: 50vh"></div>
 </template>
 
 <script>
+import echarts from "echarts";
 // language js
 import { codemirror } from "vue-codemirror";
 // theme css
@@ -25,6 +15,10 @@ export default {
   components: { codemirror },
   data() {
     return {
+      operationsVis: {},
+      operationsChart: {},
+      option: {},
+      // codemirror
       code: "const a = 10",
       cmOptions: {
         // codemirror options
@@ -37,6 +31,83 @@ export default {
       }
     };
   },
+  computed: {
+    codemirror() {
+      return this.$refs.myCm.codemirror;
+    },
+    operations() {
+      return this.$store.state.operations;
+    }
+  },
+  mounted() {
+    this.operationsChart = echarts.init(
+      document.getElementsByClassName("operations")[0]
+    );
+    console.log("echarts", this.operationsChart);
+    this.option = {
+      backgroundColor: "#404a59",
+      color: ["#dd4444", "#fec42c", "#80F1BE"],
+      grid: {
+        x: "10%",
+        x2: 150,
+        y: "18%",
+        y2: "10%"
+      },
+      dataset: {
+        source: this.operations
+      },
+      xAxis: {
+        type: "time",
+        name: "时间",
+        nameGap: 16,
+        nameTextStyle: {
+          color: "#fff",
+          fontSize: 14
+        },
+        splitLine: {
+          show: false
+        },
+        axisLine: {
+          lineStyle: {
+            color: "#eee"
+          }
+        }
+      },
+      yAxis: {
+        type: "category",
+        data: ["click", "brush", "drag", "mouseover", "invertBrush", "zoom"],
+        name: "操作",
+        nameLocation: "end",
+        nameGap: 20,
+        nameTextStyle: {
+          color: "#fff",
+          fontSize: 16
+        },
+        axisLine: {
+          lineStyle: {
+            color: "#eee"
+          }
+        },
+        splitLine: {
+          show: false
+        }
+      },
+      series: [
+        {
+          name: "北京",
+          type: "scatter",
+          encode: {
+            x: "time",
+            y: "action"
+          },
+        }
+      ]
+    };
+    this.operationsChart.setOption(this.option, true);
+  },
+  activated() {
+    this.operationsChart.setOption(this.option, true);
+  },
   methods: {
     onCmReady(cm) {
       console.log("the editor is readied!", cm);
@@ -48,15 +119,6 @@ export default {
       console.log("this is new code", newCode);
       this.code = newCode;
     }
-  },
-  computed: {
-    codemirror() {
-      return this.$refs.myCm.codemirror;
-    }
-  },
-  mounted() {
-    console.log("this is current codemirror object", this.codemirror);
-    // you can use this.codemirror to do something...
   }
 };
 </script>

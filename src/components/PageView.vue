@@ -23,36 +23,58 @@
           <a-menu-item>
             <a-button type="primary" block="block" :style="{ margin: '1px' }">save</a-button>
           </a-menu-item>
-          <a-menu-item @click="onVisClick">
-            <span>click</span>
-            <span :style="{display:'block',float:'right'}" @click.stop>
-              <a-switch v-model="visClick" />
-            </span>
-          </a-menu-item>
-          <a-menu-item @click="onVisBrush">
-            <span>brush</span>
-            <span :style="{display:'block',float:'right'}" @click.stop>
-              <a-switch v-model="visBrush" @change="onVisBrush('switch')" />
-            </span>
-          </a-menu-item>
-          <a-menu-item @click="onVisInvertBrush">
-            <span>invert brush</span>
-            <span :style="{display:'block',float:'right'}" @click.stop>
-              <a-switch v-model="visInvertBrush" @change="onVisInvertBrush('switch')" />
-            </span>
-          </a-menu-item>
-          <a-menu-item key="1" @click="onVisDrag">
-            <span>drag</span>
-            <span :style="{display:'block',float:'right'}" @click.stop>
-              <a-switch v-model="visDrag" />
-            </span>
-          </a-menu-item>
-          <a-menu-item @click="onVisMouseover">
-            <span>mouseover</span>
-            <span :style="{display:'block',float:'right'}" @click.stop>
-              <a-switch v-model="visMouseover" />
-            </span>
-          </a-menu-item>
+          <a-menu-item-group key="g1" title="single point">
+            <a-menu-item @click="onVisClick">
+              <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" :mouseEnterDelay="0.4">
+                <span>click</span>
+              </a-tooltip>
+              <span :style="{display:'block',float:'right'}" @click.stop>
+                <a-switch v-model="visClick" />
+              </span>
+            </a-menu-item>
+            <a-menu-item key="1" @click="onVisDrag">
+              <a-tooltip placement="top" title="单点操作，拖动一个点" :mouseEnterDelay="0.4">
+                <span>drag</span>
+              </a-tooltip>
+              <span :style="{display:'block',float:'right'}" @click.stop>
+                <a-switch v-model="visDrag" />
+              </span>
+            </a-menu-item>
+            <a-menu-item @click="onVisMouseover">
+              <a-tooltip placement="top" title="单点操作，展示与该点相关联的点" :mouseEnterDelay="0.4">
+                <span>mouseover</span>
+              </a-tooltip>
+              <span :style="{display:'block',float:'right'}" @click.stop>
+                <a-switch v-model="visMouseover" />
+              </span>
+            </a-menu-item>
+          </a-menu-item-group>
+          <a-menu-item-group key="g2" title="multiple point">
+            <a-menu-item @click="onVisBrush">
+              <a-tooltip placement="top" title="多点操作，选中多个点" :mouseEnterDelay="0.4">
+                <span>brush</span>
+              </a-tooltip>
+              <span :style="{display:'block',float:'right'}" @click.stop>
+                <a-switch v-model="visBrush" @change="onVisBrush('switch')" />
+              </span>
+            </a-menu-item>
+            <a-menu-item @click="onVisInvertBrush">
+              <a-tooltip placement="top" title="多点操作，取消选中多个点" :mouseEnterDelay="0.4">
+                <span>invert brush</span>
+              </a-tooltip>
+              <span :style="{display:'block',float:'right'}" @click.stop>
+                <a-switch v-model="visInvertBrush" @change="onVisInvertBrush('switch')" />
+              </span>
+            </a-menu-item>
+            <a-menu-item @click="onVisZoom">
+              <a-tooltip placement="top" title="多点操作，放大、缩小或平移视图" :mouseEnterDelay="0.4">
+                <span>zoom</span>
+              </a-tooltip>
+              <span :style="{display:'block',float:'right'}" @click.stop>
+                <a-switch v-model="visZoom" />
+              </span>
+            </a-menu-item>
+          </a-menu-item-group>
         </a-sub-menu>
 
         <a-sub-menu key="sub2">
@@ -74,18 +96,29 @@
         <a-sub-menu key="sub3">
           <span slot="title">
             <a-icon type="notification" />
-            <span>sub3</span>
+            <span>charts</span>
           </span>
-          <a-menu-item key="9">option9</a-menu-item>
-          <a-menu-item key="10">option10</a-menu-item>
-          <a-menu-item key="11">option11</a-menu-item>
-          <a-menu-item key="12">option12</a-menu-item>
+          <a-menu-item key="scatter" @click="changeChart">scatter</a-menu-item>
+          <a-menu-item key="force" @click="changeChart">force</a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
 
     <a-layout style="padding: 0 0px 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
+        <keep-alive>
+          <component
+            :is="currentChart"
+            :visClick="visClick"
+            :visBrush="visBrush"
+            :visInvertBrush="visInvertBrush"
+            :visDrag="visDrag"
+            :visMouseover="visMouseover"
+            :visZoom="visZoom"
+            :visShowIds="visShowIds"
+            :viewUpdate="viewUpdate"
+          ></component>
+        </keep-alive>
         <!-- <ForceChart
           :visClick="visClick"
           :visBrush="visBrush"
@@ -94,8 +127,8 @@
           :visMouseover="visMouseover"
           :visShowIds="visShowIds"
           :viewUpdate="viewUpdate"
-        ></ForceChart> -->
-        <ScatterChart
+        ></ForceChart>-->
+        <!-- <ScatterChart
           :visClick="visClick"
           :visBrush="visBrush"
           :visInvertBrush="visInvertBrush"
@@ -103,7 +136,7 @@
           :visMouseover="visMouseover"
           :visShowIds="visShowIds"
           :viewUpdate="viewUpdate"
-        ></ScatterChart>
+        ></ScatterChart>-->
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -127,7 +160,10 @@ export default {
       visInvertBrush: false,
       visDrag: true,
       visMouseover: false,
-      visShowIds: false
+      visZoom: true,
+      visShowIds: false,
+
+      currentChartKey: "force"
     };
   },
   methods: {
@@ -160,8 +196,14 @@ export default {
     onVisMouseover() {
       this.visMouseover = !this.visMouseover;
     },
+    onVisZoom() {
+      this.visZoom = !this.visZoom;
+    },
     onVisShowIds() {
       this.visShowIds = !this.visShowIds;
+    },
+    changeChart(option) {
+      this.currentChartKey = option.key;
     },
     test(event, i, a) {
       console.log(event);
@@ -177,6 +219,18 @@ export default {
   computed: {
     viewUpdate() {
       return this.$store.state.viewUpdate;
+    },
+    currentChart() {
+      switch (this.currentChartKey) {
+        case "scatter":
+          return "ScatterChart";
+          break;
+        case "force":
+          return "ForceChart";
+          break;
+        default:
+          break;
+      }
     }
   }
 };

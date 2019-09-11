@@ -52,6 +52,7 @@ export default {
     visInvertBrush: Boolean,
     visDrag: Boolean,
     visMouseover: Boolean,
+    visZoom: Boolean,
     visShowIds: Boolean,
     viewUpdate: false
   },
@@ -112,11 +113,17 @@ export default {
     },
     xDimensionData() {
       // 断绝了数据与节点的关联性，仅当作坐标刻度用
-      return this.node.data().map(i => i[this.xDimension]);
+      return this.node
+        .data()
+        .map(i => i[this.xDimension])
+        .sort();
     },
     yDimensionData() {
       //
-      return this.node.data().map(i => i[this.yDimension]);
+      return this.node
+        .data()
+        .map(i => i[this.yDimension])
+        .sort();
     }
   },
   mounted() {
@@ -131,22 +138,27 @@ export default {
       .attr("viewBox", [0, 0, +this.chartWidth, +this.chartHeight]);
     // console.log(svg);
 
-    //axis
-    this.xAxis = svg
+    this.vis = svg
       .append("g")
       .attr(
         "transform",
         "translate(" + this.axisMargin + "," + this.axisMargin + ")"
       );
-    this.yAxis = svg
-      .append("g")
-      .attr(
-        "transform",
-        "translate(" + this.axisMargin + "," + this.axisMargin + ")"
-      );
+    svg
+      .call(
+        d3
+          .zoom()
+          .translateExtent([
+            [-this.axisMargin, -this.axisMargin],
+            [Infinity, Infinity]
+          ])
+          .on("zoom", zoomed)
+      )
+      .on("dblclick.zoom", null);
 
-    this.vis = svg.append("g");
-    svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
+    //axis
+    this.xAxis = this.vis.append("g");
+    this.yAxis = this.vis.append("g");
 
     // brush
     let brush = d3
@@ -187,49 +199,43 @@ export default {
     this.test();
 
     function zoomed() {
-      that.vis.attr("transform", d3.event.transform);
-
-      let visTransformScale=d3.event.transform.k;
-
-      let xTicksNum = this.xDimensionData.length||0;
-      this.xScale = d3
-        .scaleOrdinal()
-        .domain(this.xDimensionData)
-        .range(
-          // ticks
-          d3.range(xTicksNum).map(function(d) {
-            return (d * +that.chartWidth) / xTicksNum;
-          })
-        );
-      // let xAxisCreator = g => g.call(d3.axisTop(x));
-      this.xAxis.call(d3.axisTop(this.xScale));
-
-      let yTicksNum = this.yDimensionData.length||0;
-      this.yScale = d3
-        .scaleOrdinal()
-        .domain(this.yDimensionData)
-        .range(
-          // ticks
-          d3.range(yTicksNum).map(function(d) {
-            return (d * +that.chartHeight) / yTicksNum;
-          })
-        );
-      // let yAxisCreator = g => g.call(d3.axisLeft(y));
-      this.yAxis.call(d3.axisLeft(this.yScale));
-      
-      that.xAxis.attr(
-        "transform",
-        d3.event.transform
-          .translate(that.axisMargin, that.axisMargin)
-          .toString()
+      if (!that.visZoom) return;
+      let transform = d3.event.transform.translate(
+        that.axisMargin,
+        that.axisMargin
       );
-      that.yAxis.attr(
-        "transform",
-        d3.event.transform
-          .translate(that.axisMargin, that.axisMargin)
-          .toString()
-      );
+      that.vis.attr("transform", transform);
+      let extentStart = transform.invert([0, 0]); // 视口的开始坐标
+      let extentEnd = transform.invert([+that.chartWidth, +that.chartHeight]); // 视口的结束坐标
+      let t = that.node.filter(d => {
+        return (
+          extentStart[0] <= d.x &&
+          extentStart[1] <= d.y &&
+          d.x <= extentEnd[0] &&
+          d.y <= extentEnd[1]
+        );
+      });
+      t.each(d => {
+        d.attentionTimes += 1;
+      });
+      that.$store.commit("addOperation", {
+        action: "zoom",
+        nodes: t,
+        time: new Date()
+      });
+      console.log("zoom", t);
     }
+  },
+
+  activated() {
+    this.node.classed("selected", d => d.selected);
+    this.node
+      .each(d => {
+        d.x = this.xScale(d[this.xDimension]);
+      })
+      .each(d => {
+        d.y = this.yScale(d[this.yDimension]);
+      });
   },
 
   methods: {
@@ -245,7 +251,7 @@ export default {
         return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
-      let xTicksNum = this.xDimensionData.length||0;
+      let xTicksNum = this.xDimensionData.length || 0;
       this.xScale = d3
         .scaleOrdinal()
         .domain(this.xDimensionData)
@@ -258,7 +264,7 @@ export default {
       // let xAxisCreator = g => g.call(d3.axisTop(x));
       this.xAxis.call(d3.axisTop(this.xScale));
 
-      let yTicksNum = this.yDimensionData.length||0;
+      let yTicksNum = this.yDimensionData.length || 0;
       this.yScale = d3
         .scaleOrdinal()
         .domain(this.yDimensionData)
@@ -286,7 +292,18 @@ export default {
         .attr("class", "display")
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
-        .each(d => (d.attentionTimes = 0));
+        .attr("cx", d => {
+          d.x = that.xScale(d[that.xDimension]);
+          return d.x;
+        })
+        .attr("cy", d => {
+          d.y = that.yScale(d[that.yDimension]);
+          return d.y;
+        })
+        .each(d => {
+          d.attentionTimes = 0;
+          d.selected = false;
+        });
       // this.node.append("title").text(d => d.id);
 
       this.text = this.textG
@@ -299,6 +316,8 @@ export default {
         .attr("dy", "-0.5em")
         .text(d => d.id)
         .attr("fill", color)
+        .attr("x", d => d.x)
+        .attr("y", d => d.y)
         .style("-webkit-user-select", "none") // 字体不被选中
         .style("-moz-user-select", "none")
         .style("-ms-user-select", "none")
@@ -342,7 +361,10 @@ export default {
       }
     },
     brushed() {
-      let transform = this.visTransform();
+      let transform = this.visTransform().translate(
+        this.axisMargin,
+        this.axisMargin
+      );
       let extent = d3.event.selection; // brush的一个事件
       let extentStart = transform.invert(extent[0]); // brush的开始坐标
       let extentEnd = transform.invert(extent[1]); // brush的结束坐标
@@ -365,10 +387,19 @@ export default {
     brushEnd() {
       this.brushedNodes = this.nodeG.selectAll(".brushing");
       // console.log(this.brushedNodes);
-      this.brushedNodes.classed("brushing", false).classed("selected", true);
+      this.brushedNodes
+        .classed("brushing", false)
+        .classed("selected", true)
+        .each(d => {
+          d.selected = true;
+        });
+      this.brushedNodes.each(d => {
+        d.attentionTimes += 1;
+      });
       this.$store.commit("addOperation", {
         action: "brush",
-        nodes: this.brushedNodes
+        nodes: this.brushedNodes,
+        time: new Date()
       });
       console.log("brushEnd", this.brushedNodes);
     },
@@ -376,10 +407,14 @@ export default {
       this.invertBrushedNodes = this.nodeG.selectAll(".invertBrushing");
       this.invertBrushedNodes
         .classed("invertBrushing", false)
-        .classed("selected", false);
+        .classed("selected", false)
+        .each(d => {
+          d.selected = false;
+        });
       this.$store.commit("addOperation", {
         action: "invertBrush",
-        nodes: this.invertBrushedNodes
+        nodes: this.invertBrushedNodes,
+        time: new Date()
       });
       console.log("invertBrushEnd", this.invertBrushedNodes);
     },
@@ -389,6 +424,8 @@ export default {
     },
     dragged(d, i, p) {
       if (!this.visDrag) return;
+      // console.log(d3.event.x);
+      // console.log(d.x);
       d.x = d3.event.x;
       d.y = d3.event.y;
       // console.log(d.x,d.y);
@@ -410,7 +447,11 @@ export default {
       if (this.isDraging) {
         d.attentionTimes += 1;
         let t = d3.select(p[i]);
-        this.$store.commit("addOperation", { action: "drag", nodes: t });
+        this.$store.commit("addOperation", {
+          action: "drag",
+          nodes: t,
+          time: new Date()
+        });
         this.isDraging = false;
         console.log("drag", t);
       }
@@ -420,10 +461,16 @@ export default {
         let t = d3.select(p[i]);
         if (t.classed("selected")) {
           t.classed("selected", false);
+          d.selected = false;
         } else {
           t.classed("selected", true);
+          d.selected = true;
           d.attentionTimes += 1;
-          this.$store.commit("addOperation", { action: "click", nodes: t });
+          this.$store.commit("addOperation", {
+            action: "click",
+            nodes: t,
+            time: new Date()
+          });
           console.log("click", t);
         }
       }
@@ -487,7 +534,8 @@ export default {
         d.attentionTimes += 1;
         this.$store.commit("addOperation", {
           action: "mouseover",
-          nodes: displayNodes
+          nodes: displayNodes,
+          time: new Date()
         });
         console.log("mouseover", displayNodes);
       }

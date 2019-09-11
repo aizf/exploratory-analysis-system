@@ -70,6 +70,7 @@ export default {
     visInvertBrush: Boolean,
     visDrag: Boolean,
     visMouseover: Boolean,
+    visZoom: Boolean,
     visShowIds: Boolean,
     viewUpdate: false
   },
@@ -197,9 +198,38 @@ export default {
     this.test();
 
     function zoomed() {
-      that.vis.attr("transform", d3.event.transform);
-      // console.log(this.vis);
+      if (!that.visZoom) return;
+      let transform = d3.event.transform;
+      that.vis.attr("transform", transform);
+      let extentStart = transform.invert([0, 0]); // 视口的开始坐标
+      let extentEnd = transform.invert([+that.chartWidth, +that.chartHeight]); // 视口的结束坐标
+      let t = that.node.filter(d => {
+        return (
+          extentStart[0] <= d.x &&
+          extentStart[1] <= d.y &&
+          d.x <= extentEnd[0] &&
+          d.y <= extentEnd[1]
+        );
+      });
+      t.each(d => {
+        d.attentionTimes += 1;
+      });
+      that.$store.commit("addOperation", {
+        action: "zoom",
+        nodes: t,
+        time: new Date()
+      });
+      console.log("zoom", t);
     }
+  },
+
+  activated() {
+    this.node.classed("selected", d => d.selected);
+    this.simulation.alpha(0.15).restart();
+  },
+
+  deactivated() {
+    this.simulation.stop();
   },
 
   methods: {
@@ -229,7 +259,10 @@ export default {
         .attr("class", "display")
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
-        .each(d => (d.attentionTimes = 0));
+        .each(d => {
+          d.attentionTimes = 0;
+          d.selected = false;
+        });
       // this.node.append("title").text(d => d.id);
 
       this.text = this.textG
@@ -344,23 +377,36 @@ export default {
     brushEnd() {
       this.brushedNodes = this.nodeG.selectAll(".brushing");
       // console.log(this.brushedNodes);
-      this.brushedNodes.classed("brushing", false).classed("selected", true);
+      this.brushedNodes
+        .classed("brushing", false)
+        .classed("selected", true)
+        .each(d => {
+          d.selected = true;
+        });
+      this.brushedNodes.each(d => {
+        d.attentionTimes += 1;
+      });
       this.$store.commit("addOperation", {
         action: "brush",
-        nodes: this.brushedNodes
+        nodes: this.brushedNodes,
+        time: new Date()
       });
-      console.log("brushEnd", this.brushedNodes);
+      console.log("brush", this.brushedNodes);
     },
     invertBrushEnd() {
       this.invertBrushedNodes = this.nodeG.selectAll(".invertBrushing");
       this.invertBrushedNodes
         .classed("invertBrushing", false)
-        .classed("selected", false);
+        .classed("selected", false)
+        .each(d => {
+          d.selected = false;
+        });
       this.$store.commit("addOperation", {
         action: "invertBrush",
-        nodes: this.invertBrushedNodes
+        nodes: this.invertBrushedNodes,
+        time: new Date()
       });
-      console.log("invertBrushEnd", this.invertBrushedNodes);
+      console.log("invertBrush", this.invertBrushedNodes);
     },
     dragstarted(d) {
       if (!this.visDrag) return;
@@ -391,7 +437,11 @@ export default {
       if (this.isDraging) {
         d.attentionTimes += 1;
         let t = d3.select(p[i]);
-        this.$store.commit("addOperation", { action: "drag", nodes: t });
+        this.$store.commit("addOperation", {
+          action: "drag",
+          nodes: t,
+          time: new Date()
+        });
         this.isDraging = false;
         console.log("drag", t);
         t.dispatch("mouseout");
@@ -402,10 +452,16 @@ export default {
         let t = d3.select(p[i]);
         if (t.classed("selected")) {
           t.classed("selected", false);
+          d.selected = false;
         } else {
           t.classed("selected", true);
+          d.selected = true;
           d.attentionTimes += 1;
-          this.$store.commit("addOperation", { action: "click", nodes: t });
+          this.$store.commit("addOperation", {
+            action: "click",
+            nodes: t,
+            time: new Date()
+          });
           console.log("click", t);
         }
       }
@@ -466,10 +522,13 @@ export default {
       this.opacityLinks.transition().style("stroke-opacity", 0);
       this.opacityTexts.transition().style("fill-opacity", 0);
       if (!this.isDraging) {
-        d.attentionTimes += 1;
+        displayNodes.each(d => {
+          d.attentionTimes += 1;
+        });
         this.$store.commit("addOperation", {
           action: "mouseover",
-          nodes: displayNodes
+          nodes: displayNodes,
+          time: new Date()
         });
         console.log("mouseover", displayNodes);
       }
