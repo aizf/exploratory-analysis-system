@@ -18,17 +18,6 @@ export default {
       operationsVis: {},
       operationsChart: {},
       option: {},
-      // codemirror
-      code: "const a = 10",
-      cmOptions: {
-        // codemirror options
-        tabSize: 4,
-        mode: { name: "javascript", json: true },
-        theme: "base16-dark",
-        lineNumbers: true,
-        line: true
-        // more codemirror options, 更多 codemirror 的高级配置...
-      }
     };
   },
   computed: {
@@ -109,16 +98,7 @@ export default {
     this.operationsChart.setOption(this.option, true);
   },
   methods: {
-    onCmReady(cm) {
-      console.log("the editor is readied!", cm);
-    },
-    onCmFocus(cm) {
-      console.log("the editor is focus!", cm);
-    },
-    onCmCodeChange(newCode) {
-      console.log("this is new code", newCode);
-      this.code = newCode;
-    }
+
   }
 };
 </script>
