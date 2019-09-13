@@ -349,13 +349,13 @@ export default {
       this.node.on("mouseout", this.mouseout);
       let node = this.node;
 
-      this.text.call(
-        d3
-          .drag()
-          .on("start", this.dragstarted)
-          .on("drag", this.dragged)
-          .on("end", this.dragended)
-      );
+      // this.text.call(
+      //   d3
+      //     .drag()
+      //     .on("start", this.dragstarted)
+      //     .on("drag", this.dragged)
+      //     .on("end", this.dragended)
+      // );
       this.text.on("click", textEvent2Node);
       this.text.on("mouseover", textEvent2Node);
       this.text.on("mouseout", textEvent2Node);

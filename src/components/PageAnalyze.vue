@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import * as d3 from "d3";
 import G2 from "@antv/g2";
 import { View } from "@antv/data-set";
 
@@ -41,12 +42,11 @@ export default {
       },
       action: {
         type: "cat", // 指定 cat 分类类型
-        values: ["click", "brush", "drag", "mouseover", "invertBrush", "zoom"] // 重新指定 c 属性每一个的值
+        values: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"] // 重新指定 c 属性每一个的值
       },
-      nodes: {
-      }
+      nodes: {}
     };
-    this.chart.source(this.operations,defs);
+    this.chart.source(this.operations, defs);
     this.chart.legend({
       title: null, // 不展示图例的标题
       marker: "square" // 设置图例 marker 的显示样式
@@ -55,6 +55,11 @@ export default {
       .point()
       .position("time*action")
       .color("action")
+      .size("nodes", nodes => {
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!// console.log(d3.select().merge(nodes));
+        console.log(nodes); // 可能由于不同的d3命名空间，试将t改为d和p[i]
+        // return d3.selection(nodes).size();
+      })
       .label(".");
     this.chart.render();
   },
