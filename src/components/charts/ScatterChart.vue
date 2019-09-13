@@ -207,7 +207,7 @@ export default {
       );
       that.vis.attr("transform", transform);
     }
-    function zoomed() {
+    function zoomEnd() {
       if (!that.visZoom) return;
       let transform = d3.event.transform.translate(
         that.axisMargin,
@@ -217,10 +217,10 @@ export default {
       let extentEnd = transform.invert([+that.chartWidth, +that.chartHeight]); // 视口的结束坐标
       let t = that.node.filter(d => {
         return (
-          extentStart[0] <= d.x &&
-          extentStart[1] <= d.y &&
-          d.x <= extentEnd[0] &&
-          d.y <= extentEnd[1]
+          extentStart[0] <= d.xx &&
+          extentStart[1] <= d.yy &&
+          d.xx <= extentEnd[0] &&
+          d.yy <= extentEnd[1]
         );
       });
       t.each(d => {
@@ -239,10 +239,10 @@ export default {
     this.node.classed("selected", d => d.selected);
     this.node
       .each(d => {
-        d.x = this.xScale(d[this.xDimension]);
+        d.xx = this.xScale(d[this.xDimension]);
       })
       .each(d => {
-        d.y = this.yScale(d[this.yDimension]);
+        d.yy = this.yScale(d[this.yDimension]);
       });
   },
 
@@ -301,12 +301,12 @@ export default {
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
         .attr("cx", d => {
-          d.x = that.xScale(d[that.xDimension]);
-          return d.x;
+          d.xx = that.xScale(d[that.xDimension]);
+          return d.xx;
         })
         .attr("cy", d => {
-          d.y = that.yScale(d[that.yDimension]);
-          return d.y;
+          d.yy = that.yScale(d[that.yDimension]);
+          return d.yy;
         })
         .each(d => {
           d.attentionTimes = 0;
@@ -324,8 +324,8 @@ export default {
         .attr("dy", "-0.5em")
         .text(d => d.id)
         .attr("fill", color)
-        .attr("x", d => d.x)
-        .attr("y", d => d.y)
+        .attr("x", d => d.xx)
+        .attr("y", d => d.yy)
         .style("-webkit-user-select", "none") // 字体不被选中
         .style("-moz-user-select", "none")
         .style("-ms-user-select", "none")
@@ -337,13 +337,13 @@ export default {
     },
     bindEvents() {
       // 更新后绑定事件
-      this.node.call(
-        d3
-          .drag()
-          .on("start", this.dragstarted)
-          .on("drag", this.dragged)
-          .on("end", this.dragended)
-      );
+      // this.node.call(
+      //   d3
+      //     .drag()
+      //     .on("start", this.dragstarted)
+      //     .on("drag", this.dragged)
+      //     .on("end", this.dragended)
+      // );
       this.node.on("click", this.clickSelect);
       this.node.on("mouseover", this.mouseover);
       this.node.on("mouseout", this.mouseout);
@@ -385,10 +385,10 @@ export default {
       let className = this.visBrush ? "brushing" : "invertBrushing";
       this.node.classed(className, d => {
         return (
-          extentStart[0] <= d.x &&
-          extentStart[1] <= d.y &&
-          d.x <= extentEnd[0] &&
-          d.y <= extentEnd[1]
+          extentStart[0] <= d.xx &&
+          extentStart[1] <= d.yy &&
+          d.xx <= extentEnd[0] &&
+          d.yy <= extentEnd[1]
         );
       });
     },
@@ -433,13 +433,13 @@ export default {
     dragged(d, i, p) {
       if (!this.visDrag) return;
       // console.log(d3.event.x);
-      // console.log(d.x);
-      d.x = d3.event.x;
-      d.y = d3.event.y;
-      // console.log(d.x,d.y);
+      // console.log(d.xx);
+      d.xx = d3.event.x;
+      d.yy = d3.event.y;
+      // console.log(d.xx,d.yy);
       d3.select(p[i])
-        .attr("cx", d.x)
-        .attr("cy", d.y);
+        .attr("cx", d.xx)
+        .attr("cy", d.yy);
       // console.log([d3.event.x,d3.event.y]);
       if (
         // 如果mousePoint没变过，则没有发生drag,当this.isDraging==false时判断

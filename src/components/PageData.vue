@@ -83,7 +83,7 @@ export default {
       collapsed: false, // 侧边栏
       visSwitched: false, // 点击开关时，防止双击
       tabs: ["SourceData", "Node-Link", "Hierarchical"],
-      tabContents: [],
+      tabContents: Array(3),
       lastSelect: undefined,
       // codemirror
       cmOptions: {
@@ -103,22 +103,24 @@ export default {
       let setPath = "./static/";
       let setName = "";
       this.tabContents = []; // 清空数据
-      switch (event.key) {
-        case "1":
-          setName = "miserables.json";
-          __loadNodeLinkData();
-          break;
-        case "2":
-          setName = "readme.json";
-          __loadHierarchicalData();
-          break;
-        case "3":
-          setName = "test.json";
-          __loadHierarchicalData();
-          break;
-        default:
-          break;
-      }
+      this.$message.loading("Action in progress..",0.3).then(() => {
+        switch (event.key) {
+          case "1":
+            setName = "miserables.json";
+            __loadNodeLinkData();
+            break;
+          case "2":
+            setName = "readme.json";
+            __loadHierarchicalData();
+            break;
+          case "3":
+            setName = "test.json";
+            __loadHierarchicalData();
+            break;
+          default:
+            break;
+        }
+      });
 
       function __loadHierarchicalData() {
         d3.json(setPath + setName)
@@ -161,6 +163,7 @@ export default {
           console.log("change!");
           that.lastSelect = event.key;
           that.$store.commit("updateViewUpdate", true);
+          that.$message.success("Data loaded.");
         }
       }
     },

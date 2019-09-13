@@ -32,12 +32,12 @@
                 <a-switch v-model="visClick" />
               </span>
             </a-menu-item>
-            <a-menu-item key="1" @click="onVisDrag">
+            <a-menu-item key="1" @click="onVisDrag" :disabled="dragDisabled">
               <a-tooltip placement="top" title="单点操作，拖动一个点" :mouseEnterDelay="0.4">
                 <span>drag</span>
               </a-tooltip>
               <span :style="{display:'block',float:'right'}" @click.stop>
-                <a-switch v-model="visDrag" />
+                <a-switch v-model="visDrag" :disabled="dragDisabled" />
               </span>
             </a-menu-item>
             <a-menu-item @click="onVisMouseover">
@@ -159,6 +159,7 @@ export default {
       visBrush: false,
       visInvertBrush: false,
       visDrag: true,
+      dragDisabled: false, // 控制drag开关
       visMouseover: false,
       visZoom: true,
       visShowIds: false,
@@ -223,12 +224,15 @@ export default {
     currentChart() {
       switch (this.currentChartKey) {
         case "scatter":
+          this.dragDisabled = true;
           return "ScatterChart";
           break;
         case "force":
+          this.dragDisabled = false;
           return "ForceChart";
           break;
         default:
+          this.dragDisabled = false;
           break;
       }
     }

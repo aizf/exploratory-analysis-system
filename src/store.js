@@ -6,8 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    sourceData: {},
-    visualData: {},
+    sourceData: undefined,
+    visualData: undefined,
     viewUpdate: false,
     operations: [], // operation={action:["click","brush","drag","mouseover","invertBrush","zoom"],nodes:[]}
     backgroundColor: "#333",
@@ -27,6 +27,8 @@ export default new Vuex.Store({
   },
   getters: {
     hierarchical2nodeLink: (state) => {
+      if (!state.sourceData) return;
+
       // nodes
       let nodes = [];
 

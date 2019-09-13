@@ -236,7 +236,7 @@ export default {
 
   activated() {
     this.node.classed("selected", d => d.selected);
-    this.simulation.alpha(0.15).restart();
+    this.simulation.tick();
   },
 
   deactivated() {

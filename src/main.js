@@ -10,6 +10,7 @@ import {
   Input,
   InputNumber,
   Layout,
+  message,
   Menu,
   Row,
   Select,
@@ -20,6 +21,8 @@ import {
 } from 'ant-design-vue'
 
 import store from './store'
+
+Vue.prototype.$message = message;
 
 // Vue.use(Antd);
 Vue.use(Button);

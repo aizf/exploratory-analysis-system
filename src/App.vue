@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <a-layout id="components-layout-demo-top-side-2" style="min-height: 100vh">
+    <a-layout id="app-layout" style="min-height: 100vh">
       <a-layout-header class="header">
         <div class="logo" />
         <a-menu
@@ -10,8 +10,12 @@
           :style="{ lineHeight: '64px' }"
         >
           <a-menu-item key="1" @click="currentPageKey='1'">Data</a-menu-item>
-          <a-menu-item key="2" @click="currentPageKey='2'">View</a-menu-item>
-          <a-menu-item key="3" @click="currentPageKey='3'">Analyze</a-menu-item>
+          <a-menu-item key="2" @click="currentPageKey='2'" :disabled="!dataSelected">
+            <a-tooltip placement="bottom" :title="pageViewTooltipTitle">View</a-tooltip>
+          </a-menu-item>
+          <a-menu-item key="3" @click="currentPageKey='3'" :disabled="!dataSelected">
+            <a-tooltip placement="bottom" :title="pageAnalyzeTooltipTitle">Analyze</a-tooltip>
+          </a-menu-item>
         </a-menu>
       </a-layout-header>
       <keep-alive>
@@ -54,6 +58,18 @@ export default {
         default:
           break;
       }
+    },
+    visualData() {
+      return !!this.$store.state.visualData;
+    },
+    dataSelected() {
+      return this.visualData;
+    },
+    pageViewTooltipTitle() {
+      return !this.dataSelected ? "请先在左侧选择数据" : "数据可视化界面";
+    },
+    pageAnalyzeTooltipTitle() {
+      return !this.dataSelected ? "请先在左侧选择数据" : "交互分析界面";
     }
   }
 };
@@ -67,7 +83,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 } */
-#components-layout-demo-top-side-2 .logo {
+#app-layout .logo {
   width: 120px;
   height: 31px;
   background: rgba(255, 255, 255, 0.2);
