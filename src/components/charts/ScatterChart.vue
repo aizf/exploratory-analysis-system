@@ -153,6 +153,7 @@ export default {
             [Infinity, Infinity]
           ])
           .on("zoom", zoomed)
+          .on("end", zoomEnd)
       )
       .on("dblclick.zoom", null);
 
@@ -205,6 +206,13 @@ export default {
         that.axisMargin
       );
       that.vis.attr("transform", transform);
+    }
+    function zoomed() {
+      if (!that.visZoom) return;
+      let transform = d3.event.transform.translate(
+        that.axisMargin,
+        that.axisMargin
+      );
       let extentStart = transform.invert([0, 0]); // 视口的开始坐标
       let extentEnd = transform.invert([+that.chartWidth, +that.chartHeight]); // 视口的结束坐标
       let t = that.node.filter(d => {
@@ -248,7 +256,7 @@ export default {
       // 更新数据
       let that = this;
       let color = d => {
-        return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
+        return !!d.group ? this.colorPalette[d.group] : this.colorPalette[8];
       };
       // this.load(nodeData, linkData);
       let xTicksNum = this.xDimensionData.length || 0;

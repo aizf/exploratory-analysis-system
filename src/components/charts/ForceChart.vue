@@ -150,7 +150,14 @@ export default {
     // console.log(svg);
 
     this.vis = svg.append("g");
-    svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
+    svg
+      .call(
+        d3
+          .zoom()
+          .on("zoom", zoomed)
+          .on("end", zoomEnd)
+      )
+      .on("dblclick.zoom", null);
 
     this.simulation = d3
       .forceSimulation()
@@ -201,6 +208,10 @@ export default {
       if (!that.visZoom) return;
       let transform = d3.event.transform;
       that.vis.attr("transform", transform);
+    }
+    function zoomEnd() {
+      if (!that.visZoom) return;
+      let transform = d3.event.transform;
       let extentStart = transform.invert([0, 0]); // 视口的开始坐标
       let extentEnd = transform.invert([+that.chartWidth, +that.chartHeight]); // 视口的结束坐标
       let t = that.node.filter(d => {

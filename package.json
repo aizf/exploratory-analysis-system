@@ -16,6 +16,8 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@antv/data-set": "^0.10.2",
+    "@antv/g2": "^3.5.8-beta.3",
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-service": "^3.11.0",

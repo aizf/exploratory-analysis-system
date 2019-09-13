@@ -1,9 +1,12 @@
 <template>
-  <div class="operations" style="height: 50vh"></div>
+  <div>
+    <div class="operations" style="height: 50vh"></div>
+  </div>
 </template>
 
 <script>
-import echarts from "echarts";
+import G2 from "@antv/g2";
+import { View } from "@antv/data-set";
 // language js
 import { codemirror } from "vue-codemirror";
 // theme css
@@ -16,8 +19,7 @@ export default {
   data() {
     return {
       operationsVis: {},
-      operationsChart: {},
-      option: {},
+      operationsChart: {}
     };
   },
   computed: {
@@ -29,76 +31,47 @@ export default {
     }
   },
   mounted() {
-    this.operationsChart = echarts.init(
-      document.getElementsByClassName("operations")[0]
-    );
-    console.log("echarts", this.operationsChart);
-    this.option = {
-      backgroundColor: this.$store.state.backgroundColor,
-      color: this.$store.state.colorPalette,
-      grid: {
-        x: "10%",
-        x2: 150,
-        y: "18%",
-        y2: "10%"
-      },
-      dataset: {
-        source: this.operations
-      },
-      xAxis: {
-        type: "time",
-        name: "时间",
-        nameGap: 16,
-        nameTextStyle: {
-          color: "#fff",
-          fontSize: 14
-        },
-        splitLine: {
-          show: false
-        },
-        axisLine: {
-          lineStyle: {
-            color: "#eee"
-          }
-        }
-      },
-      yAxis: {
-        type: "category",
-        data: ["click", "brush", "drag", "mouseover", "invertBrush", "zoom"],
-        name: "操作",
-        nameLocation: "end",
-        nameGap: 20,
-        nameTextStyle: {
-          color: "#fff",
-          fontSize: 16
-        },
-        axisLine: {
-          lineStyle: {
-            color: "#eee"
-          }
-        },
-        splitLine: {
-          show: false
-        }
-      },
-      series: [
-        {
-          name: "北京",
-          type: "scatter",
-          encode: {
-            x: "time",
-            y: "action"
-          },
-        }
-      ]
-    };
-    this.operationsChart.setOption(this.option, true);
-  },
-  activated() {
-    this.operationsChart.setOption(this.option, true);
-  },
-  methods: {
+    // data: ["click", "brush", "drag", "mouseover", "invertBrush", "zoom"]
 
-  }
+    const chart = new G2.Chart({
+      container: document.getElementsByClassName("operations")[0],
+      forceFit: true,
+      height: 400,
+      data: this.operations,
+      theme: "dark"
+    });
+    const data = [
+      { year: "Year 1800", region: "Africa", population: 107 },
+      { year: "Year 1900", region: "Africa", population: 133 },
+      { year: "Year 2012", region: "Africa", population: 1052 },
+      { year: "Year 1800", region: "America", population: 31 },
+      { year: "Year 1900", region: "America", population: 156 },
+      { year: "Year 2012", region: "America", population: 954 },
+      { year: "Year 1800", region: "Asia", population: 635 },
+      { year: "Year 1900", region: "Asia", population: 947 },
+      { year: "Year 2012", region: "Asia", population: 4250 },
+      { year: "Year 1800", region: "Europe", population: 203 },
+      { year: "Year 1900", region: "Europe", population: 408 },
+      { year: "Year 2012", region: "Europe", population: 740 },
+      { year: "Year 1800", region: "Oceania", population: 2 },
+      { year: "Year 1900", region: "Oceania", population: 6 },
+      { year: "Year 2012", region: "Oceania", population: 38 }
+    ];
+
+    chart.source(data);
+    chart.coord().transpose();
+    chart.legend({
+      title: null, // 不展示图例的标题
+      marker: "square" // 设置图例 marker 的显示样式
+    });
+    chart
+      .intervalDodge()
+      .position("region*population")
+      .color("year")
+      .label("population");
+    chart.render();
+  },
+  activated() {},
+  methods: {}
 };
 </script>

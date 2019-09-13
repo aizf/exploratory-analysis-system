@@ -43,4 +43,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 调节尺寸，长宽外部绑定
 
-反色(echarts)
+y轴映射nodes数量，颜色映射操作
