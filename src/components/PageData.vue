@@ -92,7 +92,8 @@ export default {
         mode: { name: "javascript", json: true },
         theme: "lucario",
         lineNumbers: true,
-        line: true
+        line: true,
+        readOnly: "nocursor"
         // more codemirror options, 更多 codemirror 的高级配置...
       }
     };

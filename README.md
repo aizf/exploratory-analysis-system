@@ -43,4 +43,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 调节尺寸，长宽外部绑定
 
-y轴映射nodes数量，颜色映射操作
+y轴映射啥
+
+ant 时间轴+表格（nodes）
