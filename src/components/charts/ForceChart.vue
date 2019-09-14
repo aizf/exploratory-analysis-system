@@ -227,10 +227,10 @@ export default {
       });
       that.$store.commit("addOperation", {
         action: "zoom",
-        nodes: t,
+        nodes: t.nodes(),
         time: new Date()
       });
-      console.log("zoom", t);
+      console.log("zoom", t.nodes());
     }
   },
 
@@ -265,7 +265,8 @@ export default {
         .data(this.nodeData)
         .join("circle")
         .attr("r", d => {
-          return Math.sqrt(d.size) / 10 || 4.5;
+          let size = Math.sqrt(d.size) / 10;
+          return size > 4.5 ? size : 4.5;
         })
         .attr("class", "display")
         .attr("fill", color)
@@ -399,10 +400,10 @@ export default {
       });
       this.$store.commit("addOperation", {
         action: "brush",
-        nodes: this.brushedNodes,
+        nodes: this.brushedNodes.nodes(),
         time: new Date()
       });
-      console.log("brush", this.brushedNodes);
+      console.log("brush", this.brushedNodes.nodes());
     },
     invertBrushEnd() {
       this.invertBrushedNodes = this.nodeG.selectAll(".invertBrushing");
@@ -414,10 +415,10 @@ export default {
         });
       this.$store.commit("addOperation", {
         action: "invertBrush",
-        nodes: this.invertBrushedNodes,
+        nodes: this.invertBrushedNodes.nodes(),
         time: new Date()
       });
-      console.log("invertBrush", this.invertBrushedNodes);
+      console.log("invertBrush", this.invertBrushedNodes.nodes());
     },
     dragstarted(d) {
       if (!this.visDrag) return;
@@ -450,11 +451,11 @@ export default {
         let t = d3.select(p[i]);
         this.$store.commit("addOperation", {
           action: "drag",
-          nodes: t,
+          nodes: t.nodes(),
           time: new Date()
         });
         this.isDraging = false;
-        console.log("drag", t);
+        console.log("drag", t.nodes());
         t.dispatch("mouseout");
       }
     },
@@ -470,10 +471,10 @@ export default {
           d.attentionTimes += 1;
           this.$store.commit("addOperation", {
             action: "click",
-            nodes: t,
+            nodes: t.nodes(),
             time: new Date()
           });
-          console.log("click", t);
+          console.log("click", t.nodes());
         }
       }
     },

@@ -228,10 +228,10 @@ export default {
       });
       that.$store.commit("addOperation", {
         action: "zoom",
-        nodes: t,
+        nodes: t.nodes(),
         time: new Date()
       });
-      console.log("zoom", t);
+      console.log("zoom", t.nodes());
     }
   },
 
@@ -406,10 +406,10 @@ export default {
       });
       this.$store.commit("addOperation", {
         action: "brush",
-        nodes: this.brushedNodes,
+        nodes: this.brushedNodes.nodes(),
         time: new Date()
       });
-      console.log("brushEnd", this.brushedNodes);
+      console.log("brushEnd", this.brushedNodes.nodes());
     },
     invertBrushEnd() {
       this.invertBrushedNodes = this.nodeG.selectAll(".invertBrushing");
@@ -421,10 +421,10 @@ export default {
         });
       this.$store.commit("addOperation", {
         action: "invertBrush",
-        nodes: this.invertBrushedNodes,
+        nodes: this.invertBrushedNodes.nodes(),
         time: new Date()
       });
-      console.log("invertBrushEnd", this.invertBrushedNodes);
+      console.log("invertBrushEnd", this.invertBrushedNodes.nodes());
     },
     dragstarted(d) {
       if (!this.visDrag) return;
@@ -457,11 +457,11 @@ export default {
         let t = d3.select(p[i]);
         this.$store.commit("addOperation", {
           action: "drag",
-          nodes: t,
+          nodes: t.nodes(),
           time: new Date()
         });
         this.isDraging = false;
-        console.log("drag", t);
+        console.log("drag", t.nodes());
       }
     },
     clickSelect(d, i, p) {
@@ -476,10 +476,10 @@ export default {
           d.attentionTimes += 1;
           this.$store.commit("addOperation", {
             action: "click",
-            nodes: t,
+            nodes: t.nodes(),
             time: new Date()
           });
-          console.log("click", t);
+          console.log("click", t.nodes());
         }
       }
     },

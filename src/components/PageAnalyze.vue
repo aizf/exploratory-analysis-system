@@ -33,8 +33,10 @@ export default {
       container: document.getElementsByClassName("operations")[0],
       forceFit: true,
       height: 400,
-      theme: "dark"
+      theme: "dark",
+      renderer : 'svg'
     });
+    
     const defs = {
       time: {
         type: "time", // 指定 time 类型
@@ -43,24 +45,26 @@ export default {
       action: {
         type: "cat", // 指定 cat 分类类型
         values: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"] // 重新指定 c 属性每一个的值
-      },
-      nodes: {}
+      }
     };
     this.chart.source(this.operations, defs);
     this.chart.legend({
       title: null, // 不展示图例的标题
       marker: "square" // 设置图例 marker 的显示样式
     });
+    this.chart.legend('nodes', false);  // 隐藏 nodes 维度对应的图例
+    // this.chart.legend('action', false);
+    // this.chart.legend(false); 
     this.chart
       .point()
       .position("time*action")
       .color("action")
       .size("nodes", nodes => {
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!// console.log(d3.select().merge(nodes));
-        console.log(nodes); // 可能由于不同的d3命名空间，试将t改为d和p[i]
-        // return d3.selection(nodes).size();
+        let size = Math.sqrt(nodes.length);
+        return size > 4.5 ? size : 4.5;
       })
-      .label(".");
+      .opacity(0.8)
+      .shape("circle");
     this.chart.render();
   },
   activated() {
