@@ -163,7 +163,8 @@ export default {
         if (event.key !== that.lastSelect) {
           console.log("change!");
           that.lastSelect = event.key;
-          that.$store.commit("updateViewUpdate", true);
+          that.$store.commit("updateViewUpdate", "all");
+          // console.log(that.$store.state.viewUpdate);
           that.$message.success("Data loaded.");
         }
       }

@@ -33,10 +33,10 @@ export default {
       container: document.getElementsByClassName("operations")[0],
       forceFit: true,
       height: 400,
-      theme: "dark",
-      renderer : 'svg'
+      theme: "dark"
+      // renderer : 'svg'
     });
-    
+
     const defs = {
       time: {
         type: "time", // 指定 time 类型
@@ -52,9 +52,11 @@ export default {
       title: null, // 不展示图例的标题
       marker: "square" // 设置图例 marker 的显示样式
     });
-    this.chart.legend('nodes', false);  // 隐藏 nodes 维度对应的图例
-    // this.chart.legend('action', false);
-    // this.chart.legend(false); 
+    this.chart.legend("nodes", false); // 隐藏 nodes 维度对应的图例
+    this.chart.tooltip({
+      showTitle: false
+      // itemTpl: '<li>{color}{name}\t{value}</li>'
+    });
     this.chart
       .point()
       .position("time*action")
@@ -64,7 +66,11 @@ export default {
         return size > 4.5 ? size : 4.5;
       })
       .opacity(0.8)
-      .shape("circle");
+      .shape("circle")
+      .tooltip("time*action", (time, action, nodes) => {
+        return { name: action, value: time + "%" };
+        // , { "操作": action }];
+      });
     this.chart.render();
   },
   activated() {

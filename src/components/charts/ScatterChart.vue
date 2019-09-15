@@ -332,8 +332,8 @@ export default {
         .style("user-select", "none");
 
       this.bindEvents(); // 给显示的dom绑定元素
-      this.$store.commit("updateViewUpdate", false);
-      console.log("update!");
+      this.$store.commit("updateViewUpdate", "scatter", false);
+      console.log("ScatterChart update!");
     },
     bindEvents() {
       // 更新后绑定事件
@@ -613,7 +613,8 @@ export default {
         ? this.textG.style("display", "inline")
         : this.textG.style("display", "none");
     },
-    viewUpdate: function(val) {
+    "viewUpdate.scatter": function(val) {
+      console.log("scatter watcher");
       if (val) {
         this.test();
       }

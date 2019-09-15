@@ -8,7 +8,11 @@ export default new Vuex.Store({
   state: {
     sourceData: undefined,
     visualData: undefined,
-    viewUpdate: false,
+    viewUpdate: {
+      force: false,
+      scatter: false,
+      table: false
+    },
     operations: [], // operation={action:["click","brush","drag","mouseover","invertBrush","zoom"],nodes:[]}
     backgroundColor: "#333",
     contrastColor: "#eee",
@@ -71,8 +75,11 @@ export default new Vuex.Store({
     updateVisualData: (state, data) => {
       state.visualData = data;
     },
-    updateViewUpdate: (state, data) => {
-      state.viewUpdate = data;
+    updateViewUpdate: (state, chart, val) => {
+      let charts = ["force", "scatter", "table"];
+      chart === "all" ? (charts.forEach(c => {
+        state.viewUpdate[c] = true;
+      })) : (state.viewUpdate[chart] = val);
     },
     addOperation: (state, data) => {
       state.operations.push(data);

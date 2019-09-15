@@ -75,7 +75,11 @@ export default {
         let datum = { key: i };
         // console.log(this.dimensions);
         for (let dimension of this.dimensions) {
-          datum[dimension] = node[dimension].toString();
+          // console.log(node[dimension]);
+          datum[dimension] =
+            node[dimension] === undefined || node[dimension] === null
+              ? "-"
+              : node[dimension].toString();
         }
         // console.log(datum);
         return datum;
@@ -126,7 +130,7 @@ export default {
     },
     getDimensions() {
       // 获得node的属性(维度)有哪些
-      let privateArr = ["fx", "fy", "x", "y", "xx", "yy", "vx", "vy"];
+      let privateArr = ["fx", "fy", "x", "y", "xx", "yy", "vx", "vy","children"];
       let dSet = new Set();
       this.nodes.forEach(node => {
         dSet = new Set([...dSet, ...Object.keys(node)]);
@@ -139,7 +143,7 @@ export default {
     }
   },
   watch: {
-    viewUpdate: function(val) {
+    "viewUpdate.table": function(val) {
       if (val) {
       }
     }

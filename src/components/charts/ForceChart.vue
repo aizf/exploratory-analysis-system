@@ -304,8 +304,8 @@ export default {
       // console.log(this.simulation.nodes());
       this.bindEvents(); // 给显示的dom绑定元素
       this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
-      this.$store.commit("updateViewUpdate", false);
-      console.log("update!");
+      this.$store.commit("updateViewUpdate", "force",false);
+      console.log("ForceChart update!");
     },
     bindEvents() {
       // 更新后绑定事件
@@ -603,7 +603,8 @@ export default {
         ? this.textG.style("display", "inline")
         : this.textG.style("display", "none");
     },
-    viewUpdate: function(val) {
+    "viewUpdate.force": function(val) {
+      console.log("force watcher");
       if (val) {
         this.test();
       }

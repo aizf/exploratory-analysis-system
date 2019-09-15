@@ -106,8 +106,8 @@
             <a-icon type="notification" />
             <span>charts</span>
           </span>
-          <a-menu-item key="scatter" @click="changeChart">scatter</a-menu-item>
           <a-menu-item key="force" @click="changeChart">force</a-menu-item>
+          <a-menu-item key="scatter" @click="changeChart">scatter</a-menu-item>
           <a-menu-item key="table" @click="changeChart">table</a-menu-item>
         </a-sub-menu>
       </a-menu>
