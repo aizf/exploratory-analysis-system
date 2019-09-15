@@ -46,3 +46,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 y轴映射啥
 
 ant 时间轴+表格（nodes）
+
+各个属性在store中存储，如node-link，层级，nodes，links等，再大分类(关系型，非关系型)
+
+怎么在store中存储公共函数(model)
+
+饼图，各种操作的比例，等
+
+迷你图

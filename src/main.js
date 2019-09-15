@@ -16,6 +16,7 @@ import {
   Select,
   Slider,
   Switch,
+  Table,
   Tabs,
   Tooltip
 } from 'ant-design-vue'
@@ -36,6 +37,7 @@ Vue.use(Row);
 Vue.use(Select);
 Vue.use(Slider);
 Vue.use(Switch);
+Vue.use(Table);
 Vue.use(Tabs);
 Vue.use(Tooltip);
 

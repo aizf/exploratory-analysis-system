@@ -11,6 +11,7 @@ export default new Vuex.Store({
     viewUpdate: false,
     operations: [], // operation={action:["click","brush","drag","mouseover","invertBrush","zoom"],nodes:[]}
     backgroundColor: "#333",
+    contrastColor: "#eee",
     colorPalette: [
       "#dd6b66",
       "#759aa0",
