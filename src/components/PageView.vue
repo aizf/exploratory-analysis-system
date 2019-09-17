@@ -17,7 +17,7 @@
         <a-sub-menu key="sub1">
           <span slot="title">
             <a-icon type="user" />
-            <span>opration</span>
+            <span>oprations</span>
           </span>
           <!--  -->
           <a-menu-item>
@@ -85,18 +85,18 @@
           </a-menu-item-group>
         </a-sub-menu>
 
-        <a-sub-menu key="sub2">
+        <a-sub-menu key="display">
           <span slot="title">
             <a-icon type="laptop" />
             <span>display</span>
           </span>
-          <a-menu-item @click="onVisShowIds" :disabled="showIdsDisabled">
+          <a-menu-item key="showIdsDisabled" @click="onVisShowIds" :disabled="showIdsDisabled">
             <span>visShowIds</span>
             <span :style="{display:'block',float:'right'}" @click.stop>
               <a-switch v-model="visShowIds" :disabled="showIdsDisabled" />
             </span>
           </a-menu-item>
-          <a-menu-item key="4">OprationView</a-menu-item>
+          <a-menu-item key="record">record</a-menu-item>
           <a-menu-item key="5">DataFlow</a-menu-item>
           <a-menu-item key="6">OprationFlow</a-menu-item>
         </a-sub-menu>
@@ -104,11 +104,11 @@
         <a-sub-menu key="sub3">
           <span slot="title">
             <a-icon type="notification" />
-            <span>charts</span>
+            <span>change chart</span>
           </span>
-          <a-menu-item key="force" @click="changeChart">force</a-menu-item>
-          <a-menu-item key="scatter" @click="changeChart">scatter</a-menu-item>
-          <a-menu-item key="table" @click="changeChart">table</a-menu-item>
+          <a-menu-item key="force" @click="changeChart"><a-icon type="deployment-unit" />force</a-menu-item>
+          <a-menu-item key="scatter" @click="changeChart"><a-icon type="dot-chart" />scatter</a-menu-item>
+          <a-menu-item key="table" @click="changeChart"><a-icon type="table" />table</a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
@@ -128,7 +128,6 @@
             :viewUpdate="viewUpdate"
           ></component>
         </keep-alive>
-        <NodesTable />
       </a-layout-content>
     </a-layout>
   </a-layout>

@@ -39,7 +39,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - Enclosure diagrams(包裹图) 也是一种区域编码，但是通过相互包含的形式来展示拓扑结构。treemap 递归的将一个区域划分为更小的矩形区域。Circle-packing 则通过相互紧凑嵌套的圆来表示, 虽然空间利用率不高，但是能更明显的展示拓扑结构。
 - 一个好的层次结构可视化能促进快速的促进多尺度推理: 对单个单元的微观观察和对整体的宏观观察.
 
-## TODO
+## TODO（数据驱动）
 
 调节尺寸，长宽外部绑定
 
@@ -55,3 +55,5 @@ ant 时间轴+表格（nodes）
 饼图，各种操作的比例，等
 
 迷你图
+
+截取 记录

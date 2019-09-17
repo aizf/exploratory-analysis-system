@@ -161,7 +161,7 @@ export default {
 
     this.simulation = d3
       .forceSimulation()
-      .force("link", d3.forceLink().id(d => d.id))
+      .force("link", d3.forceLink().id(d => d.id||d.name))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2));
     // console.log();
@@ -285,7 +285,7 @@ export default {
         .attr("font-family", "Avenir")
         .attr("font-size", "10")
         .attr("dy", "-0.5em")
-        .text(d => d.id)
+        .text(d => d.id || d.name)
         .attr("fill", color)
         .style("-webkit-user-select", "none") // 字体不被选中
         .style("-moz-user-select", "none")
@@ -304,7 +304,7 @@ export default {
       // console.log(this.simulation.nodes());
       this.bindEvents(); // 给显示的dom绑定元素
       this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
-      this.$store.commit("updateViewUpdate", "force",false);
+      this.$store.commit("updateViewUpdate", "force", false);
       console.log("ForceChart update!");
     },
     bindEvents() {
@@ -484,13 +484,17 @@ export default {
       // let opacityNodes = null;
       let displayLinks = null;
       // let opacityLinks = null;
-      let thisId = d.id;
+      if(!(d.id || d.name)){
+        throw new Error(`object do not has "id" or "name"`);
+      }
+      let id =  d.id ? "id" : "name";
+      let thisId = d[id];
       // console.log(thisId);
       this.opacityLinks = this.link.filter(d => {
-        return d.source.id !== thisId && d.target.id !== thisId;
+        return d.source[id] !== thisId && d.target[id] !== thisId;
       });
       displayLinks = this.link.filter(d => {
-        return d.source.id === thisId || d.target.id === thisId;
+        return d.source[id] === thisId || d.target[id] === thisId;
       });
       this.opacityNodes = this.node.filter(d => {
         // console.log("d",d);
@@ -498,8 +502,8 @@ export default {
         for (let i in displayLinksData) {
           // console.log(i);
           if (
-            d.id === displayLinksData[i].source.id ||
-            d.id === displayLinksData[i].target.id
+            d[id] === displayLinksData[i].source[id] ||
+            d[id] === displayLinksData[i].target[id]
           ) {
             return false;
           }
@@ -511,8 +515,8 @@ export default {
         for (let i in displayLinksData) {
           // console.log(i);
           if (
-            d.id === displayLinksData[i].source.id ||
-            d.id === displayLinksData[i].target.id
+            d[id] === displayLinksData[i].source[id] ||
+            d[id] === displayLinksData[i].target[id]
           ) {
             return true;
           }
@@ -539,10 +543,10 @@ export default {
         });
         this.$store.commit("addOperation", {
           action: "mouseover",
-          nodes: displayNodes,
+          nodes: displayNodes.nodes(),
           time: new Date()
         });
-        console.log("mouseover", displayNodes);
+        console.log("mouseover", displayNodes.nodes());
       }
     },
     mouseout() {
@@ -604,7 +608,7 @@ export default {
         : this.textG.style("display", "none");
     },
     "viewUpdate.force": function(val) {
-      console.log("force watcher");
+      // console.log("force watcher");
       if (val) {
         this.test();
       }

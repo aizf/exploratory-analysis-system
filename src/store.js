@@ -6,6 +6,25 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    // datasets的键(key)对应<a-menu-item>的key
+    datasets: {
+      "energy": {
+        fileName: "energy.json",
+        dataType: "node-link",
+      },
+      "miserables": {
+        fileName: "miserables.json",
+        dataType: "node-link",
+      },
+      "readme": {
+        fileName: "readme.json",
+        dataType: "hierarchical",
+      },
+      "test": {
+        fileName: "test.json",
+        dataType: "hierarchical",
+      }
+    },
     sourceData: undefined,
     visualData: undefined,
     viewUpdate: {
@@ -80,6 +99,9 @@ export default new Vuex.Store({
       chart === "all" ? (charts.forEach(c => {
         state.viewUpdate[c] = true;
       })) : (state.viewUpdate[chart] = val);
+    },
+    resetOperations: (state) => {
+      state.operations = [];
     },
     addOperation: (state, data) => {
       state.operations.push(data);

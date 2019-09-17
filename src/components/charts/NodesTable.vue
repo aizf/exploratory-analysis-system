@@ -1,5 +1,5 @@
 <template>
-  <a-table :columns="columns" :dataSource="data" :scroll="{ x: 1500, y: 300 }"></a-table>
+  <a-table :columns="columns" :dataSource="data" size="small"></a-table>
 </template>
 <script>
 // import * as _ from "lodash";
@@ -19,7 +19,8 @@ export default {
     return {
       chartWidth: "960",
       chartHeight: "600",
-      dimensions: []
+      dimensions: [],
+      nodesChanged: false
     };
   },
   computed: {
@@ -67,10 +68,21 @@ export default {
         title: d,
         dataIndex: d,
         key: d,
-        width: 150
+        sorter: (a, b) => {
+          //   console.log(a, b);
+          // 该比较函数需要返回数值
+          // a[d]全为数字则相减，否则比较大小
+          return isNaN(a[d]) || isNaN(b[d])
+            ? a[d] > b[d]
+              ? 1
+              : -1
+            : a[d] - b[d];
+        }
+        // width: 150
       }));
     },
     data() {
+      this.nodesChanged = false;
       return this.nodes.map((node, i) => {
         let datum = { key: i };
         // console.log(this.dimensions);
@@ -107,30 +119,20 @@ export default {
         return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
-      this.link = this.linkG
-        .selectAll("line")
-        .data(this.linkData)
-        .join("line");
-
-      this.node = this.nodeG
-        .selectAll("circle")
-        .data(this.nodeData)
-        .join("circle")
-        .attr("r", d => {
-          let size = Math.sqrt(d.size) / 10;
-          return size > 4.5 ? size : 4.5;
-        })
-        .attr("class", "display")
-        .attr("fill", color)
-        .attr("filter", "url(#shadow)")
-        .each(d => {
-          d.attentionTimes = 0;
-          d.selected = false;
-        });
     },
     getDimensions() {
       // 获得node的属性(维度)有哪些
-      let privateArr = ["fx", "fy", "x", "y", "xx", "yy", "vx", "vy","children"];
+      let privateArr = [
+        "fx",
+        "fy",
+        "x",
+        "y",
+        "xx",
+        "yy",
+        "vx",
+        "vy",
+        "children"
+      ];
       let dSet = new Set();
       this.nodes.forEach(node => {
         dSet = new Set([...dSet, ...Object.keys(node)]);
@@ -146,6 +148,12 @@ export default {
     "viewUpdate.table": function(val) {
       if (val) {
       }
+    },
+    nodes: {
+      handler() {
+        this.nodesChanged = true;
+      },
+      deep: true
     }
   }
 };

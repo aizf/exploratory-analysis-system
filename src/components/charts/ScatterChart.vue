@@ -105,25 +105,15 @@ export default {
     },
     dimensions() {
       // 获得node的属性(维度)有哪些
-      let dSet = new Set();
-      this.node.each(d => {
-        dSet = new Set([...dSet, ...Object.keys(d)]);
-      });
-      return [...dSet].sort();
+      return this.getDimensions();
     },
     xDimensionData() {
       // 断绝了数据与节点的关联性，仅当作坐标刻度用
-      return this.node
-        .data()
-        .map(i => i[this.xDimension])
-        .sort();
+      return this.nodeData.map(i => i[this.xDimension]).sort();
     },
     yDimensionData() {
       //
-      return this.node
-        .data()
-        .map(i => i[this.yDimension])
-        .sort();
+      return this.nodeData.map(i => i[this.yDimension]).sort();
     }
   },
   mounted() {
@@ -197,7 +187,7 @@ export default {
       ? this.textG.style("display", "inline")
       : this.textG.style("display", "none");
 
-    this.test();
+    this.load(this.visualData);
 
     function zoomed() {
       if (!that.visZoom) return;
@@ -301,17 +291,14 @@ export default {
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
         .attr("cx", d => {
-          d.xx = that.xScale(d[that.xDimension]);
+          d.xx = this.xScale(d[this.xDimension]);
           return d.xx;
         })
         .attr("cy", d => {
-          d.yy = that.yScale(d[that.yDimension]);
+          d.yy = this.yScale(d[this.yDimension]);
           return d.yy;
         })
-        .each(d => {
-          d.attentionTimes = 0;
-          d.selected = false;
-        });
+        .classed("selected", d => d.selected);
       // this.node.append("title").text(d => d.id);
 
       this.text = this.textG
@@ -367,6 +354,25 @@ export default {
         theNode.dispatch(d3.event.type);
         // console.log(d3.event.type);
       }
+    },
+    getDimensions() {
+      // 获得node的属性(维度)有哪些
+      let privateArr = [
+        "fx",
+        "fy",
+        "x",
+        "y",
+        "xx",
+        "yy",
+        "vx",
+        "vy",
+        "children"
+      ];
+      let dSet = new Set();
+      this.visualData.nodes.forEach(node => {
+        dSet = new Set([...dSet, ...Object.keys(node)]);
+      });
+      return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();
     },
     brushed() {
       let transform = this.visTransform().translate(
@@ -542,10 +548,10 @@ export default {
         d.attentionTimes += 1;
         this.$store.commit("addOperation", {
           action: "mouseover",
-          nodes: displayNodes,
+          nodes: displayNodes.nodes(),
           time: new Date()
         });
-        console.log("mouseover", displayNodes);
+        console.log("mouseover", displayNodes.nodes());
       }
     },
     mouseout() {

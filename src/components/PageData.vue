@@ -17,12 +17,17 @@
         <a-sub-menu key="sub1">
           <span slot="title">
             <a-icon type="user" />
-            <span>DataSet</span>
+            <span>Dataset</span>
           </span>
           <!--  -->
-          <a-menu-item key="1" @click="loadData">miserables.json</a-menu-item>
-          <a-menu-item key="2" @click="loadData">readme.json</a-menu-item>
-          <a-menu-item key="3" @click="loadData">test(2196N,2195L)</a-menu-item>
+          <a-menu-item-group key="node-link" title="node-link">
+            <a-menu-item key="miserables" @click="loadData">miserables</a-menu-item>
+            <a-menu-item key="energy" @click="loadData">energy</a-menu-item>
+          </a-menu-item-group>
+          <a-menu-item-group key="hierarchical" title="hierarchical">
+            <a-menu-item key="readme" @click="loadData">readme</a-menu-item>
+            <a-menu-item key="test" @click="loadData">test(2196N,2195L)</a-menu-item>
+          </a-menu-item-group>
         </a-sub-menu>
 
         <a-sub-menu key="sub2">
@@ -98,33 +103,36 @@ export default {
       }
     };
   },
+  computed: {
+    datasets() {
+      return this.$store.state.datasets;
+    }
+  },
   methods: {
     loadData(event) {
       let that = this;
-      let setPath = "./static/";
-      let setName = "";
+      let dataset = this.datasets[event.key];
+      let setPath = "./static/" + dataset.fileName;
       this.tabContents = []; // 清空数据
-      this.$message.loading("Action in progress..",0.3).then(() => {
-        switch (event.key) {
-          case "1":
-            setName = "miserables.json";
-            __loadNodeLinkData();
+      this.$message.loading("Action in progress..", 0.3).then(() => {
+        __loadData(dataset.dataType)(setPath);
+      });
+
+      function __loadData(dataType) {
+        switch (dataType) {
+          case "node-link":
+            return __loadNodeLinkData;
             break;
-          case "2":
-            setName = "readme.json";
-            __loadHierarchicalData();
-            break;
-          case "3":
-            setName = "test.json";
-            __loadHierarchicalData();
+          case "hierarchical":
+            return __loadHierarchicalData;
             break;
           default:
             break;
         }
-      });
+      }
 
-      function __loadHierarchicalData() {
-        d3.json(setPath + setName)
+      function __loadHierarchicalData(setPath) {
+        d3.json(setPath)
           .then(res => {
             that.$store.commit("updateSourceData", res);
             that.$store.commit(
@@ -144,7 +152,7 @@ export default {
           });
       }
       function __loadNodeLinkData() {
-        d3.json(setPath + setName)
+        d3.json(setPath)
           .then(res => {
             that.$store.commit("updateSourceData", res);
             that.$store.commit("updateVisualData", res);
@@ -163,8 +171,10 @@ export default {
         if (event.key !== that.lastSelect) {
           console.log("change!");
           that.lastSelect = event.key;
+          // 源数据改变后更新store状态
+          that.$store.commit("resetOperations");
           that.$store.commit("updateViewUpdate", "all");
-          // console.log(that.$store.state.viewUpdate);
+
           that.$message.success("Data loaded.");
         }
       }
