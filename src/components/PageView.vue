@@ -21,7 +21,7 @@
           </span>
           <!--  -->
           <a-menu-item>
-            <a-button type="primary" block="block" :style="{ margin: '1px' }">save</a-button>
+            <a-button type="primary" block="block" @click="saveViewData" :style="{ margin: '1px' }">save</a-button>
           </a-menu-item>
           <a-menu-item>
             <a-button-group>
@@ -256,8 +256,17 @@ export default {
     recordClose() {
       this.recordVisible = false;
     },
+    saveViewData() {
+      this.$store.commit("changeSavedViewData", d => d.push(this.visualData));
+      // this.$store.commit("changeSavedViewData", d => console.log(d));
+    },
     viewSlice() {
-      this.$store.commit("updateVisualData", this.$store.state.viewSlice());
+      let slicedData = this.$store.state.viewSlice();
+      if (!slicedData.nodes.length) {
+        this.$message.error("No nodes are selected !");
+        return;
+      }
+      this.$store.commit("updateVisualData",slicedData);
       this.$store.commit("updateViewUpdate", "all");
       console.info("sliced!");
     },
@@ -273,6 +282,12 @@ export default {
     }
   },
   computed: {
+    sourceData() {
+      return this.$store.state.sourceData;
+    },
+    visualData() {
+      return this.$store.state.visualData;
+    },
     viewUpdate() {
       return this.$store.state.viewUpdate;
     },
@@ -302,6 +317,9 @@ export default {
           this.changeDisabledState();
           break;
       }
+    },
+    savedViewData() {
+      return this.$store.state.savedViewData;
     }
   }
 };

@@ -48,6 +48,7 @@ export default new Vuex.Store({
       "#91ca8c",
       "#f49f42"
     ],
+    savedViewData:[],
     viewSlice() {
       let removedNodes = [];
       let slicedNodes = this.visualData.nodes.filter(d => {
@@ -57,16 +58,16 @@ export default new Vuex.Store({
           return false;
         }
       });
-      let sliceLinks = this.visualData.links.filter(d =>
+      let slicedLinks = this.visualData.links.filter(d =>
         removedNodes.every(rd => {
           let id = rd.id ? "id" : "name";
           return rd[id] !== d.source[id] && rd[id] !== d.target[id];
         })
       );
-      // console.log("123", sliceLinks);
+      // console.log("123", slicedLinks);
       return {
         "nodes": slicedNodes,
-        "links": sliceLinks
+        "links": slicedLinks
       };
       // console.log("123", this);
     }
@@ -129,6 +130,11 @@ export default new Vuex.Store({
       state.operations.push(data);
       // let data = { chart: "", time: "", action: "", nodes: {} };
     },
+    changeSavedViewData: (state, fn) => {
+      let data = state.savedViewData;
+      // fn为自定义函数
+      return fn(data);
+    }
   },
   actions: {
 
