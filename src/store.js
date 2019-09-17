@@ -47,7 +47,29 @@ export default new Vuex.Store({
       "#7289ab",
       "#91ca8c",
       "#f49f42"
-    ]
+    ],
+    viewSlice() {
+      let removedNodes = [];
+      let slicedNodes = this.visualData.nodes.filter(d => {
+        if (d.selected) return true;
+        else {
+          removedNodes.push(d);
+          return false;
+        }
+      });
+      let sliceLinks = this.visualData.links.filter(d =>
+        removedNodes.every(rd => {
+          let id = rd.id ? "id" : "name";
+          return rd[id] !== d.source[id] && rd[id] !== d.target[id];
+        })
+      );
+      // console.log("123", sliceLinks);
+      return {
+        "nodes": slicedNodes,
+        "links": sliceLinks
+      };
+      // console.log("123", this);
+    }
   },
   getters: {
     hierarchical2nodeLink: (state) => {
@@ -83,7 +105,7 @@ export default new Vuex.Store({
       return {
         "nodes": nodes,
         "links": getLinks(nodes)
-      }
+      };
     },
 
   },

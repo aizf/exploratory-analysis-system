@@ -201,7 +201,6 @@ export default {
     this.visShowIds
       ? this.textG.style("display", "inline")
       : this.textG.style("display", "none");
-
     this.test();
 
     function zoomed() {

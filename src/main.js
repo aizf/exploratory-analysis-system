@@ -6,6 +6,7 @@ import "ant-design-vue/dist/antd.css";
 import {
   Button,
   Col,
+  Drawer,
   Icon,
   Input,
   InputNumber,
@@ -28,6 +29,7 @@ Vue.prototype.$message = message;
 // Vue.use(Antd);
 Vue.use(Button);
 Vue.use(Col);
+Vue.use(Drawer);
 Vue.use(Icon);
 Vue.use(Input);
 Vue.use(InputNumber);

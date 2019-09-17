@@ -23,6 +23,12 @@
           <a-menu-item>
             <a-button type="primary" block="block" :style="{ margin: '1px' }">save</a-button>
           </a-menu-item>
+          <a-menu-item>
+            <a-button-group>
+              <a-button>back</a-button>
+              <a-button type="primary" @click="viewSlice" :style="{ width: '78px' }">slice</a-button>
+            </a-button-group>
+          </a-menu-item>
           <a-menu-item-group key="g1" title="single point">
             <a-menu-item @click="onVisClick" :disabled="clickDisabled">
               <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" :mouseEnterDelay="0.4">
@@ -91,12 +97,15 @@
             <span>display</span>
           </span>
           <a-menu-item key="showIdsDisabled" @click="onVisShowIds" :disabled="showIdsDisabled">
-            <span>visShowIds</span>
+            <a-icon type="tags" />
+            <span>showIds</span>
             <span :style="{display:'block',float:'right'}" @click.stop>
               <a-switch v-model="visShowIds" :disabled="showIdsDisabled" />
             </span>
           </a-menu-item>
-          <a-menu-item key="record">record</a-menu-item>
+          <a-menu-item key="record" @click="recordOpen">
+            <a-icon type="database" />record
+          </a-menu-item>
           <a-menu-item key="5">DataFlow</a-menu-item>
           <a-menu-item key="6">OprationFlow</a-menu-item>
         </a-sub-menu>
@@ -106,9 +115,15 @@
             <a-icon type="notification" />
             <span>change chart</span>
           </span>
-          <a-menu-item key="force" @click="changeChart"><a-icon type="deployment-unit" />force</a-menu-item>
-          <a-menu-item key="scatter" @click="changeChart"><a-icon type="dot-chart" />scatter</a-menu-item>
-          <a-menu-item key="table" @click="changeChart"><a-icon type="table" />table</a-menu-item>
+          <a-menu-item key="force" @click="changeChart">
+            <a-icon type="deployment-unit" />force
+          </a-menu-item>
+          <a-menu-item key="scatter" @click="changeChart">
+            <a-icon type="dot-chart" />scatter
+          </a-menu-item>
+          <a-menu-item key="table" @click="changeChart">
+            <a-icon type="table" />table
+          </a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
@@ -130,6 +145,17 @@
         </keep-alive>
       </a-layout-content>
     </a-layout>
+    <a-drawer
+      title="record"
+      placement="right"
+      :closable="false"
+      @close="recordClose"
+      :visible="recordVisible"
+    >
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </a-drawer>
   </a-layout>
 </template>
 <script>
@@ -155,6 +181,7 @@ export default {
       visInvertBrush: false,
       visZoom: true,
       visShowIds: false,
+      recordVisible: false,
       // switch disabled
       clickDisabled: false,
       dragDisabled: false,
@@ -222,6 +249,17 @@ export default {
       this.invertBrushDisabled = invertBrush;
       this.zoomDisabled = zoom;
       this.showIdsDisabled = showIds;
+    },
+    recordOpen() {
+      this.recordVisible = true;
+    },
+    recordClose() {
+      this.recordVisible = false;
+    },
+    viewSlice() {
+      this.$store.commit("updateVisualData", this.$store.state.viewSlice());
+      this.$store.commit("updateViewUpdate", "all");
+      console.info("sliced!");
     },
     test(event, i, a) {
       console.log(event);
