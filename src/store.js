@@ -32,7 +32,8 @@ export default new Vuex.Store({
       scatter: false,
       table: false
     },
-    operations: [], // operation={action:["click","brush","drag","mouseover","invertBrush","zoom"],nodes:[]}
+    operations: [], // operation={action:,nodes:,time:}
+    operationTypes: ["slice", "sliceUndo", "click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
     backgroundColor: "#333",
     contrastColor: "#eee",
     colorPalette: [
@@ -48,7 +49,9 @@ export default new Vuex.Store({
       "#91ca8c",
       "#f49f42"
     ],
-    savedViewData:[],
+    savedViewData: [], // undo存储栈
+    undoStack: [], // index: 0,1,2,3,4
+    redoStack: [], // index: 5,6,7,...
     viewSlice() {
       let removedNodes = [];
       let slicedNodes = this.visualData.nodes.filter(d => {
@@ -131,9 +134,10 @@ export default new Vuex.Store({
       // let data = { chart: "", time: "", action: "", nodes: {} };
     },
     changeSavedViewData: (state, fn) => {
-      let data = state.savedViewData;
+      let undo = state.undoStack;
+      let redo = state.redoStack;
       // fn为自定义函数
-      return fn(data);
+      fn(undo, redo);
     }
   },
   actions: {

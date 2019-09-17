@@ -5,6 +5,7 @@ import App from './App.vue'
 import "ant-design-vue/dist/antd.css";
 import {
   Button,
+  Card,
   Col,
   Drawer,
   Icon,
@@ -28,6 +29,7 @@ Vue.prototype.$message = message;
 
 // Vue.use(Antd);
 Vue.use(Button);
+Vue.use(Card);
 Vue.use(Col);
 Vue.use(Drawer);
 Vue.use(Icon);

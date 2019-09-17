@@ -21,13 +21,27 @@
           </span>
           <!--  -->
           <a-menu-item>
-            <a-button type="primary" block="block" @click="saveViewData" :style="{ margin: '1px' }">save</a-button>
+            <a-button
+              type="primary"
+              block="block"
+              @click="saveViewData"
+              :style="{ margin: '1px' }"
+            >save</a-button>
           </a-menu-item>
           <a-menu-item>
-            <a-button-group>
-              <a-button>back</a-button>
-              <a-button type="primary" @click="viewSlice" :style="{ width: '78px' }">slice</a-button>
-            </a-button-group>
+            <a-button
+              @click="sliceUndo"
+              shape="circle"
+              :disabled="sliceUndoDisabled"
+              :style="{ paddingLeft: '8px' }"
+            >
+              <a-icon type="undo" />
+            </a-button>
+            <a-button
+              type="primary"
+              @click="viewSlice"
+              :style="{ marginLeft:'5px',width: '100px' }"
+            >slice</a-button>
           </a-menu-item>
           <a-menu-item-group key="g1" title="single point">
             <a-menu-item @click="onVisClick" :disabled="clickDisabled">
@@ -152,9 +166,7 @@
       @close="recordClose"
       :visible="recordVisible"
     >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+      <RecordDrawer />
     </a-drawer>
   </a-layout>
 </template>
@@ -162,12 +174,14 @@
 import ForceChart from "./charts/ForceChart.vue";
 import ScatterChart from "./charts/ScatterChart.vue";
 import NodesTable from "./charts/NodesTable.vue";
+import RecordDrawer from "./RecordDrawer.vue";
 export default {
   name: "PageView",
   components: {
     ForceChart,
     ScatterChart,
-    NodesTable
+    NodesTable,
+    RecordDrawer
   },
   data() {
     return {
@@ -190,6 +204,7 @@ export default {
       invertBrushDisabled: false,
       zoomDisabled: false,
       showIdsDisabled: false,
+      sliceUndoList: [],
 
       currentChartKey: "force"
     };
@@ -257,8 +272,22 @@ export default {
       this.recordVisible = false;
     },
     saveViewData() {
-      this.$store.commit("changeSavedViewData", d => d.push(this.visualData));
+      this.$store.commit("changeSavedViewData", undo => {
+        undo.push(this.visualData);
+      });
       // this.$store.commit("changeSavedViewData", d => console.log(d));
+    },
+    viewBack() {
+      this.$store.commit("changeSavedViewData", (undo, redo) => {
+        if (!undo.length) {
+          return;
+        }
+        let data = undo.pop();
+        redo.unshift(data);
+        this.$store.commit("updateVisualData", data);
+        this.$store.commit("updateViewUpdate", "all");
+        console.info("backed!");
+      });
     },
     viewSlice() {
       let slicedData = this.$store.state.viewSlice();
@@ -266,9 +295,29 @@ export default {
         this.$message.error("No nodes are selected !");
         return;
       }
-      this.$store.commit("updateVisualData",slicedData);
+      this.sliceUndoList.push(this.visualData);
+      this.$store.commit("updateVisualData", slicedData);
       this.$store.commit("updateViewUpdate", "all");
-      console.info("sliced!");
+      this.$store.commit("addOperation", {
+        action: "slice",
+        nodes: slicedData,
+        time: new Date()
+      });
+      console.log("slice", slicedData);
+    },
+    sliceUndo() {
+      if (this.sliceUndoDisabled) {
+        return;
+      }
+      let data = this.sliceUndoList.pop();
+      this.$store.commit("updateVisualData", data);
+      this.$store.commit("updateViewUpdate", "all");
+      this.$store.commit("addOperation", {
+        action: "sliceUndo",
+        nodes: data,
+        time: new Date()
+      });
+      console.log("sliceUndo", data);
     },
     test(event, i, a) {
       console.log(event);
@@ -318,8 +367,17 @@ export default {
           break;
       }
     },
+    undoStack() {
+      return this.$store.state.undoStack;
+    },
+    redoStack() {
+      return this.$store.state.redoStack;
+    },
     savedViewData() {
-      return this.$store.state.savedViewData;
+      return [...this.undoStack, ...redoStack];
+    },
+    sliceUndoDisabled() {
+      return !this.sliceUndoList.length;
     }
   }
 };

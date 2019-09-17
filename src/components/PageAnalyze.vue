@@ -44,7 +44,7 @@ export default {
       },
       action: {
         type: "cat", // 指定 cat 分类类型
-        values: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"] // 重新指定 c 属性每一个的值
+        values: this.$store.state.operationTypes // 重新指定 c 属性每一个的值
       }
     };
     this.chart.source(this.operations, defs);
