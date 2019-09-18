@@ -82,8 +82,6 @@ export default {
       node: d3.selectAll(),
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
-      linkData: [],
-      nodeData: [],
       vis: d3.selectAll(),
       simulation: {},
       brushG: d3.selectAll(),
@@ -108,6 +106,12 @@ export default {
     visualData() {
       return this.$store.state.visualData;
     },
+    nodes() {
+      return this.$store.getters.nodes;
+    },
+    links() {
+      return this.$store.getters.links;
+    },
     backgroundColor() {
       return this.$store.state.backgroundColor;
     },
@@ -115,8 +119,7 @@ export default {
       return this.$store.state.colorPalette;
     },
     nodesNumber() {
-      // 节点的数量
-      return this.node.size();
+      return this.$store.getters.nodesNumber;
     },
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -161,7 +164,7 @@ export default {
 
     this.simulation = d3
       .forceSimulation()
-      .force("link", d3.forceLink().id(d => d.id||d.name))
+      .force("link", d3.forceLink().id(d => d.id || d.name))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2));
     // console.log();
@@ -201,7 +204,7 @@ export default {
     this.visShowIds
       ? this.textG.style("display", "inline")
       : this.textG.style("display", "none");
-    this.test();
+    this.update();
 
     function zoomed() {
       if (!that.visZoom) return;
@@ -243,25 +246,19 @@ export default {
   },
 
   methods: {
-    load(obj) {
-      // 加载数据,后期拓展
-      this.nodeData = obj.nodes;
-      this.linkData = obj.links;
-    },
     update() {
       // 更新数据
       let color = d => {
         return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
-      // this.load(nodeData, linkData);
       this.link = this.linkG
         .selectAll("line")
-        .data(this.linkData)
+        .data(this.links)
         .join("line");
 
       this.node = this.nodeG
         .selectAll("circle")
-        .data(this.nodeData)
+        .data(this.nodes)
         .join("circle")
         .attr("r", d => {
           let size = Math.sqrt(d.size) / 10;
@@ -278,7 +275,7 @@ export default {
 
       this.text = this.textG
         .selectAll("text")
-        .data(this.node.data())
+        .data(this.nodes)
         .join("text")
         .attr("text-anchor", "middle")
         .attr("font-family", "Avenir")
@@ -294,10 +291,10 @@ export default {
       // console.log(this.node);
       // console.log(this.simulation.nodes());
       this.simulation
-        .nodes(this.node.data())
+        .nodes(this.nodes)
         .on("tick", this.ticked)
         .on("end", this.tickEnd);
-      this.simulation.force("link").links(this.link.data());
+      this.simulation.force("link").links(this.links);
       // console.log("after simulation");
       // console.log(this.node);
       // console.log(this.simulation.nodes());
@@ -308,13 +305,12 @@ export default {
     },
     bindEvents() {
       // 更新后绑定事件
-      this.node.call(
-        d3
-          .drag()
-          .on("start", this.dragstarted)
-          .on("drag", this.dragged)
-          .on("end", this.dragended)
-      );
+      let nodeDrag = d3
+        .drag()
+        .on("start", this.dragstarted)
+        .on("drag", this.dragged)
+        .on("end", this.dragended);
+      this.node.call(nodeDrag);
       this.node.on("click", this.clickSelect);
       this.node.on("mouseover", this.mouseover);
       this.node.on("mouseout", this.mouseout);
@@ -447,7 +443,8 @@ export default {
       d.fy = null;
       if (this.isDraging) {
         d.attentionTimes += 1;
-        let t = d3.select(p[i]);
+        // drag <text>时，通过以下返回node
+        let t = this.node.filter(dd => dd.index === d.index);
         this.$store.commit("addOperation", {
           action: "drag",
           nodes: t.nodes(),
@@ -483,10 +480,10 @@ export default {
       // let opacityNodes = null;
       let displayLinks = null;
       // let opacityLinks = null;
-      if(!(d.id || d.name)){
+      if (!(d.id || d.name)) {
         throw new Error(`object do not has "id" or "name"`);
       }
-      let id =  d.id ? "id" : "name";
+      let id = d.id ? "id" : "name";
       let thisId = d[id];
       // console.log(thisId);
       this.opacityLinks = this.link.filter(d => {
@@ -585,10 +582,7 @@ export default {
     visTransform() {
       return d3.zoomTransform(this.vis.node());
     },
-    test() {
-      this.load(this.visualData);
-      this.update();
-    }
+    test() {}
   },
   watch: {
     visBrush: function(val) {
@@ -609,7 +603,7 @@ export default {
     "viewUpdate.force": function(val) {
       // console.log("force watcher");
       if (val) {
-        this.test();
+        this.update();
       }
     }
   }
@@ -618,7 +612,8 @@ export default {
 <style>
 .ForceChart line {
   stroke: #aaa;
-  /*fill-opacity: 0.9;*/
+  stroke-opacity: 0.8;
+  stroke-width: 0.3;
 }
 
 .ForceChart circle {
@@ -648,12 +643,5 @@ export default {
 .ForceChart circle.invertBrushing {
   stroke: none;
   stroke-width: 0px;
-}
-
-.ForceChart circle.saved {
-  display: none;
-}
-
-.ForceChart circle.thumb {
 }
 </style>

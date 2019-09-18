@@ -11,6 +11,8 @@
         mode="inline"
         :defaultSelectedKeys="['1']"
         :defaultOpenKeys="['sub1']"
+        :openKeys="openKeys"
+        @openChange="onOpenChange"
         :style="{ height: '100%', borderRight: 0 }"
         :inlineIndent="24"
       >
@@ -105,7 +107,7 @@
           </a-menu-item-group>
         </a-sub-menu>
 
-        <a-sub-menu key="display">
+        <a-sub-menu key="sub2">
           <span slot="title">
             <a-icon type="laptop" />
             <span>display</span>
@@ -126,7 +128,7 @@
 
         <a-sub-menu key="sub3">
           <span slot="title">
-            <a-icon type="notification" />
+            <a-icon type="area-chart" />
             <span>change chart</span>
           </span>
           <a-menu-item key="force" @click="changeChart">
@@ -171,10 +173,10 @@
   </a-layout>
 </template>
 <script>
-import ForceChart from "./charts/ForceChart.vue";
-import ScatterChart from "./charts/ScatterChart.vue";
-import NodesTable from "./charts/NodesTable.vue";
-import RecordDrawer from "./RecordDrawer.vue";
+import ForceChart from "./pageView/ForceChart.vue";
+import ScatterChart from "./pageView/ScatterChart.vue";
+import NodesTable from "./pageView/NodesTable.vue";
+import RecordDrawer from "./pageView/RecordDrawer.vue";
 export default {
   name: "PageView",
   components: {
@@ -187,6 +189,8 @@ export default {
     return {
       // interface
       collapsed: false, // 侧边栏
+      rootSubmenuKeys: ["sub1", "sub2", "sub3"],
+      openKeys: ["sub1"],
       // view
       visClick: false,
       visDrag: true,
@@ -244,6 +248,17 @@ export default {
     },
     onVisShowIds() {
       this.visShowIds = !this.visShowIds;
+    },
+    onOpenChange(openKeys) {
+      // 点击菜单，收起其他展开的所有菜单，保持菜单聚焦简洁
+      const latestOpenKey = openKeys.find(
+        key => this.openKeys.indexOf(key) === -1
+      );
+      if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+        this.openKeys = openKeys;
+      } else {
+        this.openKeys = latestOpenKey ? [latestOpenKey] : [];
+      }
     },
     changeChart(option) {
       this.currentChartKey = option.key;

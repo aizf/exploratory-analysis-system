@@ -52,6 +52,8 @@ export default new Vuex.Store({
     savedViewData: [], // undo存储栈
     undoStack: [], // index: 0,1,2,3,4
     redoStack: [], // index: 5,6,7,...
+
+    // 依赖对象属性，不用getter
     viewSlice() {
       let removedNodes = [];
       let slicedNodes = this.visualData.nodes.filter(d => {
@@ -73,9 +75,40 @@ export default new Vuex.Store({
         "links": slicedLinks
       };
       // console.log("123", this);
-    }
+    },
+    getDimensions() {
+      // 获得node的属性(维度)有哪些
+      let privateArr = [
+        "fx",
+        "fy",
+        "x",
+        "y",
+        "xx",
+        "yy",
+        "vx",
+        "vy",
+        "children"
+      ];
+      let dSet = new Set();
+      this.visualData.nodes.forEach(node => {
+        dSet = new Set([...dSet, ...Object.keys(node)]);
+      });
+      return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();
+    },
   },
   getters: {
+    nodes: (state) => {
+      return state.visualData.nodes;
+    },
+    links: (state) => {
+      return state.visualData.links;
+    },
+    nodesNumber: (state) => {
+      return state.visualData.nodes.length;
+    },
+    linksNumber: (state) => {
+      return state.visualData.links.length;
+    },
     hierarchical2nodeLink: (state) => {
       if (!state.sourceData) return;
 

@@ -50,10 +50,11 @@ ant 时间轴+表格（nodes）
 克里化，先选类型再有属性
 各个属性在store中存储，如node-link，层级，nodes，links等，再大分类(关系型，非关系型)
 
-怎么在store中存储公共函数(model)
+公共属性=>store
 
 饼图，各种操作的比例，等
 
 迷你图
 
-截取 记录=> 回退
+Done    怎么在store中存储公共函数(model)
+Done    截取 记录=> 回退

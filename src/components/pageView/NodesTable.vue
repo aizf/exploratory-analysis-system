@@ -31,10 +31,10 @@ export default {
       return this.$store.state.visualData;
     },
     nodes() {
-      return this.visualData.nodes;
+      return this.$store.getters.nodes;
     },
     links() {
-      return this.visualData.links;
+      return this.$store.getters.links;
     },
     backgroundColor() {
       return this.$store.state.backgroundColor;
@@ -43,8 +43,7 @@ export default {
       return this.$store.state.colorPalette;
     },
     nodesNumber() {
-      // 节点的数量
-      //   return this.node.size();
+      return this.$store.getters.nodesNumber;
     },
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -108,11 +107,6 @@ export default {
   deactivated() {},
 
   methods: {
-    load(obj) {
-      // 加载数据,后期拓展
-      this.nodeData = obj.nodes;
-      this.linkData = obj.links;
-    },
     update() {
       // 更新数据
       let color = d => {
@@ -121,26 +115,9 @@ export default {
       // this.load(nodeData, linkData);
     },
     getDimensions() {
-      // 获得node的属性(维度)有哪些
-      let privateArr = [
-        "fx",
-        "fy",
-        "x",
-        "y",
-        "xx",
-        "yy",
-        "vx",
-        "vy",
-        "children"
-      ];
-      let dSet = new Set();
-      this.nodes.forEach(node => {
-        dSet = new Set([...dSet, ...Object.keys(node)]);
-      });
-      return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();
+      return this.$store.state.getDimensions();
     },
     test() {
-      this.load(this.visualData);
       this.update();
     }
   },

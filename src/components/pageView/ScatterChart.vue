@@ -66,8 +66,6 @@ export default {
       yDimension: "",
       node: d3.selectAll(),
       nodeG: d3.selectAll(),
-      linkData: [],
-      nodeData: [],
       vis: d3.selectAll(),
       xAxis: d3.selectAll(),
       yAxis: d3.selectAll(),
@@ -93,6 +91,12 @@ export default {
     visualData() {
       return this.$store.state.visualData;
     },
+    nodes() {
+      return this.$store.getters.nodes;
+    },
+    links() {
+      return this.$store.getters.links;
+    },
     backgroundColor() {
       return this.$store.state.backgroundColor;
     },
@@ -101,19 +105,31 @@ export default {
     },
     nodesNumber() {
       // 节点的数量
-      return this.node.size();
+      return this.$store.getters.nodesNumber;
     },
     dimensions() {
       // 获得node的属性(维度)有哪些
-      return this.getDimensions();
+      return this.$store.state.getDimensions();
     },
     xDimensionData() {
       // 断绝了数据与节点的关联性，仅当作坐标刻度用
-      return this.nodeData.map(i => i[this.xDimension]).sort();
+      return this.nodes
+        .map(i => i[this.xDimension])
+        .sort((a, b) => {
+          // 该比较函数需要返回数值
+          // a全为数字则相减，否则比较大小
+          return isNaN(a) || isNaN(b) ? (a > b ? 1 : -1) : a - b;
+        });
     },
     yDimensionData() {
       //
-      return this.nodeData.map(i => i[this.yDimension]).sort();
+      return this.nodes
+        .map(i => i[this.yDimension])
+        .sort((a, b) => {
+          // 该比较函数需要返回数值
+          // a全为数字则相减，否则比较大小
+          return isNaN(a) || isNaN(b) ? (a > b ? 1 : -1) : a - b;
+        });
     }
   },
   mounted() {
@@ -187,8 +203,6 @@ export default {
       ? this.textG.style("display", "inline")
       : this.textG.style("display", "none");
 
-    this.load(this.visualData);
-
     function zoomed() {
       if (!that.visZoom) return;
       let transform = d3.event.transform.translate(
@@ -226,29 +240,16 @@ export default {
   },
 
   activated() {
-    this.node.classed("selected", d => d.selected);
-    this.node
-      .each(d => {
-        d.xx = this.xScale(d[this.xDimension]);
-      })
-      .each(d => {
-        d.yy = this.yScale(d[this.yDimension]);
-      });
+    this.update();
   },
 
   methods: {
-    load(obj) {
-      // 加载数据,后期拓展
-      this.nodeData = obj.nodes;
-      this.linkData = obj.links;
-    },
     update() {
       // 更新数据
       let that = this;
       let color = d => {
         return !!d.group ? this.colorPalette[d.group] : this.colorPalette[8];
       };
-      // this.load(nodeData, linkData);
       let xTicksNum = this.xDimensionData.length || 0;
       this.xScale = d3
         .scaleOrdinal()
@@ -268,21 +269,19 @@ export default {
         .domain(this.yDimensionData)
         .range(
           // ticks
-          d3.range(yTicksNum).map(function(d) {
-            return (d * +that.chartHeight) / yTicksNum;
-          })
+          d3.range(yTicksNum).map(d => (d * +this.chartHeight) / yTicksNum)
         );
       // let yAxisCreator = g => g.call(d3.axisLeft(y));
       this.yAxis.call(d3.axisLeft(this.yScale));
 
       this.link = this.linkG
         .selectAll("line")
-        .data(this.linkData)
+        .data(this.links)
         .join("line");
 
       this.node = this.nodeG
         .selectAll("circle")
-        .data(this.nodeData)
+        .data(this.nodes)
         .join("circle")
         .attr("r", d => {
           return Math.sqrt(d.size) / 10 || 4.5;
@@ -354,25 +353,6 @@ export default {
         theNode.dispatch(d3.event.type);
         // console.log(d3.event.type);
       }
-    },
-    getDimensions() {
-      // 获得node的属性(维度)有哪些
-      let privateArr = [
-        "fx",
-        "fy",
-        "x",
-        "y",
-        "xx",
-        "yy",
-        "vx",
-        "vy",
-        "children"
-      ];
-      let dSet = new Set();
-      this.visualData.nodes.forEach(node => {
-        dSet = new Set([...dSet, ...Object.keys(node)]);
-      });
-      return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();
     },
     brushed() {
       let transform = this.visTransform().translate(
@@ -599,7 +579,6 @@ export default {
       // console.log(this.yDimensionData);
     },
     test() {
-      this.load(this.visualData);
       this.update();
     }
   },
