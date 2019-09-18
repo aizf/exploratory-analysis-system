@@ -49,7 +49,7 @@ export default new Vuex.Store({
       "#91ca8c",
       "#f49f42"
     ],
-    savedViewData: [], // undo存储栈
+    // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
     undoStack: [], // index: 0,1,2,3,4
     redoStack: [], // index: 5,6,7,...
 
@@ -108,6 +108,9 @@ export default new Vuex.Store({
     },
     linksNumber: (state) => {
       return state.visualData.links.length;
+    },
+    savedViewData: (state) => {
+      return [...state.undoStack, ...state.redoStack];
     },
     hierarchical2nodeLink: (state) => {
       if (!state.sourceData) return;

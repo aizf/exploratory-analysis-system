@@ -27,6 +27,7 @@
               type="primary"
               block="block"
               @click="saveViewData"
+              :disabled="saveDisabled"
               :style="{ margin: '1px' }"
             >save</a-button>
           </a-menu-item>
@@ -148,6 +149,7 @@
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
         <keep-alive>
           <component
+            ref="theView"
             :is="currentChart"
             :visClick="visClick"
             :visBrush="visBrush"
@@ -202,6 +204,7 @@ export default {
       visShowIds: false,
       recordVisible: false,
       // switch disabled
+      saveDisabled: false,
       clickDisabled: false,
       dragDisabled: false,
       mouseoverDisabled: false,
@@ -264,7 +267,10 @@ export default {
     changeChart(option) {
       this.currentChartKey = option.key;
     },
+    // 改变开关的禁用状态
     changeDisabledState({
+      // true !!!!!
+      save = true,
       click = false,
       drag = false,
       mouseover = false,
@@ -273,6 +279,7 @@ export default {
       zoom = false,
       showIds = false
     } = {}) {
+      this.saveDisabled = save;
       this.clickDisabled = click;
       this.dragDisabled = drag;
       this.mouseoverDisabled = mouseover;
@@ -281,15 +288,18 @@ export default {
       this.zoomDisabled = zoom;
       this.showIdsDisabled = showIds;
     },
+    // 开关record的drawer
     recordOpen() {
       this.recordVisible = true;
     },
     recordClose() {
       this.recordVisible = false;
     },
+    // save相关
     saveViewData() {
+      let saveThing = { data: this.visualData, dom: this.$refs.theView.vis.node().cloneNode(true) };
       this.$store.commit("changeSavedViewData", undo => {
-        undo.push(this.visualData);
+        undo.push(saveThing);
       });
       // this.$store.commit("changeSavedViewData", d => console.log(d));
     },
@@ -305,6 +315,7 @@ export default {
         console.info("backed!");
       });
     },
+    // 切片和切片回退
     viewSlice() {
       let slicedData = this.$store.state.viewSlice();
       if (!slicedData.nodes.length) {
@@ -335,6 +346,7 @@ export default {
       });
       console.log("sliceUndo", data);
     },
+    // test
     test(event, i, a) {
       console.log(event);
       console.log(this.$listeners);
@@ -363,7 +375,7 @@ export default {
           return "ScatterChart";
           break;
         case "force":
-          this.changeDisabledState();
+          this.changeDisabledState({ save: false });
           return "ForceChart";
           break;
         case "table":
@@ -390,7 +402,7 @@ export default {
       return this.$store.state.redoStack;
     },
     savedViewData() {
-      return [...this.undoStack, ...redoStack];
+      return this.$store.getters.savedViewData;
     },
     sliceUndoDisabled() {
       return !this.sliceUndoList.length;
