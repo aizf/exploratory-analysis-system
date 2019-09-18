@@ -22,6 +22,7 @@ export default {
 <style>
 .record .ant-card-grid {
   width: 100%;
+  height: 400px;
 }
 </style>
 <style>

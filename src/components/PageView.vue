@@ -164,6 +164,7 @@
     <a-drawer
       title="record"
       placement="right"
+      :width="720"
       :closable="false"
       @close="recordClose"
       :visible="recordVisible"
