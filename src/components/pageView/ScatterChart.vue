@@ -71,17 +71,19 @@ export default {
       yAxis: d3.selectAll(),
       xScale: {},
       yScale: {},
+      brush: {},
+      invertBrush: {},
       brushG: d3.selectAll(),
+      invertBrushG: d3.selectAll(),
+      brushedNodes: d3.selectAll(),
+      invertBrushedNodes: d3.selectAll(),
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
       text: d3.selectAll(),
       textG: d3.selectAll(),
       isDraging: false, // 区分click和drag等
-      mousePoint: [], // 相对于原始坐标系
-      // isBrushing:false,
-      brushedNodes: d3.selectAll(),
-      invertBrushedNodes: d3.selectAll()
+      mousePoint: [] // 相对于原始坐标系
     };
   },
   computed: {
@@ -168,28 +170,28 @@ export default {
     this.yAxis = this.vis.append("g");
 
     // brush
-    let brush = d3
+    this.brush = d3
       .brush()
       .extent([[0, 0], [+this.chartWidth, +this.chartHeight]])
       .on("start brush", this.brushed)
       .on("end", this.brushEnd);
     this.brushG = svg
       .append("g")
-      .call(brush)
+      .call(this.brush)
       .attr("class", "brush");
     // console.log(this.brushG);
     this.visBrush
       ? this.brushG.style("display", "inline")
       : this.brushG.style("display", "none");
     // invertBrush
-    let invertBrush = d3
+    this.invertBrush = d3
       .brush()
       .extent([[0, 0], [+this.chartWidth, +this.chartHeight]])
       .on("start brush", this.brushed)
       .on("end", this.invertBrushEnd);
     this.invertBrushG = svg
       .append("g")
-      .call(invertBrush)
+      .call(this.invertBrush)
       .attr("class", "invertBrush");
     this.visInvertBrush
       ? this.invertBrushG.style("display", "inline")
@@ -355,6 +357,7 @@ export default {
       }
     },
     brushed() {
+      if (d3.event.selection === null) return;
       let transform = this.visTransform().translate(
         this.axisMargin,
         this.axisMargin
@@ -379,6 +382,7 @@ export default {
       });
     },
     brushEnd() {
+      if (d3.event.selection === null) return;
       this.brushedNodes = this.nodeG.selectAll(".brushing");
       // console.log(this.brushedNodes);
       this.brushedNodes
@@ -585,12 +589,14 @@ export default {
   watch: {
     visBrush: function(val) {
       val
-        ? this.brushG.style("display", "inline")
+        ? (this.brushG.style("display", "inline"),
+          this.brush.clear(this.brushG))
         : this.brushG.style("display", "none");
     },
     visInvertBrush: function(val) {
       val
-        ? this.invertBrushG.style("display", "inline")
+        ? (this.invertBrushG.style("display", "inline"),
+          this.invertBrush.clear(this.invertBrushG))
         : this.invertBrushG.style("display", "none");
     },
     visShowIds: function(val) {

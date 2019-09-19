@@ -84,7 +84,12 @@ export default {
       nodeG: d3.selectAll(),
       vis: d3.selectAll(),
       simulation: {},
+      brush: {},
+      invertBrush: {},
       brushG: d3.selectAll(),
+      invertBrushG: d3.selectAll(),
+      brushedNodes: d3.selectAll(),
+      invertBrushedNodes: d3.selectAll(),
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
@@ -93,10 +98,7 @@ export default {
       linkStrength: 1,
       linkLength: 0,
       isDraging: false, // 区分click和drag等
-      mousePoint: [], // 相对于原始坐标系
-      // isBrushing:false,
-      brushedNodes: d3.selectAll(),
-      invertBrushedNodes: d3.selectAll()
+      mousePoint: [] // 相对于原始坐标系
     };
   },
   computed: {
@@ -170,28 +172,28 @@ export default {
     // console.log();
 
     // brush
-    let brush = d3
+    this.brush = d3
       .brush()
       .extent([[0, 0], [width, height]])
       .on("start brush", this.brushed)
       .on("end", this.brushEnd);
     this.brushG = svg
       .append("g")
-      .call(brush)
+      .call(this.brush)
       .attr("class", "brush");
     // console.log(this.brushG);
     this.visBrush
       ? this.brushG.style("display", "inline")
       : this.brushG.style("display", "none");
     // invertBrush
-    let invertBrush = d3
+    this.invertBrush = d3
       .brush()
       .extent([[0, 0], [width, height]])
       .on("start brush", this.brushed)
       .on("end", this.invertBrushEnd);
     this.invertBrushG = svg
       .append("g")
-      .call(invertBrush)
+      .call(this.invertBrush)
       .attr("class", "invertBrush");
     this.visInvertBrush
       ? this.invertBrushG.style("display", "inline")
@@ -361,8 +363,10 @@ export default {
       }
     },
     brushed() {
-      let transform = this.visTransform();
+      // console.log(d3.event);
+      if (d3.event.selection === null) return;
       let extent = d3.event.selection; // brush的一个事件
+      let transform = this.visTransform();
       let extentStart = transform.invert(extent[0]); // brush的开始坐标
       let extentEnd = transform.invert(extent[1]); // brush的结束坐标
       // console.log(transform);
@@ -383,6 +387,7 @@ export default {
       });
     },
     brushEnd() {
+      if (d3.event.selection === null) return;
       this.brushedNodes = this.nodeG.selectAll(".brushing");
       // console.log(this.brushedNodes);
       this.brushedNodes
@@ -402,6 +407,7 @@ export default {
       console.log("brush", this.brushedNodes.nodes());
     },
     invertBrushEnd() {
+      if (d3.event.selection === null) return;
       this.invertBrushedNodes = this.nodeG.selectAll(".invertBrushing");
       this.invertBrushedNodes
         .classed("invertBrushing", false)
@@ -588,12 +594,14 @@ export default {
   watch: {
     visBrush: function(val) {
       val
-        ? this.brushG.style("display", "inline")
+        ? (this.brushG.style("display", "inline"),
+          this.brush.clear(this.brushG))
         : this.brushG.style("display", "none");
     },
     visInvertBrush: function(val) {
       val
-        ? this.invertBrushG.style("display", "inline")
+        ? (this.invertBrushG.style("display", "inline"),
+          this.invertBrush.clear(this.invertBrushG))
         : this.invertBrushG.style("display", "none");
     },
     visShowIds: function(val) {
