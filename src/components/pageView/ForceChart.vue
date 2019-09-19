@@ -1,13 +1,13 @@
 <template>
   <div
     class="ForceChart"
-    :style="{margin:'5px',height:+this.chartHeight+5+'px',width:+this.chartWidth+5+2*100+'px'}"
+    :style="{margin:'5px',height:+chartHeight+5+'px',width:+chartWidth+5+2*100+'px'}"
   >
     <div style="float:left;">
       <svg
-        :width="this.chartWidth"
-        :height="this.chartHeight"
-        :style="{border:'1px solid #305dff',background:this.backgroundColor}"
+        :width="chartWidth"
+        :height="chartHeight"
+        :style="{border:'1px solid #305dff',background:backgroundColor}"
       >
         <defs>
           <filter id="shadow">
@@ -267,10 +267,11 @@ export default {
         .attr("class", "display")
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
-        .each(d => {
-          d.attentionTimes = 0;
-          d.selected = false;
-        });
+        .classed("selected", d => d.selected);
+      // .each(d => {
+      //   d.attentionTimes = 0;
+      //   d.selected = false;
+      // });
       // this.node.append("title").text(d => d.id);
 
       this.text = this.textG

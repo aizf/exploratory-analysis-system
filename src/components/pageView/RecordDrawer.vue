@@ -1,14 +1,19 @@
 <template>
-<div class="RecordDrawer">
-  <a-card title="Card Title" class="record">
-    <a-card-grid v-for="(item, index) in savedViewData" :key="index">
-      <svg :width="width"
-        :height="height"
-        v-html="formatViewDom(item.dom)"
-        :style="{background:backgroundColor}">
-    </svg>
-    </a-card-grid>
-  </a-card>
+  <div class="RecordDrawer">
+    <a-card title="Card Title" class="record">
+      <a-card-grid
+        v-for="(item, index) in savedViewData"
+        :key="index"
+        @click="rollback(item.data,item.dom,item.selectedIds)"
+      >
+        <svg
+          :width="width"
+          :height="height"
+          v-html="formatViewDom(item.dom)"
+          :style="{background:backgroundColor}"
+        />
+      </a-card-grid>
+    </a-card>
   </div>
 </template>
 <script>
@@ -18,12 +23,12 @@ export default {
   name: "RecordDrawer",
   data() {
     return {
-      width:606,
-      height:352
+      width: 606,
+      height: 352
     };
   },
   computed: {
-        backgroundColor() {
+    backgroundColor() {
       return this.$store.state.backgroundColor;
     },
     savedViewData() {
@@ -32,12 +37,36 @@ export default {
   },
   methods: {
     formatViewDom(dom) {
-      let vis=d3.selectAll(dom);
-      let transform=d3.zoomTransform(dom);
-      vis.attr("transform", transform.scale(606/960));
-      console.log(dom);
-      console.log(vis);
+      let vis = d3.select(dom);
+      let transform = d3.zoomTransform(dom);
+      vis.attr("transform", transform.scale(this.height / 600));
+      // console.log(dom);
+      // console.log(vis);
       return vis.node().outerHTML;
+    },
+    rollback(data, dom, selectedIds) {
+      console.log(selectedIds);
+      data.nodes.forEach(node => {
+        console.log("before", node);
+        // data未重新分组，手动更新index
+        selectedIds.includes(node.id || node.name)
+          ? (node.selected = true)
+          : (node.selected = false);
+        console.log(data.nodes);
+        // console.log(selectedIndexs.includes(node.index));
+        // console.log(selectedIndexs);
+        console.log("after", node);
+        // debugger
+      });
+      console.log(data.nodes);
+      this.$store.commit("updateVisualData", data);
+      this.$store.commit("updateViewUpdate", "all");
+      this.$store.commit("addOperation", {
+        action: "rollback",
+        nodes: data,
+        time: new Date()
+      });
+      console.log("rollback", data);
     },
     test() {
       console.log("c");

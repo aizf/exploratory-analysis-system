@@ -104,6 +104,15 @@ export default {
     };
   },
   computed: {
+    sourceData() {
+      return this.$store.state.sourceData;
+    },
+    visualData() {
+      return this.$store.state.visualData;
+    },
+    nodes() {
+      return this.$store.getters.nodes;
+    },
     datasets() {
       return this.$store.state.datasets;
     }
@@ -113,6 +122,7 @@ export default {
       let that = this;
       let dataset = this.datasets[event.key];
       let setPath = "./static/" + dataset.fileName;
+      let visualData;
       this.tabContents = []; // 清空数据
       this.$message.loading("Action in progress..", 0.3).then(() => {
         __loadData(dataset.dataType)(setPath);
@@ -135,15 +145,10 @@ export default {
         d3.json(setPath)
           .then(res => {
             that.$store.commit("updateSourceData", res);
-            that.$store.commit(
-              "updateVisualData",
-              that.$store.getters.hierarchical2nodeLink
-            );
+            visualData = that.$store.getters.hierarchical2nodeLink;
             // todo !!!!!!!!!!!!!
             that.tabContents.push(JSON.stringify(res, null, "\t"));
-            that.tabContents.push(
-              JSON.stringify(that.$store.state.visualData, null, "\t")
-            );
+            that.tabContents.push(JSON.stringify(visualData, null, "\t"));
             that.tabContents.push("asdsafdhfghdfghsdf");
             changeState();
           })
@@ -155,11 +160,9 @@ export default {
         d3.json(setPath)
           .then(res => {
             that.$store.commit("updateSourceData", res);
-            that.$store.commit("updateVisualData", res);
+            visualData = res;
             that.tabContents.push(JSON.stringify(res, null, "\t"));
-            that.tabContents.push(
-              JSON.stringify(that.$store.state.visualData, null, "\t")
-            );
+            that.tabContents.push(JSON.stringify(visualData, null, "\t"));
             that.tabContents.push("asdsafdhfghdfghsdf");
             changeState();
           })
@@ -169,6 +172,12 @@ export default {
       }
       function changeState() {
         if (event.key !== that.lastSelect) {
+          visualData.nodes.forEach(d => {
+            d.attentionTimes = 0;
+            d.selected = false;
+          });
+          console.log(visualData);
+          that.$store.commit("updateVisualData", visualData);
           console.log("change!");
           that.lastSelect = event.key;
           // 源数据改变后更新store状态

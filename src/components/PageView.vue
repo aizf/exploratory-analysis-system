@@ -297,7 +297,13 @@ export default {
     },
     // save相关
     saveViewData() {
-      let saveThing = { data: this.visualData, dom: this.$refs.theView.vis.node().cloneNode(true) };
+      let saveThing = {
+        data: this.visualData,
+        dom: this.$refs.theView.vis.node().cloneNode(true),
+        selectedIds: this.visualData.nodes
+          .filter(d => d.selected)
+          .map(d => d.id||d.name)
+      };
       this.$store.commit("changeSavedViewData", undo => {
         undo.push(saveThing);
       });

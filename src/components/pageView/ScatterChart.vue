@@ -599,7 +599,7 @@ export default {
         : this.textG.style("display", "none");
     },
     "viewUpdate.scatter": function(val) {
-      console.log("scatter watcher");
+      // console.log("scatter watcher");
       if (val) {
         this.test();
       }

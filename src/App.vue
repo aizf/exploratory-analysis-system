@@ -60,10 +60,10 @@ export default {
       }
     },
     visualData() {
-      return !!this.$store.state.visualData;
+      return this.$store.state.visualData;
     },
     dataSelected() {
-      return this.visualData;
+      return !!this.visualData;
     },
     pageViewTooltipTitle() {
       return !this.dataSelected ? "请先在左侧选择数据" : "数据可视化界面";
