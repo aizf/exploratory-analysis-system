@@ -253,6 +253,7 @@ export default {
       let color = d => {
         return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
+      // debugger;
       this.link = this.linkG
         .selectAll("line")
         .data(this.links)
