@@ -271,11 +271,6 @@ export default {
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
         .classed("selected", d => d.selected);
-      // .each(d => {
-      //   d.attentionTimes = 0;
-      //   d.selected = false;
-      // });
-      // this.node.append("title").text(d => d.id);
 
       this.text = this.textG
         .selectAll("text")

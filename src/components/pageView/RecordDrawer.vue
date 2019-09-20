@@ -23,8 +23,8 @@ export default {
   name: "RecordDrawer",
   data() {
     return {
-      width: 606,
-      height: 352
+      width: 634,
+      height: 380
     };
   },
   computed: {
@@ -78,6 +78,7 @@ export default {
 .record .ant-card-grid {
   width: 100%;
   height: 400px;
+  padding: 10px 10px 10px 10px;
 }
 .RecordDrawer line {
   stroke: #aaa;
