@@ -122,6 +122,7 @@ export default {
       let that = this;
       let dataset = this.datasets[event.key];
       let setPath = "./static/" + dataset.fileName;
+      if (event.key === this.lastSelect) return;
       let visualData;
       this.tabContents = []; // 清空数据
       this.$message.loading("Action in progress..", 0.3).then(() => {
@@ -129,6 +130,7 @@ export default {
       });
 
       function __loadData(dataType) {
+        // 先传入类型，再传入路径
         switch (dataType) {
           case "node-link":
             return __loadNodeLinkData;
@@ -170,22 +172,22 @@ export default {
             console.log(err);
           });
       }
+      // the last step
       function changeState() {
-        if (event.key !== that.lastSelect) {
-          visualData.nodes.forEach(d => {
-            d.attentionTimes = 0;
-            d.selected = false;
-          });
-          console.log(visualData);
-          that.$store.commit("updateVisualData", visualData);
-          console.log("change!");
-          that.lastSelect = event.key;
-          // 源数据改变后更新store状态
-          that.$store.commit("resetOperations");
-          that.$store.commit("updateViewUpdate", "all");
+        visualData.nodes.forEach(d => {
+          d.attentionTimes = 0;
+          d.selected = false;
+        });
+        // console.log(visualData);
+        // debugger;
+        that.$store.commit("updateVisualData", visualData);
+        console.log("change!");
+        that.lastSelect = event.key;
+        // 源数据改变后更新store状态
+        that.$store.commit("resetOperations");
+        that.$store.commit("updateViewUpdate", "all");
 
-          that.$message.success("Data loaded.");
-        }
+        that.$message.success("Data loaded.");
       }
     },
     test() {
