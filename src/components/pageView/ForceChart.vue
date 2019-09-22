@@ -347,6 +347,7 @@ export default {
       }
     },
     tickEnd() {
+      // 静态布局
       // this.link
       //   .attr("x1", d => d.source.x)
       //   .attr("y1", d => d.source.y)
@@ -418,6 +419,7 @@ export default {
       });
       console.log("invertBrush", this.invertBrushedNodes.nodes());
     },
+    // drag
     dragstarted(d) {
       if (!this.visDrag) return;
       if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();

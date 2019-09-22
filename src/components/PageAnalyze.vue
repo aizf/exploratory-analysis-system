@@ -50,7 +50,7 @@ export default {
     this.chart.source(this.operations, defs);
     this.chart.legend({
       title: null, // 不展示图例的标题
-      marker: "square" // 设置图例 marker 的显示样式
+      // marker: "square" // 设置图例 marker 的显示样式
     });
     this.chart.legend("nodes", false); // 隐藏 nodes 维度对应的图例
     this.chart.tooltip({

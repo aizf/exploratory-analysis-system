@@ -86,7 +86,6 @@ export default {
     return {
       // interface
       collapsed: false, // 侧边栏
-      visSwitched: false, // 点击开关时，防止双击
       tabs: ["SourceData", "Node-Link", "Hierarchical"],
       tabContents: Array(3),
       lastSelect: undefined,

@@ -33,10 +33,11 @@ export default new Vuex.Store({
       table: false
     },
     operations: [], // operation={action:,nodes:,time:}
-    operationTypes: ["slice", "sliceUndo", "click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
+    operationTypes: ["rollback", "slice", "sliceUndo", "click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
     backgroundColor: "#333",
     contrastColor: "#eee",
     colorPalette: [
+      // 11类
       "#dd6b66",
       "#759aa0",
       "#e69d87",

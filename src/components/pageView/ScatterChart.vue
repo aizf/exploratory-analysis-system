@@ -607,7 +607,7 @@ export default {
     "viewUpdate.scatter": function(val) {
       // console.log("scatter watcher");
       if (val) {
-        this.test();
+        this.update();
       }
     }
   }
