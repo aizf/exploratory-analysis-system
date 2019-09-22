@@ -45,28 +45,29 @@ export default {
       return vis.node().outerHTML;
     },
     rollback(data, dom, selectedIds) {
-      console.log(selectedIds);
+      // console.log(selectedIds);
       data.nodes.forEach(node => {
-        console.log("before", node);
+        // console.log("before", node);
         // data未重新分组，手动更新index
         selectedIds.includes(node.id || node.name)
           ? (node.selected = true)
           : (node.selected = false);
-        console.log(data.nodes);
+        // console.log(data.nodes);
         // console.log(selectedIndexs.includes(node.index));
         // console.log(selectedIndexs);
-        console.log("after", node);
+        // console.log("after", node);
         // debugger
       });
-      console.log(data.nodes);
+      // console.log(data.nodes);
       this.$store.commit("updateVisualData", data);
       this.$store.commit("updateViewUpdate", "all");
-      this.$store.commit("addOperation", {
+      this.$store.state.rollbacked=true;
+      this.$store.commit("addOperation_", {
         action: "rollback",
         nodes: data,
         time: new Date()
       });
-      console.log("rollback", data);
+      console.log("rollback", data.nodes);
     },
     test() {
       console.log("c");

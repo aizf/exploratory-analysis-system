@@ -1,13 +1,13 @@
 <template>
   <div
     class="ScatterChart"
-    :style="{margin:'5px',height:+this.chartHeight+5+'px',width:+this.chartWidth+5+2*200+'px'}"
+    :style="{margin:'5px',height:+chartHeight+5+'px',width:+chartWidth+5+2*200+'px'}"
   >
     <div style="float:left;">
       <svg
-        :width="this.chartWidth"
-        :height="this.chartHeight"
-        :style="{border:'1px solid #305dff',background:this.backgroundColor}"
+        :width="chartWidth"
+        :height="chartHeight"
+        :style="{border:'1px solid #305dff',background:backgroundColor}"
       >
         <defs>
           <filter id="shadow">
@@ -54,7 +54,7 @@ export default {
     visMouseover: Boolean,
     visZoom: Boolean,
     visShowIds: Boolean,
-    viewUpdate: false
+    viewUpdate: {}
   },
   data() {
     return {

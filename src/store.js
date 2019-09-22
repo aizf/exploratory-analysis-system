@@ -25,6 +25,7 @@ export default new Vuex.Store({
         dataType: "hierarchical",
       }
     },
+    isNewData:false,
     sourceData: undefined,
     visualData: undefined,
     viewUpdate: {
@@ -33,7 +34,9 @@ export default new Vuex.Store({
       table: false
     },
     operations: [], // operation={action:,nodes:,time:}
-    operationTypes: ["rollback", "slice", "sliceUndo", "click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
+    operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
+    operations_: [], // 改变visualData的操作
+    operation_Types: ["rollback", "slice", "sliceUndo"],
     backgroundColor: "#333",
     contrastColor: "#eee",
     colorPalette: [
@@ -53,6 +56,8 @@ export default new Vuex.Store({
     // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
     undoStack: [], // index: 0,1,2,3,4
     redoStack: [], // index: 5,6,7,...
+
+    rollbacked:false,
 
     // 依赖对象属性，不用getter
     viewSlice() {
@@ -151,6 +156,9 @@ export default new Vuex.Store({
 
   },
   mutations: {
+    updateIsNewData: (state, data) => {
+      state.isNewData = data;
+    },
     updateSourceData: (state, data) => {
       state.sourceData = data;
     },
@@ -165,9 +173,14 @@ export default new Vuex.Store({
     },
     resetOperations: (state) => {
       state.operations = [];
+      state.operations_ = [];
     },
     addOperation: (state, data) => {
       state.operations.push(data);
+      // let data = { chart: "", time: "", action: "", nodes: {} };
+    },
+    addOperation_: (state, data) => {
+      state.operations_.push(data);
       // let data = { chart: "", time: "", action: "", nodes: {} };
     },
     changeSavedViewData: (state, fn) => {

@@ -179,10 +179,11 @@ export default {
         });
         // console.log(visualData);
         // debugger;
-        that.$store.commit("updateVisualData", visualData);
         console.log("change!");
         that.lastSelect = event.key;
         // 源数据改变后更新store状态
+        that.$store.commit("updateIsNewData", true);
+        that.$store.commit("updateVisualData", visualData);
         that.$store.commit("resetOperations");
         that.$store.commit("updateViewUpdate", "all");
 

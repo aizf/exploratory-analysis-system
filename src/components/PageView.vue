@@ -271,6 +271,7 @@ export default {
     changeDisabledState({
       // true !!!!!
       save = true,
+
       click = false,
       drag = false,
       mouseover = false,
@@ -302,11 +303,13 @@ export default {
         dom: this.$refs.theView.vis.node().cloneNode(true),
         selectedIds: this.visualData.nodes
           .filter(d => d.selected)
-          .map(d => d.id||d.name)
+          .map(d => d.id || d.name)
       };
       this.$store.commit("changeSavedViewData", undo => {
         undo.push(saveThing);
       });
+      this.$message.success("View saved.");
+      console.log("save");
       // this.$store.commit("changeSavedViewData", d => console.log(d));
     },
     viewBack() {
@@ -328,10 +331,13 @@ export default {
         this.$message.error("No nodes are selected !");
         return;
       }
+      slicedData.nodes.forEach(d => {
+        d.selected = false;
+      });
       this.sliceUndoList.push(this.visualData);
       this.$store.commit("updateVisualData", slicedData);
       this.$store.commit("updateViewUpdate", "all");
-      this.$store.commit("addOperation", {
+      this.$store.commit("addOperation_", {
         action: "slice",
         nodes: slicedData,
         time: new Date()
@@ -343,9 +349,15 @@ export default {
         return;
       }
       let data = this.sliceUndoList.pop();
+      let selectedNodesId = this.nodes.map(d => d.id || d.name);
+      data.nodes.forEach(d => {
+        selectedNodesId.includes(d.id || d.name)
+          ? (d.selected = true)
+          : (d.selected = false);
+      });
       this.$store.commit("updateVisualData", data);
       this.$store.commit("updateViewUpdate", "all");
-      this.$store.commit("addOperation", {
+      this.$store.commit("addOperation_", {
         action: "sliceUndo",
         nodes: data,
         time: new Date()
@@ -365,11 +377,20 @@ export default {
     }
   },
   computed: {
+    isNewData() {
+      return this.$store.state.isNewData;
+    },
     sourceData() {
       return this.$store.state.sourceData;
     },
     visualData() {
       return this.$store.state.visualData;
+    },
+    nodes: state => {
+      return state.visualData.nodes;
+    },
+    links: state => {
+      return state.visualData.links;
     },
     viewUpdate() {
       return this.$store.state.viewUpdate;
@@ -412,6 +433,23 @@ export default {
     },
     sliceUndoDisabled() {
       return !this.sliceUndoList.length;
+    },
+    rollbacked() {
+      return this.$store.state.rollbacked;
+    }
+  },
+  watch: {
+    rollbacked: function(val) {
+      if (val) {
+        this.sliceUndoList = [];
+        this.$store.state.rollbacked = false;
+      }
+    },
+    isNewData: function(val) {
+      if (val) {
+        this.sliceUndoList = [];
+        this.$store.commit("updateIsNewData", false);
+      }
     }
   }
 };

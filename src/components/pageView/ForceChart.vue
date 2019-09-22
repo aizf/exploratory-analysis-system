@@ -72,7 +72,7 @@ export default {
     visMouseover: Boolean,
     visZoom: Boolean,
     visShowIds: Boolean,
-    viewUpdate: false
+    viewUpdate: {}
   },
   data() {
     return {

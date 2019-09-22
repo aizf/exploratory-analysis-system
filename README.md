@@ -56,11 +56,10 @@ ant 时间轴+表格（nodes）
 
 普通操作正常，save不弄,slice,rollback,sliceBack明显标注，显示概览图，按时间排序
 
-公共属性=>store
-
 饼图，各种操作的比例，等
 
 迷你图
 
+Done    公共属性=>store
 Done    怎么在store中存储公共函数(model)
 Done    截取 记录=> 回退
