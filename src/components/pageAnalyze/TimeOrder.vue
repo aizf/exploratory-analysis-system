@@ -81,7 +81,7 @@ export default {
       .opacity(0.8)
       .shape("circle")
       .tooltip("time*action", (time, action, nodes) => {
-        return { name: action, value: time + "%" };
+        return { name: action, value: time };
         // , { "操作": action }];
       });
 
@@ -93,6 +93,10 @@ export default {
       action: {
         type: "cat", // 指定 cat 分类类型
         values: this.$store.state.operation_Types // 重新指定 c 属性每一个的值
+      },
+      max: {
+        type: "cat", // 指定 cat 分类类型
+        values: this.$store.state.operationTypes
       }
     };
     this.view_ = this.chart.view();
@@ -102,12 +106,13 @@ export default {
     });
     this.view_
       .interval()
-      .position("time*action")
-      .color("action")
+      .position("time*max")
+      .shape("line")
+      .color("action", ["#B381E6", "#F04864", "#3436C7"])
       .size(2)
-      .opacity(0.8)
+      .opacity(0.3)
       .tooltip("time*action", (time, action, nodes) => {
-        return { name: action, value: time + "%" };
+        return { name: action, value: time  };
         // , { "操作": action }];
       });
 

@@ -114,6 +114,12 @@ export default {
     },
     datasets() {
       return this.$store.state.datasets;
+    },
+    currentUUID() {
+      return this.$store.state.currentUUID;
+    },
+    generateUUID() {
+      return this.$store.state.generateUUID;
     }
   },
   methods: {
@@ -186,6 +192,11 @@ export default {
         that.$store.commit("updateVisualData", visualData);
         that.$store.commit("resetOperations");
         that.$store.commit("updateViewUpdate", "all");
+        that.$store.commit("addDataFlow", {
+          type:"nodes",
+          id: that.currentUUID,
+          data: { ...visualData }
+        });
 
         that.$message.success("Data loaded.");
       }

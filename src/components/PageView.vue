@@ -303,7 +303,9 @@ export default {
         dom: this.$refs.theView.vis.node().cloneNode(true),
         selectedIds: this.visualData.nodes
           .filter(d => d.selected)
-          .map(d => d.id || d.name)
+          .map(d => d.id || d.name),
+        id: this.currentUUID,
+        pId: this.parentUUID
       };
       this.$store.commit("changeSavedViewData", undo => {
         undo.push(saveThing);
@@ -334,9 +336,33 @@ export default {
       slicedData.nodes.forEach(d => {
         d.selected = false;
       });
-      this.sliceUndoList.push(this.visualData);
+      this.sliceUndoList.push({
+        data: this.visualData,
+        id: this.currentUUID,
+        pId: this.parentUUID
+      });
       this.$store.commit("updateVisualData", slicedData);
       this.$store.commit("updateViewUpdate", "all");
+      // dataFlow
+      this.$store.commit("updateParentUUID", this.currentUUID);
+      this.$store.commit("updateCurrentUUID", this.generateUUID());
+      this.$store.commit("addDataFlow", {
+        type: "nodes",
+        data: {
+          id: this.currentUUID,
+          data: { ...this.visualData }
+        }
+      });
+      this.$store.commit("addDataFlow", {
+        type: "links",
+        data: {
+          source: this.parentUUID,
+          target: this.currentUUID,
+          options: this.currentOptions
+        }
+      });
+      this.$store.commit("resetCurrentOptions");
+
       this.$store.commit("addOperation_", {
         action: "slice",
         nodes: slicedData,
@@ -348,21 +374,23 @@ export default {
       if (this.sliceUndoDisabled) {
         return;
       }
-      let data = this.sliceUndoList.pop();
+      let item = this.sliceUndoList.pop();
       let selectedNodesId = this.nodes.map(d => d.id || d.name);
-      data.nodes.forEach(d => {
+      item.data.nodes.forEach(d => {
         selectedNodesId.includes(d.id || d.name)
           ? (d.selected = true)
           : (d.selected = false);
       });
-      this.$store.commit("updateVisualData", data);
+      this.$store.commit("updateVisualData", item.data);
+      this.$store.commit("updateParentUUID", item.pId);
+      this.$store.commit("updateCurrentUUID", item.id);
       this.$store.commit("updateViewUpdate", "all");
       this.$store.commit("addOperation_", {
         action: "sliceUndo",
-        nodes: data,
+        nodes: item.data,
         time: new Date()
       });
-      console.log("sliceUndo", data);
+      console.log("sliceUndo", item.data);
     },
     // test
     test(event, i, a) {
@@ -392,6 +420,20 @@ export default {
     links: state => {
       return state.visualData.links;
     },
+    // dataFlow
+    parentUUID() {
+      return this.$store.state.parentUUID;
+    },
+    currentUUID() {
+      return this.$store.state.currentUUID;
+    },
+    generateUUID() {
+      return this.$store.state.generateUUID;
+    },
+    currentOptions() {
+      return this.$store.state.currentOptions;
+    },
+
     viewUpdate() {
       return this.$store.state.viewUpdate;
     },

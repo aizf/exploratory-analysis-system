@@ -1,17 +1,19 @@
 <template>
   <div>
     <TimeOrder></TimeOrder>
+    <DataFlow></DataFlow>
   </div>
 </template>
 
 <script>
 import * as d3 from "d3";
 import TimeOrder from "./pageAnalyze/TimeOrder.vue";
+import DataFlow from "./pageAnalyze/DataFlow.vue";
 
 export default {
   name: "PageAnalyze",
   components:{
-    TimeOrder
+    TimeOrder,DataFlow
   },
   data() {
     return {

@@ -232,11 +232,13 @@ export default {
       t.each(d => {
         d.attentionTimes += 1;
       });
-      that.$store.commit("addOperation", {
+      let operation = {
         action: "zoom",
         nodes: t.nodes(),
         time: new Date()
-      });
+      };
+      that.$store.commit("addOperation", operation);
+      that.$store.commit("addCurrentOptions", operation);
       console.log("zoom", t.nodes());
     }
   },
@@ -394,11 +396,13 @@ export default {
       this.brushedNodes.each(d => {
         d.attentionTimes += 1;
       });
-      this.$store.commit("addOperation", {
+      let operation = {
         action: "brush",
         nodes: this.brushedNodes.nodes(),
         time: new Date()
-      });
+      };
+      this.$store.commit("addOperation", operation);
+      this.$store.commit("addCurrentOptions", operation);
       console.log("brushEnd", this.brushedNodes.nodes());
     },
     invertBrushEnd() {
@@ -409,11 +413,13 @@ export default {
         .each(d => {
           d.selected = false;
         });
-      this.$store.commit("addOperation", {
+      let operation = {
         action: "invertBrush",
         nodes: this.invertBrushedNodes.nodes(),
         time: new Date()
-      });
+      };
+      this.$store.commit("addOperation", operation);
+      this.$store.commit("addCurrentOptions", operation);
       console.log("invertBrushEnd", this.invertBrushedNodes.nodes());
     },
     dragstarted(d) {
@@ -445,11 +451,13 @@ export default {
       if (this.isDraging) {
         d.attentionTimes += 1;
         let t = d3.select(p[i]);
-        this.$store.commit("addOperation", {
+        let operation = {
           action: "drag",
           nodes: t.nodes(),
           time: new Date()
-        });
+        };
+        this.$store.commit("addOperation", operation);
+        this.$store.commit("addCurrentOptions", operation);
         this.isDraging = false;
         console.log("drag", t.nodes());
       }
@@ -464,11 +472,13 @@ export default {
           t.classed("selected", true);
           d.selected = true;
           d.attentionTimes += 1;
-          this.$store.commit("addOperation", {
+          let operation = {
             action: "click",
             nodes: t.nodes(),
             time: new Date()
-          });
+          };
+          this.$store.commit("addOperation", operation);
+          this.$store.commit("addCurrentOptions", operation);
           console.log("click", t.nodes());
         }
       }
@@ -530,11 +540,13 @@ export default {
       this.opacityTexts.transition().style("fill-opacity", 0);
       if (!this.isDraging) {
         d.attentionTimes += 1;
-        this.$store.commit("addOperation", {
+        let operation = {
           action: "mouseover",
           nodes: displayNodes.nodes(),
           time: new Date()
-        });
+        };
+        this.$store.commit("addOperation", operation);
+        this.$store.commit("addCurrentOptions", operation);
         console.log("mouseover", displayNodes.nodes());
       }
     },

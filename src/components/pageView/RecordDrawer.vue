@@ -4,7 +4,7 @@
       <a-card-grid
         v-for="(item, index) in savedViewData"
         :key="index"
-        @click="rollback(item.data,item.dom,item.selectedIds)"
+        @click="rollback(item.data,item.dom,item.selectedIds,item)"
       >
         <svg
           :width="width"
@@ -31,8 +31,20 @@ export default {
     backgroundColor() {
       return this.$store.state.backgroundColor;
     },
+    visualData() {
+      return this.$store.state.visualData;
+    },
     savedViewData() {
       return this.$store.getters.savedViewData;
+    },
+    parentUUID() {
+      return this.$store.state.parentUUID;
+    },
+    currentUUID() {
+      return this.$store.state.currentUUID;
+    },
+    generateUUID() {
+      return this.$store.state.generateUUID;
     }
   },
   methods: {
@@ -44,7 +56,7 @@ export default {
       // console.log(vis);
       return vis.node().outerHTML;
     },
-    rollback(data, dom, selectedIds) {
+    rollback(data, dom, selectedIds, item) {
       // console.log(selectedIds);
       data.nodes.forEach(node => {
         // console.log("before", node);
@@ -61,7 +73,9 @@ export default {
       // console.log(data.nodes);
       this.$store.commit("updateVisualData", data);
       this.$store.commit("updateViewUpdate", "all");
-      this.$store.state.rollbacked=true;
+      this.$store.commit("updateParentUUID", item.pId);
+      this.$store.commit("updateCurrentUUID", item.id);
+      this.$store.state.rollbacked = true;
       this.$store.commit("addOperation_", {
         action: "rollback",
         nodes: data,

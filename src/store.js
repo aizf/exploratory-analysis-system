@@ -25,13 +25,22 @@ export default new Vuex.Store({
         dataType: "hierarchical",
       }
     },
-    isNewData:false,
+    isNewData: false,
     sourceData: undefined,
     visualData: undefined,
     viewUpdate: {
       force: false,
       scatter: false,
       table: false
+    },
+    parentUUID: "root",
+    currentUUID: "root",
+    currentOptions:[],  // dataFlow中，source和target中间的操作
+    dataFlow: {
+      // nodes:{id:UUID,data:{nodes:,links:},}
+      nodes: [],
+      // links:{source:,target:,options:[]}
+      links: []
     },
     operations: [], // operation={action:,nodes:,time:}
     operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
@@ -57,7 +66,8 @@ export default new Vuex.Store({
     undoStack: [], // index: 0,1,2,3,4
     redoStack: [], // index: 5,6,7,...
 
-    rollbacked:false,
+
+    rollbacked: false,
 
     // 依赖对象属性，不用getter
     viewSlice() {
@@ -85,14 +95,12 @@ export default new Vuex.Store({
     getDimensions() {
       // 获得node的属性(维度)有哪些
       let privateArr = [
-        "fx",
-        "fy",
-        "x",
-        "y",
-        "xx",
-        "yy",
-        "vx",
-        "vy",
+        "fx", "fy",
+        "x", "y",
+        "xx", "yy",
+        "vx", "vy",
+        "x0", "y0",
+        "x1", "y1",
         "children"
       ];
       let dSet = new Set();
@@ -101,6 +109,18 @@ export default new Vuex.Store({
       });
       return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();
     },
+    generateUUID() {
+      let d = new Date().getTime();
+      if (window.performance && typeof window.performance.now === "function") {
+        d += performance.now(); //use high-precision timer if available
+      }
+      let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        let r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      });
+      return uuid;
+    }
   },
   getters: {
     nodes: (state) => {
@@ -165,6 +185,12 @@ export default new Vuex.Store({
     updateVisualData: (state, data) => {
       state.visualData = data;
     },
+    updateParentUUID: (state, data) => {
+      state.parentUUID = data;
+    },
+    updateCurrentUUID: (state, data) => {
+      state.currentUUID = data;
+    },
     updateViewUpdate: (state, chart, val) => {
       let charts = ["force", "scatter", "table"];
       chart === "all" ? (charts.forEach(c => {
@@ -174,14 +200,41 @@ export default new Vuex.Store({
     resetOperations: (state) => {
       state.operations = [];
       state.operations_ = [];
+      state.dataFlow = {
+        nodes: [],
+        links: []
+      };
+      state.parentUUID = "root";
+      state.currentUUID = "root";
     },
     addOperation: (state, data) => {
       state.operations.push(data);
       // let data = { chart: "", time: "", action: "", nodes: {} };
     },
     addOperation_: (state, data) => {
-      state.operations_.push(data);
+      state.operations_.push({
+        ...data,
+        ...{
+          max: "zoom"
+        }
+      });
       // let data = { chart: "", time: "", action: "", nodes: {} };
+    },
+    addDataFlow: (state, item) => {
+      // 数据流图数据
+      // item={type:["nodes","links"],data:data}
+      if (item.type !== "nodes" && item.type !== "links") {
+        throw ("addDataFlow() 'item.type' error !");
+      }
+      // nodes:{id:UUID,data:{nodes:,links:},}
+      // links:{source:,target:,options:[]}
+      state.dataFlow[item.type].push(item.data);
+    },
+    addCurrentOptions: (state, data) => {
+      state.currentOptions.push(data);
+    },
+    resetCurrentOptions: (state) => {
+      state.currentOptions = [];
     },
     changeSavedViewData: (state, fn) => {
       let undo = state.undoStack;

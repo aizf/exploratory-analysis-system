@@ -229,11 +229,13 @@ export default {
       t.each(d => {
         d.attentionTimes += 1;
       });
-      that.$store.commit("addOperation", {
+      let operation = {
         action: "zoom",
         nodes: t.nodes(),
         time: new Date()
-      });
+      };
+      that.$store.commit("addOperation", operation);
+      that.$store.commit("addCurrentOptions", operation);
       console.log("zoom", t.nodes());
     }
   },
@@ -396,11 +398,13 @@ export default {
       this.brushedNodes.each(d => {
         d.attentionTimes += 1;
       });
-      this.$store.commit("addOperation", {
+      let operation = {
         action: "brush",
         nodes: this.brushedNodes.nodes(),
         time: new Date()
-      });
+      };
+      this.$store.commit("addOperation", operation);
+      this.$store.commit("addCurrentOptions", operation);
       console.log("brush", this.brushedNodes.nodes());
     },
     invertBrushEnd() {
@@ -412,11 +416,13 @@ export default {
         .each(d => {
           d.selected = false;
         });
-      this.$store.commit("addOperation", {
+      let operation = {
         action: "invertBrush",
         nodes: this.invertBrushedNodes.nodes(),
         time: new Date()
-      });
+      };
+      this.$store.commit("addOperation", operation);
+      this.$store.commit("addCurrentOptions", operation);
       console.log("invertBrush", this.invertBrushedNodes.nodes());
     },
     // drag
@@ -450,11 +456,13 @@ export default {
         d.attentionTimes += 1;
         // drag <text>时，通过以下返回node
         let t = this.node.filter(dd => dd.index === d.index);
-        this.$store.commit("addOperation", {
+        let operation = {
           action: "drag",
           nodes: t.nodes(),
           time: new Date()
-        });
+        };
+        this.$store.commit("addOperation", operation);
+        this.$store.commit("addCurrentOptions", operation);
         this.isDraging = false;
         console.log("drag", t.nodes());
         t.dispatch("mouseout");
@@ -470,11 +478,13 @@ export default {
           t.classed("selected", true);
           d.selected = true;
           d.attentionTimes += 1;
-          this.$store.commit("addOperation", {
+          let operation = {
             action: "click",
             nodes: t.nodes(),
             time: new Date()
-          });
+          };
+          this.$store.commit("addOperation", operation);
+          this.$store.commit("addCurrentOptions", operation);
           console.log("click", t.nodes());
         }
       }
@@ -542,11 +552,13 @@ export default {
         displayNodes.each(d => {
           d.attentionTimes += 1;
         });
-        this.$store.commit("addOperation", {
+        let operation = {
           action: "mouseover",
           nodes: displayNodes.nodes(),
           time: new Date()
-        });
+        };
+        this.$store.commit("addOperation", operation);
+        this.$store.commit("addCurrentOptions", operation);
         console.log("mouseover", displayNodes.nodes());
       }
     },
