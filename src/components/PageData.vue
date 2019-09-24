@@ -193,9 +193,8 @@ export default {
         that.$store.commit("resetOperations");
         that.$store.commit("updateViewUpdate", "all");
         that.$store.commit("addDataFlow", {
-          type:"nodes",
-          id: that.currentUUID,
-          data: { ...visualData }
+          type: "nodes",
+          data: { id: that.currentUUID, data: { ...visualData } }
         });
 
         that.$message.success("Data loaded.");

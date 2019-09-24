@@ -235,7 +235,7 @@ export default {
         time: new Date()
       };
       that.$store.commit("addOperation", operation);
-      that.$store.commit("addCurrentOptions", operation);
+      that.$store.commit("addCurrentOperations", operation);
       console.log("zoom", t.nodes());
     }
   },
@@ -404,7 +404,7 @@ export default {
         time: new Date()
       };
       this.$store.commit("addOperation", operation);
-      this.$store.commit("addCurrentOptions", operation);
+      this.$store.commit("addCurrentOperations", operation);
       console.log("brush", this.brushedNodes.nodes());
     },
     invertBrushEnd() {
@@ -422,7 +422,7 @@ export default {
         time: new Date()
       };
       this.$store.commit("addOperation", operation);
-      this.$store.commit("addCurrentOptions", operation);
+      this.$store.commit("addCurrentOperations", operation);
       console.log("invertBrush", this.invertBrushedNodes.nodes());
     },
     // drag
@@ -462,7 +462,7 @@ export default {
           time: new Date()
         };
         this.$store.commit("addOperation", operation);
-        this.$store.commit("addCurrentOptions", operation);
+        this.$store.commit("addCurrentOperations", operation);
         this.isDraging = false;
         console.log("drag", t.nodes());
         t.dispatch("mouseout");
@@ -484,7 +484,7 @@ export default {
             time: new Date()
           };
           this.$store.commit("addOperation", operation);
-          this.$store.commit("addCurrentOptions", operation);
+          this.$store.commit("addCurrentOperations", operation);
           console.log("click", t.nodes());
         }
       }
@@ -558,7 +558,7 @@ export default {
           time: new Date()
         };
         this.$store.commit("addOperation", operation);
-        this.$store.commit("addCurrentOptions", operation);
+        this.$store.commit("addCurrentOperations", operation);
         console.log("mouseover", displayNodes.nodes());
       }
     },

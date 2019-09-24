@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 // import * as d3 from "d3";
 
 Vue.use(Vuex)
@@ -33,10 +33,11 @@ export default new Vuex.Store({
       scatter: false,
       table: false
     },
-    parentUUID: "root",
-    currentUUID: "root",
-    currentOptions:[],  // dataFlow中，source和target中间的操作
+    parentUUID: "root", //当前view的父view的UUID
+    currentUUID: "root", //当前view的UUID
+    currentOperations: [], // dataFlow中，存储source和target中间的操作，view切换后清空
     dataFlow: {
+      // 记录view切换过程及其view中的操作，nodes为view的信息，links为view的切换顺序及之间的操作
       // nodes:{id:UUID,data:{nodes:,links:},}
       nodes: [],
       // links:{source:,target:,options:[]}
@@ -71,6 +72,7 @@ export default new Vuex.Store({
 
     // 依赖对象属性，不用getter
     viewSlice() {
+      // 返回slice后的nodes和links
       let removedNodes = [];
       let slicedNodes = this.visualData.nodes.filter(d => {
         if (d.selected) return true;
@@ -110,6 +112,7 @@ export default new Vuex.Store({
       return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();
     },
     generateUUID() {
+      // 产生UUID，全局唯一，目前只有slice后调用
       let d = new Date().getTime();
       if (window.performance && typeof window.performance.now === "function") {
         d += performance.now(); //use high-precision timer if available
@@ -120,6 +123,34 @@ export default new Vuex.Store({
         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
       });
       return uuid;
+    },
+    formattedDataFlow() {
+      let {
+        nodes,
+        links
+      } = this.dataFlow;
+      let uniqIds = {}; // id:id's nodes size
+      removeRepetitiveNodes(nodes);
+      addLinksValue(links);
+      // return state.dataFlow;
+
+      function removeRepetitiveNodes() {
+        nodes.filter(node => {
+          if (uniqIds[node.id] !== undefined) {
+            node.fixedValue = node.data.nodes.length;
+            return true;
+          } else {
+            uniqIds[node.id] = node.data.nodes.length;
+            return false;
+          }
+        });
+      }
+
+      function addLinksValue() {
+        links.forEach(link => {
+          link.value = uniqIds[link.target] || uniqIds[link.target.id];
+        })
+      }
     }
   },
   getters: {
@@ -173,7 +204,6 @@ export default new Vuex.Store({
         "links": getLinks(nodes)
       };
     },
-
   },
   mutations: {
     updateIsNewData: (state, data) => {
@@ -230,11 +260,11 @@ export default new Vuex.Store({
       // links:{source:,target:,options:[]}
       state.dataFlow[item.type].push(item.data);
     },
-    addCurrentOptions: (state, data) => {
-      state.currentOptions.push(data);
+    addCurrentOperations: (state, data) => {
+      state.currentOperations.push(data);
     },
-    resetCurrentOptions: (state) => {
-      state.currentOptions = [];
+    resetCurrentOperations: (state) => {
+      state.currentOperations = [];
     },
     changeSavedViewData: (state, fn) => {
       let undo = state.undoStack;

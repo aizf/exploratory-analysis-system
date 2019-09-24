@@ -358,10 +358,10 @@ export default {
         data: {
           source: this.parentUUID,
           target: this.currentUUID,
-          options: this.currentOptions
+          options: this.currentOperations
         }
       });
-      this.$store.commit("resetCurrentOptions");
+      this.$store.commit("resetCurrentOperations");
 
       this.$store.commit("addOperation_", {
         action: "slice",
@@ -430,8 +430,8 @@ export default {
     generateUUID() {
       return this.$store.state.generateUUID;
     },
-    currentOptions() {
-      return this.$store.state.currentOptions;
+    currentOperations() {
+      return this.$store.state.currentOperations;
     },
 
     viewUpdate() {
