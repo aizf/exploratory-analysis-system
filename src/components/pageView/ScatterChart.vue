@@ -1,7 +1,7 @@
 <template>
   <div
     class="ScatterChart"
-    :style="{margin:'5px',height:+chartHeight+5+'px',width:+chartWidth+5+2*200+'px'}"
+    :style="{margin:'5px',height:chartHeight+5+'px',width:chartWidth+5+2*200+'px'}"
   >
     <div style="float:left;">
       <svg
@@ -58,9 +58,6 @@ export default {
   },
   data() {
     return {
-      chartWidth: "960",
-      chartHeight: "600",
-
       axisMargin: 50,
       xDimension: "", // x轴选择的维度,key,字符串,数据在computed中
       yDimension: "",
@@ -87,6 +84,12 @@ export default {
     };
   },
   computed: {
+    chartWidth() {
+      return this.$store.state.dpiX * 0.7;
+    },
+    chartHeight() {
+      return this.$store.state.dpiY * 0.7;
+    },
     sourceData() {
       return this.$store.state.sourceData;
     },
@@ -143,7 +146,7 @@ export default {
     let svg = d3
       .select(this.$el)
       .select("svg")
-      .attr("viewBox", [0, 0, +this.chartWidth, +this.chartHeight]);
+      .attr("viewBox", [0, 0, this.chartWidth, this.chartHeight]);
     // console.log(svg);
 
     this.vis = svg
@@ -172,7 +175,7 @@ export default {
     // brush
     this.brush = d3
       .brush()
-      .extent([[0, 0], [+this.chartWidth, +this.chartHeight]])
+      .extent([[0, 0], [this.chartWidth, this.chartHeight]])
       .on("start brush", this.brushed)
       .on("end", this.brushEnd);
     this.brushG = svg
@@ -186,7 +189,7 @@ export default {
     // invertBrush
     this.invertBrush = d3
       .brush()
-      .extent([[0, 0], [+this.chartWidth, +this.chartHeight]])
+      .extent([[0, 0], [this.chartWidth, this.chartHeight]])
       .on("start brush", this.brushed)
       .on("end", this.invertBrushEnd);
     this.invertBrushG = svg
@@ -220,7 +223,7 @@ export default {
         that.axisMargin
       );
       let extentStart = transform.invert([0, 0]); // 视口的开始坐标
-      let extentEnd = transform.invert([+that.chartWidth, +that.chartHeight]); // 视口的结束坐标
+      let extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
       let t = that.node.filter(d => {
         return (
           extentStart[0] <= d.xx &&
@@ -261,7 +264,7 @@ export default {
         .range(
           // ticks
           d3.range(xTicksNum).map(function(d) {
-            return (d * +that.chartWidth) / xTicksNum;
+            return (d * that.chartWidth) / xTicksNum;
           })
         );
       // let xAxisCreator = g => g.call(d3.axisTop(x));

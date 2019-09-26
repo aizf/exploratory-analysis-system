@@ -9,7 +9,7 @@
         <svg
           :width="width"
           :height="height"
-          v-html="formatViewDom(item.dom)"
+          v-html="formatViewDom(item)"
           :style="{background:backgroundColor}"
         />
       </a-card-grid>
@@ -48,10 +48,18 @@ export default {
     }
   },
   methods: {
-    formatViewDom(dom) {
+    formatViewDom(item) {
+      let dom = item.dom;
       let vis = d3.select(dom);
       let transform = d3.zoomTransform(dom);
-      vis.attr("transform", transform.scale(this.height / 600));
+      vis.attr("transform", transform.scale(this.height / 756));
+      vis
+        .append("text")
+        .attr("font-family", "Avenir")
+        .attr("font-size", "20")
+        .attr("dy", "1em")
+        .attr("fill", "#eee")
+        .text(item.id);
       // console.log(dom);
       // console.log(vis);
       return vis.node().outerHTML;

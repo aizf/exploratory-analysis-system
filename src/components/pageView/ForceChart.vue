@@ -1,7 +1,7 @@
 <template>
   <div
     class="ForceChart"
-    :style="{margin:'5px',height:+chartHeight+5+'px',width:+chartWidth+5+2*100+'px'}"
+    :style="{margin:'5px',height:chartHeight+5+'px',width:chartWidth+5+2*100+'px'}"
   >
     <div style="float:left;">
       <svg
@@ -76,8 +76,6 @@ export default {
   },
   data() {
     return {
-      chartWidth: "960",
-      chartHeight: "600",
       link: d3.selectAll(),
       node: d3.selectAll(),
       linkG: d3.selectAll(),
@@ -102,6 +100,12 @@ export default {
     };
   },
   computed: {
+    chartWidth() {
+      return this.$store.state.dpiX * 0.7;
+    },
+    chartHeight() {
+      return this.$store.state.dpiY * 0.7;
+    },
     sourceData() {
       return this.$store.state.sourceData;
     },
@@ -149,9 +153,9 @@ export default {
     let svg = d3
       .select(this.$el)
       .select("svg")
-      .attr("viewBox", [0, 0, +this.chartWidth, +this.chartHeight]);
-    let width = +this.chartWidth,
-      height = +this.chartHeight;
+      .attr("viewBox", [0, 0, this.chartWidth, this.chartHeight]);
+    let width = this.chartWidth,
+      height = this.chartHeight;
     // console.log(svg);
 
     this.vis = svg.append("g");
@@ -217,7 +221,7 @@ export default {
       if (!that.visZoom) return;
       let transform = d3.event.transform;
       let extentStart = transform.invert([0, 0]); // 视口的开始坐标
-      let extentEnd = transform.invert([+that.chartWidth, +that.chartHeight]); // 视口的结束坐标
+      let extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
       let t = that.node.filter(d => {
         return (
           extentStart[0] <= d.x &&

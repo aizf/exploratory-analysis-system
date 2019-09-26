@@ -7,6 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // datasets的键(key)对应<a-menu-item>的key
+    dpiX: 1920,
+    dpiY: 1080,
     datasets: {
       "energy": {
         fileName: "energy.json",
@@ -130,28 +132,24 @@ export default new Vuex.Store({
         links
       } = this.dataFlow;
       let uniqIds = {}; // id:id's nodes size
-      removeRepetitiveNodes(nodes);
-      addLinksValue(links);
-      // return state.dataFlow;
 
-      function removeRepetitiveNodes() {
-        nodes.filter(node => {
-          if (uniqIds[node.id] !== undefined) {
-            node.fixedValue = node.data.nodes.length;
-            return true;
-          } else {
-            uniqIds[node.id] = node.data.nodes.length;
-            return false;
-          }
-        });
-      }
+      // removeRepetitiveNodes
+      nodes.filter(node => {
+        if (uniqIds[node.id] === undefined) {
+          node.fixedValue = node.data.nodes.length;
+          uniqIds[node.id] = node.data.nodes.length;
+          return true;
+        } else {
+          return false;
+        }
+      });
 
-      function addLinksValue() {
-        links.forEach(link => {
-          link.value = uniqIds[link.target] || uniqIds[link.target.id];
-        })
-      }
+      // function addLinksValue(links) {
+      links.forEach(link => {
+        link.value = uniqIds[link.target] || uniqIds[link.target.id];
+      })
     }
+
   },
   getters: {
     nodes: (state) => {

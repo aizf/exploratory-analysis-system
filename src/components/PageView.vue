@@ -358,7 +358,7 @@ export default {
         data: {
           source: this.parentUUID,
           target: this.currentUUID,
-          options: this.currentOperations
+          operations: this.currentOperations
         }
       });
       this.$store.commit("resetCurrentOperations");

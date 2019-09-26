@@ -1,7 +1,9 @@
 <template>
   <div>
-    <TimeOrder></TimeOrder>
-    <DataFlow></DataFlow>
+    <div :style="{float:'left',width:width}">
+      <TimeOrder></TimeOrder>
+      <DataFlow></DataFlow>
+    </div>
   </div>
 </template>
 
@@ -12,8 +14,9 @@ import DataFlow from "./pageAnalyze/DataFlow.vue";
 
 export default {
   name: "PageAnalyze",
-  components:{
-    TimeOrder,DataFlow
+  components: {
+    TimeOrder,
+    DataFlow
   },
   data() {
     return {
@@ -21,6 +24,12 @@ export default {
     };
   },
   computed: {
+    width() {
+      return this.$store.state.dpiX * 0.7;
+    },
+    height() {
+      return this.$store.state.dpiY - 64;
+    },
     visualData() {
       return this.$store.state.visualData;
     },
@@ -40,10 +49,8 @@ export default {
       return this.$store.state.operations;
     }
   },
-  mounted() {
-  },
-  activated() {
-  },
+  mounted() {},
+  activated() {},
   methods: {}
 };
 </script>

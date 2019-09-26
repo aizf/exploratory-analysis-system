@@ -1,5 +1,5 @@
 <template>
-  <div class="operations" style="height: 50vh"></div>
+  <div class="operations"></div>
 </template>
 
 <script>
@@ -17,6 +17,12 @@ export default {
     };
   },
   computed: {
+    width() {
+      return this.$store.state.dpiX * 0.7;
+    },
+    height() {
+      return (this.$store.state.dpiY - 64) * 0.35;
+    },
     visualData() {
       return this.$store.state.visualData;
     },
@@ -43,7 +49,7 @@ export default {
     this.chart = new G2.Chart({
       container: document.getElementsByClassName("operations")[0],
       forceFit: true,
-      height: 400,
+      height: this.height,
       theme: "dark"
       // renderer : 'svg'
     });
@@ -57,11 +63,17 @@ export default {
       showTitle: false
       // itemTpl: '<li>{color}{name}\t{value}</li>'
     });
+    this.chart.scale("time", {
+      type: "time", // 指定 time 类型
+      mask: "HH:mm:ss", // 指定时间的输出格式
+      sync: true
+    });
 
     const defs = {
       time: {
         type: "time", // 指定 time 类型
-        mask: "HH:mm:ss" // 指定时间的输出格式
+        mask: "HH:mm:ss", // 指定时间的输出格式
+        sync: true
       },
       action: {
         type: "cat", // 指定 cat 分类类型
@@ -81,14 +93,18 @@ export default {
       .opacity(0.8)
       .shape("circle")
       .tooltip("time*action", (time, action, nodes) => {
-        return { name: action, value: time };
+        return {
+          name: action,
+          value: `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
+        };
         // , { "操作": action }];
       });
 
     const defs_ = {
       time: {
         type: "time", // 指定 time 类型
-        mask: "HH:mm:ss" // 指定时间的输出格式
+        mask: "HH:mm:ss", // 指定时间的输出格式
+        sync: true
       },
       action: {
         type: "cat", // 指定 cat 分类类型
@@ -108,11 +124,14 @@ export default {
       .interval()
       .position("time*max")
       .shape("line")
-      .color("action", ["#B381E6", "#F04864", "#3436C7"])
+      .color("action", ["#F04864", "#B381E6", "#ea7e53"])
       .size(2)
       .opacity(0.3)
       .tooltip("time*action", (time, action, nodes) => {
-        return { name: action, value: time  };
+        return {
+          name: action,
+          value: `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
+        };
         // , { "操作": action }];
       });
 

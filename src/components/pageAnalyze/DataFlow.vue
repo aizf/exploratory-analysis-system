@@ -4,7 +4,13 @@
       :width="width"
       :height="height"
       :style="{border:'1px solid #305dff',background:backgroundColor}"
-    />
+    >
+      <defs>
+        <filter id="shadow">
+          <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
+        </filter>
+      </defs>
+    </svg>
   </div>
 </template>
 
@@ -16,8 +22,6 @@ export default {
   name: "DataFlow",
   data() {
     return {
-      width: 1275,
-      height: 800,
       link: d3.selectAll(),
       node: d3.selectAll(),
       vis: d3.selectAll(),
@@ -28,6 +32,12 @@ export default {
     };
   },
   computed: {
+    width() {
+      return this.$store.state.dpiX * 0.7;
+    },
+    height() {
+      return (this.$store.state.dpiY - 64) * 0.55;
+    },
     visualData() {
       return this.$store.state.visualData;
     },
@@ -79,7 +89,7 @@ export default {
   },
   methods: {
     update() {
-      //   console.log(this.dataFlow);
+      console.log(this.dataFlow);
       this.$store.state.formattedDataFlow();
       let { nodes, links } = this.sankey(this.dataFlow);
 
@@ -95,6 +105,7 @@ export default {
         .attr("fill", "green")
         .append("title")
         .text(d => `${d.id}\n${d.value}`);
+      // .call(d3.drag().on("drag", this.dragged));
 
       this.link = this.linkG
         .selectAll("g")
@@ -108,7 +119,10 @@ export default {
         .attr("stroke", "#aaa")
         .attr("stroke-width", d => Math.max(1, d.width))
         .append("title")
-        .text(d => `${d.source.id} → ${d.target.id}\n${d.value}`);
+        .text(d => {
+          let operations = d.operations.map(d => d.action).join("→");
+          return `${d.source.id} → ${d.target.id}\n${operations}`;
+        });
 
       this.textG
         .selectAll("text")
@@ -120,6 +134,38 @@ export default {
         .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
         .text(d => d.id || d.name);
     }
+    // dragged(d) {
+    //   d.x0 = d3.event.x;
+    //   d.x1 = d3.event.x + this.sankey.nodeWidth();
+    //   d.y0 = d3.event.y;
+    //   d.y1 = d3.event.y + d.value;
+    //   this.sankey.update(this.dataFlow);
+    //   this.node.attr("x", d => d.x0).attr("y", d => d.y0);
+    // }
   }
 };
 </script>
+<style>
+.DataFlow line {
+  stroke: #aaa;
+  stroke-opacity: 0.8;
+  stroke-width: 0.3;
+}
+
+.DataFlow circle {
+  pointer-events: all;
+  stroke: none;
+}
+
+.DataFlow circle.selected {
+  /* fill: red; */
+  stroke: red;
+  stroke-width: 1.5;
+}
+
+.DataFlow circle.brushing {
+  /* fill: red; */
+  stroke: red;
+  stroke-width: 1.5;
+}
+</style>
