@@ -110,7 +110,7 @@ export default {
     update() {
       // 更新数据
       let color = d => {
-        return !!d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
+        return d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
     },

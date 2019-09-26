@@ -255,7 +255,7 @@ export default {
       // 更新数据
       let that = this;
       let color = d => {
-        return !!d.group ? this.colorPalette[d.group] : this.colorPalette[8];
+        return d.group ? this.colorPalette[d.group] : this.colorPalette[8];
       };
       let xTicksNum = this.xDimensionData.length || 0;
       this.xScale = d3
