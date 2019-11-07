@@ -67,6 +67,7 @@ export default {
   props: {
     visClick: Boolean,
     visBrush: Boolean,
+    brushKeep: Boolean,
     visInvertBrush: Boolean,
     visDrag: Boolean,
     visMouseover: Boolean,
@@ -245,8 +246,9 @@ export default {
   },
 
   activated() {
-    this.node.classed("selected", d => d.selected)
-    .attr("fill", d =>this.colorPalette[d.group||0]);
+    this.node
+      .classed("selected", d => d.selected)
+      .attr("fill", d => this.colorPalette[d.group || 0]);
     this.simulation.tick();
   },
 
@@ -378,9 +380,18 @@ export default {
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
       if (d3.event.type === "start") {
+        if (!this.brushKeep) {
+          this.node
+            .classed("selected", false)
+            .classed("brushing", false)
+            .each(d => {
+              d.selected = false;
+            });
+        }
       }
 
       let className = this.visBrush ? "brushing" : "invertBrushing";
+
       this.node.classed(className, d => {
         return (
           extentStart[0] <= d.x &&

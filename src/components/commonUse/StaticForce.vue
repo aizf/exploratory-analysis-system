@@ -1,5 +1,5 @@
 <template>
-  <div style="float:left;">
+  <div class="StaticForce" style="float:left;">
     <svg
       :width="width"
       :height="height"
@@ -21,8 +21,8 @@ export default {
   name: "StaticForce",
   props: {
     viewUpdate: Boolean,
-    nodes:[],
-    links:[],
+    nodes: {},
+    links: {},
     width: {
       type: Number,
       required: true
@@ -120,6 +120,9 @@ export default {
 
   methods: {
     update() {
+      if (this.nodes.length === 0) {
+        return;
+      }
       // 更新数据
       let color = d => {
         return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
@@ -142,21 +145,6 @@ export default {
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
         .classed("selected", d => d.selected);
-
-      this.text = this.textG
-        .selectAll("text")
-        .data(this.nodes)
-        .join("text")
-        .attr("text-anchor", "middle")
-        .attr("font-family", "Avenir")
-        .attr("font-size", "10")
-        .attr("dy", "-0.5em")
-        .text(d => d.id || d.name)
-        .attr("fill", color)
-        .style("-webkit-user-select", "none") // 字体不被选中
-        .style("-moz-user-select", "none")
-        .style("-ms-user-select", "none")
-        .style("user-select", "none");
 
       this.simulation
         .nodes(this.nodes)
@@ -198,10 +186,7 @@ export default {
   },
   watch: {
     viewUpdate: function(val) {
-      if (val) {
-        this.update();
-        this.viewUpdate=false;
-      }
+      this.update();
     }
   }
 };

@@ -74,9 +74,13 @@
           </a-menu-item-group>
           <a-menu-item-group key="g2" title="multiple point">
             <a-menu-item @click="onVisBrush" :disabled="brushDisabled">
-              <a-tooltip placement="top" title="多点操作，选中多个点" :mouseEnterDelay="0.4">
+              <a-popover placement="top" title="keep last selected nodes ?" :mouseEnterDelay="0.4">
+                <template slot="content">
+                  <a-checkbox :checked=!brushKeep @change="brushKeep=!brushKeep">no</a-checkbox>
+                  <a-checkbox :checked=brushKeep @change="brushKeep=!brushKeep">yes</a-checkbox>
+                </template>
                 <span>brush</span>
-              </a-tooltip>
+              </a-popover>
               <span :style="{display:'block',float:'right'}" @click.stop>
                 <a-switch
                   v-model="visBrush"
@@ -163,6 +167,7 @@
             :is="currentChart"
             :visClick="visClick"
             :visBrush="visBrush"
+            :brushKeep="brushKeep"
             :visInvertBrush="visInvertBrush"
             :visDrag="visDrag"
             :visMouseover="visMouseover"
@@ -210,6 +215,7 @@ export default {
       visDrag: true,
       visMouseover: false,
       visBrush: false,
+      brushKeep:false,
       visInvertBrush: false,
       visZoom: true,
       visShowIds: false,

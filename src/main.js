@@ -6,6 +6,7 @@ import "ant-design-vue/dist/antd.css";
 import {
   Button,
   Card,
+  Checkbox,
   Col,
   Drawer,
   Icon,
@@ -14,6 +15,7 @@ import {
   Layout,
   message,
   Menu,
+  Popover,
   Row,
   Select,
   Slider,
@@ -31,6 +33,7 @@ Vue.prototype.$message = message;
 // Vue.use(Antd);
 Vue.use(Button);
 Vue.use(Card);
+Vue.use(Checkbox);
 Vue.use(Col);
 Vue.use(Drawer);
 Vue.use(Icon);
@@ -38,6 +41,7 @@ Vue.use(Input);
 Vue.use(InputNumber);
 Vue.use(Layout);
 Vue.use(Menu);
+Vue.use(Popover);
 Vue.use(Row);
 Vue.use(Select);
 Vue.use(Slider);

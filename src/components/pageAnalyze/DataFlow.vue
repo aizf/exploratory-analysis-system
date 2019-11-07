@@ -93,11 +93,12 @@ export default {
   methods: {
     update() {
       let that = this;
+      console.log(this);
       console.log(this.dataFlow);
       this.$store.state.formattedDataFlow();
       let { nodes, links } = this.sankey(this.dataFlow);
 
-      console.log(nodes, links);
+      // console.log(nodes, links);
       this.node = this.nodeG
         .selectAll("g")
         .data(nodes)
@@ -156,16 +157,26 @@ export default {
       });
       let groups = Object.keys(eachGroupNum).sort();
       let g = d3.select(p[i]);
-      let preDy = 0;  // 偏移量
+      let preDy = 0; // 偏移量
       groups.forEach(group => {
         let h = (height * eachGroupNum[group]) / totalNum;
         g.append("rect")
           .attr("fill", this.colorPalette[group])
           .attr("x", d.x0)
-          .attr("y", d.y0+preDy)
+          .attr("y", d.y0 + preDy)
           .attr("width", width)
           .attr("height", h);
         preDy += h;
+      });
+      g.on("click", () => {
+        this.updateTooltip(d.data);
+      });
+    },
+    updateTooltip(data) {
+      // debugger;
+      this.$store.commit("updatePageAnalyzeTooltip", {
+        update: true,
+        data: data
       });
     }
     // dragged(d) {

@@ -74,7 +74,10 @@ export default new Vuex.Store({
 
     // PageAnalyze.DataFlow
     pageAnalyzeTooltipUpdata: false,
-    pageAnalyzeTooltipData: {},
+    pageAnalyzeTooltipData: {
+      "nodes": [],
+      "links": []
+    },
 
     // 依赖对象属性，不用getter
     selectedNodes() {
@@ -280,9 +283,12 @@ export default new Vuex.Store({
       // fn为自定义函数
       fn(undo, redo);
     },
-    updatePageAnalyzeTooltip: (state, update, data) => {
-      state.pageAnalyzeTooltipData = data;
-      state.pageAnalyzeTooltipUpdata = update; // true or false
+    updatePageAnalyzeTooltip: (state, val) => {
+      // debugger
+      state.pageAnalyzeTooltipData = val.data;
+      // state.pageAnalyzeTooltipUpdata = val.update; // true or false
+      // 改变状态，触发watch
+      state.pageAnalyzeTooltipUpdata = !state.pageAnalyzeTooltipUpdata;
     }
   },
   actions: {
