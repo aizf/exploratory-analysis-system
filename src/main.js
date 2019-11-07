@@ -20,6 +20,7 @@ import {
   Switch,
   Table,
   Tabs,
+  Tag,
   Tooltip
 } from 'ant-design-vue'
 
@@ -43,6 +44,7 @@ Vue.use(Slider);
 Vue.use(Switch);
 Vue.use(Table);
 Vue.use(Tabs);
+Vue.use(Tag);
 Vue.use(Tooltip);
 
 Vue.config.productionTip = false;

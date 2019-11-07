@@ -245,7 +245,8 @@ export default {
   },
 
   activated() {
-    this.node.classed("selected", d => d.selected);
+    this.node.classed("selected", d => d.selected)
+    .attr("fill", d =>this.colorPalette[d.group||0]);
     this.simulation.tick();
   },
 
@@ -257,7 +258,7 @@ export default {
     update() {
       // 更新数据
       let color = d => {
-        return d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
+        return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
       };
       // debugger;
       this.link = this.linkG
@@ -654,13 +655,13 @@ export default {
 .ForceChart circle.selected {
   /* fill: red; */
   stroke: red;
-  stroke-width: 1.5;
+  stroke-width: 0.8;
 }
 
 .ForceChart circle.brushing {
   /* fill: red; */
   stroke: red;
-  stroke-width: 1.5;
+  stroke-width: 0.8;
 }
 
 .ForceChart circle.invertBrushing {

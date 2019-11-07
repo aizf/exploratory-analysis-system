@@ -72,7 +72,17 @@ export default new Vuex.Store({
 
     rollbacked: false,
 
+    // PageAnalyze.DataFlow
+    pageAnalyzeTooltipUpdata: false,
+    pageAnalyzeTooltipData: {},
+
     // 依赖对象属性，不用getter
+    selectedNodes() {
+      let selectedNodes = this.visualData.nodes.filter(d =>
+        !!d.selected
+      );
+      return selectedNodes;
+    },
     viewSlice() {
       // 返回slice后的nodes和links
       let removedNodes = [];
@@ -269,6 +279,10 @@ export default new Vuex.Store({
       let redo = state.redoStack;
       // fn为自定义函数
       fn(undo, redo);
+    },
+    updatePageAnalyzeTooltip: (state, update, data) => {
+      state.pageAnalyzeTooltipData = data;
+      state.pageAnalyzeTooltipUpdata = update; // true or false
     }
   },
   actions: {

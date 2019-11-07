@@ -147,7 +147,17 @@
 
     <a-layout style="padding: 0 0px 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
+        <div>
+          <!-- 分组的图例 -->
+          <a-tag
+            v-for="(color, index) in colorPalette"
+            :color="color"
+            @click="groupTheSelectedNodes(index)"
+            :key="index"
+          >{{index}}</a-tag>
+        </div>
         <keep-alive>
+          <!-- 可视化视图 -->
           <component
             ref="theView"
             :is="currentChart"
@@ -176,6 +186,7 @@
   </a-layout>
 </template>
 <script>
+import * as d3 from "d3";
 import ForceChart from "./pageView/ForceChart.vue";
 import ScatterChart from "./pageView/ScatterChart.vue";
 import NodesTable from "./pageView/NodesTable.vue";
@@ -392,6 +403,17 @@ export default {
       });
       console.log("sliceUndo", item.data);
     },
+    groupTheSelectedNodes(group) {
+      // console.log(group);
+      let selectedNodes = this.$store.state.selectedNodes();
+      selectedNodes.forEach(d => {
+        d.group = group;
+      });
+      this.$store.commit("updateViewUpdate", "all");
+      // d3.select(selectedNodes)
+      //   .attr("group", group)
+      //   .attr("fill", this.colorPalette[group]);
+    },
     // test
     test(event, i, a) {
       console.log(event);
@@ -405,6 +427,9 @@ export default {
     }
   },
   computed: {
+    colorPalette() {
+      return this.$store.state.colorPalette;
+    },
     isNewData() {
       return this.$store.state.isNewData;
     },

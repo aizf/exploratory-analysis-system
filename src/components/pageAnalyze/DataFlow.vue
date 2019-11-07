@@ -72,10 +72,13 @@ export default {
     this.sankey = d3Sankey
       .sankey()
       .nodeId(d => d.id || d.name)
-      .nodeWidth(15)
-      .nodePadding(10)
+      .nodeWidth(45)
+      .nodePadding(40)
       .extent([[1, 5], [this.width - 1, this.height - 5]]);
-    this.nodeG = this.vis.append("g").attr("stroke", "#000");
+    this.nodeG = this.vis
+      .append("g")
+      .attr("class", "nodeG")
+      .attr("stroke", "#000");
     this.linkG = this.vis
       .append("g")
       .attr("fill", "none")
@@ -89,22 +92,22 @@ export default {
   },
   methods: {
     update() {
+      let that = this;
       console.log(this.dataFlow);
       this.$store.state.formattedDataFlow();
       let { nodes, links } = this.sankey(this.dataFlow);
 
-      // console.log(nodes, links);
+      console.log(nodes, links);
       this.node = this.nodeG
-        .selectAll("rect")
+        .selectAll("g")
         .data(nodes)
-        .join("rect")
-        .attr("x", d => d.x0)
-        .attr("y", d => d.y0)
-        .attr("height", d => d.y1 - d.y0)
-        .attr("width", d => d.x1 - d.x0)
-        .attr("fill", "green")
-        .append("title")
-        .text(d => `${d.id}\n${d.value}`);
+        .join("g")
+        .each((d, i, p) => {
+          // debugger;
+          this.createMultipleColorsRect(d, i, p);
+        });
+      // .attr("fill", "green");
+      this.node.append("title").text(d => `${d.id}\n${d.value}`);
       // .call(d3.drag().on("drag", this.dragged));
 
       this.link = this.linkG
@@ -133,6 +136,37 @@ export default {
         .attr("dy", "0.35em")
         .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
         .text(d => d.id || d.name);
+    },
+    createMultipleColorsRect(d, i, p) {
+      let height = d.y1 - d.y0;
+      let width = d.x1 - d.x0;
+      let nodes = d.data.nodes;
+      let totalNum = d.fixedValue;
+      let eachGroupNum = {};
+      nodes.forEach(node => {
+        if (!node.group) {
+          eachGroupNum["0"] === undefined
+            ? (eachGroupNum["0"] = 0)
+            : eachGroupNum["0"]++;
+        } else {
+          eachGroupNum[node.group + ""] === undefined
+            ? (eachGroupNum[node.group + ""] = 0)
+            : eachGroupNum[node.group + ""]++;
+        }
+      });
+      let groups = Object.keys(eachGroupNum).sort();
+      let g = d3.select(p[i]);
+      let preDy = 0;  // 偏移量
+      groups.forEach(group => {
+        let h = (height * eachGroupNum[group]) / totalNum;
+        g.append("rect")
+          .attr("fill", this.colorPalette[group])
+          .attr("x", d.x0)
+          .attr("y", d.y0+preDy)
+          .attr("width", width)
+          .attr("height", h);
+        preDy += h;
+      });
     }
     // dragged(d) {
     //   d.x0 = d3.event.x;
