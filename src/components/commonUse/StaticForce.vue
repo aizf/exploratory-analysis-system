@@ -174,10 +174,6 @@ export default {
       //   .attr("x2", d => d.target.x)
       //   .attr("y2", d => d.target.y);
       // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
-
-      if (!this.visShowIds) {
-        this.text.attr("x", d => d.x).attr("y", d => d.y);
-      }
     },
 
     visTransform() {

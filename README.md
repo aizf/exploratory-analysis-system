@@ -43,9 +43,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 调节尺寸，长宽外部绑定
 
-y轴映射啥(待定)
+y轴映射啥(待定)  ing
 
-ant 时间轴+表格（nodes）
+ant 时间轴+表格（nodes）ing
 
 分析社交网络
 
@@ -60,6 +60,11 @@ ant 时间轴+表格（nodes）
 
 迷你图
 
-Done    公共属性=>store
-Done    怎么在store中存储公共函数(model)
-Done    截取 记录=> 回退
+流程图增加分组之后的图节点
+
+time图纵轴可变，根据不同分组 !!!!!!!!!!!
+分组依据： 1.单点或多点 2.是否影响布局，查看信息或操作视图  3.是否影响源数据    4.
+
+深拷贝
+
+task: 一个完整的视图到视图的变化过程

@@ -213,4 +213,8 @@ export default {
   stroke: red;
   stroke-width: 1.5;
 }
+
+.DataFlow rect {
+  stroke: none;
+}
 </style>

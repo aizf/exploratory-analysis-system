@@ -16,7 +16,7 @@
         </defs>
       </svg>
     </div>
-    <div :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
+    <div v-if=false :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
       <a-slider
         vertical
         :min="0.01"
@@ -36,7 +36,7 @@
         @change="forceLinkChange"
       />
     </div>
-    <div :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
+    <div v-if=false :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
       <a-slider
         vertical
         :min="0"
