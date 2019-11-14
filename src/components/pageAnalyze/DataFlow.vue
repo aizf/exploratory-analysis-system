@@ -53,6 +53,9 @@ export default {
     operations() {
       return this.$store.state.operations;
     },
+    operationTypes() {
+      return this.$store.state.operationTypes;
+    },
     dataFlow() {
       return this.$store.state.dataFlow;
     }
@@ -78,12 +81,17 @@ export default {
     this.nodeG = this.vis
       .append("g")
       .attr("class", "nodeG")
-      .attr("stroke", "#000");
+      .attr("stroke", "#000")
+      .attr("class", "nodes");
     this.linkG = this.vis
       .append("g")
       .attr("fill", "none")
-      .attr("stroke-opacity", 0.5);
-    this.textG = this.vis.append("g").style("font", "10px sans-serif");
+      .attr("stroke-opacity", 0.5)
+      .attr("class", "links");
+    this.textG = this.vis
+      .append("g")
+      .attr("class", "texts")
+      .style("font", "10px sans-serif");
 
     this.update();
   },
@@ -94,11 +102,11 @@ export default {
     update() {
       let that = this;
       console.log(this);
-      console.log(this.dataFlow);
+      console.log("dataFlow:", this.dataFlow);
       this.$store.state.formattedDataFlow();
       let { nodes, links } = this.sankey(this.dataFlow);
-
       // console.log(nodes, links);
+
       this.node = this.nodeG
         .selectAll("g")
         .data(nodes)
@@ -137,6 +145,8 @@ export default {
         .attr("dy", "0.35em")
         .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
         .text(d => d.id || d.name);
+
+      this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
     createMultipleColorsRect(d, i, p) {
       let height = d.y1 - d.y0;
@@ -170,6 +180,53 @@ export default {
       });
       g.on("click", () => {
         this.updateTooltip(d.data);
+      });
+    },
+    dataFlowShowOperations(_ = true) {
+      // const width = this.sankey.nodeWidth() / 2;
+      const width = 10;
+      const height = 50;
+      const r = 15;
+      this.link.selectAll("path").remove();
+      this.link.each((d, i, p) => {
+        console.log(d);
+        let operations = d.operations.map(d => d.action);
+        let op_num = operations.length;
+        if (!op_num) return; // TODO: 0个操作时，直接加曲线
+        let left = [d.source.x1, d.y0];
+        let right = [d.target.x0, d.y1];
+        let padding = [
+          (right[0] - left[0]) / (op_num + 1),
+          (right[1] - left[1]) / (op_num + 1)
+        ];
+        let op_node = d3
+          .select(p[i])
+          .selectAll("circle")
+          .data(operations)
+          .join("circle")
+          .attr("cx", (d, i) => left[0] + (i + 1) * padding[0])
+          .attr("cy", (d, i) => left[1] + (i + 1) * padding[1])
+          .attr("r", r)
+          .attr("fill", d => this.colorPalette[this.operationTypes.indexOf(d)]);
+        // debugger
+        op_node.append("title").text(d => d);
+        console.log(op_node);
+        let links = new Array(op_num - 1).fill({});
+        let op_link = d3
+          .select(p[i])
+          .selectAll("path")
+          .data(links)
+          .join("path")
+          .attr("d", (d, i) => {
+            d3.linkHorizontal()
+              .source([left[0] + i * padding[0], left[1] + i * padding[1]])
+              .target([
+                left[0] + (i + 1) * padding[0],
+                left[1] + (i + 1) * padding[1]
+              ]);
+          })
+          .attr("stroke", "#aaa")
+          .attr("stroke-width", 2 * r);
       });
     },
     updateTooltip(data) {

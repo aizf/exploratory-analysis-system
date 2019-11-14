@@ -30,7 +30,7 @@ import store from './store'
 
 Vue.prototype.$message = message;
 
-// Vue.use(Antd);
+// TODO: Vue.use(Antd);
 Vue.use(Button);
 Vue.use(Card);
 Vue.use(Checkbox);

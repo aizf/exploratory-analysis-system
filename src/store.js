@@ -47,7 +47,7 @@ export default new Vuex.Store({
     },
     operations: [], // operation={action:,nodes:,time:}
     operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
-    operations_: [], // 改变visualData的操作
+    operations_: [], // 切换view的操作
     operation_Types: ["rollback", "slice", "sliceUndo"],
     backgroundColor: "#333",
     contrastColor: "#eee",
