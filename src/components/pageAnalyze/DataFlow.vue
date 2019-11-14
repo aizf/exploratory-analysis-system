@@ -74,6 +74,7 @@ export default {
     svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
     this.sankey = d3Sankey
       .sankey()
+      .nodeAlign(d3Sankey["sankeyLeft"])
       .nodeId(d => d.id || d.name)
       .nodeWidth(45)
       .nodePadding(60)
