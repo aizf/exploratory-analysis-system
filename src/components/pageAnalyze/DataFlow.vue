@@ -76,7 +76,7 @@ export default {
       .sankey()
       .nodeId(d => d.id || d.name)
       .nodeWidth(45)
-      .nodePadding(40)
+      .nodePadding(60)
       .extent([[1, 5], [this.width - 1, this.height - 5]]);
     this.nodeG = this.vis
       .append("g")
@@ -127,15 +127,28 @@ export default {
 
       this.link
         .append("path")
-        .attr("d", d3Sankey.sankeyLinkHorizontal())
+        .attr("d", (d, i) =>
+          d3
+            .linkHorizontal()
+            .source(dd => [d.source.x1, (d.source.y0 + d.source.y1) / 2])
+            .target(dd => [d.target.x0, d.y1])()
+        )
         .attr("stroke", "#aaa")
-        .attr("stroke-width", d => Math.max(1, d.width))
+        .attr("stroke-width", 5)
+        // .attr("stroke-width", d => Math.max(1, d.width))
         .append("title")
         .text(d => {
           let operations = d.operations.map(d => d.action).join("→");
           return `${d.source.id} → ${d.target.id}\n${operations}`;
         });
-
+      // console.log("sankeylink", d3Sankey.sankeyLinkHorizontal()(links[0]));
+      // console.log(
+      //   "slink",
+      //   d3
+      //     .linkHorizontal()
+      //     .source(d => [0, 0])
+      //     .target(d => [1, 1])(links[0])
+      // );
       this.textG
         .selectAll("text")
         .data(nodes)
@@ -187,20 +200,43 @@ export default {
       const width = 10;
       const height = 50;
       const r = 15;
-      this.link.selectAll("path").remove();
+      // this.link.selectAll("path").remove();
       this.link.each((d, i, p) => {
-        console.log(d);
+        // console.log(d);
         let operations = d.operations.map(d => d.action);
         let op_num = operations.length;
         if (!op_num) return; // TODO: 0个操作时，直接加曲线
-        let left = [d.source.x1, d.y0];
+        d3.select(p[i])
+          .select("path")
+          .remove();
+        let left = [d.source.x1, (d.source.y0 + d.source.y1) / 2];
         let right = [d.target.x0, d.y1];
         let padding = [
           (right[0] - left[0]) / (op_num + 1),
           (right[1] - left[1]) / (op_num + 1)
         ];
+
+        let links = new Array(op_num + 1).fill({});
+        let op_link = d3
+          .select(p[i])
+          .selectAll("path")
+          .data(links)
+          .join("path")
+          .attr("d", (d, i) =>
+            d3
+              .linkHorizontal()
+              .source(d => [left[0] + i * padding[0], left[1] + i * padding[1]])
+              .target(d => [
+                left[0] + (i + 1) * padding[0],
+                left[1] + (i + 1) * padding[1]
+              ])()
+          )
+          .attr("stroke", "#aaa")
+          .attr("stroke-width", 5);
+        console.log(op_link);
         let op_node = d3
           .select(p[i])
+          .attr("class", "linkLink")
           .selectAll("circle")
           .data(operations)
           .join("circle")
@@ -210,23 +246,13 @@ export default {
           .attr("fill", d => this.colorPalette[this.operationTypes.indexOf(d)]);
         // debugger
         op_node.append("title").text(d => d);
-        console.log(op_node);
-        let links = new Array(op_num - 1).fill({});
-        let op_link = d3
-          .select(p[i])
-          .selectAll("path")
-          .data(links)
-          .join("path")
-          .attr("d", (d, i) => {
-            d3.linkHorizontal()
-              .source([left[0] + i * padding[0], left[1] + i * padding[1]])
-              .target([
-                left[0] + (i + 1) * padding[0],
-                left[1] + (i + 1) * padding[1]
-              ]);
-          })
-          .attr("stroke", "#aaa")
-          .attr("stroke-width", 2 * r);
+        // console.log(op_node);
+        // console.log(
+        //   d3
+        //     .linkHorizontal()
+        //     .source([0, 0])
+        //     .target(1, 1)
+        // );
       });
     },
     updateTooltip(data) {
