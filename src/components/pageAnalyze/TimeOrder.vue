@@ -1,5 +1,15 @@
 <template>
-  <div class="operations"></div>
+  <div class="TimeOrder" :style="{width: '100%',height:(height+50)+'px'}">
+    <div class="operations"></div>
+    <div>
+      <a-select defaultValue="0" style="width: 320px" @change="yAxisChange">
+        <a-select-option value="0">按照名称</a-select-option>
+        <a-select-option value="1">源数据(个数/field)是否变化</a-select-option>
+        <a-select-option value="2">操作点的数量</a-select-option>
+        <a-select-option value="3">是否影响布局</a-select-option>
+      </a-select>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -78,6 +88,17 @@ export default {
       action: {
         type: "cat", // 指定 cat 分类类型
         values: this.$store.state.operationTypes // 重新指定 c 属性每一个的值
+      },
+      isChangeSource: {
+        type: "cat",
+        values: [false, true]
+      },
+      nodesNum: {
+        type: "linear"
+      },
+      isChangeLayout: {
+        type: "cat",
+        values: [false, true]
       }
     };
     this.view = this.chart.view();
@@ -141,6 +162,123 @@ export default {
     this.view.changeData(this.operations);
     this.view_.changeData(this.operations_);
   },
-  methods: {}
+  methods: {
+    update() {},
+    yAxisChange(value) {
+      switch (value) {
+        case "0":
+          this.yAxis0();
+          break;
+        case "1":
+          this.yAxis1();
+          break;
+        case "2":
+          this.yAxis2();
+          break;
+        case "3":
+          this.yAxis3();
+          break;
+        default:
+          break;
+      }
+    },
+    // ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"]
+    yAxis0() {
+      console.log(this.view);
+      this.view.changeData(this.operations);
+      this.view.position("time*action");
+      this.chart.render();
+    },
+    yAxis1() {
+      const defs = {
+      time: {
+        type: "time", // 指定 time 类型
+        mask: "HH:mm:ss", // 指定时间的输出格式
+        sync: true
+      },
+      action: {
+        type: "cat", // 指定 cat 分类类型
+        values: this.$store.state.operationTypes // 重新指定 c 属性每一个的值
+      },
+      isChangeSource: {
+        type: "cat",
+        values: [false, true]
+      },
+      nodesNum: {
+        type: "linear"
+      },
+      isChangeLayout: {
+        type: "cat",
+        values: [false, true]
+      }
+    };
+      let ops = this.operations.forEach(d => {
+        switch (d.action) {
+          case "drag":
+          case "mouseover":
+          case "zoom":
+            d.isChangeSource = false;
+            break;
+          case "click":
+          case "brush":
+          case "invertBrush":
+            d.isChangeSource = true;
+            break;
+          default:
+            console.log("TimeOder > yAxis1 > bug");
+        }
+      });
+this.view.clear();
+      this.view.source(ops,defs);
+      this.view
+        .point()
+        .position("time*isChangeSource")
+        .color("action")
+        .size("nodes", nodes => {
+          let size = Math.sqrt(nodes.length);
+          return size > 4.5 ? size : 4.5;
+        })
+        .opacity(0.8)
+        .shape("circle")
+        .tooltip("time*action", (time, action, nodes) => {
+          return {
+            name: action,
+            value: `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
+          };
+        });
+      // this.view.changeData(ops);
+      // this.view.position("time*isChangeSource");
+      this.chart.render();
+    },
+    yAxis2() {
+      let ops = this.operations.forEach(d => {
+        d.nodesNum = d.nodes.length;
+      });
+      this.view.changeData(ops);
+      this.view.position("time*nodesNum");
+      this.chart.render();
+    },
+    yAxis3() {
+      let ops = this.operations.forEach(d => {
+        switch (d.action) {
+          case "drag":
+          case "mouseover":
+          case "zoom":
+            d.isChangeLayout = true;
+            break;
+          case "click":
+          case "brush":
+          case "invertBrush":
+            d.isChangeLayout = false;
+            break;
+          default:
+            console.log("TimeOder > yAxis3 > bug");
+        }
+      });
+      this.view.changeData(ops);
+      this.view.position("time*isChangeLayout");
+      this.chart.render();
+    }
+  }
 };
 </script>
