@@ -16,7 +16,7 @@
       >
         <a-sub-menu key="sub1">
           <span slot="title">
-            <a-icon type="user" />
+            <a-icon type="database" />
             <span>Dataset</span>
           </span>
           <!--  -->
@@ -30,7 +30,7 @@
           </a-menu-item-group>
         </a-sub-menu>
 
-        <a-sub-menu key="sub2">
+        <!-- <a-sub-menu key="sub2">
           <span slot="title">
             <a-icon type="laptop" />
             <span>hierarchical</span>
@@ -49,7 +49,7 @@
           <a-menu-item key="10">option10</a-menu-item>
           <a-menu-item key="11">option11</a-menu-item>
           <a-menu-item key="12">option12</a-menu-item>
-        </a-sub-menu>
+        </a-sub-menu> -->
       </a-menu>
     </a-layout-sider>
 

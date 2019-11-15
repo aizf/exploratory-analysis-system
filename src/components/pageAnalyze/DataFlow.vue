@@ -200,7 +200,7 @@ export default {
       // const width = this.sankey.nodeWidth() / 2;
       const width = 10;
       const height = 50;
-      const r = 15;
+      const r = 10;
       // this.link.selectAll("path").remove();
       this.link.each((d, i, p) => {
         // console.log(d);
