@@ -206,7 +206,7 @@ export default {
         // console.log(d);
         let operations = d.operations.map(d => d.action);
         let op_num = operations.length;
-        if (!op_num) return; // TODO: 0个操作时，直接加曲线
+        if (!op_num) return;
         d3.select(p[i])
           .select("path")
           .remove();

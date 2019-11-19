@@ -161,6 +161,26 @@ export default new Vuex.Store({
       links.forEach(link => {
         link.value = uniqIds[link.target] || uniqIds[link.target.id];
       })
+    },
+    dataDeepClone(oldData) {
+      // 深拷贝数据集，格式data={nodes:[],links:[]}
+      let oldNodes = oldData.nodes;
+      let oldLinks = oldData.links;
+      let newNodes = [];
+      let newLinks = [];
+      let tempDict = {};  // 查找字典
+      for (let oldNode of oldNodes) {
+        let newNode = Object.assign({}, oldNode);
+        newNodes.push(newNode);
+        tempDict[newNode.id] = newNode;
+      }
+      for (let oldLink of oldLinks) {
+        let newLink = Object.assign({}, oldLink);
+        // 更改 source 和 target 指向的 node
+        newLink.source = tempDict[newLink.source.id];
+        newLink.target = tempDict[newLink.target.id];
+        newLinks.push(newLink);
+      }
     }
 
   },
