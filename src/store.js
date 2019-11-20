@@ -181,6 +181,7 @@ export default new Vuex.Store({
         newLink.target = tempDict[newLink.target.id];
         newLinks.push(newLink);
       }
+      return { nodes: newNodes, links: newLinks }
     }
 
   },
