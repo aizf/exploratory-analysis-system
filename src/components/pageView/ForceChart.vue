@@ -16,7 +16,10 @@
         </defs>
       </svg>
     </div>
-    <div v-if=false :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
+    <div
+      v-if="false"
+      :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}"
+    >
       <a-slider
         vertical
         :min="0.01"
@@ -36,7 +39,10 @@
         @change="forceLinkChange"
       />
     </div>
-    <div v-if=false :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
+    <div
+      v-if="false"
+      :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}"
+    >
       <a-slider
         vertical
         :min="0"
@@ -113,6 +119,15 @@ export default {
     visualData() {
       return this.$store.state.visualData;
     },
+    parentUUID() {
+      return this.$store.state.parentUUID;
+    },
+    currentUUID() {
+      return this.$store.state.currentUUID;
+    },
+    generateUUID() {
+      return this.$store.state.generateUUID;
+    },
     nodes() {
       return this.$store.getters.nodes;
     },
@@ -180,26 +195,32 @@ export default {
     this.brush = d3
       .brush()
       .extent([[0, 0], [width, height]])
-      .on("start brush", this.brushed)
+      .on("start", this.brushStart)
+      .on("brush", this.brushed)
       .on("end", this.brushEnd);
     this.brushG = svg
       .append("g")
       .call(this.brush)
       .attr("class", "brush");
     // console.log(this.brushG);
+
+    // 使鼠标不能触发
     this.visBrush
       ? this.brushG.style("display", "inline")
       : this.brushG.style("display", "none");
+
     // invertBrush
     this.invertBrush = d3
       .brush()
       .extent([[0, 0], [width, height]])
-      .on("start brush", this.brushed)
+      .on("start.mouse", this.brushStart)
+      .on("brush", this.brushed)
       .on("end", this.invertBrushEnd);
     this.invertBrushG = svg
       .append("g")
       .call(this.invertBrush)
       .attr("class", "invertBrush");
+
     this.visInvertBrush
       ? this.invertBrushG.style("display", "inline")
       : this.invertBrushG.style("display", "none");
@@ -368,9 +389,33 @@ export default {
         this.text.attr("x", d => d.x).attr("y", d => d.y);
       }
     },
-    brushed() {
+    brushStart() {
+      // 记录之前的状态
       // console.log(d3.event);
+      // debugger
       if (d3.event.selection === null) return;
+      let arg = {
+        data: this.visualData,
+        uuid: this.currentUUID,
+        operation: this.visBrush ? "brush" : "invertBrush",
+        time: new Date()
+      };
+      this.$store.commit("addRecordData", arg);
+      this.$store.commit("updateParentUUID", this.currentUUID);
+      this.$store.commit("updateCurrentUUID", this.generateUUID());
+
+      if (!this.brushKeep && this.visBrush) {
+        this.node
+          .classed("selected", false)
+          .classed("brushing", false)
+          .each(d => {
+            d.selected = false;
+          });
+      }
+    },
+    brushed() {
+      if (d3.event.selection === null) return;
+      console.log("brushing");
       let extent = d3.event.selection; // brush的一个事件
       let transform = this.visTransform();
       let extentStart = transform.invert(extent[0]); // brush的开始坐标
@@ -379,16 +424,6 @@ export default {
       // console.log(extent);
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
-      if (d3.event.type === "start") {
-        if (!this.brushKeep) {
-          this.node
-            .classed("selected", false)
-            .classed("brushing", false)
-            .each(d => {
-              d.selected = false;
-            });
-        }
-      }
 
       let className = this.visBrush ? "brushing" : "invertBrushing";
 
@@ -403,6 +438,7 @@ export default {
     },
     brushEnd() {
       if (d3.event.selection === null) return;
+      console.log("brushed");
       this.brushedNodes = this.nodeG.selectAll(".brushing");
       // console.log(this.brushedNodes);
       this.brushedNodes
@@ -620,15 +656,14 @@ export default {
   watch: {
     visBrush: function(val) {
       val
-        ? (this.brushG.style("display", "inline"),
-          this.brush.clear(this.brushG))
-        : this.brushG.style("display", "none");
+        ? this.brushG.style("display", "inline")
+        : (this.brushG.style("display", "none"), this.brush.clear(this.brushG));
     },
     visInvertBrush: function(val) {
       val
-        ? (this.invertBrushG.style("display", "inline"),
-          this.invertBrush.clear(this.invertBrushG))
-        : this.invertBrushG.style("display", "none");
+        ? this.invertBrushG.style("display", "inline")
+        : (this.invertBrushG.style("display", "none"),
+          this.invertBrush.clear(this.invertBrushG));
     },
     visShowIds: function(val) {
       val

@@ -49,6 +49,8 @@ export default new Vuex.Store({
     operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
     operations_: [], // 切换view的操作
     operation_Types: ["rollback", "slice", "sliceUndo"],
+    recordset: [],
+    // recordData,
     backgroundColor: "#333",
     contrastColor: "#eee",
     colorPalette: [
@@ -182,6 +184,39 @@ export default new Vuex.Store({
         newLinks.push(newLink);
       }
       return { nodes: newNodes, links: newLinks }
+    },
+    recordData(arg) {
+      class RecordData {
+        constructor({ data, uuid, operation, time, change = null }) {
+          this.data = this.dataDeepClone(data); // 操作之前的数据
+          this.uuid = uuid;
+          this.operation = operation;
+          this.time = time;
+          this.change = change; // 当data变化不大时，data指向上一次的data，用change保存变化
+        }
+        dataDeepClone(oldData) {
+          // 深拷贝数据集，格式data={nodes:[],links:[]}
+          let oldNodes = oldData.nodes;
+          let oldLinks = oldData.links;
+          let newNodes = [];
+          let newLinks = [];
+          let tempDict = {};  // 查找字典
+          for (let oldNode of oldNodes) {
+            let newNode = Object.assign({}, oldNode);
+            newNodes.push(newNode);
+            tempDict[newNode.id] = newNode;
+          }
+          for (let oldLink of oldLinks) {
+            let newLink = Object.assign({}, oldLink);
+            // 更改 source 和 target 指向的 node
+            newLink.source = tempDict[newLink.source.id];
+            newLink.target = tempDict[newLink.target.id];
+            newLinks.push(newLink);
+          }
+          return { nodes: newNodes, links: newLinks }
+        }
+      }
+      return new RecordData(arg);
     }
 
   },
@@ -268,6 +303,10 @@ export default new Vuex.Store({
       };
       state.parentUUID = "root";
       state.currentUUID = "root";
+    },
+    addRecordData: (state, arg) => {
+      // arg 格式: [data, uuid, operation,time]
+      state.recordset.push(state.recordData(arg));
     },
     addOperation: (state, data) => {
       state.operations.push(data);
