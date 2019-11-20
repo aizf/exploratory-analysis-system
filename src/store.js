@@ -188,6 +188,7 @@ export default new Vuex.Store({
     recordData(arg) {
       class RecordData {
         constructor({ data, uuid, operation, time, change = null }) {
+          // 存储的数据在操作之前
           this.data = this.dataDeepClone(data); // 操作之前的数据
           this.uuid = uuid;
           this.operation = operation;

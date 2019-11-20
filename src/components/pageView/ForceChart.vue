@@ -179,6 +179,7 @@ export default {
       .call(
         d3
           .zoom()
+          .on("start", zoomStart)
           .on("zoom", zoomed)
           .on("end", zoomEnd)
       )
@@ -234,6 +235,9 @@ export default {
       : this.textG.style("display", "none");
     this.update();
 
+    function zoomStart() {
+      that.eventCallback("zoom");
+    }
     function zoomed() {
       if (!that.visZoom) return;
       let transform = d3.event.transform;
@@ -394,15 +398,7 @@ export default {
       // console.log(d3.event);
       // debugger
       if (d3.event.selection === null) return;
-      let arg = {
-        data: this.visualData,
-        uuid: this.currentUUID,
-        operation: this.visBrush ? "brush" : "invertBrush",
-        time: new Date()
-      };
-      this.$store.commit("addRecordData", arg);
-      this.$store.commit("updateParentUUID", this.currentUUID);
-      this.$store.commit("updateCurrentUUID", this.generateUUID());
+      this.eventCallback(this.visBrush ? "brush" : "invertBrush");
 
       if (!this.brushKeep && this.visBrush) {
         this.node
@@ -480,6 +476,7 @@ export default {
     // drag
     dragstarted(d) {
       if (!this.visDrag) return;
+      this.eventCallback("drag");
       if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
@@ -522,6 +519,7 @@ export default {
     },
     clickSelect(d, i, p) {
       if (this.visClick) {
+        this.eventCallback("click");
         let t = d3.select(p[i]);
         if (t.classed("selected")) {
           t.classed("selected", false);
@@ -543,6 +541,13 @@ export default {
     },
     mouseover(d) {
       if (!this.visMouseover || this.isDraging) return;
+      let arg = {
+        data: this.visualData,
+        uuid: this.currentUUID,
+        operation: "mouseover",
+        time: new Date()
+      };
+      this.$store.commit("addRecordData", arg);
       let displayNodes = null;
       // let opacityNodes = null;
       let displayLinks = null;
@@ -629,6 +634,17 @@ export default {
         .transition()
         .delay(200)
         .style("fill-opacity", null);
+    },
+    eventCallback(operation) {
+      let arg = {
+        data: this.visualData,
+        uuid: this.currentUUID,
+        operation: operation,
+        time: new Date()
+      };
+      this.$store.commit("addRecordData", arg);
+      this.$store.commit("updateParentUUID", this.currentUUID);
+      this.$store.commit("updateCurrentUUID", this.generateUUID());
     },
     forceLinkChange() {
       // 调整Link力的布局函数
