@@ -214,7 +214,7 @@ export default {
     this.invertBrush = d3
       .brush()
       .extent([[0, 0], [width, height]])
-      .on("start.mouse", this.brushStart)
+      .on("start", this.brushStart)
       .on("brush", this.brushed)
       .on("end", this.invertBrushEnd);
     this.invertBrushG = svg
