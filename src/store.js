@@ -165,6 +165,7 @@ export default new Vuex.Store({
       })
     },
     dataDeepClone(oldData) {
+      // 不适用与所有的Object !!!
       // 深拷贝数据集，格式data={nodes:[],links:[]}
       let oldNodes = oldData.nodes;
       let oldLinks = oldData.links;
@@ -184,6 +185,31 @@ export default new Vuex.Store({
         newLinks.push(newLink);
       }
       return { nodes: newNodes, links: newLinks }
+    },
+    layoutRange(data, args) {
+      // args 上右下左的属性field
+      let dict = {};
+      for (let arg of args) {
+        dict[arg] = data[0][arg];
+      }
+      for (let d of data.slice(1)) {
+        for (let i in args) {
+          switch (i) {
+            case "0": // 上
+            case "3": // 左
+              dict[args[+i]] = Math.min(d[args[+i]], dict[args[+i]]);
+              break;
+            case "1": // 右
+            case "2": // 下
+              dict[args[+i]] = Math.max(d[args[+i]], dict[args[+i]]);
+              break;
+            default:
+              throw new Error(`layoutRange args error`);
+          }
+        }
+      }
+
+      return Object.values(dict);
     },
     recordData(arg) {
       class RecordData {
@@ -272,6 +298,31 @@ export default new Vuex.Store({
         "links": getLinks(nodes)
       };
     },
+    recordFlow: (state) => {
+      // 先增加尾节点
+      let nodes = [...state.recordset];
+      nodes.push(state.recordData({
+        data: state.visualData,
+        uuid: state.currentUUID,
+        operation: "current",
+        time: new Date()
+      }));
+      nodes.forEach(node => {
+        node.fixedValue = node.data.nodes.length;
+      })
+      // links
+      let links = [];
+      for (let i in nodes) {
+        if (+i === 0) continue;
+        links.push({
+          source: nodes[+i - 1].uuid,
+          target: nodes[+i].uuid,
+          operation: nodes[+i - 1].operation
+        })
+      }
+
+      return { "nodes": nodes, "links": links };
+    }
   },
   mutations: {
     updateIsNewData: (state, data) => {

@@ -39,6 +39,9 @@ export default {
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
       vis: d3.selectAll(),
+      simulation: {},
+      linkStrength: 1,
+      linkLength: 0,
       mousePoint: [] // 相对于原始坐标系
     };
   },
@@ -68,8 +71,16 @@ export default {
         d3
           .zoom()
           .on("zoom", zoomed)
+          .on("end", zoomEnd)
       )
       .on("dblclick.zoom", null);
+
+    this.simulation = d3
+      .forceSimulation()
+      .force("link", d3.forceLink().id(d => d.id || d.name))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(width / 2, height / 2));
+    // console.log();
 
     // 初始化<g>，防止update()产生多个<g>
     this.linkG = this.vis.append("g").attr("class", "links");
@@ -81,11 +92,31 @@ export default {
       let transform = d3.event.transform;
       that.vis.attr("transform", transform);
     }
+    function zoomEnd() {
+      let transform = d3.event.transform;
+      let extentStart = transform.invert([0, 0]); // 视口的开始坐标
+      let extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
+      let t = that.node.filter(d => {
+        return (
+          extentStart[0] <= d.x &&
+          extentStart[1] <= d.y &&
+          d.x <= extentEnd[0] &&
+          d.y <= extentEnd[1]
+        );
+      });
+    }
   },
 
-  activated() {},
+  activated() {
+    // this.node
+    //   .classed("selected", d => d.selected)
+    //   .attr("fill", d => this.colorPalette[d.group || 0]);
+    this.simulation.tick();
+  },
 
-  deactivated() {},
+  deactivated() {
+    this.simulation.stop();
+  },
 
   methods: {
     update() {
@@ -101,11 +132,6 @@ export default {
         .selectAll("line")
         .data(this.links)
         .join("line");
-      this.link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
 
       this.node = this.nodeG
         .selectAll("circle")
@@ -119,15 +145,35 @@ export default {
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
         .classed("selected", d => d.selected);
+
+      this.simulation
+        .nodes(this.nodes)
+        .on("tick", this.ticked)
+        .on("end", this.tickEnd);
+      this.simulation.force("link").links(this.links);
+
+      this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
+    },
+    ticked() {
+      this.link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
       this.node.attr("cx", d => d.x).attr("cy", d => d.y);
 
-      let layoutRange = this.$store.state.layoutRange(this.nodes, [
-        "cy",
-        "cx",
-        "cx",
-        "cy"
-      ]);
-      console.log(layoutRange);
+      if (this.visShowIds) {
+        this.text.attr("x", d => d.x).attr("y", d => d.y);
+      }
+    },
+    tickEnd() {
+      // 静态布局
+      // this.link
+      //   .attr("x1", d => d.source.x)
+      //   .attr("y1", d => d.source.y)
+      //   .attr("x2", d => d.target.x)
+      //   .attr("y2", d => d.target.y);
+      // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
     },
 
     visTransform() {

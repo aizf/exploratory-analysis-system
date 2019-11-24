@@ -58,6 +58,9 @@ export default {
     },
     dataFlow() {
       return this.$store.state.dataFlow;
+    },
+    recordFlow() {
+      return this.$store.getters.recordFlow;
     }
   },
   mounted() {
@@ -75,7 +78,7 @@ export default {
     this.sankey = d3Sankey
       .sankey()
       .nodeAlign(d3Sankey["sankeyLeft"])
-      .nodeId(d => d.id || d.name)
+      .nodeId(d => d.uuid)
       .nodeWidth(45)
       .nodePadding(60)
       .extent([[1, 5], [this.width - 1, this.height - 5]]);
@@ -103,9 +106,9 @@ export default {
     update() {
       let that = this;
       console.log(this);
-      console.log("dataFlow:", this.dataFlow);
-      this.$store.state.formattedDataFlow();
-      let { nodes, links } = this.sankey(this.dataFlow);
+      console.log("recordFlow:", this.recordFlow);
+      // this.$store.state.formattedDataFlow();
+      let { nodes, links } = this.sankey(this.recordFlow);
       // console.log(nodes, links);
 
       this.node = this.nodeG
@@ -117,7 +120,7 @@ export default {
           this.createMultipleColorsRect(d, i, p);
         });
       // .attr("fill", "green");
-      this.node.append("title").text(d => `${d.id}\n${d.value}`);
+      this.node.append("title").text(d => `${d.uuid}\n${d.value}`);
       // .call(d3.drag().on("drag", this.dragged));
 
       this.link = this.linkG
@@ -126,47 +129,50 @@ export default {
         .join("g")
         .style("mix-blend-mode", "multiply");
 
+      // this.link.each(d => {
+      //   d.width = 5;
+      //   d.y0 = (d.source.y0 + d.source.y1) / 2;
+      //   d.y1 = (d.target.y0 + d.target.y1) / 2;
+      // });
+
       this.link
         .append("path")
-        .attr("d", (d, i) =>
+        .attr("d", d =>
           d3
             .linkHorizontal()
-            .source(dd => [d.source.x1, (d.source.y0 + d.source.y1) / 2])
-            .target(dd => [d.target.x0, d.y1])()
+            .source(() => [d.source.x1, (d.source.y0 + d.source.y1) / 2])
+            .target(() => [d.target.x0, (d.target.y0 + d.target.y1) / 2])()
         )
         .attr("stroke", "#aaa")
-        .attr("stroke-width", 5)
-        // .attr("stroke-width", d => Math.max(1, d.width))
-        .append("title")
-        .text(d => {
-          let operations = d.operations.map(d => d.action).join("→");
-          return `${d.source.id} → ${d.target.id}\n${operations}`;
-        });
-      // console.log("sankeylink", d3Sankey.sankeyLinkHorizontal()(links[0]));
-      // console.log(
-      //   "slink",
-      //   d3
-      //     .linkHorizontal()
-      //     .source(d => [0, 0])
-      //     .target(d => [1, 1])(links[0])
-      // );
+        .attr("stroke-width", 5);
+      this.link.append("title").text(d => {
+        // let operations = d.operations.map(d => d.action).join("→");
+        // return `${d.source.id} → ${d.target.id}\n${operations}`;
+        return d.operation;
+      });
+
+      // text的x，y反向，值为相反数
       this.textG
         .selectAll("text")
         .data(nodes)
         .join("text")
-        .attr("x", d => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
-        .attr("y", d => (d.y1 + d.y0) / 2)
-        .attr("dy", "0.35em")
-        .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
-        .text(d => d.id || d.name);
+        .attr("y", d => -(d.x1 + 6))
+        // .attr("x", d => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
+        .attr("x", d => -d.y0)
+        .attr("dx", "-0.35em")
+        .attr("text-anchor", "start")
+        // .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
+        .text(d => d.uuid)
+        .attr("transform", "rotate(90)")
+        .attr("transform-origin", "(left,bottom)");
 
-      this.dataFlowShowOperations(); // 显示视图节点间的操作
+      // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
     createMultipleColorsRect(d, i, p) {
       let height = d.y1 - d.y0;
       let width = d.x1 - d.x0;
       let nodes = d.data.nodes;
-      let totalNum = d.fixedValue;
+      let totalNum = d.data.nodes.length;
       let eachGroupNum = {};
       nodes.forEach(node => {
         if (!node.group) {

@@ -541,13 +541,7 @@ export default {
     },
     mouseover(d) {
       if (!this.visMouseover || this.isDraging) return;
-      let arg = {
-        data: this.visualData,
-        uuid: this.currentUUID,
-        operation: "mouseover",
-        time: new Date()
-      };
-      this.$store.commit("addRecordData", arg);
+      this.eventCallback("mouseover");
       let displayNodes = null;
       // let opacityNodes = null;
       let displayLinks = null;
