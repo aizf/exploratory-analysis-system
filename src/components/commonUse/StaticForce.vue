@@ -116,16 +116,16 @@ export default {
         .classed("selected", d => d.selected);
       this.node.attr("cx", d => d.x).attr("cy", d => d.y);
 
+      // 调整布局，使图显示在画布中间，并调整大小
       let layoutRange = this.$store.state.layoutRange(this.nodes, [
         "y",
         "x",
         "y",
         "x"
       ]);
-      // console.log(this.nodes);
       // console.log(layoutRange);
       let t = this.visTransform();
-      // t 存储在svg的__zoom中，更改t的属性，不更换对象
+      // t 存储在svg的__zoom中，更改t的属性，不能更换对象
       let vw = layoutRange[1] - layoutRange[3]; // vis的宽
       let vh = layoutRange[2] - layoutRange[0]; // vis的高
       let k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
@@ -141,7 +141,6 @@ export default {
       t.x = x;
       t.y = y;
       t.k = k;
-      // console.log();
       this.vis.attr("transform", t);
     },
 
