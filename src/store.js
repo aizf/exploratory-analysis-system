@@ -188,20 +188,25 @@ export default new Vuex.Store({
     },
     layoutRange(data, args) {
       // args 上右下左的属性field
-      let dict = {};
-      for (let arg of args) {
-        dict[arg] = data[0][arg];
+      let dict = [];
+      for (let i in args) {
+        dict[+i] = data[0][args[+i]];
       }
+      
       for (let d of data.slice(1)) {
         for (let i in args) {
           switch (i) {
             case "0": // 上
+            case 0:
             case "3": // 左
-              dict[args[+i]] = Math.min(d[args[+i]], dict[args[+i]]);
+            case 3:
+              dict[+i] = Math.min(d[args[+i]], dict[+i]);
               break;
             case "1": // 右
+            case 1:
             case "2": // 下
-              dict[args[+i]] = Math.max(d[args[+i]], dict[args[+i]]);
+            case 2:
+              dict[+i] = Math.max(d[args[+i]], dict[+i]);
               break;
             default:
               throw new Error(`layoutRange args error`);

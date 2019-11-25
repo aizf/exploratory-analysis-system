@@ -63,13 +63,7 @@ export default {
     // console.log(svg);
 
     this.vis = svg.append("g");
-    svg
-      .call(
-        d3
-          .zoom()
-          .on("zoom", zoomed)
-      )
-      .on("dblclick.zoom", null);
+    svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
 
     // 初始化<g>，防止update()产生多个<g>
     this.linkG = this.vis.append("g").attr("class", "links");
@@ -79,6 +73,7 @@ export default {
 
     function zoomed() {
       let transform = d3.event.transform;
+      // console.log(d3.event.transform === that.visTransform());
       that.vis.attr("transform", transform);
     }
   },
@@ -122,12 +117,32 @@ export default {
       this.node.attr("cx", d => d.x).attr("cy", d => d.y);
 
       let layoutRange = this.$store.state.layoutRange(this.nodes, [
-        "cy",
-        "cx",
-        "cx",
-        "cy"
+        "y",
+        "x",
+        "y",
+        "x"
       ]);
-      console.log(layoutRange);
+      // console.log(this.nodes);
+      // console.log(layoutRange);
+      let t = this.visTransform();
+      // t 存储在svg的__zoom中，更改t的属性，不更换对象
+      let vw = layoutRange[1] - layoutRange[3]; // vis的宽
+      let vh = layoutRange[2] - layoutRange[0]; // vis的高
+      let k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
+
+      // 计算svg中心坐标和vis中心坐标
+      let svgP = [this.width / 2, this.height / 2];
+      let visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
+
+      // Xvis*k + x = Xsvg
+      let x = svgP[0]-visP[0]*k;
+      let y = svgP[1]-visP[1]*k;
+
+      t.x = x;
+      t.y = y;
+      t.k = k;
+      // console.log();
+      this.vis.attr("transform", t);
     },
 
     visTransform() {
