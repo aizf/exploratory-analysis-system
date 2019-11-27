@@ -47,10 +47,10 @@ export default {
   },
   computed: {
     backgroundColor() {
-      return this.$store.state.backgroundColor;
+      return this.$store.state.view.backgroundColor;
     },
     colorPalette() {
-      return this.$store.state.colorPalette;
+      return this.$store.state.view.colorPalette;
     }
   },
   mounted() {

@@ -104,22 +104,22 @@ export default {
   },
   computed: {
     sourceData() {
-      return this.$store.state.sourceData;
+      return this.$store.state.data.sourceData;
     },
     visualData() {
-      return this.$store.state.visualData;
+      return this.$store.state.data.visualData;
     },
     nodes() {
       return this.$store.getters.nodes;
     },
     datasets() {
-      return this.$store.state.datasets;
+      return this.$store.state.data.datasets;
     },
     currentUUID() {
-      return this.$store.state.currentUUID;
+      return this.$store.state.view.currentUUID;
     },
     generateUUID() {
-      return this.$store.state.generateUUID;
+      return this.$store.state.view.generateUUID;
     }
   },
   methods: {

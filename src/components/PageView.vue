@@ -345,7 +345,7 @@ export default {
     },
     // 切片和切片回退
     viewSlice() {
-      let slicedData = this.$store.state.viewSlice();
+      let slicedData = this.$store.state.view.viewSlice();
       if (!slicedData.nodes.length) {
         this.$message.error("No nodes are selected !");
         return;
@@ -411,7 +411,7 @@ export default {
     },
     groupTheSelectedNodes(group) {
       // console.log(group);
-      let selectedNodes = this.$store.state.selectedNodes();
+      let selectedNodes = this.$store.state.view.selectedNodes();
       selectedNodes.forEach(d => {
         d.group = group;
       });
@@ -434,39 +434,39 @@ export default {
   },
   computed: {
     colorPalette() {
-      return this.$store.state.colorPalette;
+      return this.$store.state.view.colorPalette;
     },
     isNewData() {
-      return this.$store.state.isNewData;
+      return this.$store.state.data.isNewData;
     },
     sourceData() {
-      return this.$store.state.sourceData;
+      return this.$store.state.data.sourceData;
     },
     visualData() {
-      return this.$store.state.visualData;
+      return this.$store.state.data.visualData;
     },
-    nodes: state => {
-      return state.visualData.nodes;
+    nodes(){
+      return this.$store.getters.nodes;
     },
-    links: state => {
-      return state.visualData.links;
+    links(){
+      return this.$store.getters.links;
     },
     // dataFlow
     parentUUID() {
-      return this.$store.state.parentUUID;
+      return this.$store.state.view.parentUUID;
     },
     currentUUID() {
-      return this.$store.state.currentUUID;
+      return this.$store.state.view.currentUUID;
     },
     generateUUID() {
-      return this.$store.state.generateUUID;
+      return this.$store.state.public_function.generateUUID;
     },
     currentOperations() {
-      return this.$store.state.currentOperations;
+      return this.$store.state.analyze.currentOperations;
     },
 
     viewUpdate() {
-      return this.$store.state.viewUpdate;
+      return this.$store.state.view.viewUpdate;
     },
     currentChart() {
       switch (this.currentChartKey) {
@@ -496,10 +496,10 @@ export default {
       }
     },
     undoStack() {
-      return this.$store.state.undoStack;
+      return this.$store.state.analyze.undoStack;
     },
     redoStack() {
-      return this.$store.state.redoStack;
+      return this.$store.state.analyze.redoStack;
     },
     savedViewData() {
       return this.$store.getters.savedViewData;
@@ -508,14 +508,14 @@ export default {
       return !this.sliceUndoList.length;
     },
     rollbacked() {
-      return this.$store.state.rollbacked;
+      return this.$store.state.analyze.rollbacked;
     }
   },
   watch: {
     rollbacked: function(val) {
       if (val) {
         this.sliceUndoList = [];
-        this.$store.state.rollbacked = false;
+        this.$store.state.analyze.rollbacked = false;
       }
     },
     isNewData: function(val) {

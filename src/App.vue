@@ -60,7 +60,7 @@ export default {
       }
     },
     visualData() {
-      return this.$store.state.visualData;
+      return this.$store.state.data.visualData;
     },
     dataSelected() {
       return !!this.visualData;
@@ -70,6 +70,14 @@ export default {
     },
     pageAnalyzeTooltipTitle() {
       return !this.dataSelected ? "请先在左侧选择数据" : "交互分析界面";
+    },
+    test: {
+      get: function() {
+        return this.currentPageKey + "A";
+      },
+      set: function(val) {
+        return this.currentPageKey + val;
+      }
     }
   }
 };

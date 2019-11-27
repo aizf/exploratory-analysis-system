@@ -15,7 +15,6 @@
 <script>
 import * as d3 from "d3";
 import G2 from "@antv/g2";
-import { View } from "@antv/data-set";
 
 export default {
   name: "TimeOrder",

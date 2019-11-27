@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import axios from 'axios';
 
 // import Antd from 'ant-design-vue'
 import "ant-design-vue/dist/antd.css";
@@ -26,9 +27,10 @@ import {
   Tooltip
 } from 'ant-design-vue'
 
-import store from './store'
+import store from './store/'
 
 Vue.prototype.$message = message;
+Vue.prototype.$axios = axios;
 
 // TODO: Vue.use(Antd);
 Vue.use(Button);

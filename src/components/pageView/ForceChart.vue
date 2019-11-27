@@ -108,25 +108,25 @@ export default {
   },
   computed: {
     chartWidth() {
-      return this.$store.state.dpiX * 0.7;
+      return this.$store.state.view.dpiX * 0.7;
     },
     chartHeight() {
-      return this.$store.state.dpiY * 0.7;
+      return this.$store.state.view.dpiY * 0.7;
     },
     sourceData() {
-      return this.$store.state.sourceData;
+      return this.$store.state.data.sourceData;
     },
     visualData() {
-      return this.$store.state.visualData;
+      return this.$store.state.data.visualData;
     },
     parentUUID() {
-      return this.$store.state.parentUUID;
+      return this.$store.state.view.parentUUID;
     },
     currentUUID() {
-      return this.$store.state.currentUUID;
+      return this.$store.state.view.currentUUID;
     },
     generateUUID() {
-      return this.$store.state.generateUUID;
+      return this.$store.state.public_function.generateUUID;
     },
     nodes() {
       return this.$store.getters.nodes;
@@ -135,10 +135,10 @@ export default {
       return this.$store.getters.links;
     },
     backgroundColor() {
-      return this.$store.state.backgroundColor;
+      return this.$store.state.view.backgroundColor;
     },
     colorPalette() {
-      return this.$store.state.colorPalette;
+      return this.$store.state.view.colorPalette;
     },
     nodesNumber() {
       return this.$store.getters.nodesNumber;
