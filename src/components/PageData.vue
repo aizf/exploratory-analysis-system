@@ -49,7 +49,7 @@
           <a-menu-item key="10">option10</a-menu-item>
           <a-menu-item key="11">option11</a-menu-item>
           <a-menu-item key="12">option12</a-menu-item>
-        </a-sub-menu> -->
+        </a-sub-menu>-->
       </a-menu>
     </a-layout-sider>
 
@@ -65,6 +65,7 @@
   </a-layout>
 </template>
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 
 import { codemirror } from "vue-codemirror";
@@ -103,24 +104,14 @@ export default {
     };
   },
   computed: {
-    sourceData() {
-      return this.$store.state.data.sourceData;
-    },
-    visualData() {
-      return this.$store.state.data.visualData;
-    },
-    nodes() {
-      return this.$store.getters.nodes;
-    },
-    datasets() {
-      return this.$store.state.data.datasets;
-    },
-    currentUUID() {
-      return this.$store.state.view.currentUUID;
-    },
-    generateUUID() {
-      return this.$store.state.view.generateUUID;
-    }
+    ...mapState({
+      sourceData: state => state.data.sourceData,
+      visualData: state => state.data.visualData,
+      datasets: state => state.data.datasets,
+      currentUUID: state => state.view.currentUUID,
+      generateUUID: state => state.public_function.generateUUID
+    }),
+    ...mapGetters(["nodes"])
   },
   methods: {
     loadData(event) {

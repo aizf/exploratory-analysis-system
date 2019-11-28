@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import StaticForce from "./commonUse/StaticForce.vue";
 import TimeOrder from "./pageAnalyze/TimeOrder.vue";
@@ -43,39 +44,26 @@ export default {
     };
   },
   computed: {
-    width() {
-      return this.$store.state.dpiX * 0.7;
-    },
-    height() {
-      return this.$store.state.dpiY - 64;
-    },
-    visualData() {
-      return this.$store.state.visualData;
-    },
-    nodes() {
-      return this.$store.getters.nodes;
-    },
-    links() {
-      return this.$store.getters.links;
-    },
-    backgroundColor() {
-      return this.$store.state.backgroundColor;
-    },
-    colorPalette() {
-      return this.$store.state.colorPalette;
-    },
-    operations() {
-      return this.$store.state.operations;
-    },
-    tooltipUpdate() {
-      return this.$store.state.pageAnalyzeTooltipUpdata;
-    },
-    tooltipNodes() {
-      return this.$store.state.pageAnalyzeTooltipData.nodes;
-    },
-    tooltipLinks() {
-      return this.$store.state.pageAnalyzeTooltipData.links;
-    }
+    ...mapState({
+      visualData: state => state.data.visualData,
+
+      width: state => state.view.dpiX * 0.7,
+      height: state => state.view.dpiY - 64,
+      colorPalette: state => state.view.colorPalette,
+      backgroundColor: state => state.view.backgroundColor,
+
+      operations: state => state.analyze.operations,
+      currentOperations: state => state.analyze.currentOperations,
+      undoStack: state => state.analyze.undoStack,
+      redoStack: state => state.analyze.redoStack,
+      rollbacked: state => state.analyze.rollbacked,
+      tooltipUpdate: state => state.analyze.pageAnalyzeTooltipUpdata,
+      tooltipNodes: state => state.analyze.pageAnalyzeTooltipData.nodes,
+      tooltipLinks: state => state.analyze.pageAnalyzeTooltipData.links,
+
+      generateUUID: state => state.public_function.generateUUID
+    }),
+    ...mapGetters(["nodes", "links", "nodesNumber"])
   },
   mounted() {},
   activated() {},

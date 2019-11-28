@@ -65,6 +65,7 @@
   </div>
 </template>
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
@@ -79,7 +80,6 @@ export default {
     visMouseover: Boolean,
     visZoom: Boolean,
     visShowIds: Boolean,
-    viewUpdate: {}
   },
   data() {
     return {
@@ -107,42 +107,29 @@ export default {
     };
   },
   computed: {
-    chartWidth() {
-      return this.$store.state.view.dpiX * 0.7;
-    },
-    chartHeight() {
-      return this.$store.state.view.dpiY * 0.7;
-    },
-    sourceData() {
-      return this.$store.state.data.sourceData;
-    },
-    visualData() {
-      return this.$store.state.data.visualData;
-    },
-    parentUUID() {
-      return this.$store.state.view.parentUUID;
-    },
-    currentUUID() {
-      return this.$store.state.view.currentUUID;
-    },
-    generateUUID() {
-      return this.$store.state.public_function.generateUUID;
-    },
-    nodes() {
-      return this.$store.getters.nodes;
-    },
-    links() {
-      return this.$store.getters.links;
-    },
-    backgroundColor() {
-      return this.$store.state.view.backgroundColor;
-    },
-    colorPalette() {
-      return this.$store.state.view.colorPalette;
-    },
-    nodesNumber() {
-      return this.$store.getters.nodesNumber;
-    },
+    ...mapState({
+      sourceData: state => state.data.sourceData,
+      visualData: state => state.data.visualData,
+      datasets: state => state.data.datasets,
+      isNewData: state => state.data.isNewData,
+
+      chartWidth: state => state.view.dpiX * 0.7,
+      chartHeight: state => state.view.dpiY * 0.7,
+      colorPalette: state => state.view.colorPalette,
+      backgroundColor: state => state.view.backgroundColor,
+      parentUUID: state => state.view.parentUUID,
+      currentUUID: state => state.view.currentUUID,
+      viewUpdate: state => state.view.viewUpdate,
+
+      currentOperations: state => state.analyze.currentOperations,
+      undoStack: state => state.analyze.undoStack,
+      redoStack: state => state.analyze.redoStack,
+      rollbacked: state => state.analyze.rollbacked,
+
+      generateUUID: state => state.public_function.generateUUID
+    }),
+    ...mapGetters(["nodes", "links", "nodesNumber"]),
+
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
       let nodes = this.simulation.nodes(),

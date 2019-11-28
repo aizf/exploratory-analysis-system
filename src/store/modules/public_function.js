@@ -1,22 +1,5 @@
 const public_function = {
   state: {
-    getDimensions() {
-      // 获得node的属性(维度)有哪些
-      let privateArr = [
-        "fx", "fy",
-        "x", "y",
-        "xx", "yy",
-        "vx", "vy",
-        "x0", "y0",
-        "x1", "y1",
-        "children"
-      ];
-      let dSet = new Set();
-      this.view.visualData.nodes.forEach(node => {
-        dSet = new Set([...dSet, ...Object.keys(node)]);
-      });
-      return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();
-    },
     generateUUID() {
       // 产生UUID，全局唯一，目前只有slice后调用
       let d = new Date().getTime();

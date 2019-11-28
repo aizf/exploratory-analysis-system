@@ -2,6 +2,7 @@
   <a-table :columns="columns" :dataSource="data" size="small"></a-table>
 </template>
 <script>
+import { mapState, mapGetters } from "vuex";
 // import * as _ from "lodash";
 export default {
   name: "NodesTable",
@@ -13,38 +14,24 @@ export default {
     visMouseover: Boolean,
     visZoom: Boolean,
     visShowIds: Boolean,
-    viewUpdate: {}
   },
   data() {
     return {
       chartWidth: "960",
       chartHeight: "600",
-      dimensions: [],
       nodesChanged: false
     };
   },
   computed: {
-    sourceData() {
-      return this.$store.state.sourceData;
-    },
-    visualData() {
-      return this.$store.state.visualData;
-    },
-    nodes() {
-      return this.$store.getters.nodes;
-    },
-    links() {
-      return this.$store.getters.links;
-    },
-    backgroundColor() {
-      return this.$store.state.backgroundColor;
-    },
-    colorPalette() {
-      return this.$store.state.colorPalette;
-    },
-    nodesNumber() {
-      return this.$store.getters.nodesNumber;
-    },
+    ...mapState({
+      sourceData: state => state.data.sourceData,
+      visualData: state => state.data.visualData,
+
+      colorPalette: state => state.view.colorPalette,
+      backgroundColor: state => state.view.backgroundColor
+    }),
+    ...mapGetters(["nodes", "links", "nodesNumber","dimensions"]),
+
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
       let nodes = this.simulation.nodes(),
@@ -101,7 +88,6 @@ export default {
 
   activated() {
     // getDimensions() 内的this.nodes为object，因此为methods而非computed
-    this.dimensions = this.getDimensions();
   },
 
   deactivated() {},
@@ -113,9 +99,6 @@ export default {
         return d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
       };
       // this.load(nodeData, linkData);
-    },
-    getDimensions() {
-      return this.$store.state.getDimensions();
     },
     test() {
       this.update();

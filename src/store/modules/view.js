@@ -27,36 +27,6 @@ const view = {
         operation_Types: ["rollback", "slice", "sliceUndo"],
         parentUUID: "root", //当前view的父view的UUID
         currentUUID: "root", //当前view的UUID
-        selectedNodes() {
-            let selectedNodes = this.data.visualData.nodes.filter(d =>
-                !!d.selected
-            );
-            return selectedNodes;
-        },
-        viewSlice() {
-            // 返回slice后的nodes和links
-            // console.log(this);
-            let removedNodes = [];
-            let slicedNodes = this.data.visualData.nodes.filter(d => {
-                if (d.selected) return true;
-                else {
-                    removedNodes.push(d);
-                    return false;
-                }
-            });
-            let slicedLinks = this.data.visualData.links.filter(d =>
-                removedNodes.every(rd => {
-                    let id = rd.id ? "id" : "name";
-                    return rd[id] !== d.source[id] && rd[id] !== d.target[id];
-                })
-            );
-            // console.log("123", slicedLinks);
-            return {
-                "nodes": slicedNodes,
-                "links": slicedLinks
-            };
-            // console.log("123", this);
-        },
     },
     mutations: {
         updateParentUUID: (state, data) => {

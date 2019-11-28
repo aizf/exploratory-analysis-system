@@ -14,6 +14,7 @@
   </div>
 </template>
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
@@ -43,12 +44,11 @@ export default {
     };
   },
   computed: {
-    backgroundColor() {
-      return this.$store.state.backgroundColor;
-    },
-    colorPalette() {
-      return this.$store.state.colorPalette;
-    }
+    ...mapState({
+      backgroundColor: state => state.view.backgroundColor,
+      colorPalette: state => state.view.colorPalette
+    }),
+    ...mapGetters(["layoutRange"])
   },
   mounted() {
     // console.log(d3.version);
@@ -117,7 +117,7 @@ export default {
       this.node.attr("cx", d => d.x).attr("cy", d => d.y);
 
       // 调整布局，使图显示在画布中间，并调整大小
-      let layoutRange = this.$store.state.layoutRange(this.nodes, [
+      let layoutRange = this.layoutRange(this.nodes, [
         "y",
         "x",
         "y",
@@ -135,8 +135,8 @@ export default {
       let visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
 
       // Xvis*k + x = Xsvg
-      let x = svgP[0]-visP[0]*k;
-      let y = svgP[1]-visP[1]*k;
+      let x = svgP[0] - visP[0] * k;
+      let y = svgP[1] - visP[1] * k;
 
       t.x = x;
       t.y = y;

@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import G2 from "@antv/g2";
 
@@ -26,33 +27,23 @@ export default {
     };
   },
   computed: {
-    width() {
-      return this.$store.state.dpiX * 0.7;
-    },
-    height() {
-      return (this.$store.state.dpiY - 64) * 0.35;
-    },
-    visualData() {
-      return this.$store.state.visualData;
-    },
-    nodes() {
-      return this.$store.getters.nodes;
-    },
-    links() {
-      return this.$store.getters.links;
-    },
-    backgroundColor() {
-      return this.$store.state.backgroundColor;
-    },
-    colorPalette() {
-      return this.$store.state.colorPalette;
-    },
-    operations() {
-      return this.$store.state.operations;
-    },
-    operations_() {
-      return this.$store.state.operations_;
-    }
+    ...mapState({
+      visualData: state => state.data.visualData,
+
+      width: state => state.view.dpiX * 0.7,
+      height: state => (state.view.dpiY - 64) * 0.35,
+      colorPalette: state => state.view.colorPalette,
+      backgroundColor: state => state.view.backgroundColor,
+      contrastColor: state => state.view.contrastColor,
+      operationTypes: state => state.view.operationTypes,
+
+      operations: state => state.analyze.operations,
+      operations_: state => state.analyze.operations_,
+      dataFlow: state => state.analyze.dataFlow,
+
+      generateUUID: state => state.public_function.generateUUID
+    }),
+    ...mapGetters(["nodes", "links", "recordFlow"])
   },
   mounted() {
     this.chart = new G2.Chart({
@@ -190,27 +181,27 @@ export default {
     },
     yAxis1() {
       const defs = {
-      time: {
-        type: "time", // 指定 time 类型
-        mask: "HH:mm:ss", // 指定时间的输出格式
-        sync: true
-      },
-      action: {
-        type: "cat", // 指定 cat 分类类型
-        values: this.$store.state.operationTypes // 重新指定 c 属性每一个的值
-      },
-      isChangeSource: {
-        type: "cat",
-        values: [false, true]
-      },
-      nodesNum: {
-        type: "linear"
-      },
-      isChangeLayout: {
-        type: "cat",
-        values: [false, true]
-      }
-    };
+        time: {
+          type: "time", // 指定 time 类型
+          mask: "HH:mm:ss", // 指定时间的输出格式
+          sync: true
+        },
+        action: {
+          type: "cat", // 指定 cat 分类类型
+          values: this.$store.state.operationTypes // 重新指定 c 属性每一个的值
+        },
+        isChangeSource: {
+          type: "cat",
+          values: [false, true]
+        },
+        nodesNum: {
+          type: "linear"
+        },
+        isChangeLayout: {
+          type: "cat",
+          values: [false, true]
+        }
+      };
       let ops = this.operations.forEach(d => {
         switch (d.action) {
           case "drag":
@@ -227,8 +218,8 @@ export default {
             console.log("TimeOder > yAxis1 > bug");
         }
       });
-this.view.clear();
-      this.view.source(ops,defs);
+      this.view.clear();
+      this.view.source(ops, defs);
       this.view
         .point()
         .position("time*isChangeSource")

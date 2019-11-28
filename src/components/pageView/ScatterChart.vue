@@ -41,6 +41,7 @@
   </div>
 </template>
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
@@ -54,7 +55,6 @@ export default {
     visMouseover: Boolean,
     visZoom: Boolean,
     visShowIds: Boolean,
-    viewUpdate: {}
   },
   data() {
     return {
@@ -84,38 +84,29 @@ export default {
     };
   },
   computed: {
-    chartWidth() {
-      return this.$store.state.dpiX * 0.7;
-    },
-    chartHeight() {
-      return this.$store.state.dpiY * 0.7;
-    },
-    sourceData() {
-      return this.$store.state.sourceData;
-    },
-    visualData() {
-      return this.$store.state.visualData;
-    },
-    nodes() {
-      return this.$store.getters.nodes;
-    },
-    links() {
-      return this.$store.getters.links;
-    },
-    backgroundColor() {
-      return this.$store.state.backgroundColor;
-    },
-    colorPalette() {
-      return this.$store.state.colorPalette;
-    },
-    nodesNumber() {
-      // 节点的数量
-      return this.$store.getters.nodesNumber;
-    },
-    dimensions() {
-      // 获得node的属性(维度)有哪些
-      return this.$store.state.getDimensions();
-    },
+    ...mapState({
+      sourceData: state => state.data.sourceData,
+      visualData: state => state.data.visualData,
+      datasets: state => state.data.datasets,
+      isNewData: state => state.data.isNewData,
+
+      chartWidth: state => state.view.dpiX * 0.7,
+      chartHeight: state => state.view.dpiY * 0.7,
+      colorPalette: state => state.view.colorPalette,
+      backgroundColor: state => state.view.backgroundColor,
+      parentUUID: state => state.view.parentUUID,
+      currentUUID: state => state.view.currentUUID,
+      viewUpdate: state => state.view.viewUpdate,
+
+      currentOperations: state => state.analyze.currentOperations,
+      undoStack: state => state.analyze.undoStack,
+      redoStack: state => state.analyze.redoStack,
+      rollbacked: state => state.analyze.rollbacked,
+
+      generateUUID: state => state.public_function.generateUUID,
+    }),
+    ...mapGetters(["nodes", "links", "nodesNumber","dimensions"]),
+
     xDimensionData() {
       // 断绝了数据与节点的关联性，仅当作坐标刻度用
       return this.nodes

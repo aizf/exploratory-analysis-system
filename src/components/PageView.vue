@@ -42,7 +42,7 @@
             </a-button>
             <a-button
               type="primary"
-              @click="viewSlice"
+              @click="sliceView"
               :style="{ marginLeft:'5px',width: '100px' }"
             >slice</a-button>
           </a-menu-item>
@@ -76,8 +76,8 @@
             <a-menu-item @click="onVisBrush" :disabled="brushDisabled">
               <a-popover placement="top" title="keep last selected nodes ?" :mouseEnterDelay="0.4">
                 <template slot="content">
-                  <a-checkbox :checked=!brushKeep @change="brushKeep=!brushKeep">no</a-checkbox>
-                  <a-checkbox :checked=brushKeep @change="brushKeep=!brushKeep">yes</a-checkbox>
+                  <a-checkbox :checked="!brushKeep" @change="brushKeep=!brushKeep">no</a-checkbox>
+                  <a-checkbox :checked="brushKeep" @change="brushKeep=!brushKeep">yes</a-checkbox>
                 </template>
                 <span>brush</span>
               </a-popover>
@@ -173,7 +173,6 @@
             :visMouseover="visMouseover"
             :visZoom="visZoom"
             :visShowIds="visShowIds"
-            :viewUpdate="viewUpdate"
           ></component>
         </keep-alive>
       </a-layout-content>
@@ -191,6 +190,7 @@
   </a-layout>
 </template>
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import ForceChart from "./pageView/ForceChart.vue";
 import ScatterChart from "./pageView/ScatterChart.vue";
@@ -215,7 +215,7 @@ export default {
       visDrag: true,
       visMouseover: false,
       visBrush: false,
-      brushKeep:false,
+      brushKeep: false,
       visInvertBrush: false,
       visZoom: true,
       visShowIds: false,
@@ -344,8 +344,8 @@ export default {
       });
     },
     // 切片和切片回退
-    viewSlice() {
-      let slicedData = this.$store.state.view.viewSlice();
+    sliceView() {
+      let slicedData = this.viewSlice();
       if (!slicedData.nodes.length) {
         this.$message.error("No nodes are selected !");
         return;
@@ -411,7 +411,7 @@ export default {
     },
     groupTheSelectedNodes(group) {
       // console.log(group);
-      let selectedNodes = this.$store.state.view.selectedNodes();
+      let selectedNodes = this.selectedNodes();
       selectedNodes.forEach(d => {
         d.group = group;
       });
@@ -433,41 +433,31 @@ export default {
     }
   },
   computed: {
-    colorPalette() {
-      return this.$store.state.view.colorPalette;
-    },
-    isNewData() {
-      return this.$store.state.data.isNewData;
-    },
-    sourceData() {
-      return this.$store.state.data.sourceData;
-    },
-    visualData() {
-      return this.$store.state.data.visualData;
-    },
-    nodes(){
-      return this.$store.getters.nodes;
-    },
-    links(){
-      return this.$store.getters.links;
-    },
-    // dataFlow
-    parentUUID() {
-      return this.$store.state.view.parentUUID;
-    },
-    currentUUID() {
-      return this.$store.state.view.currentUUID;
-    },
-    generateUUID() {
-      return this.$store.state.public_function.generateUUID;
-    },
-    currentOperations() {
-      return this.$store.state.analyze.currentOperations;
-    },
+    ...mapState({
+      sourceData: state => state.data.sourceData,
+      visualData: state => state.data.visualData,
+      datasets: state => state.data.datasets,
+      isNewData: state => state.data.isNewData,
 
-    viewUpdate() {
-      return this.$store.state.view.viewUpdate;
-    },
+      colorPalette: state => state.view.colorPalette,
+      parentUUID: state => state.view.parentUUID,
+      currentUUID: state => state.view.currentUUID,
+      viewUpdate: state => state.view.viewUpdate,
+
+      currentOperations: state => state.analyze.currentOperations,
+      undoStack: state => state.analyze.undoStack,
+      redoStack: state => state.analyze.redoStack,
+      rollbacked: state => state.analyze.rollbacked,
+
+      generateUUID: state => state.public_function.generateUUID
+    }),
+    ...mapGetters([
+      "nodes",
+      "links",
+      "selectedNodes",
+      "viewSlice"
+    ]),
+
     currentChart() {
       switch (this.currentChartKey) {
         case "scatter":
@@ -495,20 +485,8 @@ export default {
           break;
       }
     },
-    undoStack() {
-      return this.$store.state.analyze.undoStack;
-    },
-    redoStack() {
-      return this.$store.state.analyze.redoStack;
-    },
-    savedViewData() {
-      return this.$store.getters.savedViewData;
-    },
     sliceUndoDisabled() {
       return !this.sliceUndoList.length;
-    },
-    rollbacked() {
-      return this.$store.state.analyze.rollbacked;
     }
   },
   watch: {

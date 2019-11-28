@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import * as d3Sankey from "d3-sankey";
 
@@ -32,36 +33,20 @@ export default {
     };
   },
   computed: {
-    width() {
-      return this.$store.state.dpiX * 0.7;
-    },
-    height() {
-      return (this.$store.state.dpiY - 64) * 0.55;
-    },
-    visualData() {
-      return this.$store.state.visualData;
-    },
-    backgroundColor() {
-      return this.$store.state.backgroundColor;
-    },
-    contrastColor() {
-      return this.$store.state.contrastColor;
-    },
-    colorPalette() {
-      return this.$store.state.colorPalette;
-    },
-    operations() {
-      return this.$store.state.operations;
-    },
-    operationTypes() {
-      return this.$store.state.operationTypes;
-    },
-    dataFlow() {
-      return this.$store.state.dataFlow;
-    },
-    recordFlow() {
-      return this.$store.getters.recordFlow;
-    }
+    ...mapState({
+      visualData: state => state.data.visualData,
+
+      width: state => state.view.dpiX * 0.7,
+      height: state => (state.view.dpiY - 64) * 0.55,
+      colorPalette: state => state.view.colorPalette,
+      backgroundColor: state => state.view.backgroundColor,
+      contrastColor: state => state.view.contrastColor,
+      operationTypes: state => state.view.operationTypes,
+
+      operations: state => state.analyze.operations,
+      dataFlow: state => state.analyze.dataFlow
+    }),
+    ...mapGetters(["recordFlow"])
   },
   mounted() {
     console.log("d3", d3);

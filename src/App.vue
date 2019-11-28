@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import PageData from "./components/PageData.vue";
 import PageView from "./components/PageView.vue";
 import PageAnalyze from "./components/PageAnalyze.vue";
@@ -39,11 +40,15 @@ export default {
   },
   data() {
     return {
-      currentPageKey: "1"
+      currentPageKey: "1",
+      t: { a: 1, b: 2 }
     };
   },
   methods: {},
   computed: {
+    ...mapState({
+      visualData: state => state.data.visualData
+    }),
     currentPage() {
       switch (this.currentPageKey) {
         case "1":
@@ -59,9 +64,6 @@ export default {
           break;
       }
     },
-    visualData() {
-      return this.$store.state.data.visualData;
-    },
     dataSelected() {
       return !!this.visualData;
     },
@@ -70,15 +72,11 @@ export default {
     },
     pageAnalyzeTooltipTitle() {
       return !this.dataSelected ? "请先在左侧选择数据" : "交互分析界面";
-    },
-    test: {
-      get: function() {
-        return this.currentPageKey + "A";
-      },
-      set: function(val) {
-        return this.currentPageKey + val;
-      }
     }
+  },
+  mounted() {
+    console.log(this);
+    console.log(this.$children);
   }
 };
 </script>

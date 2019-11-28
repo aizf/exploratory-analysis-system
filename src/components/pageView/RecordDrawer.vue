@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 
 export default {
@@ -28,24 +29,17 @@ export default {
     };
   },
   computed: {
-    backgroundColor() {
-      return this.$store.state.backgroundColor;
-    },
-    visualData() {
-      return this.$store.state.visualData;
-    },
-    savedViewData() {
-      return this.$store.getters.savedViewData;
-    },
-    parentUUID() {
-      return this.$store.state.parentUUID;
-    },
-    currentUUID() {
-      return this.$store.state.currentUUID;
-    },
-    generateUUID() {
-      return this.$store.state.generateUUID;
-    }
+    ...mapState({
+      sourceData: state => state.data.sourceData,
+      visualData: state => state.data.visualData,
+
+      backgroundColor: state => state.view.backgroundColor,
+      parentUUID: state => state.view.parentUUID,
+      currentUUID: state => state.view.currentUUID,
+
+      generateUUID: state => state.public_function.generateUUID
+    }),
+    ...mapGetters(["savedViewData"])
   },
   methods: {
     formatViewDom(item) {
