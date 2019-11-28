@@ -151,30 +151,52 @@
 
     <a-layout style="padding: 0 0px 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
-        <div>
-          <!-- 分组的图例 -->
-          <a-tag
-            v-for="(color, index) in colorPalette"
-            :color="color"
-            @click="groupTheSelectedNodes(index)"
-            :key="index"
-          >{{index}}</a-tag>
-        </div>
-        <keep-alive>
-          <!-- 可视化视图 -->
-          <component
-            ref="theView"
-            :is="currentChart"
-            :visClick="visClick"
-            :visBrush="visBrush"
-            :brushKeep="brushKeep"
-            :visInvertBrush="visInvertBrush"
-            :visDrag="visDrag"
-            :visMouseover="visMouseover"
-            :visZoom="visZoom"
-            :visShowIds="visShowIds"
-          ></component>
-        </keep-alive>
+        <a-row>
+          <a-col :span="20">
+            <!-- col为工具栏和视图 -->
+            <a-row style="padding: 5px 0 5px 0">
+              <!-- row工具栏 -->
+              <a-col :span="6">
+                <!-- 分组的图例 -->
+                <a-tag
+                  v-for="(color, index) in colorPalette"
+                  :color="color"
+                  @click="groupTheSelectedNodes(index)"
+                  :key="index"
+                >{{index}}</a-tag>
+              </a-col>
+              <a-col :span="6">col-6</a-col>
+              <a-col :span="6">col-6</a-col>
+              <a-col :span="3">col-3</a-col>
+              <a-col :span="3">
+                <a-button-group>
+                  <a-button @click="marked=!marked">
+                    <a-icon type="book" :theme="marked?'filled':'outlined'" />
+                  </a-button>
+                </a-button-group>
+              </a-col>
+            </a-row>
+            <keep-alive>
+              <!-- 可视化视图 -->
+              <component
+                ref="theView"
+                :is="currentChart"
+                :visClick="visClick"
+                :visBrush="visBrush"
+                :brushKeep="brushKeep"
+                :visInvertBrush="visInvertBrush"
+                :visDrag="visDrag"
+                :visMouseover="visMouseover"
+                :visZoom="visZoom"
+                :visShowIds="visShowIds"
+              ></component>
+            </keep-alive>
+          </a-col>
+          <a-col :span="4">
+            <!-- 右侧暂时空白 -->
+            a-col-4
+          </a-col>
+        </a-row>
       </a-layout-content>
     </a-layout>
     <a-drawer
@@ -233,6 +255,9 @@ export default {
 
       currentChartKey: "force"
     };
+  },
+  mounted() {
+    console.log("PageView", this);
   },
   methods: {
     onVisClick() {
@@ -448,16 +473,20 @@ export default {
       undoStack: state => state.analyze.undoStack,
       redoStack: state => state.analyze.redoStack,
       rollbacked: state => state.analyze.rollbacked,
+      //toolbox
 
       generateUUID: state => state.public_function.generateUUID
     }),
-    ...mapGetters([
-      "nodes",
-      "links",
-      "selectedNodes",
-      "viewSlice"
-    ]),
+    ...mapGetters(["nodes", "links", "selectedNodes", "viewSlice"]),
 
+    marked: {
+      get: function() {
+        return this.$store.state.view.marked;
+      },
+      set: function(val) {
+        this.$store.state.view.marked = val;
+      }
+    },
     currentChart() {
       switch (this.currentChartKey) {
         case "scatter":

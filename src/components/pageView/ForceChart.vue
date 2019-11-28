@@ -1,9 +1,6 @@
 <template>
-  <div
-    class="ForceChart"
-    :style="{margin:'5px',height:chartHeight+5+'px',width:chartWidth+5+2*100+'px'}"
-  >
-    <div style="float:left;">
+  <div class="ForceChart">
+    <div style>
       <svg
         :width="chartWidth"
         :height="chartHeight"
@@ -79,7 +76,7 @@ export default {
     visDrag: Boolean,
     visMouseover: Boolean,
     visZoom: Boolean,
-    visShowIds: Boolean,
+    visShowIds: Boolean
   },
   data() {
     return {

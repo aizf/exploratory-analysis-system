@@ -27,6 +27,8 @@ const view = {
         operation_Types: ["rollback", "slice", "sliceUndo"],
         parentUUID: "root", //当前view的父view的UUID
         currentUUID: "root", //当前view的UUID
+        // toolbox
+        marked: false,
     },
     mutations: {
         updateParentUUID: (state, data) => {
