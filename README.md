@@ -73,3 +73,5 @@ task: 一个完整的视图到视图的变化过程,自己mark
 dataflow的path增加箭头
 
 TODO: 记录交互的影响，而不是交互
+
+merge 操作

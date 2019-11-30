@@ -108,10 +108,9 @@ export default {
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
       datasets: state => state.data.datasets,
-      currentUUID: state => state.view.currentUUID,
-      generateUUID: state => state.public_function.generateUUID
+      currentUUID: state => state.view.currentUUID
     }),
-    ...mapGetters(["nodes"])
+    ...mapGetters(["nodes", "generateUUID"])
   },
   methods: {
     loadData(event) {

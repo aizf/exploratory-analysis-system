@@ -44,7 +44,7 @@
               type="primary"
               @click="sliceView"
               :style="{ marginLeft:'5px',width: '100px' }"
-            >slice</a-button>
+            >filter</a-button>
           </a-menu-item>
           <a-menu-item-group key="g1" title="single point">
             <a-menu-item @click="onVisClick" :disabled="clickDisabled">
@@ -368,13 +368,15 @@ export default {
         console.info("backed!");
       });
     },
-    // 切片和切片回退
+    // 切片(filter)和切片回退
     sliceView() {
       let slicedData = this.viewSlice();
       if (!slicedData.nodes.length) {
         this.$message.error("No nodes are selected !");
         return;
       }
+      this.beforeEvent("filter",this);
+
       slicedData.nodes.forEach(d => {
         d.selected = false;
       });
@@ -472,12 +474,17 @@ export default {
       currentOperations: state => state.analyze.currentOperations,
       undoStack: state => state.analyze.undoStack,
       redoStack: state => state.analyze.redoStack,
-      rollbacked: state => state.analyze.rollbacked,
+      rollbacked: state => state.analyze.rollbacked
       //toolbox
-
-      generateUUID: state => state.public_function.generateUUID
     }),
-    ...mapGetters(["nodes", "links", "selectedNodes", "viewSlice"]),
+    ...mapGetters([
+      "nodes",
+      "links",
+      "selectedNodes",
+      "viewSlice",
+      "generateUUID",
+      "beforeEvent"
+    ]),
 
     marked: {
       get: function() {

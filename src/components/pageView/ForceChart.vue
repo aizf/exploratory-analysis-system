@@ -121,11 +121,9 @@ export default {
       currentOperations: state => state.analyze.currentOperations,
       undoStack: state => state.analyze.undoStack,
       redoStack: state => state.analyze.redoStack,
-      rollbacked: state => state.analyze.rollbacked,
-
-      generateUUID: state => state.public_function.generateUUID
+      rollbacked: state => state.analyze.rollbacked
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber"]),
+    ...mapGetters(["nodes", "links", "nodesNumber","generateUUID","beforeEvent"]),
 
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -220,7 +218,7 @@ export default {
     this.update();
 
     function zoomStart() {
-      that.eventCallback("zoom");
+      that.beforeEvent("zoom",that);
     }
     function zoomed() {
       if (!that.visZoom) return;
@@ -382,7 +380,7 @@ export default {
       // console.log(d3.event);
       // debugger
       if (d3.event.selection === null) return;
-      this.eventCallback(this.visBrush ? "brush" : "invertBrush");
+      this.beforeEvent(this.visBrush ? "brush" : "invertBrush",this);
 
       if (!this.brushKeep && this.visBrush) {
         this.node
@@ -460,7 +458,7 @@ export default {
     // drag
     dragstarted(d) {
       if (!this.visDrag) return;
-      this.eventCallback("drag");
+      this.beforeEvent("drag",this);
       if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
@@ -503,7 +501,7 @@ export default {
     },
     clickSelect(d, i, p) {
       if (this.visClick) {
-        this.eventCallback("click");
+        this.beforeEvent("click",this);
         let t = d3.select(p[i]);
         if (t.classed("selected")) {
           t.classed("selected", false);
@@ -525,7 +523,7 @@ export default {
     },
     mouseover(d) {
       if (!this.visMouseover || this.isDraging) return;
-      this.eventCallback("mouseover");
+      this.beforeEvent("mouseover",this);
       let displayNodes = null;
       // let opacityNodes = null;
       let displayLinks = null;
@@ -612,17 +610,6 @@ export default {
         .transition()
         .delay(200)
         .style("fill-opacity", null);
-    },
-    eventCallback(operation) {
-      let arg = {
-        data: this.visualData,
-        uuid: this.currentUUID,
-        operation: operation,
-        time: new Date()
-      };
-      this.$store.commit("addRecordData", arg);
-      this.$store.commit("updateParentUUID", this.currentUUID);
-      this.$store.commit("updateCurrentUUID", this.generateUUID());
     },
     forceLinkChange() {
       // 调整Link力的布局函数

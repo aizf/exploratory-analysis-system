@@ -101,11 +101,9 @@ export default {
       currentOperations: state => state.analyze.currentOperations,
       undoStack: state => state.analyze.undoStack,
       redoStack: state => state.analyze.redoStack,
-      rollbacked: state => state.analyze.rollbacked,
-
-      generateUUID: state => state.public_function.generateUUID,
+      rollbacked: state => state.analyze.rollbacked
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber","dimensions"]),
+    ...mapGetters(["nodes", "links", "nodesNumber","dimensions","generateUUID"]),
 
     xDimensionData() {
       // 断绝了数据与节点的关联性，仅当作坐标刻度用

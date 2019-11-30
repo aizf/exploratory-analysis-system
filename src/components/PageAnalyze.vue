@@ -60,10 +60,8 @@ export default {
       tooltipUpdate: state => state.analyze.pageAnalyzeTooltipUpdata,
       tooltipNodes: state => state.analyze.pageAnalyzeTooltipData.nodes,
       tooltipLinks: state => state.analyze.pageAnalyzeTooltipData.links,
-
-      generateUUID: state => state.public_function.generateUUID
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber"])
+    ...mapGetters(["nodes", "links", "nodesNumber","generateUUID"])
   },
   mounted() {},
   activated() {},

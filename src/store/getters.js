@@ -145,6 +145,31 @@ const getters = {
     }
 
     return Object.values(dict);
+  },
+  generateUUID: () => () => {
+    let d = new Date().getTime();
+    if (window.performance && typeof window.performance.now === "function") {
+      d += performance.now(); //use high-precision timer if available
+    }
+    let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      let r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    return uuid;
+  },
+  beforeEvent: (state,getters) => (operation, vueComponent) => {
+    // vueComponent为调用此函数的组件实例
+    let arg = {
+      data: state.data.visualData,
+      uuid: state.view.currentUUID,
+      operation: operation,
+      time: new Date(),
+      marked: state.view.marked,
+    };
+    vueComponent.$store.commit("addRecordData", arg);
+    vueComponent.$store.commit("updateParentUUID", state.view.currentUUID);
+    vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
   }
 }
 

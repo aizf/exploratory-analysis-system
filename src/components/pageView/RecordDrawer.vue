@@ -36,10 +36,8 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
-
-      generateUUID: state => state.public_function.generateUUID
     }),
-    ...mapGetters(["savedViewData"])
+    ...mapGetters(["savedViewData","generateUUID"])
   },
   methods: {
     formatViewDom(item) {
