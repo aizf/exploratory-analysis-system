@@ -24,7 +24,7 @@ const view = {
             table: false
         },
         operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
-        operation_Types: ["rollback", "slice", "sliceUndo"],
+        operation_Types: ["rollback", "filter", "undo","redo"],
         parentUUID: "root", //当前view的父view的UUID
         currentUUID: "root", //当前view的UUID
         // toolbox

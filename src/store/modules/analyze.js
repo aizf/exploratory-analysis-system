@@ -12,8 +12,8 @@ const analyze = {
         operations_: [], // 切换view的操作
         // recordData,
         // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
-        undoStack: [], // index: 0,1,2,3,4
-        redoStack: [], // index: 5,6,7,...
+        undoList: [], // index: 0,1,2,3,4
+        redoList: [], // index: 5,6,7,...
 
 
         rollbacked: false,
@@ -66,7 +66,14 @@ const analyze = {
     mutations: {
         addRecordData: (state, arg) => {
             // arg 格式: [data, uuid, operation,time]
-            state.recordset.push(state.recordData(arg));
+            let d = state.recordData(arg);
+            state.recordset.push(d);
+            if (arg.operation === "undo") {
+                state.redoList.push(d);
+            }
+            else {
+                state.undoList.push(d);
+            }
         },
         addOperation: (state, data) => {
             state.operations.push(data);
@@ -97,9 +104,9 @@ const analyze = {
         resetCurrentOperations: (state) => {
             state.currentOperations = [];
         },
-        changeSavedViewData: (state, fn) => {
-            let undo = state.undoStack;
-            let redo = state.redoStack;
+        changeUndoRedo: (state, fn) => {
+            let undo = state.undoList;
+            let redo = state.redoList;
             // fn为自定义函数
             fn(undo, redo);
         },

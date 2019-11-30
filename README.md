@@ -79,3 +79,5 @@ merge 操作
 无links数据=>links:[]
 
 redo undo  !!!!!
+
+update 刷新不重新绘图

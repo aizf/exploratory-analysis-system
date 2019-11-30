@@ -63,7 +63,6 @@ const getters = {
     };
   },
   // analyze
-  savedViewData: state => [...state.analyze.undoStack, ...state.analyze.redoStack],
   recordFlow: state => {
     // 返回格式化后的记录流
     // 先增加尾节点

@@ -33,16 +33,8 @@
           </a-menu-item>
           <a-menu-item>
             <a-button
-              @click="sliceUndo"
-              shape="circle"
-              :disabled="sliceUndoDisabled"
-              :style="{ paddingLeft: '8px' }"
-            >
-              <a-icon type="undo" />
-            </a-button>
-            <a-button
               type="primary"
-              @click="sliceView"
+              @click="viewFilter"
               :style="{ marginLeft:'5px',width: '100px' }"
             >filter</a-button>
           </a-menu-item>
@@ -157,6 +149,19 @@
             <a-row style="padding: 5px 0 5px 0">
               <!-- row工具栏 -->
               <a-col :span="6">
+                <a-button @click="viewUndo" shape="circle" :disabled="undoDisabled">
+                  <a-icon type="undo" />
+                </a-button>
+                <a-button
+                  @click="viewRedo"
+                  shape="circle"
+                  :disabled="redoDisabled"
+                  style="margin:0 0 0 5px"
+                >
+                  <a-icon type="redo" />
+                </a-button>
+              </a-col>
+              <a-col :span="6">
                 <!-- 分组的图例 -->
                 <a-tag
                   v-for="(color, index) in colorPalette"
@@ -165,7 +170,6 @@
                   :key="index"
                 >{{index}}</a-tag>
               </a-col>
-              <a-col :span="6">col-6</a-col>
               <a-col :span="6">col-6</a-col>
               <a-col :span="3">col-3</a-col>
               <a-col :span="3">
@@ -251,7 +255,6 @@ export default {
       invertBrushDisabled: false,
       zoomDisabled: false,
       showIdsDisabled: false,
-      sliceUndoList: [],
 
       currentChartKey: "force"
     };
@@ -339,43 +342,57 @@ export default {
       this.recordVisible = false;
     },
     // save相关
-    saveViewData() {
-      let saveThing = {
-        data: this.visualData,
-        dom: this.$refs.theView.vis.node().cloneNode(true),
-        selectedIds: this.visualData.nodes
-          .filter(d => d.selected)
-          .map(d => d.id || d.name),
-        id: this.currentUUID,
-        pId: this.parentUUID
-      };
-      this.$store.commit("changeSavedViewData", undo => {
-        undo.push(saveThing);
-      });
-      this.$message.success("View saved.");
-      console.log("save");
-      // this.$store.commit("changeSavedViewData", d => console.log(d));
-    },
-    viewBack() {
-      this.$store.commit("changeSavedViewData", (undo, redo) => {
+    saveViewData() {},
+    viewUndo() {
+      this.$store.commit("changeUndoRedo", (undo, redo) => {
         if (!undo.length) {
           return;
         }
-        let data = undo.pop();
-        redo.unshift(data);
-        this.$store.commit("updateVisualData", data);
+        let arg = {
+          data: this.visualData,
+          uuid: this.currentUUID,
+          operation: "undo",
+          time: new Date(),
+          marked: this.marked
+        };
+        this.$store.commit("addRecordData", arg);
+        let record = undo.pop();
+        this.$store.commit("updateVisualData", record.data);
+        this.$store.commit("updateParentUUID", this.currentUUID);
+        this.$store.commit("updateCurrentUUID", record.uuid);
         this.$store.commit("updateViewUpdate", "all");
-        console.info("backed!");
+        console.info("undo!");
+      });
+    },
+    viewRedo() {
+      this.$store.commit("changeUndoRedo", (undo, redo) => {
+        if (!redo.length) {
+          return;
+        }
+        let arg = {
+          data: this.visualData,
+          uuid: this.currentUUID,
+          operation: "redo",
+          time: new Date(),
+          marked: this.marked
+        };
+        this.$store.commit("addRecordData", arg);
+        let record = redo.shift();
+        this.$store.commit("updateVisualData", record.data);
+        this.$store.commit("updateParentUUID", this.currentUUID);
+        this.$store.commit("updateCurrentUUID", record.uuid);
+        this.$store.commit("updateViewUpdate", "all");
+        console.info("redo!");
       });
     },
     // filter别名，切片和切片回退
-    sliceView() {
+    viewFilter() {
       let slicedData = this.viewSlice();
       if (!slicedData.nodes.length) {
         this.$message.error("No nodes are selected !");
         return;
       }
-      this.beforeEvent("filter",this);
+      this.beforeEvent("filter", this);
 
       slicedData.nodes.forEach(d => {
         d.selected = false;
@@ -387,33 +404,11 @@ export default {
       this.$store.commit("resetCurrentOperations");
 
       this.$store.commit("addOperation_", {
-        action: "slice",
+        action: "filter",
         nodes: slicedData,
         time: new Date()
       });
-      console.log("slice", slicedData);
-    },
-    sliceUndo() {
-      if (this.sliceUndoDisabled) {
-        return;
-      }
-      let item = this.sliceUndoList.pop();
-      let selectedNodesId = this.nodes.map(d => d.id || d.name);
-      item.data.nodes.forEach(d => {
-        selectedNodesId.includes(d.id || d.name)
-          ? (d.selected = true)
-          : (d.selected = false);
-      });
-      this.$store.commit("updateVisualData", item.data);
-      this.$store.commit("updateParentUUID", item.pId);
-      this.$store.commit("updateCurrentUUID", item.id);
-      this.$store.commit("updateViewUpdate", "all");
-      this.$store.commit("addOperation_", {
-        action: "sliceUndo",
-        nodes: item.data,
-        time: new Date()
-      });
-      console.log("sliceUndo", item.data);
+      console.log("filter", slicedData);
     },
     groupTheSelectedNodes(group) {
       // console.log(group);
@@ -451,8 +446,8 @@ export default {
       viewUpdate: state => state.view.viewUpdate,
 
       currentOperations: state => state.analyze.currentOperations,
-      undoStack: state => state.analyze.undoStack,
-      redoStack: state => state.analyze.redoStack,
+      undoList: state => state.analyze.undoList,
+      redoList: state => state.analyze.redoList,
       rollbacked: state => state.analyze.rollbacked
       //toolbox
     }),
@@ -500,20 +495,21 @@ export default {
           break;
       }
     },
-    sliceUndoDisabled() {
-      return !this.sliceUndoList.length;
+    undoDisabled() {
+      return !this.undoList.length;
+    },
+    redoDisabled() {
+      return !this.redoList.length;
     }
   },
   watch: {
     rollbacked: function(val) {
       if (val) {
-        this.sliceUndoList = [];
         this.$store.state.analyze.rollbacked = false;
       }
     },
     isNewData: function(val) {
       if (val) {
-        this.sliceUndoList = [];
         this.$store.commit("updateIsNewData", false);
       }
     }
