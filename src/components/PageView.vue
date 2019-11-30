@@ -368,7 +368,7 @@ export default {
         console.info("backed!");
       });
     },
-    // 切片(filter)和切片回退
+    // filter别名，切片和切片回退
     sliceView() {
       let slicedData = this.viewSlice();
       if (!slicedData.nodes.length) {
@@ -380,31 +380,10 @@ export default {
       slicedData.nodes.forEach(d => {
         d.selected = false;
       });
-      this.sliceUndoList.push({
-        data: this.visualData,
-        id: this.currentUUID,
-        pId: this.parentUUID
-      });
+
       this.$store.commit("updateVisualData", slicedData);
       this.$store.commit("updateViewUpdate", "all");
-      // dataFlow
-      this.$store.commit("updateParentUUID", this.currentUUID);
-      this.$store.commit("updateCurrentUUID", this.generateUUID());
-      this.$store.commit("addDataFlow", {
-        type: "nodes",
-        data: {
-          id: this.currentUUID,
-          data: { ...this.visualData }
-        }
-      });
-      this.$store.commit("addDataFlow", {
-        type: "links",
-        data: {
-          source: this.parentUUID,
-          target: this.currentUUID,
-          operations: this.currentOperations
-        }
-      });
+
       this.$store.commit("resetCurrentOperations");
 
       this.$store.commit("addOperation_", {

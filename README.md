@@ -75,3 +75,7 @@ dataflow的path增加箭头
 TODO: 记录交互的影响，而不是交互
 
 merge 操作
+
+无links数据=>links:[]
+
+redo undo  !!!!!
