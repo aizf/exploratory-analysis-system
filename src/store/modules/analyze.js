@@ -73,6 +73,10 @@ const analyze = {
             }
             else {
                 state.undoList.push(d);
+                if (arg.operation !== "redo") {
+                    // 若有其他操作，redo清空
+                    state.redoList = [];
+                }
             }
         },
         addOperation: (state, data) => {
