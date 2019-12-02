@@ -16,7 +16,7 @@ const getters = {
       "children"
     ];
     let dSet = new Set();
-    state.view.visualData.nodes.forEach(node => {
+    state.data.visualData.nodes.forEach(node => {
       dSet = new Set([...dSet, ...Object.keys(node)]);
     });
     return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();

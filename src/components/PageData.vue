@@ -123,12 +123,12 @@ export default {
     loadData(event) {
       let that = this;
       let dataset = this.datasets[event.key];
-      let setPath = "./static/" + dataset.fileName;
+      let datasetPath = "./static/" + dataset.fileName;
       if (event.key === this.lastSelect) return;
       let visualData;
       this.tabContents = []; // 清空数据
       this.$message.loading("Action in progress..", 0.3).then(() => {
-        __loadData(dataset.dataType)(setPath);
+        __loadData(dataset.dataType)(datasetPath);
       });
 
       function __loadData(dataType) {
@@ -140,14 +140,16 @@ export default {
           case "hierarchical":
             return __loadHierarchicalData;
             break;
-            // TODO:
+          case "node":
+            return __loadNodeData;
+            break;
           default:
             break;
         }
       }
 
-      function __loadHierarchicalData(setPath) {
-        d3.json(setPath)
+      function __loadHierarchicalData(datasetPath) {
+        d3.json(datasetPath)
           .then(res => {
             that.$store.commit("updateSourceData", res);
             visualData = that.$store.getters.hierarchical2nodeLink;
@@ -161,11 +163,25 @@ export default {
             console.log(err);
           });
       }
-      function __loadNodeLinkData() {
-        d3.json(setPath)
+      function __loadNodeLinkData(datasetPath) {
+        d3.json(datasetPath)
           .then(res => {
             that.$store.commit("updateSourceData", res);
             visualData = res;
+            that.tabContents.push(JSON.stringify(res, null, "\t"));
+            that.tabContents.push(JSON.stringify(visualData, null, "\t"));
+            that.tabContents.push("asdsafdhfghdfghsdf");
+            changeState();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+      function __loadNodeData(datasetPath) {
+        d3.json(datasetPath)
+          .then(res => {
+            that.$store.commit("updateSourceData", res);
+            visualData = { nodes: res, links: [] };
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(JSON.stringify(visualData, null, "\t"));
             that.tabContents.push("asdsafdhfghdfghsdf");
