@@ -1,6 +1,7 @@
 const data = {
     state: {
         datasets: {
+            // Node-Link
             "energy": {
                 fileName: "energy.json",
                 dataType: "node-link",
@@ -9,6 +10,7 @@ const data = {
                 fileName: "miserables.json",
                 dataType: "node-link",
             },
+            // Hierarchical
             "readme": {
                 fileName: "readme.json",
                 dataType: "hierarchical",
@@ -16,7 +18,20 @@ const data = {
             "test": {
                 fileName: "test.json",
                 dataType: "hierarchical",
-            }
+            },
+            // Only Node
+            "cars": {
+                fileName: "cars.json",
+                dataType: "node",
+            },
+            "jobs": {
+                fileName: "jobs.json",
+                dataType: "node",
+            },
+            "barley": {
+                fileName: "barley.json",
+                dataType: "node",
+            },
         },
         isNewData: false,
         sourceData: undefined,

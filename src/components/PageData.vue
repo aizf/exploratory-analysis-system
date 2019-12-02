@@ -24,6 +24,13 @@
             <a-menu-item key="miserables" @click="loadData">miserables</a-menu-item>
             <a-menu-item key="energy" @click="loadData">energy</a-menu-item>
           </a-menu-item-group>
+
+          <a-menu-item-group key="node" title="node">
+            <a-menu-item key="cars" @click="loadData">cars</a-menu-item>
+            <a-menu-item key="jobs" @click="loadData">jobs</a-menu-item>
+            <a-menu-item key="barley" @click="loadData">barley</a-menu-item>
+          </a-menu-item-group>
+
           <a-menu-item-group key="hierarchical" title="hierarchical">
             <a-menu-item key="readme" @click="loadData">readme</a-menu-item>
             <a-menu-item key="test" @click="loadData">test(2196N,2195L)</a-menu-item>
@@ -133,6 +140,7 @@ export default {
           case "hierarchical":
             return __loadHierarchicalData;
             break;
+            // TODO:
           default:
             break;
         }
