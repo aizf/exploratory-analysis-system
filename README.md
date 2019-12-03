@@ -76,8 +76,8 @@ TODO: 记录交互的影响，而不是交互
 
 merge 操作
 
-无links数据=>links:[]
+无links数据=>links:[]   done !
 
-redo undo  !!!!!
+redo undo               done !
 
 update 刷新不重新绘图
