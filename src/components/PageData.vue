@@ -195,6 +195,9 @@ export default {
       function changeState() {
         visualData.nodes.forEach(d => {
           that.$set(d,"attentionTimes",0);
+          that.$set(d,"x",false);
+          that.$set(d,"y",false);
+          that.$set(d,"selected",false);
           that.$set(d,"selected",false);
         });
         // console.log(visualData);

@@ -11,6 +11,44 @@
             <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
           </filter>
         </defs>
+        <g>
+          <g class="links">
+            <line
+              v-for="link in links"
+              :x1="link.source.x"
+              :y1="link.source.y"
+              :x2="link.target.x"
+              :y2="link.target.y"
+              :key="link.index"
+            />
+          </g>
+          <g class="nodes">
+            <circle
+              v-for="node in nodes"
+              :r="Math.max(Math.sqrt(!!node.size) / 10, 4.5)"
+              :class="{'display':true,'selected':node.selected}"
+              :fill="colorPalette[node.group || 0]"
+              filter="url(#shadow)"
+              :cx="node.x"
+              :cy="node.y"
+              :key="node.index"
+            />
+          </g>
+          <g class="texts" :style="{display:visShowIds ? 'inline':'none'}">
+            <text
+              v-for="node in nodes"
+              text-anchor="middle"
+              font-family="Avenir"
+              font-size="10"
+              dy="-0.5em"
+              :fill="colorPalette[node.group || 0]"
+              style="user-select: none;"
+              :x="node.x"
+              :y="node.y"
+              :key="node.index"
+            >node.id</text>
+          </g>
+        </g>
       </svg>
     </div>
     <div
@@ -151,7 +189,7 @@ export default {
     // console.log(d3.version);
     // console.log(_.VERSION);
     let that = this;
-    console.log(this);
+    console.log("ForceChart", this);
     console.log(d3);
     let svg = d3
       .select(this.$el)
@@ -159,9 +197,9 @@ export default {
       .attr("viewBox", [0, 0, this.chartWidth, this.chartHeight]);
     let width = this.chartWidth,
       height = this.chartHeight;
-    // console.log(svg);
+    // console.log("svg", svg);
 
-    this.vis = svg.append("g");
+    this.vis = svg.select("g");
     svg
       .call(
         d3
@@ -214,12 +252,10 @@ export default {
       : this.invertBrushG.style("display", "none");
 
     // 初始化<g>，防止update()产生多个<g>
-    this.linkG = this.vis.append("g").attr("class", "links");
-    this.nodeG = this.vis.append("g").attr("class", "nodes");
-    this.textG = this.vis.append("g").attr("class", "texts");
-    this.visShowIds
-      ? this.textG.style("display", "inline")
-      : this.textG.style("display", "none");
+    this.linkG = this.vis.select("g.links");
+    this.nodeG = this.vis.select("g.nodes");
+    this.textG = this.vis.select("g.texts");
+
     this.render();
 
     function zoomStart() {
@@ -258,9 +294,9 @@ export default {
   },
 
   activated() {
-    this.node
-      .classed("selected", d => d.selected)
-      .attr("fill", d => this.colorPalette[d.group || 0]);
+    // this.node
+    //   .classed("selected", d => d.selected)
+    //   .attr("fill", d => this.colorPalette[d.group || 0]);
     this.simulation.tick();
   },
 
@@ -274,33 +310,9 @@ export default {
       if (this.nodes.length === 0) {
         return;
       }
-      let color = d => {
-        return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
-      };
       // debugger;
-      this.link = this.linkG
-        .selectAll("line")
-        .data(this.links)
-        .join("line");
-      this.link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-
-      this.node = this.nodeG
-        .selectAll("circle")
-        .data(this.nodes)
-        .join("circle")
-        .attr("r", d => {
-          let size = Math.sqrt(d.size) / 10;
-          return size > 4.5 ? size : 4.5;
-        })
-        .attr("class", "display")
-        .attr("fill", color)
-        .attr("filter", "url(#shadow)")
-        .classed("selected", d => d.selected);
-      this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+      this.link = this.linkG.selectAll("line").data(this.links);
+      this.node = this.nodeG.selectAll("circle").data(this.nodes);
       console.log("changeData");
     },
     render() {
@@ -308,49 +320,29 @@ export default {
       if (this.nodes.length === 0) {
         return;
       }
-      let color = d => {
-        return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
-      };
       // debugger;
-      this.link = this.linkG
-        .selectAll("line")
-        .data(this.links)
-        .join("line");
+      this.link = this.linkG.selectAll("line").data(this.links);
 
-      this.node = this.nodeG
-        .selectAll("circle")
-        .data(this.nodes)
-        .join("circle")
-        .attr("r", d => {
-          let size = Math.sqrt(d.size) / 10;
-          return size > 4.5 ? size : 4.5;
-        })
-        .attr("class", "display")
-        .attr("fill", color)
-        .attr("filter", "url(#shadow)")
-        .classed("selected", d => d.selected);
+      this.node = this.nodeG.selectAll("circle").data(this.nodes);
 
-      this.text = this.textG
-        .selectAll("text")
-        .data(this.nodes)
-        .join("text")
-        .attr("text-anchor", "middle")
-        .attr("font-family", "Avenir")
-        .attr("font-size", "10")
-        .attr("dy", "-0.5em")
-        .text(d => d.id || d.name)
-        .attr("fill", color)
-        .style("-webkit-user-select", "none") // 字体不被选中
-        .style("-moz-user-select", "none")
-        .style("-ms-user-select", "none")
-        .style("user-select", "none");
+      this.text = this.textG.selectAll("text").data(this.nodes);
+      // .join("text")
+      // .attr("text-anchor", "middle")
+      // .attr("font-family", "Avenir")
+      // .attr("font-size", "10")
+      // .attr("dy", "-0.5em")
+      // .text(d => d.id || d.name)
+      // .attr("fill", color)
+      // .style("-webkit-user-select", "none") // 字体不被选中
+      // .style("-moz-user-select", "none")
+      // .style("-ms-user-select", "none")
+      // .style("user-select", "none");
       // console.log("before simulation");
       // console.log(this.node);
       // console.log(this.simulation.nodes());
-      this.simulation
-        .nodes(this.nodes)
-        .on("tick", this.ticked)
-        .on("end", this.tickEnd);
+      this.simulation.nodes(this.nodes);
+      this.$store.commit("updateVisualData", { ...this.visualData});
+      this.simulation.on("tick", this.ticked).on("end", this.tickEnd);
       this.simulation.force("link").links(this.links);
       // console.log("after simulation");
       // console.log(this.node);
@@ -392,16 +384,15 @@ export default {
       }
     },
     ticked() {
-      this.link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-      this.node.attr("cx", d => d.x).attr("cy", d => d.y);
-
-      if (this.visShowIds) {
-        this.text.attr("x", d => d.x).attr("y", d => d.y);
-      }
+      // this.link
+      //   .attr("x1", d => d.source.x)
+      //   .attr("y1", d => d.source.y)
+      //   .attr("x2", d => d.target.x)
+      //   .attr("y2", d => d.target.y);
+      // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+      // if (this.visShowIds) {
+      //   this.text.attr("x", d => d.x).attr("y", d => d.y);
+      // }
     },
     tickEnd() {
       // 静态布局
@@ -676,19 +667,19 @@ export default {
     test() {}
   },
   watch: {
-    isNewData: function(val) {
-      console.log("watch1", this.isNewData);
-      if (val) {
-        console.log("isNewData", this.isNewData);
-        console.log("visualData", this.visualData);
-        this.render();
-        this.$store.commit("updateIsNewData", false);
-      }
-    },
-    visualData: function(val) {
-      console.log("watch2", this.isNewData);
-      this.changeData();
-    },
+    // isNewData: function(val) {
+    //   console.log("watch1", this.isNewData);
+    //   if (val) {
+    //     console.log("isNewData", this.isNewData);
+    //     console.log("visualData", this.visualData);
+    //     this.render();
+    //     this.$store.commit("updateIsNewData", false);
+    //   }
+    // },
+    // visualData: function(val) {
+    //   console.log("watch2", this.isNewData);
+    //   this.changeData();
+    // },
     visBrush: function(val) {
       val
         ? this.brushG.style("display", "inline")
@@ -699,11 +690,6 @@ export default {
         ? this.invertBrushG.style("display", "inline")
         : (this.invertBrushG.style("display", "none"),
           this.invertBrush.clear(this.invertBrushG));
-    },
-    visShowIds: function(val) {
-      val
-        ? this.textG.style("display", "inline")
-        : this.textG.style("display", "none");
     }
   }
 };
