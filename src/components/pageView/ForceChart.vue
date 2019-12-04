@@ -270,10 +270,10 @@ export default {
 
   methods: {
     changeData() {
+      // 只更新数据
       if (this.nodes.length === 0) {
         return;
       }
-      // 更新数据
       let color = d => {
         return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
       };
@@ -301,9 +301,13 @@ export default {
         .attr("filter", "url(#shadow)")
         .classed("selected", d => d.selected);
       this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+      console.log("changeData");
     },
     render() {
-      // 更新数据
+      // 重新渲染图标
+      if (this.nodes.length === 0) {
+        return;
+      }
       let color = d => {
         return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
       };
@@ -676,7 +680,7 @@ export default {
       console.log("watch1", this.isNewData);
       if (val) {
         console.log("isNewData", this.isNewData);
-        console.log("visualData",this.visualData);
+        console.log("visualData", this.visualData);
         this.render();
         this.$store.commit("updateIsNewData", false);
       }
