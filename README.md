@@ -81,3 +81,5 @@ merge 操作
 redo undo               done !
 
 update 刷新不重新绘图
+
+test
