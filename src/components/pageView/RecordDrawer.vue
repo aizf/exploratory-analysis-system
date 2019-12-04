@@ -72,7 +72,6 @@ export default {
       });
       // console.log(data.nodes);
       this.$store.commit("updateVisualData", data);
-      this.$store.commit("updateViewUpdate", "all");
       this.$store.commit("updateParentUUID", item.pId);
       this.$store.commit("updateCurrentUUID", item.id);
       this.$store.state.rollbacked = true;

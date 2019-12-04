@@ -116,14 +116,19 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
-      viewUpdate: state => state.view.viewUpdate,
 
       currentOperations: state => state.analyze.currentOperations,
       undoStack: state => state.analyze.undoStack,
       redoStack: state => state.analyze.redoStack,
       rollbacked: state => state.analyze.rollbacked
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber","generateUUID","beforeEvent"]),
+    ...mapGetters([
+      "nodes",
+      "links",
+      "nodesNumber",
+      "generateUUID",
+      "beforeEvent"
+    ]),
 
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -215,10 +220,10 @@ export default {
     this.visShowIds
       ? this.textG.style("display", "inline")
       : this.textG.style("display", "none");
-    this.update();
+    this.render();
 
     function zoomStart() {
-      that.beforeEvent("zoom",that);
+      that.beforeEvent("zoom", that);
     }
     function zoomed() {
       if (!that.visZoom) return;
@@ -264,7 +269,40 @@ export default {
   },
 
   methods: {
-    update() {
+    changeData() {
+      if (this.nodes.length === 0) {
+        return;
+      }
+      // 更新数据
+      let color = d => {
+        return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
+      };
+      // debugger;
+      this.link = this.linkG
+        .selectAll("line")
+        .data(this.links)
+        .join("line");
+      this.link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      this.node = this.nodeG
+        .selectAll("circle")
+        .data(this.nodes)
+        .join("circle")
+        .attr("r", d => {
+          let size = Math.sqrt(d.size) / 10;
+          return size > 4.5 ? size : 4.5;
+        })
+        .attr("class", "display")
+        .attr("fill", color)
+        .attr("filter", "url(#shadow)")
+        .classed("selected", d => d.selected);
+      this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+    },
+    render() {
       // 更新数据
       let color = d => {
         return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
@@ -315,8 +353,7 @@ export default {
       // console.log(this.simulation.nodes());
       this.bindEvents(); // 给显示的dom绑定元素
       this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
-      this.$store.commit("updateViewUpdate", "force", false);
-      console.log("ForceChart update!");
+      console.log("render");
     },
     bindEvents() {
       // 更新后绑定事件
@@ -380,7 +417,7 @@ export default {
       // console.log(d3.event);
       // debugger
       if (d3.event.selection === null) return;
-      this.beforeEvent(this.visBrush ? "brush" : "invertBrush",this);
+      this.beforeEvent(this.visBrush ? "brush" : "invertBrush", this);
 
       if (!this.brushKeep && this.visBrush) {
         this.node
@@ -458,7 +495,7 @@ export default {
     // drag
     dragstarted(d) {
       if (!this.visDrag) return;
-      this.beforeEvent("drag",this);
+      this.beforeEvent("drag", this);
       if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
@@ -501,7 +538,7 @@ export default {
     },
     clickSelect(d, i, p) {
       if (this.visClick) {
-        this.beforeEvent("click",this);
+        this.beforeEvent("click", this);
         let t = d3.select(p[i]);
         if (t.classed("selected")) {
           t.classed("selected", false);
@@ -523,7 +560,7 @@ export default {
     },
     mouseover(d) {
       if (!this.visMouseover || this.isDraging) return;
-      this.beforeEvent("mouseover",this);
+      this.beforeEvent("mouseover", this);
       let displayNodes = null;
       // let opacityNodes = null;
       let displayLinks = null;
@@ -635,6 +672,19 @@ export default {
     test() {}
   },
   watch: {
+    isNewData: function(val) {
+      console.log("watch1", this.isNewData);
+      if (val) {
+        console.log("isNewData", this.isNewData);
+        console.log("visualData",this.visualData);
+        this.render();
+        this.$store.commit("updateIsNewData", false);
+      }
+    },
+    visualData: function(val) {
+      console.log("watch2", this.isNewData);
+      this.changeData();
+    },
     visBrush: function(val) {
       val
         ? this.brushG.style("display", "inline")
@@ -650,12 +700,6 @@ export default {
       val
         ? this.textG.style("display", "inline")
         : this.textG.style("display", "none");
-    },
-    "viewUpdate.force": function(val) {
-      // console.log("force watcher");
-      if (val) {
-        this.update();
-      }
     }
   }
 };

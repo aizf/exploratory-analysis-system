@@ -96,7 +96,6 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
-      viewUpdate: state => state.view.viewUpdate,
 
       currentOperations: state => state.analyze.currentOperations,
       undoStack: state => state.analyze.undoStack,
@@ -314,8 +313,6 @@ export default {
         .style("user-select", "none");
 
       this.bindEvents(); // 给显示的dom绑定元素
-      this.$store.commit("updateViewUpdate", "scatter", false);
-      console.log("ScatterChart update!");
     },
     bindEvents() {
       // 更新后绑定事件
@@ -607,12 +604,6 @@ export default {
       val
         ? this.textG.style("display", "inline")
         : this.textG.style("display", "none");
-    },
-    "viewUpdate.scatter": function(val) {
-      // console.log("scatter watcher");
-      if (val) {
-        this.update();
-      }
     }
   }
 };

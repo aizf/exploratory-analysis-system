@@ -360,7 +360,6 @@ export default {
         this.$store.commit("updateVisualData", record.data);
         this.$store.commit("updateParentUUID", this.currentUUID);
         this.$store.commit("updateCurrentUUID", record.uuid);
-        this.$store.commit("updateViewUpdate", "all");
         console.info("undo!");
       });
     },
@@ -381,7 +380,6 @@ export default {
         this.$store.commit("updateVisualData", record.data);
         this.$store.commit("updateParentUUID", this.currentUUID);
         this.$store.commit("updateCurrentUUID", record.uuid);
-        this.$store.commit("updateViewUpdate", "all");
         console.info("redo!");
       });
     },
@@ -395,11 +393,10 @@ export default {
       this.beforeEvent("filter", this);
 
       slicedData.nodes.forEach(d => {
-        d.selected = false;
+        this.$set(d, "selected", false);
       });
 
       this.$store.commit("updateVisualData", slicedData);
-      this.$store.commit("updateViewUpdate", "all");
 
       this.$store.commit("resetCurrentOperations");
 
@@ -414,12 +411,8 @@ export default {
       // console.log(group);
       let selectedNodes = this.selectedNodes();
       selectedNodes.forEach(d => {
-        d.group = group;
+        this.$set(d, "group", group);
       });
-      this.$store.commit("updateViewUpdate", "all");
-      // d3.select(selectedNodes)
-      //   .attr("group", group)
-      //   .attr("fill", this.colorPalette[group]);
     },
     // test
     test(event, i, a) {
@@ -443,7 +436,6 @@ export default {
       colorPalette: state => state.view.colorPalette,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
-      viewUpdate: state => state.view.viewUpdate,
 
       currentOperations: state => state.analyze.currentOperations,
       undoList: state => state.analyze.undoList,
@@ -506,11 +498,6 @@ export default {
     rollbacked: function(val) {
       if (val) {
         this.$store.state.analyze.rollbacked = false;
-      }
-    },
-    isNewData: function(val) {
-      if (val) {
-        this.$store.commit("updateIsNewData", false);
       }
     }
   }

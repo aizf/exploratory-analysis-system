@@ -18,11 +18,6 @@ const view = {
             "#91ca8c",
             "#f49f42"
         ],
-        viewUpdate: {
-            force: false,
-            scatter: false,
-            table: false
-        },
         operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
         operation_Types: ["rollback", "filter", "undo","redo"],
         parentUUID: "root", //当前view的父view的UUID
@@ -36,12 +31,7 @@ const view = {
         },
         updateCurrentUUID: (state, data) => {
             state.currentUUID = data;
-        }, updateViewUpdate: (state, chart, val) => {
-            let charts = ["force", "scatter", "table"];
-            chart === "all" ? (charts.forEach(c => {
-                state.viewUpdate[c] = true;
-            })) : (state.viewUpdate[chart] = val);
-        },
+        }
     },
     actions: {}
 }

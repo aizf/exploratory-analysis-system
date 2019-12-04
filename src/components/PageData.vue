@@ -194,8 +194,8 @@ export default {
       // the last step
       function changeState() {
         visualData.nodes.forEach(d => {
-          d.attentionTimes = 0;
-          d.selected = false;
+          that.$set(d,"attentionTimes",0);
+          that.$set(d,"selected",false);
         });
         // console.log(visualData);
         // debugger;
@@ -205,7 +205,6 @@ export default {
         that.$store.commit("updateIsNewData", true);
         that.$store.commit("updateVisualData", visualData);
         that.$store.commit("resetOperations");
-        that.$store.commit("updateViewUpdate", "all");
         that.$store.commit("addDataFlow", {
           type: "nodes",
           data: { id: that.currentUUID, data: { ...visualData } }

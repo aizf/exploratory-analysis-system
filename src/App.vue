@@ -65,7 +65,8 @@ export default {
       }
     },
     dataSelected() {
-      return !!this.visualData;
+      // 判断是否选择了数据集
+      return Object.values(this.visualData).some(val => val.length > 0);
     },
     pageViewTooltipTitle() {
       return !this.dataSelected ? "请先在左侧选择数据" : "数据可视化界面";

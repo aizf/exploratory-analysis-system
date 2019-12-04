@@ -105,10 +105,6 @@ export default {
     }
   },
   watch: {
-    "viewUpdate.table": function(val) {
-      if (val) {
-      }
-    },
     nodes: {
       handler() {
         this.nodesChanged = true;
