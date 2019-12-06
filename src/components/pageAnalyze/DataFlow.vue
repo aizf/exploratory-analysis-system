@@ -135,21 +135,33 @@ export default {
         // return `${d.source.id} → ${d.target.id}\n${operations}`;
         return d.operation;
       });
-
-      // text的x，y反向，值为相反数
+      //**
+      // // text的x，y反向，值为相反数
+      // this.textG
+      //   .selectAll("text")
+      //   .data(nodes)
+      //   .join("text")
+      //   .attr("y", d => -(d.x1 + 6))
+      //   // .attr("x", d => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
+      //   .attr("x", d => -d.y0)
+      //   .attr("dx", "-0.35em")
+      //   .attr("text-anchor", "start")
+      //   // .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
+      //   .text(d => d.uuid)
+      //   .attr("transform", "rotate(90)")
+      //   .attr("transform-origin", "(left,bottom)");
+      //**
       this.textG
         .selectAll("text")
         .data(nodes)
         .join("text")
-        .attr("y", d => -(d.x1 + 6))
+        .attr("x", d => d.x1 + 6)
         // .attr("x", d => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
-        .attr("x", d => -d.y0)
+        .attr("y", d => d.y0)
         .attr("dx", "-0.35em")
         .attr("text-anchor", "start")
         // .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
-        .text(d => d.uuid)
-        .attr("transform", "rotate(90)")
-        .attr("transform-origin", "(left,bottom)");
+        .text(d => d.uuid);
 
       // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },

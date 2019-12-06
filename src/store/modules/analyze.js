@@ -64,16 +64,16 @@ const analyze = {
         }
     },
     mutations: {
-        addRecordData: (state, arg) => {
-            // arg 格式: [data, uuid, operation,time]
-            let d = state.recordData(arg);
+        addRecordData: (state, args) => {
+            // args 格式: [data, uuid, operation,time]
+            let d = state.recordData(args);
             state.recordset.push(d);
-            if (arg.operation === "undo") {
+            if (args.operation === "undo") {
                 state.redoList.push(d);
             }
             else {
                 state.undoList.push(d);
-                if (arg.operation !== "redo") {
+                if (args.operation !== "redo") {
                     // 若有其他操作，redo清空
                     state.redoList = [];
                 }

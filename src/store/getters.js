@@ -76,6 +76,8 @@ const getters = {
     nodes.forEach(node => {
       node.fixedValue = node.data.nodes.length;
     })
+    // 去除uuid相同的node
+    
     // links
     let links = [];
     for (let i in nodes) {
@@ -93,7 +95,7 @@ const getters = {
       links.push({
         source: nodes[+i - 1].uuid,
         target: nodes[+i].uuid,
-        operation: nodes[+i - 1].operation
+        // operation: nodes[+i - 1].operation
       })
     }
 

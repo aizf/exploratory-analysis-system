@@ -369,14 +369,14 @@ export default {
         if (!redo.length) {
           return;
         }
-        let arg = {
+        let args = {
           data: this.visualData,
           uuid: this.currentUUID,
           operation: "redo",
           time: new Date(),
           marked: this.marked
         };
-        this.$store.commit("addRecordData", arg);
+        this.$store.commit("addRecordData", args);
         let record = redo.shift();
         this.$store.commit("updateVisualData", record.data);
         this.$store.commit("updateParentUUID", this.currentUUID);
