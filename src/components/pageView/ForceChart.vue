@@ -46,7 +46,7 @@
               :x="node.x"
               :y="node.y"
               :key="node.index"
-            >node.id</text>
+            >{{node.id}}</text>
           </g>
         </g>
       </svg>

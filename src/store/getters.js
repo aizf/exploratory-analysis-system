@@ -66,36 +66,40 @@ const getters = {
   recordFlow: state => {
     // 返回格式化后的记录流
     // 先增加尾节点
-    let nodes = [...state.analyze.recordset];
-    nodes.push(state.analyze.recordData({
+    let rs = [...state.analyze.recordset];
+    rs.push(state.analyze.recordData({
       data: state.data.visualData,
       uuid: state.view.currentUUID,
       operation: "current",
       time: new Date()
     }));
-    nodes.forEach(node => {
+    rs.forEach(node => {
       node.fixedValue = node.data.nodes.length;
     })
     // 去除uuid相同的node
-    
-    // links
-    let links = [];
-    for (let i in nodes) {
-      if (+i === 0) continue;
 
+    let uuids = new Set();
+    let nodes = [];
+    let links = [];
+    for (let i = 0; i < rs.length; i++) {
+      // nodes
+      if (!uuids.has(rs[i].uuid)) {
+        uuids.add(rs[i].uuid);
+        nodes.push(rs[i]);
+      }
+      // links
+      if (i === 0) continue;
       // 防止连通
-      switch (nodes[+i - 1].operation) {
+      switch (rs[i - 1].operation) {
         case "undo":
         case "redo":
           continue;
         default:
           break;
       }
-
       links.push({
-        source: nodes[+i - 1].uuid,
-        target: nodes[+i].uuid,
-        // operation: nodes[+i - 1].operation
+        source: rs[i - 1].uuid,
+        target: rs[i].uuid,
       })
     }
 

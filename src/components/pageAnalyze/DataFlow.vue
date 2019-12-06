@@ -10,6 +10,38 @@
           <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
         </filter>
       </defs>
+      <g>
+        <g class="nodes" stroke="#000">
+          <g v-for="node in nodes" :key="node.index">
+            <rect
+              v-for="rect in createMultipleColorRects(node)"
+              :fill="colorPalette[rect.group]"
+              :x="node.x0"
+              :y="rect.y"
+              :width="node.x1 - node.x0"
+              :height="rect.height"
+              :key="rect.group"
+            />
+            <title>{{`${node.uuid}\n${node.value}`}}</title>
+          </g>
+        </g>
+        <g class="links" fill="none" stroke-opacity="0.5">
+          <g v-for="(link,index) in links" style="mix-blend-mode: multiply;" :key="index">
+            <path :d="generatePath(link)" stroke="#aaa" stroke-width="5" />
+            <title>1</title>
+          </g>
+        </g>
+        <g class="texts" style="font: 10px sans-serif;">
+          <text
+            v-for="node in nodes"
+            :x="node.x1 + 6"
+            :y="node.y0"
+            dx="-0.35em"
+            text-anchor="start"
+            :key="node.index"
+          >{{node.uuid}}</text>
+        </g>
+      </g>
     </svg>
   </div>
 </template>
@@ -46,20 +78,19 @@ export default {
       operations: state => state.analyze.operations,
       dataFlow: state => state.analyze.dataFlow
     }),
-    ...mapGetters(["recordFlow"])
+    ...mapGetters(["recordFlow"]),
+
+    graph() {
+      return this.sankey(this.recordFlow);
+    },
+    nodes() {
+      return this.graph.nodes;
+    },
+    links() {
+      return this.graph.links;
+    }
   },
-  mounted() {
-    console.log("d3", d3);
-    console.log("d3Sankey", d3Sankey);
-    let svg = d3
-      .select(".DataFlow svg")
-      .attr("viewBox", [0, 0, this.width, this.height]);
-    this.vis = svg.append("g");
-    let zoomed = () => {
-      let transform = d3.event.transform;
-      this.vis.attr("transform", transform);
-    };
-    svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
+  created() {
     this.sankey = d3Sankey
       .sankey()
       .nodeAlign(d3Sankey["sankeyLeft"])
@@ -67,22 +98,27 @@ export default {
       .nodeWidth(45)
       .nodePadding(60)
       .extent([[1, 5], [this.width - 1, this.height - 5]]);
-    this.nodeG = this.vis
-      .append("g")
-      .attr("class", "nodeG")
-      .attr("stroke", "#000")
-      .attr("class", "nodes");
-    this.linkG = this.vis
-      .append("g")
-      .attr("fill", "none")
-      .attr("stroke-opacity", 0.5)
-      .attr("class", "links");
-    this.textG = this.vis
-      .append("g")
-      .attr("class", "texts")
-      .style("font", "10px sans-serif");
+  },
+  mounted() {
+    console.log("d3", d3);
+    console.log("d3Sankey", d3Sankey);
+    let svg = d3
+      .select(".DataFlow svg")
+      .attr("viewBox", [0, 0, this.width, this.height]);
+    this.vis = svg.select("g");
 
-    this.update();
+    svg
+      .call(
+        d3.zoom().on("zoom", () => {
+          let transform = d3.event.transform;
+          this.vis.attr("transform", transform);
+        })
+      )
+      .on("dblclick.zoom", null);
+
+    this.nodeG = this.vis.select("g.nodes");
+    this.linkG = this.vis.select("g.links");
+    this.textG = this.vis.select("g.texts");
   },
   activated() {
     this.update();
@@ -93,48 +129,42 @@ export default {
       console.log(this);
       console.log("recordFlow:", this.recordFlow);
       // this.$store.state.formattedDataFlow();
-      let { nodes, links } = this.sankey(this.recordFlow);
+      // let { nodes, links } = this.sankey(this.recordFlow);
       // console.log(nodes, links);
 
-      this.node = this.nodeG
-        .selectAll("g")
-        .data(nodes)
-        .join("g")
-        .each((d, i, p) => {
-          // debugger;
-          this.createMultipleColorsRect(d, i, p);
-        });
+      // this.node = this.nodeG
+      //   .selectAll("g")
+      //   .data(this.nodes)
+      //   .join("g")
+      //   .each((d, i, p) => {
+      //     // debugger;
+      //     this.createMultipleColorsRect(d, i, p);
+      //   });
       // .attr("fill", "green");
-      this.node.append("title").text(d => `${d.uuid}\n${d.value}`);
+      // this.node.append("title").text(d => `${d.uuid}\n${d.value}`);
       // .call(d3.drag().on("drag", this.dragged));
 
-      this.link = this.linkG
-        .selectAll("g")
-        .data(links)
-        .join("g")
-        .style("mix-blend-mode", "multiply");
+      // this.link = this.linkG
+      //   .selectAll("g")
+      //   .data(this.links)
+      //   .join("g")
+      //   .style("mix-blend-mode", "multiply");
 
-      // this.link.each(d => {
-      //   d.width = 5;
-      //   d.y0 = (d.source.y0 + d.source.y1) / 2;
-      //   d.y1 = (d.target.y0 + d.target.y1) / 2;
+      // this.link
+      //   .append("path")
+      //   .attr("d", d =>
+      //     d3
+      //       .linkHorizontal()
+      //       .source(() => [d.source.x1, (d.source.y0 + d.source.y1) / 2])
+      //       .target(() => [d.target.x0, (d.target.y0 + d.target.y1) / 2])()
+      //   )
+      //   .attr("stroke", "#aaa")
+      //   .attr("stroke-width", 5);
+      // this.link.append("title").text(d => {
+      //   // let operations = d.operations.map(d => d.action).join("→");
+      //   // return `${d.source.id} → ${d.target.id}\n${operations}`;
+      //   return d.operation;
       // });
-
-      this.link
-        .append("path")
-        .attr("d", d =>
-          d3
-            .linkHorizontal()
-            .source(() => [d.source.x1, (d.source.y0 + d.source.y1) / 2])
-            .target(() => [d.target.x0, (d.target.y0 + d.target.y1) / 2])()
-        )
-        .attr("stroke", "#aaa")
-        .attr("stroke-width", 5);
-      this.link.append("title").text(d => {
-        // let operations = d.operations.map(d => d.action).join("→");
-        // return `${d.source.id} → ${d.target.id}\n${operations}`;
-        return d.operation;
-      });
       //**
       // // text的x，y反向，值为相反数
       // this.textG
@@ -151,21 +181,54 @@ export default {
       //   .attr("transform", "rotate(90)")
       //   .attr("transform-origin", "(left,bottom)");
       //**
-      this.textG
-        .selectAll("text")
-        .data(nodes)
-        .join("text")
-        .attr("x", d => d.x1 + 6)
-        // .attr("x", d => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
-        .attr("y", d => d.y0)
-        .attr("dx", "-0.35em")
-        .attr("text-anchor", "start")
-        // .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
-        .text(d => d.uuid);
+      // this.textG
+      // .attr("x", d => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
+      // .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
 
       // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
-    createMultipleColorsRect(d, i, p) {
+    generatePath(d) {
+      return d3
+        .linkHorizontal()
+        .source(() => [d.source.x1, (d.source.y0 + d.source.y1) / 2])
+        .target(() => [d.target.x0, (d.target.y0 + d.target.y1) / 2])();
+    },
+    createMultipleColorRects(d) {
+      // 在<g>元素之内添加多颜色矩形
+      let height = d.y1 - d.y0;
+      let width = d.x1 - d.x0;
+      let nodes = d.data.nodes;
+      let totalNum = d.data.nodes.length;
+      let eachGroupNum = {};
+      nodes.forEach(node => {
+        if (!node.group) {
+          eachGroupNum["0"] === undefined
+            ? (eachGroupNum["0"] = 0)
+            : eachGroupNum["0"]++;
+        } else {
+          eachGroupNum[node.group + ""] === undefined
+            ? (eachGroupNum[node.group + ""] = 0)
+            : eachGroupNum[node.group + ""]++;
+        }
+      });
+
+      let rects = [];
+      let groups = Object.keys(eachGroupNum).sort();
+      let preDy = 0;
+      for (let group in groups) {
+        let h = (height * eachGroupNum[group]) / totalNum;
+        rects.push({
+          group: group,
+          nodesNum: eachGroupNum[group],
+          y: d.y0 + preDy,
+          height: h
+        });
+        preDy += h;
+      }
+      return rects;
+    },
+    createMultipleColorsRect__(d, i, p) {
+      // 在<g>元素之内添加多颜色矩形
       let height = d.y1 - d.y0;
       let width = d.x1 - d.x0;
       let nodes = d.data.nodes;
