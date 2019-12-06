@@ -72,6 +72,7 @@
   </a-layout>
 </template>
 <script>
+import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 
@@ -94,8 +95,8 @@ export default {
     return {
       // interface
       collapsed: false, // 侧边栏
-      tabs: ["SourceData", "Node-Link", "Hierarchical"],
-      tabContents: Array(3),
+      tabs: ["SourceData", "VisualData"],
+      tabContents: Array(2),
       lastSelect: undefined,
       // codemirror
       cmOptions: {
@@ -151,12 +152,10 @@ export default {
       function __loadHierarchicalData(datasetPath) {
         d3.json(datasetPath)
           .then(res => {
-            that.$store.commit("updateSourceData", res);
-            visualData = that.$store.getters.hierarchical2nodeLink;
-            // todo !!!!!!!!!!!!!
+            store.commit("updateSourceData", res);
+            visualData = store.getters.hierarchical2nodeLink;
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(JSON.stringify(visualData, null, "\t"));
-            that.tabContents.push("asdsafdhfghdfghsdf");
             changeState();
           })
           .catch(err => {
@@ -166,11 +165,10 @@ export default {
       function __loadNodeLinkData(datasetPath) {
         d3.json(datasetPath)
           .then(res => {
-            that.$store.commit("updateSourceData", res);
+            store.commit("updateSourceData", res);
             visualData = res;
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(JSON.stringify(visualData, null, "\t"));
-            that.tabContents.push("asdsafdhfghdfghsdf");
             changeState();
           })
           .catch(err => {
@@ -180,11 +178,10 @@ export default {
       function __loadNodeData(datasetPath) {
         d3.json(datasetPath)
           .then(res => {
-            that.$store.commit("updateSourceData", res);
+            store.commit("updateSourceData", res);
             visualData = { nodes: res, links: [] };
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(JSON.stringify(visualData, null, "\t"));
-            that.tabContents.push("asdsafdhfghdfghsdf");
             changeState();
           })
           .catch(err => {
@@ -194,21 +191,23 @@ export default {
       // the last step
       function changeState() {
         visualData.nodes.forEach(d => {
-          that.$set(d,"attentionTimes",0);
-          that.$set(d,"x",false);
-          that.$set(d,"y",false);
-          that.$set(d,"selected",false);
-          that.$set(d,"selected",false);
+          that.$set(d, "attentionTimes", 0);
+          that.$set(d, "x", 0);
+          that.$set(d, "y", 0);
+          that.$set(d, "selected", false);
         });
-        // console.log(visualData);
-        // debugger;
+
         console.log("change!");
         that.lastSelect = event.key;
         // 源数据改变后更新store状态
-        that.$store.commit("updateIsNewData", true);
-        that.$store.commit("updateVisualData", visualData);
-        that.$store.commit("resetOperations");
-        that.$store.commit("addDataFlow", {
+        store.commit("ChartsNeedUpdate", {
+          force: true,
+          scatter: true,
+          table: true
+        });
+        store.commit("updateVisualData", visualData);
+        store.dispatch("resetAll");
+        store.commit("addDataFlow", {
           type: "nodes",
           data: { id: that.currentUUID, data: { ...visualData } }
         });

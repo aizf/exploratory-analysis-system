@@ -80,6 +80,16 @@ const getters = {
     let links = [];
     for (let i in nodes) {
       if (+i === 0) continue;
+
+      // 防止连通
+      switch (nodes[+i - 1].operation) {
+        case "undo":
+        case "redo":
+          continue;
+        default:
+          break;
+      }
+
       links.push({
         source: nodes[+i - 1].uuid,
         target: nodes[+i].uuid,
@@ -157,7 +167,7 @@ const getters = {
     });
     return uuid;
   },
-  beforeEvent: (state,getters) => (operation, vueComponent) => {
+  beforeEvent: (state, getters) => (operation, vueComponent) => {
     // vueComponent为调用此函数的组件实例
     let arg = {
       data: state.data.visualData,

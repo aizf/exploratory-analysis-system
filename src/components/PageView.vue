@@ -216,6 +216,7 @@
   </a-layout>
 </template>
 <script>
+import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import ForceChart from "./pageView/ForceChart.vue";
@@ -431,7 +432,6 @@ export default {
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
       datasets: state => state.data.datasets,
-      isNewData: state => state.data.isNewData,
 
       colorPalette: state => state.view.colorPalette,
       parentUUID: state => state.view.parentUUID,

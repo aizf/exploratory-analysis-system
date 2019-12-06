@@ -19,18 +19,40 @@ const view = {
             "#f49f42"
         ],
         operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom"],
-        operation_Types: ["rollback", "filter", "undo","redo"],
-        parentUUID: "root", //当前view的父view的UUID
+        operation_Types: ["rollback", "filter", "undo", "redo"],
+        parentUUID: "none", //当前view的父view的UUID
         currentUUID: "root", //当前view的UUID
+        chartsNeedUpdate: {
+            "force": false,
+            "scatter": false,
+            "table": false
+        },
         // toolbox
         marked: false,
     },
     mutations: {
-        updateParentUUID: (state, data) => {
-            state.parentUUID = data;
+        updateParentUUID: (state, payload) => {
+            state.parentUUID = payload;
         },
-        updateCurrentUUID: (state, data) => {
-            state.currentUUID = data;
+        updateCurrentUUID: (state, payload) => {
+            state.currentUUID = payload;
+        },
+        ForceUpdated: ({ chartsNeedUpdate }) => {
+            chartsNeedUpdate.force = false;
+        },
+        ScatterUpdated: ({ chartsNeedUpdate }) => {
+            chartsNeedUpdate.scatter = false;
+        },
+        TableUpdated: ({ chartsNeedUpdate }) => {
+            chartsNeedUpdate.table = false;
+        },
+        ChartsNeedUpdate: ({ chartsNeedUpdate }) => {
+            for (let key in chartsNeedUpdate) {
+                chartsNeedUpdate[key] = true;
+            }
+        },
+        changeMarked: (state, payload) => {
+            state.marked = payload;
         }
     },
     actions: {}

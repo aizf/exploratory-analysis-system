@@ -2,6 +2,7 @@
   <a-table :columns="columns" :dataSource="data" size="small"></a-table>
 </template>
 <script>
+import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 // import * as _ from "lodash";
 export default {
@@ -13,13 +14,12 @@ export default {
     visDrag: Boolean,
     visMouseover: Boolean,
     visZoom: Boolean,
-    visShowIds: Boolean,
+    visShowIds: Boolean
   },
   data() {
     return {
       chartWidth: "960",
-      chartHeight: "600",
-      nodesChanged: false
+      chartHeight: "600"
     };
   },
   computed: {
@@ -28,9 +28,10 @@ export default {
       visualData: state => state.data.visualData,
 
       colorPalette: state => state.view.colorPalette,
-      backgroundColor: state => state.view.backgroundColor
+      backgroundColor: state => state.view.backgroundColor,
+      needUpdate: state => state.view.chartsNeedUpdate.table
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber","dimensions"]),
+    ...mapGetters(["nodes", "links", "nodesNumber", "dimensions"]),
 
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -68,7 +69,6 @@ export default {
       }));
     },
     data() {
-      this.nodesChanged = false;
       return this.nodes.map((node, i) => {
         let datum = { key: i };
         // console.log(this.dimensions);
@@ -105,11 +105,11 @@ export default {
     }
   },
   watch: {
-    nodes: {
-      handler() {
-        this.nodesChanged = true;
-      },
-      deep: true
+    needUpdate: function(val) {
+      if (val) {
+        //
+        store.commit("TableUpdated"); // TODO:
+      }
     }
   }
 };

@@ -11,29 +11,32 @@ import getters from './getters'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    modules: {
-        public_function,
-        data,
-        view,
-        analyze
-    },
-    state: {
+  modules: {
+    public_function,
+    data,
+    view,
+    analyze
+  },
+  state: {
 
-    },
-    mutations: {
-        resetOperations: (state) => {
-            state.operations = [];
-            state.operations_ = [];
-            state.dataFlow = {
-              nodes: [],
-              links: []
-            };
-            state.parentUUID = "root";
-            state.currentUUID = "root";
-          },
-    },
-    actions: {
+  },
+  mutations: {
 
-    },
-    getters
+  },
+  actions: {
+    resetAll({ commit }) {
+      commit("updateParentUUID", "none");
+      commit("updateCurrentUUID", "root");
+      commit("changeMarked", false);
+
+      commit("changeUndoRedo", (undo, redo) => {
+        undo.splice(0, undo.length);
+        redo.splice(0, redo.length);
+      });
+      commit("resetOperations");
+      commit("resetDataFlow");
+      commit("resetRecordset");
+    }
+  },
+  getters
 })

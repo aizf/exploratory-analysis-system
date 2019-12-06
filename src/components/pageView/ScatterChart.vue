@@ -41,6 +41,7 @@
   </div>
 </template>
 <script>
+import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 // import { mapState } from "vuex";
@@ -54,7 +55,7 @@ export default {
     visDrag: Boolean,
     visMouseover: Boolean,
     visZoom: Boolean,
-    visShowIds: Boolean,
+    visShowIds: Boolean
   },
   data() {
     return {
@@ -88,7 +89,6 @@ export default {
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
       datasets: state => state.data.datasets,
-      isNewData: state => state.data.isNewData,
 
       chartWidth: state => state.view.dpiX * 0.7,
       chartHeight: state => state.view.dpiY * 0.7,
@@ -96,13 +96,20 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
+      needUpdate: state => state.view.chartsNeedUpdate.scatter,
 
       currentOperations: state => state.analyze.currentOperations,
       undoStack: state => state.analyze.undoStack,
       redoStack: state => state.analyze.redoStack,
       rollbacked: state => state.analyze.rollbacked
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber","dimensions","generateUUID"]),
+    ...mapGetters([
+      "nodes",
+      "links",
+      "nodesNumber",
+      "dimensions",
+      "generateUUID"
+    ]),
 
     xDimensionData() {
       // 断绝了数据与节点的关联性，仅当作坐标刻度用
@@ -235,7 +242,10 @@ export default {
   },
 
   activated() {
-    this.update();
+    if (this.needUpdate) {
+      this.update();
+      store.commit("ScatterUpdated");
+    }
   },
 
   methods: {

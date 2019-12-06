@@ -100,6 +100,7 @@
   </div>
 </template>
 <script>
+import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 // import { mapState } from "vuex";
@@ -146,7 +147,6 @@ export default {
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
       datasets: state => state.data.datasets,
-      isNewData: state => state.data.isNewData,
 
       chartWidth: state => state.view.dpiX * 0.7,
       chartHeight: state => state.view.dpiY * 0.7,
@@ -154,10 +154,9 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
+      needUpdate: state => state.view.chartsNeedUpdate.force,
 
       currentOperations: state => state.analyze.currentOperations,
-      undoStack: state => state.analyze.undoStack,
-      redoStack: state => state.analyze.redoStack,
       rollbacked: state => state.analyze.rollbacked
     }),
     ...mapGetters([
@@ -256,8 +255,6 @@ export default {
     this.nodeG = this.vis.select("g.nodes");
     this.textG = this.vis.select("g.texts");
 
-    this.render();
-
     function zoomStart() {
       that.beforeEvent("zoom", that);
     }
@@ -294,10 +291,10 @@ export default {
   },
 
   activated() {
-    // this.node
-    //   .classed("selected", d => d.selected)
-    //   .attr("fill", d => this.colorPalette[d.group || 0]);
-    this.simulation.tick();
+    if (this.needUpdate) {
+      this.render();
+      store.commit("ForceUpdated");
+    }
   },
 
   deactivated() {
@@ -313,6 +310,7 @@ export default {
       // debugger;
       this.link = this.linkG.selectAll("line").data(this.links);
       this.node = this.nodeG.selectAll("circle").data(this.nodes);
+      this.text = this.textG.selectAll("text").data(this.nodes);
       console.log("changeData");
     },
     render() {
@@ -321,6 +319,12 @@ export default {
         return;
       }
       // debugger;
+      let t = this.visTransform();
+      t.x = 0;
+      t.y = 0;
+      t.k = 1;
+      this.vis.attr("transform", t);
+
       this.link = this.linkG.selectAll("line").data(this.links);
 
       this.node = this.nodeG.selectAll("circle").data(this.nodes);
@@ -341,8 +345,7 @@ export default {
       // console.log(this.node);
       // console.log(this.simulation.nodes());
       this.simulation.nodes(this.nodes);
-      this.$store.commit("updateVisualData", { ...this.visualData});
-      this.simulation.on("tick", this.ticked).on("end", this.tickEnd);
+      // this.simulation.on("tick", this.ticked).on("end", this.tickEnd);
       this.simulation.force("link").links(this.links);
       // console.log("after simulation");
       // console.log(this.node);
@@ -667,19 +670,6 @@ export default {
     test() {}
   },
   watch: {
-    // isNewData: function(val) {
-    //   console.log("watch1", this.isNewData);
-    //   if (val) {
-    //     console.log("isNewData", this.isNewData);
-    //     console.log("visualData", this.visualData);
-    //     this.render();
-    //     this.$store.commit("updateIsNewData", false);
-    //   }
-    // },
-    // visualData: function(val) {
-    //   console.log("watch2", this.isNewData);
-    //   this.changeData();
-    // },
     visBrush: function(val) {
       val
         ? this.brushG.style("display", "inline")

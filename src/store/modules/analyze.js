@@ -109,10 +109,8 @@ const analyze = {
             state.currentOperations = [];
         },
         changeUndoRedo: (state, fn) => {
-            let undo = state.undoList;
-            let redo = state.redoList;
             // fn为自定义函数
-            fn(undo, redo);
+            fn(state.undoList, state.redoList);
         },
         updatePageAnalyzeTooltip: (state, val) => {
             // debugger
@@ -120,7 +118,20 @@ const analyze = {
             // state.pageAnalyzeTooltipUpdata = val.update; // true or false
             // 改变状态，触发watch
             state.pageAnalyzeTooltipUpdata = !state.pageAnalyzeTooltipUpdata;
-        }
+        },
+        resetOperations: (state) => {
+            state.operations = [];
+            state.operations_ = [];
+        },
+        resetDataFlow: (state) => {
+            state.dataFlow = {
+                nodes: [],
+                links: []
+            };
+        },
+        resetRecordset: (state) => {
+            state.recordset = [];
+        },
     },
     actions: {}
 }

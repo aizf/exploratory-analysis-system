@@ -33,14 +33,10 @@ const data = {
                 dataType: "node",
             },
         },
-        isNewData: false,
         sourceData: {},
         visualData: {},
     },
     mutations: {
-        updateIsNewData: (state, data) => {
-            state.isNewData = data;
-        },
         updateSourceData: (state, data) => {
             state.sourceData = data;
         },

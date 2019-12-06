@@ -41,7 +41,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## TODO（数据驱动）
 
-调节尺寸，长宽外部绑定
+调节尺寸，长宽外部绑定  done !
 
 y轴映射啥(待定)  ing
 
@@ -58,14 +58,14 @@ ant 时间轴+表格（nodes）ing
 
 饼图，各种操作的比例，等
 
-迷你图
+迷你图  done !
 
 流程图增加分组之后的图节点
 
 time图纵轴可变，根据不同分组 !!!!!!!!!!!
 分组依据： 1.单点或多点 2.是否影响布局，查看信息或操作视图  3.是否影响源数据    4.
 
-深拷贝
+深拷贝  done !
 
 task: 一个完整的视图到视图的变化过程,自己mark
 纵坐标，横坐标在中间的
@@ -82,4 +82,4 @@ redo undo               done !
 
 update 刷新不重新绘图
 
-test
+TODO: d3的数据绑定 和 vue的

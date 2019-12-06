@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import StaticForce from "./commonUse/StaticForce.vue";

@@ -27,7 +27,7 @@ import {
   Tooltip
 } from 'ant-design-vue'
 
-import store from './store/'
+import store from '@/store/'
 
 Vue.prototype.$message = message;
 Vue.prototype.$axios = axios;

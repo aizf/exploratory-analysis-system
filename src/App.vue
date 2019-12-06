@@ -27,9 +27,9 @@
 
 <script>
 import { mapState } from "vuex";
-import PageData from "./components/PageData.vue";
-import PageView from "./components/PageView.vue";
-import PageAnalyze from "./components/PageAnalyze.vue";
+import PageData from "@/components/PageData.vue";
+import PageView from "@/components/PageView.vue";
+import PageAnalyze from "@/components/PageAnalyze.vue";
 
 export default {
   name: "app",
