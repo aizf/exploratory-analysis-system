@@ -35,9 +35,13 @@
             <title>{{node.uuid}}{{"\n"}}{{node.value}}</title>
           </g>
         </g>
-        <g class="links" fill="none" stroke-opacity="0.5">
+        <g class="links" fill="none">
           <g v-for="(link,index) in links" style="mix-blend-mode: multiply;" :key="index">
-            <path :d="generatePath(link)" stroke="#aaa" stroke-width="5" />
+            <path
+              :d="generatePath(link)"
+              :stroke="pathColor(link.operation)"
+              :stroke-width="link.width"
+            />
             <title>{{link.operation}}</title>
           </g>
         </g>
@@ -67,7 +71,7 @@ export default {
     return {
       link: d3.selectAll(),
       node: d3.selectAll(),
-      linkWidth:8,
+      linkWidth: 8,
       vis: d3.selectAll(),
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
@@ -82,6 +86,7 @@ export default {
       width: state => state.view.dpiX * 0.7,
       height: state => (state.view.dpiY - 64) * 0.55,
       colorPalette: state => state.view.colorPalette,
+      colorPalette2: state => state.view.colorPalette2,
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
       operationTypes: state => state.view.operationTypes,
@@ -262,6 +267,9 @@ export default {
         .linkHorizontal()
         .source(() => [isBack ? d.source.x0 : d.source.x1, d.y0])
         .target(() => [isBack ? d.target.x1 : d.target.x0, d.y1])();
+    },
+    pathColor(op) {
+      return this.colorPalette2[this.operationTypes.indexOf(op)];
     },
     createMultipleColorRects(d) {
       // 在<g>元素之内添加多颜色矩形
