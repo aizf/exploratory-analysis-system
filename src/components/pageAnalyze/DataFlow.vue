@@ -11,6 +11,16 @@
         </filter>
       </defs>
       <g>
+        <!-- TODO: current 加边框 -->
+        <rect
+          :x="currentNode.x0"
+          :y="currentNode.y0"
+          :width="currentNode.x1-currentNode.x0"
+          :height="currentNode.y1-currentNode.y0"
+          fill="none"
+          stroke-width="8"
+          stroke="#1890ff"
+        />
         <g class="nodes" stroke="#000">
           <g v-for="node in nodes" @click="updateTooltip(node.data)" :key="node.index">
             <rect
@@ -28,7 +38,7 @@
         <g class="links" fill="none" stroke-opacity="0.5">
           <g v-for="(link,index) in links" style="mix-blend-mode: multiply;" :key="index">
             <path :d="generatePath(link)" stroke="#aaa" stroke-width="5" />
-            <title>1</title>
+            <title>{{link.operation}}</title>
           </g>
         </g>
         <g class="texts" style="font: 10px sans-serif;">
@@ -57,6 +67,7 @@ export default {
     return {
       link: d3.selectAll(),
       node: d3.selectAll(),
+      linkWidth:8,
       vis: d3.selectAll(),
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
@@ -74,9 +85,10 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
       operationTypes: state => state.view.operationTypes,
+      currentUUID: state => state.view.currentUUID,
 
       operations: state => state.analyze.operations,
-      dataFlow: state => state.analyze.dataFlow
+      recordset: state => state.analyze.recordset
     }),
     ...mapGetters(["recordFlow"]),
 
@@ -84,10 +96,61 @@ export default {
       return this.sankey(this.recordFlow);
     },
     nodes() {
-      return this.graph.nodes;
+      let nodes = this.graph.nodes;
+      nodes.forEach(node => {
+        node.sourceLinks = [];
+        node.targetLinks = [];
+      });
+      return nodes;
     },
     links() {
-      return this.graph.links;
+      // 先在nodes增加in和out的links，
+      // 再根据node上links的数量设计y0(at source node),y1(at target node)
+
+      let links = [];
+      // sourceLinks: [] outgoing links
+      // targetLinks: []  incoming links
+      let recordNodes = [...this.recordset, this.currentNode];
+      let nodesDict = {};
+      this.nodes.forEach(node => {
+        nodesDict[node.uuid] = node;
+      });
+
+      for (let i = 1; i < recordNodes.length; i++) {
+        // links
+        let link = {
+          index: i - 1,
+          operation: recordNodes[i - 1].operation,
+          source: nodesDict[recordNodes[i - 1].uuid],
+          target: nodesDict[recordNodes[i].uuid],
+          width: this.linkWidth,
+          y0: undefined,
+          y1: undefined
+        };
+        links.push(link);
+        // nodes
+        nodesDict[recordNodes[i - 1].uuid].sourceLinks.push(link);
+        nodesDict[recordNodes[i].uuid].targetLinks.push(link);
+      }
+
+      this.nodes.forEach(node => {
+        let height = node.y1 - node.y0;
+        let sourceLinks = node.sourceLinks;
+        for (let i = 0; i < sourceLinks.length; i++) {
+          sourceLinks[i].y0 =
+            node.y0 + (height * (i + 1)) / (sourceLinks.length + 1);
+        }
+
+        let targetLinks = node.targetLinks;
+        for (let i = 0; i < targetLinks.length; i++) {
+          targetLinks[i].y1 =
+            node.y0 + (height * (i + 1)) / (targetLinks.length + 1);
+        }
+      });
+      return links;
+    },
+    currentNode() {
+      return this.nodes.find(node => node.uuid === this.currentUUID);
     }
   },
   created() {
@@ -101,9 +164,11 @@ export default {
   },
   mounted() {
     console.log("DataFlow", this);
-    console.log("d3Sankey", d3Sankey);
+    // console.log("d3Sankey", d3Sankey);
+    // console.log(d3);
     let svg = d3
-      .select(".DataFlow svg")
+      .select(this.$el)
+      .select("svg")
       .attr("viewBox", [0, 0, this.width, this.height]);
     this.vis = svg.select("g");
 
@@ -114,8 +179,7 @@ export default {
           .extent([[0, 0], [this.width, this.height]])
           .on("zoom", () => {
             let transform = d3.event.transform;
-            console.log(1, transform);
-            console.log(2, d3.zoomTransform(this.vis.node()));
+            console.log("zoom", d3.event);
             this.vis.attr("transform", transform);
           })
       )
@@ -192,10 +256,12 @@ export default {
       // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
     generatePath(d) {
+      let backOp = ["undo", "rollback"];
+      let isBack = backOp.includes(d.operation);
       return d3
         .linkHorizontal()
-        .source(() => [d.source.x1, (d.source.y0 + d.source.y1) / 2])
-        .target(() => [d.target.x0, (d.target.y0 + d.target.y1) / 2])();
+        .source(() => [isBack ? d.source.x0 : d.source.x1, d.y0])
+        .target(() => [isBack ? d.target.x1 : d.target.x0, d.y1])();
     },
     createMultipleColorRects(d) {
       // 在<g>元素之内添加多颜色矩形
@@ -231,6 +297,7 @@ export default {
       }
       return rects;
     },
+
     createMultipleColorsRect__(d, i, p) {
       // 在<g>元素之内添加多颜色矩形
       let height = d.y1 - d.y0;
@@ -367,7 +434,7 @@ export default {
   stroke-width: 1.5;
 }
 
-.DataFlow rect {
+.DataFlow .nodes rect {
   stroke: none;
 }
 </style>

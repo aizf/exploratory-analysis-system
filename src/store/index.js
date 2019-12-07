@@ -36,6 +36,10 @@ export default new Vuex.Store({
       commit("resetOperations");
       commit("resetDataFlow");
       commit("resetRecordset");
+      commit("updatePageAnalyzeTooltip", {
+        "nodes": [],
+        "links": []
+      });
     }
   },
   getters

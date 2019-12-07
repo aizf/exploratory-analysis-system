@@ -73,9 +73,6 @@ const getters = {
       operation: "current",
       time: new Date()
     }));
-    rs.forEach(node => {
-      node.fixedValue = node.data.nodes.length;
-    })
     // 去除uuid相同的node
 
     let uuids = new Set();
@@ -85,7 +82,12 @@ const getters = {
       // nodes
       if (!uuids.has(rs[i].uuid)) {
         uuids.add(rs[i].uuid);
-        nodes.push(rs[i]);
+        nodes.push({
+          data: rs[i].data,
+          uuid: rs[i].uuid,
+          time: rs[i].time,
+          fixedValue: rs[i].data.nodes.length
+        });
       }
       // links
       if (i === 0) continue;
@@ -175,14 +177,14 @@ const getters = {
   },
   beforeEvent: (state, getters) => (operation, vueComponent) => {
     // vueComponent为调用此函数的组件实例
-    let arg = {
+    let args = {
       data: state.data.visualData,
       uuid: state.view.currentUUID,
       operation: operation,
       time: new Date(),
       marked: state.view.marked,
     };
-    vueComponent.$store.commit("addRecordData", arg);
+    vueComponent.$store.commit("addRecordData", args);
     vueComponent.$store.commit("updateParentUUID", state.view.currentUUID);
     vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
   }

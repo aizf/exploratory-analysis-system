@@ -349,14 +349,14 @@ export default {
         if (!undo.length) {
           return;
         }
-        let arg = {
+        let args  = {
           data: this.visualData,
           uuid: this.currentUUID,
           operation: "undo",
           time: new Date(),
           marked: this.marked
         };
-        this.$store.commit("addRecordData", arg);
+        this.$store.commit("addRecordData", args);
         let record = undo.pop();
         this.$store.commit("updateVisualData", record.data);
         this.$store.commit("updateParentUUID", this.currentUUID);

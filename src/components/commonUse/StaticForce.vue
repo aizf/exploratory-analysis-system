@@ -74,7 +74,8 @@ export default {
     ...mapGetters(["layoutRange"])
   },
   mounted() {
-    // console.log(d3.version);
+    console.log("StaticForce", this);
+    // console.log(d3);
     // console.log(_.VERSION);
     let that = this;
     let svg = d3
@@ -121,7 +122,6 @@ export default {
       //   .attr("y1", d => d.source.y)
       //   .attr("x2", d => d.target.x)
       //   .attr("y2", d => d.target.y);
-
       // this.node = this.nodeG
       //   .selectAll("circle")
       //   .data(this.nodes)
@@ -135,28 +135,24 @@ export default {
       //   .attr("filter", "url(#shadow)")
       //   .classed("selected", d => d.selected);
       // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
-
-      // 调整布局，使图显示在画布中间，并调整大小
-      let layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
-      // console.log(layoutRange);
-      let t = this.visTransform();
-      // t 存储在svg的__zoom中，更改t的属性，不能更换对象
-      let vw = layoutRange[1] - layoutRange[3]; // vis的宽
-      let vh = layoutRange[2] - layoutRange[0]; // vis的高
-      let k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
-
-      // 计算svg中心坐标和vis中心坐标
-      let svgP = [this.width / 2, this.height / 2];
-      let visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
-
-      // Xvis*k + x = Xsvg
-      let x = svgP[0] - visP[0] * k;
-      let y = svgP[1] - visP[1] * k;
-
-      t.x = x;
-      t.y = y;
-      t.k = k;
-      this.vis.attr("transform", t);
+      // // 调整布局，使图显示在画布中间，并调整大小
+      // let layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
+      // // console.log(layoutRange);
+      // let t = this.visTransform();
+      // // t 存储在svg的__zoom中，更改t的属性，不能更换对象
+      // let vw = layoutRange[1] - layoutRange[3]; // vis的宽
+      // let vh = layoutRange[2] - layoutRange[0]; // vis的高
+      // let k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
+      // // 计算svg中心坐标和vis中心坐标
+      // let svgP = [this.width / 2, this.height / 2];
+      // let visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
+      // // Xvis*k + x = Xsvg
+      // let x = svgP[0] - visP[0] * k;
+      // let y = svgP[1] - visP[1] * k;
+      // t.x = x;
+      // t.y = y;
+      // t.k = k;
+      // this.vis.attr("transform", t);
     },
 
     visTransform() {
