@@ -10,6 +10,30 @@
           <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
         </filter>
       </defs>
+      <g>
+        <g class="links">
+          <line
+            v-for="link in links"
+            :x1="link.source.x"
+            :y1="link.source.y"
+            :x2="link.target.x"
+            :y2="link.target.y"
+            :key="link.index"
+          />
+        </g>
+        <g class="nodes">
+          <circle
+            v-for="node in nodes"
+            :r="Math.max(Math.sqrt(!!node.size) / 10, 4.5)"
+            :class="{'display':true,'selected':node.selected}"
+            :fill="colorPalette[node.group || 0]"
+            filter="url(#shadow)"
+            :cx="node.x"
+            :cy="node.y"
+            :key="node.index"
+          />
+        </g>
+      </g>
     </svg>
   </div>
 </template>
@@ -21,7 +45,6 @@ import * as d3 from "d3";
 export default {
   name: "StaticForce",
   props: {
-    viewUpdate: Boolean,
     nodes: {},
     links: {},
     width: {
@@ -62,14 +85,11 @@ export default {
       height = this.height;
     // console.log(svg);
 
-    this.vis = svg.append("g");
+    this.vis = svg.select("g");
     svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
 
-    // 初始化<g>，防止update()产生多个<g>
-    this.linkG = this.vis.append("g").attr("class", "links");
-    this.nodeG = this.vis.append("g").attr("class", "nodes");
-
-    this.update();
+    this.linkG = this.vis.select("g.links");
+    this.nodeG = this.vis.select("g.nodes");
 
     function zoomed() {
       let transform = d3.event.transform;
@@ -84,45 +104,40 @@ export default {
 
   methods: {
     update() {
-      if (this.nodes.length === 0) {
-        return;
-      }
-      // 更新数据
-      let color = d => {
-        return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
-      };
-      // debugger;
-      this.link = this.linkG
-        .selectAll("line")
-        .data(this.links)
-        .join("line");
-      this.link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
+      // if (this.nodes.length === 0) {
+      //   return;
+      // }
+      // // 更新数据
+      // let color = d => {
+      //   return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
+      // };
+      // // debugger;
+      // this.link = this.linkG
+      //   .selectAll("line")
+      //   .data(this.links)
+      //   .join("line");
+      // this.link
+      //   .attr("x1", d => d.source.x)
+      //   .attr("y1", d => d.source.y)
+      //   .attr("x2", d => d.target.x)
+      //   .attr("y2", d => d.target.y);
 
-      this.node = this.nodeG
-        .selectAll("circle")
-        .data(this.nodes)
-        .join("circle")
-        .attr("r", d => {
-          let size = Math.sqrt(d.size) / 10;
-          return size > 4.5 ? size : 4.5;
-        })
-        .attr("class", "display")
-        .attr("fill", color)
-        .attr("filter", "url(#shadow)")
-        .classed("selected", d => d.selected);
-      this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+      // this.node = this.nodeG
+      //   .selectAll("circle")
+      //   .data(this.nodes)
+      //   .join("circle")
+      //   .attr("r", d => {
+      //     let size = Math.sqrt(d.size) / 10;
+      //     return size > 4.5 ? size : 4.5;
+      //   })
+      //   .attr("class", "display")
+      //   .attr("fill", color)
+      //   .attr("filter", "url(#shadow)")
+      //   .classed("selected", d => d.selected);
+      // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
 
       // 调整布局，使图显示在画布中间，并调整大小
-      let layoutRange = this.layoutRange(this.nodes, [
-        "y",
-        "x",
-        "y",
-        "x"
-      ]);
+      let layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
       // console.log(layoutRange);
       let t = this.visTransform();
       // t 存储在svg的__zoom中，更改t的属性，不能更换对象
@@ -149,8 +164,27 @@ export default {
     }
   },
   watch: {
-    viewUpdate: function(val) {
-      this.update();
+    nodes: function() {
+      let layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
+      // console.log(layoutRange);
+      let t = this.visTransform();
+      // t 存储在svg的__zoom中，更改t的属性，不能更换对象
+      let vw = layoutRange[1] - layoutRange[3]; // vis的宽
+      let vh = layoutRange[2] - layoutRange[0]; // vis的高
+      let k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
+
+      // 计算svg中心坐标和vis中心坐标
+      let svgP = [this.width / 2, this.height / 2];
+      let visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
+
+      // Xvis*k + x = Xsvg
+      let x = svgP[0] - visP[0] * k;
+      let y = svgP[1] - visP[1] * k;
+
+      t.x = x;
+      t.y = y;
+      t.k = k;
+      this.vis.attr("transform", t);
     }
   }
 };

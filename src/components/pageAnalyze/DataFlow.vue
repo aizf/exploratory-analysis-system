@@ -12,7 +12,7 @@
       </defs>
       <g>
         <g class="nodes" stroke="#000">
-          <g v-for="node in nodes" :key="node.index">
+          <g v-for="node in nodes" @click="updateTooltip(node.data)" :key="node.index">
             <rect
               v-for="rect in createMultipleColorRects(node)"
               :fill="colorPalette[rect.group]"
@@ -22,7 +22,7 @@
               :height="rect.height"
               :key="rect.group"
             />
-            <title>{{`${node.uuid}\n${node.value}`}}</title>
+            <title>{{node.uuid}}{{"\n"}}{{node.value}}</title>
           </g>
         </g>
         <g class="links" fill="none" stroke-opacity="0.5">
@@ -100,7 +100,7 @@ export default {
       .extent([[1, 5], [this.width - 1, this.height - 5]]);
   },
   mounted() {
-    console.log("d3", d3);
+    console.log("DataFlow", this);
     console.log("d3Sankey", d3Sankey);
     let svg = d3
       .select(".DataFlow svg")
@@ -109,10 +109,15 @@ export default {
 
     svg
       .call(
-        d3.zoom().on("zoom", () => {
-          let transform = d3.event.transform;
-          this.vis.attr("transform", transform);
-        })
+        d3
+          .zoom()
+          .extent([[0, 0], [this.width, this.height]])
+          .on("zoom", () => {
+            let transform = d3.event.transform;
+            console.log(1, transform);
+            console.log(2, d3.zoomTransform(this.vis.node()));
+            this.vis.attr("transform", transform);
+          })
       )
       .on("dblclick.zoom", null);
 
@@ -121,12 +126,11 @@ export default {
     this.textG = this.vis.select("g.texts");
   },
   activated() {
-    this.update();
+    // this.update();
   },
   methods: {
     update() {
       let that = this;
-      console.log(this);
       console.log("recordFlow:", this.recordFlow);
       // this.$store.state.formattedDataFlow();
       // let { nodes, links } = this.sankey(this.recordFlow);
@@ -322,12 +326,11 @@ export default {
         // );
       });
     },
+    visTransform() {
+      return d3.zoomTransform(this.vis.node());
+    },
     updateTooltip(data) {
-      // debugger;
-      this.$store.commit("updatePageAnalyzeTooltip", {
-        update: true,
-        data: data
-      });
+      this.$store.commit("updatePageAnalyzeTooltip", data);
     }
     // dragged(d) {
     //   d.x0 = d3.event.x;

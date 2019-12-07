@@ -19,7 +19,6 @@ const analyze = {
         rollbacked: false,
 
         // PageAnalyze.DataFlow
-        pageAnalyzeTooltipUpdata: false,
         pageAnalyzeTooltipData: {
             "nodes": [],
             "links": []
@@ -113,11 +112,7 @@ const analyze = {
             fn(state.undoList, state.redoList);
         },
         updatePageAnalyzeTooltip: (state, val) => {
-            // debugger
-            state.pageAnalyzeTooltipData = val.data;
-            // state.pageAnalyzeTooltipUpdata = val.update; // true or false
-            // 改变状态，触发watch
-            state.pageAnalyzeTooltipUpdata = !state.pageAnalyzeTooltipUpdata;
+            state.pageAnalyzeTooltipData = val;
         },
         resetOperations: (state) => {
             state.operations = [];

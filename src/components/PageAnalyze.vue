@@ -9,7 +9,6 @@
         <keep-alive>
           <!-- 可视化视图 -->
           <StaticForce
-            :viewUpdate="tooltipUpdate"
             :width="500"
             :height="500"
             :nodes="tooltipNodes"
@@ -58,7 +57,6 @@ export default {
       undoStack: state => state.analyze.undoStack,
       redoStack: state => state.analyze.redoStack,
       rollbacked: state => state.analyze.rollbacked,
-      tooltipUpdate: state => state.analyze.pageAnalyzeTooltipUpdata,
       tooltipNodes: state => state.analyze.pageAnalyzeTooltipData.nodes,
       tooltipLinks: state => state.analyze.pageAnalyzeTooltipData.links,
     }),

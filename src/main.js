@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import axios from 'axios';
-
+import * as d3 from "d3";
 // import Antd from 'ant-design-vue'
 import "ant-design-vue/dist/antd.css";
 import {
@@ -31,6 +31,7 @@ import store from '@/store/'
 
 Vue.prototype.$message = message;
 Vue.prototype.$axios = axios;
+Vue.prototype.$d3 = d3;
 
 // TODO: Vue.use(Antd);
 Vue.use(Button);
