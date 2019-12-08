@@ -420,9 +420,6 @@ export default {
 </script>
 <style>
 .DataFlow line {
-  stroke: #aaa;
-  stroke-opacity: 0.8;
-  stroke-width: 0.3;
 }
 
 .DataFlow circle {

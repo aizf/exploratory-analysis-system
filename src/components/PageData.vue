@@ -195,6 +195,10 @@ export default {
           that.$set(d, "x", 0);
           that.$set(d, "y", 0);
           that.$set(d, "selected", false);
+          that.$set(d, "mouseover_show", true);
+        });
+        visualData.links.forEach(d => {
+          that.$set(d, "mouseover_show", true);
         });
 
         console.log("change!");

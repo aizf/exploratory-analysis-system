@@ -15,6 +15,7 @@
           <g class="links">
             <line
               v-for="link in links"
+              :class="{'mouseover_opacity':!link.mouseover_show}"
               :x1="link.source.x"
               :y1="link.source.y"
               :x2="link.target.x"
@@ -25,18 +26,22 @@
           <g class="nodes">
             <circle
               v-for="node in nodes"
+              :class="{'display':true,'selected':node.selected,'mouseover_opacity':!node.mouseover_show}"
               :r="Math.max(Math.sqrt(!!node.size) / 10, 4.5)"
-              :class="{'display':true,'selected':node.selected}"
-              :fill="colorPalette[node.group || 0]"
-              filter="url(#shadow)"
               :cx="node.x"
               :cy="node.y"
+              :fill="colorPalette[node.group || 0]"
+              filter="url(#shadow)"
+              @click="clickSelect(node)"
+              @mouseover="mouseover(node)"
+              @mouseout="mouseout"
               :key="node.index"
             />
           </g>
-          <g class="texts" :style="{display:visShowIds ? 'inline':'none'}">
+          <g class="texts" v-show="visShowIds">
             <text
               v-for="node in nodes"
+              :class="{'mouseover_opacity':!node.mouseover_show}"
               text-anchor="middle"
               font-family="Avenir"
               font-size="10"
@@ -119,10 +124,9 @@ export default {
   },
   data() {
     return {
-      link: d3.selectAll(),
-      node: d3.selectAll(),
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
+      textG: d3.selectAll(),
       vis: d3.selectAll(),
       simulation: {},
       brush: {},
@@ -134,8 +138,6 @@ export default {
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
-      text: d3.selectAll(),
-      textG: d3.selectAll(),
       linkStrength: 1,
       linkLength: 0,
       isDraging: false, // 区分click和drag等
@@ -166,6 +168,16 @@ export default {
       "generateUUID",
       "beforeEvent"
     ]),
+
+    link() {
+      return this.linkG.selectAll("line").data(this.links);
+    },
+    node() {
+      return this.nodeG.selectAll("circle").data(this.nodes);
+    },
+    text() {
+      return this.textG.selectAll("text").data(this.nodes);
+    },
 
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -302,17 +314,6 @@ export default {
   },
 
   methods: {
-    changeData() {
-      // 只更新数据
-      if (this.nodes.length === 0) {
-        return;
-      }
-      // debugger;
-      this.link = this.linkG.selectAll("line").data(this.links);
-      this.node = this.nodeG.selectAll("circle").data(this.nodes);
-      this.text = this.textG.selectAll("text").data(this.nodes);
-      console.log("changeData");
-    },
     render() {
       // 重新渲染图标
       if (this.nodes.length === 0) {
@@ -325,11 +326,6 @@ export default {
       t.k = 1;
       this.vis.attr("transform", t);
 
-      this.link = this.linkG.selectAll("line").data(this.links);
-
-      this.node = this.nodeG.selectAll("circle").data(this.nodes);
-
-      this.text = this.textG.selectAll("text").data(this.nodes);
       // .join("text")
       // .attr("text-anchor", "middle")
       // .attr("font-family", "Avenir")
@@ -534,7 +530,7 @@ export default {
         t.dispatch("mouseout");
       }
     },
-    clickSelect(d, i, p) {
+    d3_clickSelect(d, i, p) {
       if (this.visClick) {
         this.beforeEvent("click", this);
         let t = d3.select(p[i]);
@@ -556,66 +552,64 @@ export default {
         }
       }
     },
+    clickSelect(d) {
+      if (this.visClick) {
+        this.beforeEvent("click", this);
+        if (d.selected) {
+          d.selected = false;
+        } else {
+          d.selected = true;
+          d.attentionTimes += 1;
+          let operation = {
+            action: "click",
+            nodes: [d],
+            time: new Date()
+          };
+          this.$store.commit("addOperation", operation);
+          this.$store.commit("addCurrentOperations", operation);
+          console.log("click", [t]);
+        }
+      }
+    },
     mouseover(d) {
       if (!this.visMouseover || this.isDraging) return;
       this.beforeEvent("mouseover", this);
-      let displayNodes = null;
-      // let opacityNodes = null;
-      let displayLinks = null;
-      // let opacityLinks = null;
+      let displayNodes = {};
+      let displayLinks = {};
       if (!(d.id || d.name)) {
         throw new Error(`object do not has "id" or "name"`);
       }
       let id = d.id ? "id" : "name";
       let thisId = d[id];
-      // console.log(thisId);
-      this.opacityLinks = this.link.filter(d => {
-        return d.source[id] !== thisId && d.target[id] !== thisId;
+
+      this.nodes.forEach(d => {
+        d.mouseover_show = false;
       });
-      displayLinks = this.link.filter(d => {
-        return d.source[id] === thisId || d.target[id] === thisId;
-      });
-      this.opacityNodes = this.node.filter(d => {
-        // console.log("d",d);
-        let displayLinksData = displayLinks.data();
-        for (let i in displayLinksData) {
-          // console.log(i);
-          if (
-            d[id] === displayLinksData[i].source[id] ||
-            d[id] === displayLinksData[i].target[id]
-          ) {
-            return false;
-          }
+      this.links.forEach(d => {
+        d.mouseover_show = d.source[id] === thisId || d.target[id] === thisId;
+        if (d.mouseover_show) {
+          // 如果link显示，则它两头的node也会显示
+          d.source.mouseover_show = true;
+          d.target.mouseover_show = true;
         }
-        return true;
-      });
-      displayNodes = this.node.filter(d => {
-        let displayLinksData = displayLinks.data();
-        for (let i in displayLinksData) {
-          // console.log(i);
-          if (
-            d[id] === displayLinksData[i].source[id] ||
-            d[id] === displayLinksData[i].target[id]
-          ) {
-            return true;
-          }
-        }
-        return false;
       });
 
-      let opacityIndex = this.opacityNodes.data().map(val => val.index);
-      // console.log(opacityIndex);
-      this.opacityTexts = this.text.filter(
-        d => opacityIndex.find(val => val === d.index) !== undefined //!==undefined 防止返回0误认为false
-      );
-      // console.log(this.opacityTexts.data());
+      // link
+      this.opacityLinks = this.link.filter(d => !d.mouseover_show);
+      displayLinks = this.link.filter(d => d.mouseover_show);
+      // node
+      this.opacityNodes = this.node.filter(d => !d.mouseover_show);
+      displayNodes = this.node.filter(d => d.mouseover_show);
+      // text
+      this.opacityTexts = this.text.filter(d => !d.mouseover_show);
 
-      this.opacityNodes
-        .transition()
-        .style("fill-opacity", 0.2)
-        .style("stroke-opacity", 0.2);
-      this.opacityLinks.transition().style("stroke-opacity", 0);
-      this.opacityTexts.transition().style("fill-opacity", 0);
+      // this.opacityNodes
+      //   .transition()
+      //   .style("fill-opacity", 0.2)
+      //   .style("stroke-opacity", 0.2);
+      // this.opacityLinks.transition().style("stroke-opacity", 0);
+      // this.opacityTexts.transition().style("fill-opacity", 0);
+
       if (!this.isDraging) {
         displayNodes.each(d => {
           d.attentionTimes += 1;
@@ -632,19 +626,25 @@ export default {
     },
     mouseout() {
       if (!this.visMouseover || this.isDraging) return;
-      this.opacityNodes
-        .transition()
-        .delay(200)
-        .style("fill-opacity", null)
-        .style("stroke-opacity", null);
-      this.opacityLinks
-        .transition()
-        .delay(200)
-        .style("stroke-opacity", null);
-      this.opacityTexts
-        .transition()
-        .delay(200)
-        .style("fill-opacity", null);
+      // this.opacityNodes
+      //   .transition()
+      //   .delay(200)
+      //   .style("fill-opacity", null)
+      //   .style("stroke-opacity", null);
+      // this.opacityLinks
+      //   .transition()
+      //   .delay(200)
+      //   .style("stroke-opacity", null);
+      // this.opacityTexts
+      //   .transition()
+      //   .delay(200)
+      //   .style("fill-opacity", null);
+      this.links.forEach(d => {
+        d.mouseover_show = true;
+      });
+      this.nodes.forEach(d => {
+        d.mouseover_show = true;
+      });
     },
     forceLinkChange() {
       // 调整Link力的布局函数
@@ -719,4 +719,41 @@ export default {
   stroke: none;
   stroke-width: 0px;
 }
+
+circle.mouseover_opacity {
+  fill-opacity: 0.2;
+  stroke-opacity: 0.2;
+}
+line.mouseover_opacity {
+  stroke-opacity: 0;
+}
+text.mouseover_opacity {
+  fill-opacity: 0;
+}
+
+/* .linksOverOut-enter,
+.linksOverOut-leave {
+  opacity: 0;
+}
+.linksOverOut-enter-to,
+.linksOverOut-leave {
+  opacity: 1;
+}
+.linksOverOut-enter-active {
+  transition: all 1s ease;
+}
+
+.nodesOverOut-enter,
+.nodesOverOut-leave {
+  fill-opacity: 0.2;
+  stroke-opacity: 0.2;
+}
+.nodesOverOut-enter-to,
+.nodesOverOut-leave {
+  fill-opacity: 1;
+  stroke-opacity: 1;
+}
+.nodesOverOut-enter-active {
+  transition: all 1.5s ease;
+} */
 </style>
