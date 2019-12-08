@@ -196,6 +196,8 @@ export default {
           that.$set(d, "y", 0);
           that.$set(d, "selected", false);
           that.$set(d, "mouseover_show", true);
+          that.$set(d, "brushing", false);
+          that.$set(d, "invertBrushing", false);
         });
         visualData.links.forEach(d => {
           that.$set(d, "mouseover_show", true);

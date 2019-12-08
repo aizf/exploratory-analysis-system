@@ -26,7 +26,7 @@
           <g class="nodes">
             <circle
               v-for="node in nodes"
-              :class="{'display':true,'selected':node.selected,'mouseover_opacity':!node.mouseover_show}"
+              :class="{'display':true,'selected':node.selected,'mouseover_opacity':!node.mouseover_show,'brushing':node.brushing,'invertBrushing':node.invertBrushing}"
               :r="Math.max(Math.sqrt(!!node.size) / 10, 4.5)"
               :cx="node.x"
               :cy="node.y"
@@ -133,8 +133,6 @@ export default {
       invertBrush: {},
       brushG: d3.selectAll(),
       invertBrushG: d3.selectAll(),
-      brushedNodes: d3.selectAll(),
-      invertBrushedNodes: d3.selectAll(),
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
@@ -414,12 +412,9 @@ export default {
       this.beforeEvent(this.visBrush ? "brush" : "invertBrush", this);
 
       if (!this.brushKeep && this.visBrush) {
-        this.node
-          .classed("selected", false)
-          .classed("brushing", false)
-          .each(d => {
-            d.selected = false;
-          });
+        this.nodes.forEach(d => {
+          d.selected = false;
+        });
       }
     },
     brushed() {
@@ -434,57 +429,59 @@ export default {
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
 
-      let className = this.visBrush ? "brushing" : "invertBrushing";
-
-      this.node.classed(className, d => {
-        return (
-          extentStart[0] <= d.x &&
-          extentStart[1] <= d.y &&
-          d.x <= extentEnd[0] &&
-          d.y <= extentEnd[1]
-        );
+      let type = this.visBrush ? "brushing" : "invertBrushing";
+      this.nodes.forEach(node => {
+        extentStart[0] <= node.x &&
+        extentStart[1] <= node.y &&
+        node.x <= extentEnd[0] &&
+        node.y <= extentEnd[1]
+          ? (node[type] = true)
+          : (node[type] = false);
       });
+      // this.node.classed(className, d => {
+      //   return (
+      //     extentStart[0] <= d.x &&
+      //     extentStart[1] <= d.y &&
+      //     d.x <= extentEnd[0] &&
+      //     d.y <= extentEnd[1]
+      //   );
+      // });
     },
     brushEnd() {
       if (d3.event.selection === null) return;
       console.log("brushed");
-      this.brushedNodes = this.nodeG.selectAll(".brushing");
-      // console.log(this.brushedNodes);
-      this.brushedNodes
-        .classed("brushing", false)
-        .classed("selected", true)
-        .each(d => {
-          d.selected = true;
-        });
-      this.brushedNodes.each(d => {
-        d.attentionTimes += 1;
+      let brushedNodes = this.nodes.filter(d => d.brushing);
+      brushedNodes.forEach(node => {
+        node.brushing = false;
+        node.selected = true;
+        node.attentionTimes += 1;
       });
+
       let operation = {
         action: "brush",
-        nodes: this.brushedNodes.nodes(),
+        nodes: brushedNodes,
         time: new Date()
       };
       this.$store.commit("addOperation", operation);
       this.$store.commit("addCurrentOperations", operation);
-      console.log("brush", this.brushedNodes.nodes());
+      console.log("brush", brushedNodes);
     },
     invertBrushEnd() {
       if (d3.event.selection === null) return;
-      this.invertBrushedNodes = this.nodeG.selectAll(".invertBrushing");
-      this.invertBrushedNodes
-        .classed("invertBrushing", false)
-        .classed("selected", false)
-        .each(d => {
-          d.selected = false;
-        });
+      let invertBrushedNodes = this.nodes.filter(d => d.invertBrushing);
+      invertBrushedNodes.forEach(node => {
+        node.invertBrushing = false;
+        node.selected = false;
+      });
+
       let operation = {
         action: "invertBrush",
-        nodes: this.invertBrushedNodes.nodes(),
+        nodes: invertBrushedNodes,
         time: new Date()
       };
       this.$store.commit("addOperation", operation);
       this.$store.commit("addCurrentOperations", operation);
-      console.log("invertBrush", this.invertBrushedNodes.nodes());
+      console.log("invertBrush", invertBrushedNodes);
     },
     // drag
     dragstarted(d) {
