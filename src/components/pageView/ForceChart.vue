@@ -54,7 +54,7 @@
               @mouseover="mouseover(node)"
               @mouseout="mouseout"
               :key="node.uid"
-            >{{node.uid}}</text>
+            >{{node.id}}</text>
           </g>
         </g>
       </svg>
@@ -698,7 +698,7 @@ export default {
           this.linkLength
         );
       });
-      this.simulation.alpha(0.15).restart();
+      this.simulation.alphaTarget(0.15).restart();
     },
     visTransform() {
       return d3.zoomTransform(this.vis.node());

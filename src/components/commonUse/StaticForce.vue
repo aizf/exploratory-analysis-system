@@ -18,7 +18,7 @@
             :y1="link.source.y"
             :x2="link.target.x"
             :y2="link.target.y"
-            :key="link.index"
+            :key="link.uid"
           />
         </g>
         <g class="nodes">
@@ -30,7 +30,7 @@
             filter="url(#shadow)"
             :cx="node.x"
             :cy="node.y"
-            :key="node.index"
+            :key="node.uid"
           />
         </g>
       </g>

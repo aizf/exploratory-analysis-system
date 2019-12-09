@@ -349,7 +349,7 @@ export default {
         if (!undo.length) {
           return;
         }
-        let args  = {
+        let args = {
           data: this.visualData,
           uuid: this.currentUUID,
           operation: "undo",
@@ -457,7 +457,7 @@ export default {
         return this.$store.state.view.marked;
       },
       set: function(val) {
-        this.$store.state.view.marked = val;
+        this.$store.commit("changeMarked", val);
       }
     },
     currentChart() {

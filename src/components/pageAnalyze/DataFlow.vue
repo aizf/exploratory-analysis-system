@@ -11,7 +11,6 @@
         </filter>
       </defs>
       <g>
-        <!-- TODO: current 加边框 -->
         <rect
           :x="currentNode.x0"
           :y="currentNode.y0"
@@ -23,6 +22,9 @@
         />
         <g class="nodes" stroke="#000">
           <g v-for="node in nodes" @click="updateTooltip(node.data)" :key="node.index">
+            <g :transform="`translate(${(node.x0+node.x1)/2},${node.y0-20})`">
+              <path :d="markedSymbol()" stroke="#1890ff" stroke-width="2" />
+            </g>
             <rect
               v-for="rect in createMultipleColorRects(node)"
               :fill="colorPalette[rect.group]"
@@ -276,16 +278,17 @@ export default {
       let height = d.y1 - d.y0;
       let width = d.x1 - d.x0;
       let nodes = d.data.nodes;
-      let totalNum = d.data.nodes.length;
+      let totalNum = nodes.length;
       let eachGroupNum = {};
       nodes.forEach(node => {
         if (!node.group) {
+          // group 为0，或undefined
           eachGroupNum["0"] === undefined
-            ? (eachGroupNum["0"] = 0)
+            ? (eachGroupNum["0"] = 1)
             : eachGroupNum["0"]++;
         } else {
           eachGroupNum[node.group + ""] === undefined
-            ? (eachGroupNum[node.group + ""] = 0)
+            ? (eachGroupNum[node.group + ""] = 1)
             : eachGroupNum[node.group + ""]++;
         }
       });
@@ -406,6 +409,13 @@ export default {
     },
     updateTooltip(data) {
       this.$store.commit("updatePageAnalyzeTooltip", data);
+    },
+    markedSymbol() {
+      return d3
+        .symbol()
+        .type(d3.symbols[4])
+        .size(180)();
+      // return this.$d3.symbol().type(this.$d3.symbols[4])();
     }
     // dragged(d) {
     //   d.x0 = d3.event.x;
