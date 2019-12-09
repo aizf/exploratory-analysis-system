@@ -20,7 +20,7 @@
               :y1="link.source.y"
               :x2="link.target.x"
               :y2="link.target.y"
-              :key="link.index"
+              :key="link.uid"
             />
           </g>
           <g class="nodes">
@@ -35,7 +35,7 @@
               @click="clickSelect(node)"
               @mouseover="mouseover(node)"
               @mouseout="mouseout"
-              :key="node.index"
+              :key="node.uid"
             />
           </g>
           <g class="texts" v-show="visShowIds">
@@ -53,8 +53,8 @@
               @click="clickSelect(node)"
               @mouseover="mouseover(node)"
               @mouseout="mouseout"
-              :key="node.index"
-            >{{node.id}}</text>
+              :key="node.uid"
+            >{{node.uid}}</text>
           </g>
         </g>
       </svg>
@@ -204,8 +204,8 @@ export default {
       // links包含source，target，nodes没有
       for (let link of links) {
         // console.log(link);
-        degree[link.source.index] = (degree[link.source.index] || 0) + 1;
-        degree[link.target.index] = (degree[link.target.index] || 0) + 1;
+        degree[link.source.uid] = (degree[link.source.uid] || 0) + 1;
+        degree[link.target.uid] = (degree[link.target.uid] || 0) + 1;
       }
       return degree;
     }
@@ -413,8 +413,8 @@ export default {
 
       function textEvent2Node(d) {
         // 将text接受的事件分发给node
-        let theIndex = d.index;
-        let theNode = node.filter(d => d.index === theIndex);
+        let theUid = d.uid;
+        let theNode = node.filter(d => d.uid === theUid);
         theNode.dispatch(d3.event.type);
         // console.log(d3.event.type);
       }
@@ -553,7 +553,7 @@ export default {
       if (this.isDraging) {
         d.attentionTimes += 1;
         // drag <text>时，通过以下返回node
-        let t = this.node.filter(dd => dd.index === d.index);
+        let t = this.node.filter(dd => dd.uid === d.uid);
         let operation = {
           action: "drag",
           nodes: t.nodes(),
@@ -692,8 +692,8 @@ export default {
           // d3原生的函数乘上一个系数val
           this.linkStrength /
             Math.min(
-              this.degreeArray[link.source.index],
-              this.degreeArray[link.target.index]
+              this.degreeArray[link.source.uid],
+              this.degreeArray[link.target.uid]
             ) +
           this.linkLength
         );

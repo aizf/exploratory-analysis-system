@@ -190,8 +190,8 @@ export default {
       }
       // the last step
       function changeState() {
-        visualData.nodes.forEach(d => {
-          that.$set(d, "attentionTimes", 0);
+        visualData.nodes.forEach((d, i) => {
+          that.$set(d, "uid", i);
           that.$set(d, "x", 0);
           that.$set(d, "y", 0);
           that.$set(d, "selected", false);
