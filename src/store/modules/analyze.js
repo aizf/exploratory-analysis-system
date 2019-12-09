@@ -26,16 +26,17 @@ const analyze = {
         // record
         // recordset是存储recordData的列表
         recordset: [],
-        recordData(arg) {
+        recordData(args) {
             // 返回一个类的实例，用来存储节点信息
             class RecordData {
-                constructor({ data, uuid, operation, time, change = null }) {
+                constructor({ data, uuid, operation, time, marked, change = null }) {
                     // 存储的数据在操作之前
                     this.data = this.dataDeepClone(data); // 操作之前的数据
                     this.uuid = uuid;
                     this.operation = operation;
                     this.time = time;
                     this.change = change; // 当data变化不大时，data指向上一次的data，用change保存变化
+                    this.marked = marked;
                 }
                 dataDeepClone(oldData) {
                     // 深拷贝数据集，格式data={nodes:[],links:[]}
@@ -59,7 +60,7 @@ const analyze = {
                     return { nodes: newNodes, links: newLinks }
                 }
             }
-            return new RecordData(arg);
+            return new RecordData(args);
         }
     },
     mutations: {

@@ -196,6 +196,7 @@ const getters = {
       marked: state.view.marked,
     };
     vueComponent.$store.commit("addRecordData", args);
+    vueComponent.$store.commit("changeMarked", false);
     vueComponent.$store.commit("updateParentUUID", state.view.currentUUID);
     vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
   }

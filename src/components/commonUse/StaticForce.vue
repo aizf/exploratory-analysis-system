@@ -58,8 +58,6 @@ export default {
   },
   data() {
     return {
-      link: d3.selectAll(),
-      node: d3.selectAll(),
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
       vis: d3.selectAll(),
@@ -97,6 +95,10 @@ export default {
       // console.log(d3.event.transform === that.visTransform());
       that.vis.attr("transform", transform);
     }
+
+    if (this.nodes.length) {
+      this.adjustTransform();
+    }
   },
 
   activated() {},
@@ -104,7 +106,7 @@ export default {
   deactivated() {},
 
   methods: {
-    update() {
+    render() {
       // if (this.nodes.length === 0) {
       //   return;
       // }
@@ -154,13 +156,7 @@ export default {
       // t.k = k;
       // this.vis.attr("transform", t);
     },
-
-    visTransform() {
-      return d3.zoomTransform(this.vis.node());
-    }
-  },
-  watch: {
-    nodes: function() {
+    adjustTransform() {
       let layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
       // console.log(layoutRange);
       let t = this.visTransform();
@@ -181,6 +177,14 @@ export default {
       t.y = y;
       t.k = k;
       this.vis.attr("transform", t);
+    },
+    visTransform() {
+      return d3.zoomTransform(this.vis.node());
+    }
+  },
+  watch: {
+    nodes: function() {
+      this.adjustTransform();
     }
   }
 };

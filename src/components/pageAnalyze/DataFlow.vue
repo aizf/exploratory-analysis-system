@@ -21,8 +21,8 @@
           stroke="#1890ff"
         />
         <g class="nodes" stroke="#000">
-          <g v-for="node in nodes" @click="updateTooltip(node.data)" :key="node.index">
-            <g :transform="`translate(${(node.x0+node.x1)/2},${node.y0-20})`">
+          <g v-for="node in nodes" @click="updateTooltip(node.data)" :key="node.uuid">
+            <g v-if="node.marked" :transform="`translate(${(node.x0+node.x1)/2},${node.y0-20})`">
               <path :d="markedSymbol('star',180)" stroke="#1890ff" stroke-width="2" />
             </g>
             <rect
@@ -39,7 +39,7 @@
         </g>
         <g class="links" fill="none">
           <!-- style="mix-blend-mode: multiply;" -->
-          <g v-for="(link,index) in links" style :key="index">
+          <g v-for="link in links" style :key="link.index">
             <path
               :d="generatePath(link)"
               :stroke="pathColor(link.operation)"
@@ -66,7 +66,7 @@
             :y="node.y0"
             dx="-0.35em"
             text-anchor="start"
-            :key="node.index"
+            :key="node.uuid"
           >{{node.uuid}}</text>
         </g>
       </g>
@@ -140,6 +140,7 @@ export default {
         // links
         let link = {
           index: i - 1,
+          uuid: recordNodes[i - 1].uuid,
           operation: recordNodes[i - 1].operation,
           source: nodesDict[recordNodes[i - 1].uuid],
           target: nodesDict[recordNodes[i].uuid],
@@ -282,16 +283,16 @@ export default {
     },
     generatePath(d) {
       let isBackOp = this.backOps.includes(d.operation);
-      let offset=21.87;
+      let offset = 21.87;
       return isBackOp
         ? d3
             .linkHorizontal()
             .source(() => [d.x0, d.y0])
-            .target(() => [d.x1+offset, d.y1])()
+            .target(() => [d.x1 + offset, d.y1])()
         : d3
             .linkHorizontal()
             .source(() => [d.x0, d.y0])
-            .target(() => [d.x1-offset, d.y1])();
+            .target(() => [d.x1 - offset, d.y1])();
     },
     pathColor(op) {
       return this.colorPalette2[this.operationTypes.indexOf(op)];

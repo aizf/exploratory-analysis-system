@@ -82,4 +82,6 @@ redo undo               done !
 
 update 刷新不重新绘图
 
-TODO: d3的数据绑定 和 vue的
+d3的数据绑定 和 vue的     done !
+
+recordset中重复的nodes

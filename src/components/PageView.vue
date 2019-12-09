@@ -116,8 +116,8 @@
               <a-switch v-model="visShowIds" :disabled="showIdsDisabled" />
             </span>
           </a-menu-item>
-          <a-menu-item key="record" @click="recordOpen">
-            <a-icon type="database" />record
+          <a-menu-item key="marked-views" @click="markedsVisible=true">
+            <a-icon type="database" />Marked Views
           </a-menu-item>
           <a-menu-item key="5">DataFlow</a-menu-item>
           <a-menu-item key="6">OprationFlow</a-menu-item>
@@ -204,14 +204,14 @@
       </a-layout-content>
     </a-layout>
     <a-drawer
-      title="record"
+      title="Marked Views"
       placement="right"
       :width="720"
       :closable="false"
-      @close="recordClose"
-      :visible="recordVisible"
+      @close="markedsVisible=false"
+      :visible="markedsVisible"
     >
-      <RecordDrawer />
+      <MarkedViews />
     </a-drawer>
   </a-layout>
 </template>
@@ -222,14 +222,14 @@ import * as d3 from "d3";
 import ForceChart from "./pageView/ForceChart.vue";
 import ScatterChart from "./pageView/ScatterChart.vue";
 import NodesTable from "./pageView/NodesTable.vue";
-import RecordDrawer from "./pageView/RecordDrawer.vue";
+import MarkedViews from "./pageView/MarkedViews.vue";
 export default {
   name: "PageView",
   components: {
     ForceChart,
     ScatterChart,
     NodesTable,
-    RecordDrawer
+    MarkedViews
   },
   data() {
     return {
@@ -246,7 +246,7 @@ export default {
       visInvertBrush: false,
       visZoom: true,
       visShowIds: false,
-      recordVisible: false,
+      markedsVisible: false,
       // switch disabled
       saveDisabled: false,
       clickDisabled: false,
@@ -334,13 +334,6 @@ export default {
       this.invertBrushDisabled = invertBrush;
       this.zoomDisabled = zoom;
       this.showIdsDisabled = showIds;
-    },
-    // 开关record的drawer
-    recordOpen() {
-      this.recordVisible = true;
-    },
-    recordClose() {
-      this.recordVisible = false;
     },
     // save相关
     saveViewData() {},
@@ -436,6 +429,7 @@ export default {
       colorPalette: state => state.view.colorPalette,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
+      marked: state => state.view.marked,
 
       currentOperations: state => state.analyze.currentOperations,
       undoList: state => state.analyze.undoList,
