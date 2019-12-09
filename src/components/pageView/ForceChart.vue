@@ -42,14 +42,17 @@
             <text
               v-for="node in nodes"
               :class="{'mouseover_opacity':!node.mouseover_show}"
+              :x="node.x"
+              :y="node.y"
+              dy="-0.5em"
+              :fill="colorPalette[node.group || 0]"
               text-anchor="middle"
               font-family="Avenir"
               font-size="10"
-              dy="-0.5em"
-              :fill="colorPalette[node.group || 0]"
               style="user-select: none;"
-              :x="node.x"
-              :y="node.y"
+              @click="clickSelect(node)"
+              @mouseover="mouseover(node)"
+              @mouseout="mouseout"
               :key="node.index"
             >{{node.id}}</text>
           </g>
@@ -128,7 +131,8 @@ export default {
       nodeG: d3.selectAll(),
       textG: d3.selectAll(),
       vis: d3.selectAll(),
-      simulation: {},
+      simulation__: {},
+      drag__: {},
       brush: {},
       invertBrush: {},
       brushG: d3.selectAll(),
@@ -168,13 +172,25 @@ export default {
     ]),
 
     link() {
-      return this.linkG.selectAll("line").data(this.links);
+      let link = this.linkG.selectAll("line");
+      link.data(this.links);
+      return link;
     },
     node() {
-      return this.nodeG.selectAll("circle").data(this.nodes);
+      let node = this.nodeG.selectAll("circle");
+      node.data(this.nodes);
+      return node;
     },
     text() {
-      return this.textG.selectAll("text").data(this.nodes);
+      let text = this.textG.selectAll("text");
+      text.data(this.nodes);
+      return text;
+    },
+    simulation() {
+      let simulation = this.simulation__;
+      simulation.nodes(this.nodes);
+      simulation.force("link").links(this.links);
+      return simulation;
     },
 
     degreeArray() {
@@ -193,6 +209,21 @@ export default {
       }
       return degree;
     }
+  },
+  created() {
+    this.simulation__ = d3
+      .forceSimulation()
+      .force("link", d3.forceLink().id(d => d.id || d.name))
+      .force("charge", d3.forceManyBody())
+      .force(
+        "center",
+        d3.forceCenter(this.chartWidth / 2, this.chartHeight / 2)
+      );
+    this.drag__ = d3
+      .drag()
+      .on("start", this.dragstarted)
+      .on("drag", this.dragged)
+      .on("end", this.dragended);
   },
   mounted() {
     // console.log(d3.version);
@@ -218,13 +249,6 @@ export default {
           .on("end", zoomEnd)
       )
       .on("dblclick.zoom", null);
-
-    this.simulation = d3
-      .forceSimulation()
-      .force("link", d3.forceLink().id(d => d.id || d.name))
-      .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(width / 2, height / 2));
-    // console.log();
 
     // brush
     this.brush = d3
@@ -260,11 +284,6 @@ export default {
       ? this.invertBrushG.style("display", "inline")
       : this.invertBrushG.style("display", "none");
 
-    // 初始化<g>，防止update()产生多个<g>
-    this.linkG = this.vis.select("g.links");
-    this.nodeG = this.vis.select("g.nodes");
-    this.textG = this.vis.select("g.texts");
-
     function zoomStart() {
       that.beforeEvent("zoom", that);
     }
@@ -298,8 +317,22 @@ export default {
       that.$store.commit("addCurrentOperations", operation);
       console.log("zoom", t.nodes());
     }
-  },
 
+    // mounted---nextTick
+    this.$nextTick(function() {
+      // 初始化<g>，防止update()产生多个<g>
+      this.linkG = this.vis.select("g.links");
+      this.nodeG = this.vis.select("g.nodes");
+      this.textG = this.vis.select("g.texts");
+
+      this.node.call(this.drag__);
+      this.text.call(this.drag__);
+    });
+  },
+  updated() {
+    this.node.call(this.drag__);
+    this.text.call(this.drag__);
+  },
   activated() {
     if (this.needUpdate) {
       this.render();
@@ -338,9 +371,9 @@ export default {
       // console.log("before simulation");
       // console.log(this.node);
       // console.log(this.simulation.nodes());
-      this.simulation.nodes(this.nodes);
+      // this.simulation.nodes(this.nodes);
       // this.simulation.on("tick", this.ticked).on("end", this.tickEnd);
-      this.simulation.force("link").links(this.links);
+      // this.simulation.force("link").links(this.links);
       // console.log("after simulation");
       // console.log(this.node);
       // console.log(this.simulation.nodes());
@@ -350,15 +383,21 @@ export default {
     },
     bindEvents() {
       // 更新后绑定事件
-      let nodeDrag = d3
-        .drag()
-        .on("start", this.dragstarted)
-        .on("drag", this.dragged)
-        .on("end", this.dragended);
-      this.node.call(nodeDrag);
-      this.node.on("click", this.clickSelect);
-      this.node.on("mouseover", this.mouseover);
-      this.node.on("mouseout", this.mouseout);
+      // let nodeDrag = d3
+      //   .drag()
+      //   .on("start", this.dragstarted)
+      //   .on("drag", this.dragged)
+      //   .on("end", this.dragended);
+      this.node.call(
+        d3
+          .drag()
+          .on("start", this.dragstarted)
+          .on("drag", this.dragged)
+          .on("end", this.dragended)
+      );
+      // this.node.on("click", this.clickSelect);
+      // this.node.on("mouseover", this.mouseover);
+      // this.node.on("mouseout", this.mouseout);
       let node = this.node;
 
       this.text.call(
@@ -368,9 +407,9 @@ export default {
           .on("drag", this.dragged)
           .on("end", this.dragended)
       );
-      this.text.on("click", textEvent2Node);
-      this.text.on("mouseover", textEvent2Node);
-      this.text.on("mouseout", textEvent2Node);
+      // this.text.on("click", textEvent2Node);
+      // this.text.on("mouseover", textEvent2Node);
+      // this.text.on("mouseout", textEvent2Node);
 
       function textEvent2Node(d) {
         // 将text接受的事件分发给node
@@ -564,7 +603,7 @@ export default {
           };
           this.$store.commit("addOperation", operation);
           this.$store.commit("addCurrentOperations", operation);
-          console.log("click", [t]);
+          console.log("click", [d]);
         }
       }
     },
