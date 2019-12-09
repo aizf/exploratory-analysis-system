@@ -23,7 +23,7 @@
         <g class="nodes" stroke="#000">
           <g v-for="node in nodes" @click="updateTooltip(node.data)" :key="node.index">
             <g :transform="`translate(${(node.x0+node.x1)/2},${node.y0-20})`">
-              <path :d="markedSymbol()" stroke="#1890ff" stroke-width="2" />
+              <path :d="markedSymbol('star',180)" stroke="#1890ff" stroke-width="2" />
             </g>
             <rect
               v-for="rect in createMultipleColorRects(node)"
@@ -38,13 +38,25 @@
           </g>
         </g>
         <g class="links" fill="none">
-          <g v-for="(link,index) in links" style="mix-blend-mode: multiply;" :key="index">
+          <!-- style="mix-blend-mode: multiply;" -->
+          <g v-for="(link,index) in links" style :key="index">
             <path
               :d="generatePath(link)"
               :stroke="pathColor(link.operation)"
               :stroke-width="link.width"
+              stroke-opacity="0.5"
             />
             <title>{{link.operation}}</title>
+            <g :transform="`translate(${link.x1+(link.x1>link.x0?-15:15)},${link.y1})`">
+              <path
+                :d="markedSymbol('triangle',180)"
+                :stroke="pathColor(link.operation)"
+                stroke-width="2"
+                :fill="pathColor(link.operation)"
+                opacity="0.5"
+                :transform="`rotate(${link.x1>link.x0?-30:30})`"
+              />
+            </g>
           </g>
         </g>
         <g class="texts" style="font: 10px sans-serif;">
@@ -92,6 +104,7 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
       operationTypes: state => state.view.operationTypes,
+      backOps: state => state.view.backOps,
       currentUUID: state => state.view.currentUUID,
 
       operations: state => state.analyze.operations,
@@ -131,9 +144,14 @@ export default {
           source: nodesDict[recordNodes[i - 1].uuid],
           target: nodesDict[recordNodes[i].uuid],
           width: this.linkWidth,
-          y0: undefined,
-          y1: undefined
+          x0: 0,
+          y0: 0,
+          x1: 0,
+          y1: 0
         };
+        let isBackOp = this.backOps.includes(link.operation);
+        link.x0 = isBackOp ? link.source.x0 : link.source.x1;
+        link.x1 = isBackOp ? link.target.x1 : link.target.x0;
         links.push(link);
         // nodes
         nodesDict[recordNodes[i - 1].uuid].sourceLinks.push(link);
@@ -263,12 +281,17 @@ export default {
       // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
     generatePath(d) {
-      let backOp = ["undo", "rollback"];
-      let isBack = backOp.includes(d.operation);
-      return d3
-        .linkHorizontal()
-        .source(() => [isBack ? d.source.x0 : d.source.x1, d.y0])
-        .target(() => [isBack ? d.target.x1 : d.target.x0, d.y1])();
+      let isBackOp = this.backOps.includes(d.operation);
+      let offset=21.87;
+      return isBackOp
+        ? d3
+            .linkHorizontal()
+            .source(() => [d.x0, d.y0])
+            .target(() => [d.x1+offset, d.y1])()
+        : d3
+            .linkHorizontal()
+            .source(() => [d.x0, d.y0])
+            .target(() => [d.x1-offset, d.y1])();
     },
     pathColor(op) {
       return this.colorPalette2[this.operationTypes.indexOf(op)];
@@ -410,11 +433,39 @@ export default {
     updateTooltip(data) {
       this.$store.commit("updatePageAnalyzeTooltip", data);
     },
-    markedSymbol() {
+    markedSymbol(type, size) {
+      let __type;
+      switch (type) {
+        case "circle":
+          __type = d3.symbols[0];
+          break;
+        case "cross":
+          __type = d3.symbols[1];
+          break;
+        case "diamond":
+          __type = d3.symbols[2];
+          break;
+        case "square":
+          __type = d3.symbols[3];
+          break;
+        case "star":
+          __type = d3.symbols[4];
+          break;
+        case "triangle":
+          __type = d3.symbols[5];
+          break;
+        case "wye":
+          __type = d3.symbols[6];
+          break;
+        default:
+          throw new Error(
+            "type error !\ncircle cross diamond square star triangle wye"
+          );
+      }
       return d3
         .symbol()
-        .type(d3.symbols[4])
-        .size(180)();
+        .type(__type)
+        .size(size)();
       // return this.$d3.symbol().type(this.$d3.symbols[4])();
     }
     // dragged(d) {

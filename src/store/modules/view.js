@@ -29,6 +29,8 @@ const view = {
         ],
         operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom", "filter", "undo", "redo"],
         operation_Types: ["rollback", "filter", "undo", "redo"],
+        // 回溯种类的操作
+        backOps: ["undo", "rollback"],
         parentUUID: "none", //当前view的父view的UUID
         currentUUID: "root", //当前view的UUID
         chartsNeedUpdate: {
