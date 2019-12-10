@@ -190,6 +190,8 @@ export default {
       }
       // the last step
       function changeState() {
+        that.$set(visualData, "uuid", "root");
+        that.$set(visualData, "marked", false);
         visualData.nodes.forEach((d, i) => {
           that.$set(d, "uid", i);
           that.$set(d, "x", 0);

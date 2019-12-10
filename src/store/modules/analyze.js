@@ -8,15 +8,13 @@ const analyze = {
             // links:{source:,target:,options:[]}
             links: []
         },
+        uuids: new Set(),
         operations: [], // operation={action:,nodes:,time:}
         operations_: [], // 切换view的操作
         // recordData,
         // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
         undoList: [], // index: 0,1,2,3,4
         redoList: [], // index: 5,6,7,...
-
-
-        rollbacked: false,
 
         // PageAnalyze.DataFlow
         pageAnalyzeTooltipData: {
@@ -29,14 +27,21 @@ const analyze = {
         recordData(args) {
             // 返回一个类的实例，用来存储节点信息
             class RecordData {
-                constructor({ data, uuid, operation, time, marked, change = null }) {
+                constructor({ data, uuid, operation, time, change = null }) {
                     // 存储的数据在操作之前
-                    this.data = this.dataDeepClone(data); // 操作之前的数据
-                    this.uuid = uuid;
+                    this.uuid = uuid;   // data的uuid
+                    this.data = this.handleData(data, operation); // 操作之前的数据
                     this.operation = operation;
                     this.time = time;
                     this.change = change; // 当data变化不大时，data指向上一次的data，用change保存变化
-                    this.marked = marked;
+                }
+                handleData(data, operation) {
+                    let __ops = ["undo", "redo", "rollback"];
+                    if (__ops.includes(operation)) {
+                        return data;
+                    } else {
+                        return this.dataDeepClone(data);
+                    }
                 }
                 dataDeepClone(oldData) {
                     // 深拷贝数据集，格式data={nodes:[],links:[]}
@@ -57,7 +62,12 @@ const analyze = {
                         newLink.target = tempDict[newLink.target.id];
                         newLinks.push(newLink);
                     }
-                    return { nodes: newNodes, links: newLinks }
+                    return {
+                        nodes: newNodes,
+                        links: newLinks,
+                        uuid: oldData.uuid,
+                        marked: oldData.marked
+                    }
                 }
             }
             return new RecordData(args);
@@ -91,6 +101,9 @@ const analyze = {
                 }
             });
             // let data = { chart: "", time: "", action: "", nodes: {} };
+        },
+        change_uuids: (state, fn) => {
+            fn(state.uuids);
         },
         addDataFlow: (state, item) => {
             // 数据流图数据

@@ -27,13 +27,16 @@ export default new Vuex.Store({
     resetAll({ commit }) {
       commit("updateParentUUID", "none");
       commit("updateCurrentUUID", "root");
-      commit("changeMarked", false);
 
       commit("changeUndoRedo", (undo, redo) => {
         undo.splice(0, undo.length);
         redo.splice(0, redo.length);
       });
       commit("resetOperations");
+      commit("change_uuids", (uuids) => {
+        uuids.clear();
+        uuids.add("root");
+      });
       commit("resetDataFlow");
       commit("resetRecordset");
       commit("updatePageAnalyzeTooltip", {

@@ -22,7 +22,10 @@
         />
         <g class="nodes" stroke="#000">
           <g v-for="node in nodes" @click="updateTooltip(node.data)" :key="node.uuid">
-            <g v-if="node.marked" :transform="`translate(${(node.x0+node.x1)/2},${node.y0-20})`">
+            <g
+              v-if="node.data.marked"
+              :transform="`translate(${(node.x0+node.x1)/2},${node.y0-20})`"
+            >
               <path :d="markedSymbol('star',180)" stroke="#1890ff" stroke-width="2" />
             </g>
             <rect
@@ -140,7 +143,7 @@ export default {
         // links
         let link = {
           index: i - 1,
-          uuid: recordNodes[i - 1].uuid,
+          // uuid: recordNodes[i - 1].uuid,
           operation: recordNodes[i - 1].operation,
           source: nodesDict[recordNodes[i - 1].uuid],
           target: nodesDict[recordNodes[i].uuid],
@@ -150,9 +153,9 @@ export default {
           x1: 0,
           y1: 0
         };
-        let isBackOp = this.backOps.includes(link.operation);
-        link.x0 = isBackOp ? link.source.x0 : link.source.x1;
-        link.x1 = isBackOp ? link.target.x1 : link.target.x0;
+        let isLeft2Right = link.target.x0 > link.source.x0;
+        link.x0 = isLeft2Right ? link.source.x1 : link.source.x0;
+        link.x1 = isLeft2Right ? link.target.x0 : link.target.x1;
         links.push(link);
         // nodes
         nodesDict[recordNodes[i - 1].uuid].sourceLinks.push(link);
@@ -282,17 +285,17 @@ export default {
       // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
     generatePath(d) {
-      let isBackOp = this.backOps.includes(d.operation);
+      let isLeft2Right = d.target.x0 > d.source.x0;;
       let offset = 21.87;
-      return isBackOp
+      return isLeft2Right
         ? d3
             .linkHorizontal()
             .source(() => [d.x0, d.y0])
-            .target(() => [d.x1 + offset, d.y1])()
+            .target(() => [d.x1 - offset, d.y1])()
         : d3
             .linkHorizontal()
             .source(() => [d.x0, d.y0])
-            .target(() => [d.x1 - offset, d.y1])();
+            .target(() => [d.x1 + offset, d.y1])();
     },
     pathColor(op) {
       return this.colorPalette2[this.operationTypes.indexOf(op)];

@@ -175,7 +175,7 @@
               <a-col :span="3">
                 <a-button-group>
                   <a-button @click="marked=!marked">
-                    <a-icon type="book" :theme="marked?'filled':'outlined'" />
+                    <a-icon type="book" :theme="visualData.marked?'filled':'outlined'" />
                   </a-button>
                 </a-button-group>
               </a-col>
@@ -346,8 +346,7 @@ export default {
           data: this.visualData,
           uuid: this.currentUUID,
           operation: "undo",
-          time: new Date(),
-          marked: this.marked
+          time: new Date()
         };
         this.$store.commit("addRecordData", args);
         let record = undo.pop();
@@ -366,8 +365,7 @@ export default {
           data: this.visualData,
           uuid: this.currentUUID,
           operation: "redo",
-          time: new Date(),
-          marked: this.marked
+          time: new Date()
         };
         this.$store.commit("addRecordData", args);
         let record = redo.shift();
@@ -429,7 +427,6 @@ export default {
       colorPalette: state => state.view.colorPalette,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
-      marked: state => state.view.marked,
 
       currentOperations: state => state.analyze.currentOperations,
       undoList: state => state.analyze.undoList,
@@ -448,10 +445,10 @@ export default {
 
     marked: {
       get: function() {
-        return this.$store.state.view.marked;
+        return this.$store.state.data.visualData.marked;
       },
       set: function(val) {
-        this.$store.commit("changeMarked", val);
+        this.$store.state.data.visualData.marked = val;
       }
     },
     currentChart() {
@@ -489,10 +486,10 @@ export default {
     }
   },
   watch: {
-    rollbacked: function(val) {
-      if (val) {
-        this.$store.state.analyze.rollbacked = false;
-      }
+    currentUUID: function(val) {
+      store.commit("change_uuids", uuids => {
+        uuids.add(val);
+      });
     }
   }
 };

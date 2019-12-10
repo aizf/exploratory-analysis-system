@@ -27,7 +27,7 @@ const view = {
             "#b3de69", "#fccde5", "#d9d9d9",
             "#bc80bd", "#ccebc5", "#ffed6f"
         ],
-        operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom", "filter", "undo", "redo"],
+        operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom", "filter", "undo", "redo", "rollback"],
         operation_Types: ["rollback", "filter", "undo", "redo"],
         // 回溯种类的操作
         backOps: ["undo", "rollback"],
@@ -39,7 +39,6 @@ const view = {
             "table": false
         },
         // toolbox
-        marked: false,
     },
     mutations: {
         updateParentUUID: (state, payload) => {
@@ -61,9 +60,6 @@ const view = {
             for (let key in chartsNeedUpdate) {
                 chartsNeedUpdate[key] = true;
             }
-        },
-        changeMarked: (state, payload) => {
-            state.marked = payload;
         }
     },
     actions: {}

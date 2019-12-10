@@ -5,12 +5,12 @@
         <StaticForce
           :width="width"
           :height="height-optionsHeight"
-          :nodes="d.data.nodes"
-          :links="d.data.links"
+          :nodes="d.nodes"
+          :links="d.links"
         ></StaticForce>
         <a-row>
           <a-col :span="6" :offset="8">
-            <a-button :disabled="d.uuid==='current'" @click="rollback(d)">rollback</a-button>
+            <a-button :disabled="d.uuid===currentUUID" @click="rollback(d)">rollback</a-button>
           </a-col>
           <a-col :span="6" :offset="0">
             <a-button type="danger" @click="deleteMarked(d)">delete</a-button>
@@ -42,25 +42,15 @@ export default {
       visualData: state => state.data.visualData,
 
       currentUUID: state => state.view.currentUUID,
-      marked: state => state.view.marked,
 
+      uuids: state => state.analyze.uuids,
       recordset: state => state.analyze.recordset,
       recordData: state => state.analyze.recordData
     }),
-    ...mapGetters(["savedViewData", "generateUUID"]),
+    ...mapGetters(["savedViewData", "generateUUID", "uniqueViews"]),
 
     markedData() {
-      let data = this.recordset.filter(d => d.marked);
-      return this.marked
-        ? [
-            ...data,
-            this.recordData({
-              data: this.visualData,
-              uuid: "current",
-              marked: true
-            })
-          ]
-        : data;
+      return [...this.uniqueViews.values()].filter(d => d.marked);
     }
   },
   methods: {
@@ -69,21 +59,16 @@ export default {
         data: this.visualData,
         uuid: this.currentUUID,
         operation: "rollback",
-        time: new Date(),
-        marked: this.marked
+        time: new Date()
       };
       this.$store.commit("addRecordData", args);
-      this.$store.commit("updateVisualData", d.data);
+      this.$store.commit("updateVisualData", d);
       this.$store.commit("updateParentUUID", this.currentUUID);
       this.$store.commit("updateCurrentUUID", d.uuid);
       console.log("rollback");
     },
     deleteMarked(d) {
-      if (d.uuid === "current") {
-        this.$store.commit("changeMarked", false);
-      } else {
-        d.marked = false;
-      }
+      d.marked = false;
     }
   }
 };

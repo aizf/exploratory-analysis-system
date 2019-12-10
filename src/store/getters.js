@@ -62,6 +62,16 @@ const getters = {
       "links": getLinks(nodes)
     };
   },
+  // view
+  uniqueViews: state => {
+    // {uuid1:data1,...}
+    let map = new Map();
+    state.analyze.recordset.forEach(d => {
+      map.set(d.data.uuid, d.data);
+    });
+    map.set(state.view.currentUUID, state.data.visualData);
+    return map;
+  },
   // analyze
   recordFlow: state => {
     // 返回格式化后的记录流
@@ -88,7 +98,7 @@ const getters = {
           uuid: rs[i].uuid,
           time: rs[i].time,
           fixedValue: rs[i].data.nodes.length,
-          marked: rs[i].marked
+          marked: rs[i].data.marked
         });
       }
       // links
@@ -97,6 +107,7 @@ const getters = {
       switch (rs[i - 1].operation) {
         case "undo":
         case "redo":
+        case "rollback":
           continue;
         default:
           break;
@@ -193,12 +204,12 @@ const getters = {
       uuid: state.view.currentUUID,
       operation: operation,
       time: new Date(),
-      marked: state.view.marked,
     };
     vueComponent.$store.commit("addRecordData", args);
-    vueComponent.$store.commit("changeMarked", false);
+    state.data.visualData.marked = false;
     vueComponent.$store.commit("updateParentUUID", state.view.currentUUID);
     vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
+    state.data.visualData.uuid = state.view.currentUUID;
   }
 }
 
