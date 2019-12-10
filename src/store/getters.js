@@ -21,12 +21,6 @@ const getters = {
     });
     return [...dSet].filter(d => privateArr.every(i => i !== d)).sort();
   },
-  selectedNodes: state => () => {
-    let selectedNodes = state.data.visualData.nodes.filter(d =>
-      !!d.selected
-    );
-    return selectedNodes;
-  },
   hierarchical2nodeLink: state => {
     if (!state.data.sourceData) return;
 
@@ -63,12 +57,17 @@ const getters = {
     };
   },
   // view
-  uniqueViews: state => {
+  existingViews: state => {
     // {uuid1:data1,...}
     let map = new Map();
     state.analyze.recordset.forEach(d => {
       map.set(d.data.uuid, d.data);
     });
+    return map;
+  },
+  uniqueViews: (state, getters) => {
+    // {uuid1:data1,...}
+    let map = new Map(getters.existingViews);
     map.set(state.view.currentUUID, state.data.visualData);
     return map;
   },
@@ -79,13 +78,14 @@ const getters = {
     let rs = [...state.analyze.recordset];
     rs.push(state.analyze.recordData({
       data: state.data.visualData,
+      deepClone: !((rs.map(d => d.data.uuid)).includes(state.view.currentUUID)),
       uuid: state.view.currentUUID,
       operation: "current",
       time: new Date(),
       marked: state.view.marked
     }));
+    // debugger
     // 去除uuid相同的node
-
     let uuids = new Set();
     let nodes = [];
     let links = [];
@@ -120,7 +120,9 @@ const getters = {
 
     return { "nodes": nodes, "links": links };
   },
-
+  markedVisualData: (state, getters) => {
+    return [...getters.uniqueViews.values()].filter(d => d.marked);
+  },
   // function
   viewSlice: state => () => {
     // 返回slice后的nodes和links
@@ -142,7 +144,9 @@ const getters = {
     // console.log("123", slicedLinks);
     return {
       "nodes": slicedNodes,
-      "links": slicedLinks
+      "links": slicedLinks,
+      uuid: state.view.currentUUID,
+      marked: false
     };
     // console.log("123", this);
   },
@@ -201,6 +205,7 @@ const getters = {
     // vueComponent为调用此函数的组件实例
     let args = {
       data: state.data.visualData,
+      deepClone: true,
       uuid: state.view.currentUUID,
       operation: operation,
       time: new Date(),

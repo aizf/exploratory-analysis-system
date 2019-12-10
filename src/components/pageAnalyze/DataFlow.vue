@@ -208,7 +208,6 @@ export default {
           .extent([[0, 0], [this.width, this.height]])
           .on("zoom", () => {
             let transform = d3.event.transform;
-            console.log("zoom", d3.event);
             this.vis.attr("transform", transform);
           })
       )
@@ -285,7 +284,7 @@ export default {
       // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
     generatePath(d) {
-      let isLeft2Right = d.target.x0 > d.source.x0;;
+      let isLeft2Right = d.target.x0 > d.source.x0;
       let offset = 21.87;
       return isLeft2Right
         ? d3
@@ -323,7 +322,7 @@ export default {
       let rects = [];
       let groups = Object.keys(eachGroupNum).sort();
       let preDy = 0;
-      for (let group in groups) {
+      groups.forEach(group => {
         let h = (height * eachGroupNum[group]) / totalNum;
         rects.push({
           group: group,
@@ -332,7 +331,7 @@ export default {
           height: h
         });
         preDy += h;
-      }
+      });
       return rects;
     },
 

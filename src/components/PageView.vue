@@ -344,6 +344,7 @@ export default {
         }
         let args = {
           data: this.visualData,
+          deepClone: !this.existingViews.has(this.currentUUID),
           uuid: this.currentUUID,
           operation: "undo",
           time: new Date()
@@ -363,6 +364,7 @@ export default {
         }
         let args = {
           data: this.visualData,
+          deepClone: false,
           uuid: this.currentUUID,
           operation: "redo",
           time: new Date()
@@ -382,6 +384,8 @@ export default {
         this.$message.error("No nodes are selected !");
         return;
       }
+      slicedData.uuid = this.currentUUID;
+
       this.beforeEvent("filter", this);
 
       slicedData.nodes.forEach(d => {
@@ -401,10 +405,13 @@ export default {
     },
     groupTheSelectedNodes(group) {
       // console.log(group);
-      let selectedNodes = this.selectedNodes();
-      selectedNodes.forEach(d => {
-        this.$set(d, "group", group);
+      this.beforeEvent("classification", this);
+      store.state.data.visualData.nodes.forEach(d => {
+        if (d.selected) {
+          this.$set(d, "group", group);
+        }
       });
+
     },
     // test
     test(event, i, a) {
@@ -437,10 +444,10 @@ export default {
     ...mapGetters([
       "nodes",
       "links",
-      "selectedNodes",
       "viewSlice",
       "generateUUID",
-      "beforeEvent"
+      "beforeEvent",
+      "existingViews"
     ]),
 
     marked: {

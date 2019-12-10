@@ -27,20 +27,19 @@ const analyze = {
         recordData(args) {
             // 返回一个类的实例，用来存储节点信息
             class RecordData {
-                constructor({ data, uuid, operation, time, change = null }) {
+                constructor({ data, deepClone, uuid, operation, time, change = null }) {
                     // 存储的数据在操作之前
                     this.uuid = uuid;   // data的uuid
-                    this.data = this.handleData(data, operation); // 操作之前的数据
+                    this.data = this.handleData(data, deepClone); // 操作之前的数据
                     this.operation = operation;
                     this.time = time;
                     this.change = change; // 当data变化不大时，data指向上一次的data，用change保存变化
                 }
-                handleData(data, operation) {
-                    let __ops = ["undo", "redo", "rollback"];
-                    if (__ops.includes(operation)) {
-                        return data;
-                    } else {
+                handleData(data, deepClone) {
+                    if (deepClone) {
                         return this.dataDeepClone(data);
+                    } else {
+                        return data;
                     }
                 }
                 dataDeepClone(oldData) {

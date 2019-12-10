@@ -99,9 +99,6 @@ export default {
       needUpdate: state => state.view.chartsNeedUpdate.scatter,
 
       currentOperations: state => state.analyze.currentOperations,
-      undoStack: state => state.analyze.undoStack,
-      redoStack: state => state.analyze.redoStack,
-      rollbacked: state => state.analyze.rollbacked
     }),
     ...mapGetters([
       "nodes",

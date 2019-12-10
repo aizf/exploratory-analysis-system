@@ -27,7 +27,7 @@ const view = {
             "#b3de69", "#fccde5", "#d9d9d9",
             "#bc80bd", "#ccebc5", "#ffed6f"
         ],
-        operationTypes: ["click", "drag", "mouseover", "brush", "invertBrush", "zoom", "filter", "undo", "redo", "rollback"],
+        operationTypes: ["click", "drag", "mouseover", "brush", "classification", "invertBrush", "zoom", "filter", "undo", "redo", "rollback"],
         operation_Types: ["rollback", "filter", "undo", "redo"],
         // 回溯种类的操作
         backOps: ["undo", "rollback"],

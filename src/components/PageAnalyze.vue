@@ -54,9 +54,6 @@ export default {
 
       operations: state => state.analyze.operations,
       currentOperations: state => state.analyze.currentOperations,
-      undoStack: state => state.analyze.undoStack,
-      redoStack: state => state.analyze.redoStack,
-      rollbacked: state => state.analyze.rollbacked,
       tooltipNodes: state => state.analyze.pageAnalyzeTooltipData.nodes,
       tooltipLinks: state => state.analyze.pageAnalyzeTooltipData.links,
     }),

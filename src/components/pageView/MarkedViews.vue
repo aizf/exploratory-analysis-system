@@ -1,7 +1,7 @@
 <template>
   <div class="MarkedViews">
     <a-card>
-      <a-card-grid v-for="d in markedData" :key="d.uuid">
+      <a-card-grid v-for="d in markedVisualData" :key="d.uuid">
         <StaticForce
           :width="width"
           :height="height-optionsHeight"
@@ -9,7 +9,10 @@
           :links="d.links"
         ></StaticForce>
         <a-row>
-          <a-col :span="6" :offset="8">
+          <a-col :span="3" style="vertical-align: middle;">
+            <p>uuid: {{d.uuid}}</p>
+          </a-col>
+          <a-col :span="6" :offset="5">
             <a-button :disabled="d.uuid===currentUUID" @click="rollback(d)">rollback</a-button>
           </a-col>
           <a-col :span="6" :offset="0">
@@ -47,16 +50,18 @@ export default {
       recordset: state => state.analyze.recordset,
       recordData: state => state.analyze.recordData
     }),
-    ...mapGetters(["savedViewData", "generateUUID", "uniqueViews"]),
-
-    markedData() {
-      return [...this.uniqueViews.values()].filter(d => d.marked);
-    }
+    ...mapGetters([
+      "savedViewData",
+      "generateUUID",
+      "uniqueViews",
+      "markedVisualData"
+    ])
   },
   methods: {
     rollback(d) {
       let args = {
         data: this.visualData,
+        deepClone: !this.existingViews.has(this.currentUUID),
         uuid: this.currentUUID,
         operation: "rollback",
         time: new Date()
@@ -77,7 +82,7 @@ export default {
 .MarkedViews .ant-card-grid {
   width: 100%;
   height: 400px;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 10px 0px 10px;
 }
 </style>
 <style>
