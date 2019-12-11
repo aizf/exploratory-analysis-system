@@ -314,8 +314,7 @@ export default {
         time: new Date()
       };
       that.$store.commit("addOperation", operation);
-      that.$store.commit("addCurrentOperations", operation);
-      console.log("zoom", t.nodes());
+      console.log("zoom");
     }
 
     // mounted---nextTick
@@ -502,8 +501,7 @@ export default {
         time: new Date()
       };
       this.$store.commit("addOperation", operation);
-      this.$store.commit("addCurrentOperations", operation);
-      console.log("brush", brushedNodes);
+      console.log("brush");
     },
     invertBrushEnd() {
       if (d3.event.selection === null) return;
@@ -519,8 +517,7 @@ export default {
         time: new Date()
       };
       this.$store.commit("addOperation", operation);
-      this.$store.commit("addCurrentOperations", operation);
-      console.log("invertBrush", invertBrushedNodes);
+      console.log("invertBrush");
     },
     // drag
     dragstarted(d) {
@@ -560,9 +557,8 @@ export default {
           time: new Date()
         };
         this.$store.commit("addOperation", operation);
-        this.$store.commit("addCurrentOperations", operation);
         this.isDraging = false;
-        console.log("drag", t.nodes());
+        console.log("drag");
         t.dispatch("mouseout");
       }
     },
@@ -583,8 +579,7 @@ export default {
             time: new Date()
           };
           this.$store.commit("addOperation", operation);
-          this.$store.commit("addCurrentOperations", operation);
-          console.log("click", t.nodes());
+          console.log("click");
         }
       }
     },
@@ -602,8 +597,7 @@ export default {
             time: new Date()
           };
           this.$store.commit("addOperation", operation);
-          this.$store.commit("addCurrentOperations", operation);
-          console.log("click", [d]);
+          console.log("click");
         }
       }
     },
@@ -656,8 +650,7 @@ export default {
           time: new Date()
         };
         this.$store.commit("addOperation", operation);
-        this.$store.commit("addCurrentOperations", operation);
-        console.log("mouseover", displayNodes.nodes());
+        console.log("mouseover");
       }
     },
     mouseout() {

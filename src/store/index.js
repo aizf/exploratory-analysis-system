@@ -24,9 +24,10 @@ export default new Vuex.Store({
 
   },
   actions: {
-    resetAll({ commit }) {
+    resetAll({ getters, commit }) {
       commit("updateParentUUID", "none");
       commit("updateCurrentUUID", "root");
+      getters.generateUUID(1);
 
       commit("changeUndoRedo", (undo, redo) => {
         undo.splice(0, undo.length);

@@ -182,11 +182,9 @@ const getters = {
   },
   generateUUID: () => {
     // 全局产生视图uid的function
-    let __uid = 1;
-    return function () {
-      let uid = __uid;
-      __uid += 1;
-      return uid;
+    let uid = 1;
+    return function (_) {
+      return arguments.length ? (uid = +_) : uid++;
     };
   },
   // generateUUID: () => () => {
@@ -204,6 +202,7 @@ const getters = {
   beforeEvent: (state, getters) => (operation, vueComponent) => {
     // vueComponent为调用此函数的组件实例
     let args = {
+      index: state.analyze.recordset.length,
       data: state.data.visualData,
       deepClone: true,
       uuid: state.view.currentUUID,
@@ -215,6 +214,15 @@ const getters = {
     vueComponent.$store.commit("updateParentUUID", state.view.currentUUID);
     vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
     state.data.visualData.uuid = state.view.currentUUID;
+  },
+  afterEvent: (state, getters) => (operation, subjects, vueComponent) => {
+    let args = {
+      index: state.analyze.recordset.length - 1,
+      visualData: state.analyze.recordset[state.analyze.recordset.length - 2].data,
+      subjects: subjects,
+      operation: operation,
+      time: new Date(),
+    }
   }
 }
 

@@ -9,18 +9,21 @@ const analyze = {
             links: []
         },
         uuids: new Set(),
-        operations: [], // operation={action:,nodes:,time:}
-        operations_: [], // 切换view的操作
-        // recordData,
+
         // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
         undoList: [], // index: 0,1,2,3,4
         redoList: [], // index: 5,6,7,...
-
+        
         // PageAnalyze.DataFlow
         pageAnalyzeTooltipData: {
             "nodes": [],
             "links": []
         },
+
+        // interaction
+        operations: [], // operation={action:,nodes:,time:}
+        operations_: [], // 切换view的操作
+
         // record
         // recordset是存储recordData的列表
         recordset: [],
