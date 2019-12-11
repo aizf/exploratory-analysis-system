@@ -80,10 +80,12 @@ merge 操作
 
 redo undo               done !
 
-update 刷新不重新绘图
-
 d3的数据绑定 和 vue的     done !
 
 recordset中重复的nodes    done
 
-TODO:card内对齐
+1.箭头加浮框显示数据流向
+2.多余的缩成环
+3.dataflow方框变pie图
+4.加社交网络dataset
+5.view能够分析出信息
