@@ -1,12 +1,98 @@
 <template>
   <a-layout>
     <a-layout-sider
-      width="200"
+      width="250"
       theme="light"
       style="background: #fff"
       collapsible
       collapsedWidth="80"
     >
+      <a-card
+        title="Oprations"
+        :headStyle="{padding:'0 24px 0 24px'}"
+        :bodyStyle="{padding:'5px 20px 5px 15px'}"
+      >
+        <a-row>
+          <a-col :span="12" offset="4">
+            <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" @.stop :mouseEnterDelay="0.4">
+              <span style="fontSize: 18px; fontWeight: 500">click</span>
+            </a-tooltip>
+          </a-col>
+          <a-col :span="4" offset="2">
+            <a-switch v-model="visClick" :disabled="clickDisabled" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12" offset="4">
+            <a-tooltip placement="top" title="单点操作，拖动一个点" :mouseEnterDelay="0.4">
+              <span style="fontSize: 18px; fontWeight: 500">drag</span>
+            </a-tooltip>
+          </a-col>
+          <a-col :span="4" offset="2">
+            <a-switch v-model="visDrag" :disabled="dragDisabled" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12" offset="4">
+            <a-tooltip placement="top" title="单点操作，展示与该点相关联的点" :mouseEnterDelay="0.4">
+              <span style="fontSize: 18px; fontWeight: 500">hover</span>
+            </a-tooltip>
+          </a-col>
+          <a-col :span="4" offset="2">
+            <a-switch v-model="visMouseover" :disabled="mouseoverDisabled" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12" offset="4">
+            <a-popover placement="top" title="keep last selected nodes ?" :mouseEnterDelay="0.4">
+              <template slot="content">
+                <a-checkbox :checked="!brushKeep" @change="brushKeep=!brushKeep">no</a-checkbox>
+                <a-checkbox :checked="brushKeep" @change="brushKeep=!brushKeep">yes</a-checkbox>
+              </template>
+              <span style="fontSize: 18px; fontWeight: 500">brush</span>
+            </a-popover>
+          </a-col>
+          <a-col :span="4" offset="2">
+            <a-switch v-model="visBrush" @change="onVisBrush('switch')" :disabled="brushDisabled" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12" offset="4">
+            <a-tooltip placement="top" title="多点操作，取消选中多个点" :mouseEnterDelay="0.4">
+              <span style="fontSize: 18px; fontWeight: 500">invert brush</span>
+            </a-tooltip>
+          </a-col>
+          <a-col :span="4" offset="2">
+            <a-switch
+              v-model="visInvertBrush"
+              @change="onVisInvertBrush('switch')"
+              :disabled="invertBrushDisabled"
+            />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="12" offset="4">
+            <a-tooltip placement="top" title="多点操作，放大、缩小或平移视图" :mouseEnterDelay="0.4">
+              <span style="fontSize: 18px; fontWeight: 500">zoom</span>
+            </a-tooltip>
+          </a-col>
+          <a-col :span="4" offset="2">
+            <a-switch v-model="visZoom" :disabled="zoomDisabled" />
+          </a-col>
+        </a-row>
+      </a-card>
+
+      <a-card
+        title="Data Fields"
+        :headStyle="{padding:'0 24px 0 24px'}"
+        :bodyStyle="{padding:'5px 10px 5px 10px'}"
+      >
+        <a-row>
+          <a-col :span="12" offset="4"></a-col>
+          <a-col :span="4" offset="2"></a-col>
+        </a-row>
+      </a-card>
+
       <a-menu
         mode="inline"
         :defaultSelectedKeys="['1']"
@@ -16,21 +102,11 @@
         :style="{ height: '100%', borderRight: 0 }"
         :inlineIndent="24"
       >
-        <a-sub-menu key="sub1">
+        <!-- <a-sub-menu key="sub1">
           <span slot="title">
             <a-icon type="user" />
             <span>oprations</span>
           </span>
-          <!--  -->
-          <a-menu-item>
-            <a-button
-              type="primary"
-              block="block"
-              @click="saveViewData"
-              :disabled="saveDisabled"
-              :style="{ margin: '1px' }"
-            >save</a-button>
-          </a-menu-item>
           <a-menu-item>
             <a-button
               type="primary"
@@ -40,7 +116,7 @@
           </a-menu-item>
           <a-menu-item-group key="g1" title="single point">
             <a-menu-item @click="onVisClick" :disabled="clickDisabled">
-              <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" :mouseEnterDelay="0.4">
+              <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" @.stop :mouseEnterDelay="0.4">
                 <span>click</span>
               </a-tooltip>
               <span :style="{display:'block',float:'right'}" @click.stop>
@@ -102,9 +178,9 @@
               </span>
             </a-menu-item>
           </a-menu-item-group>
-        </a-sub-menu>
+        </a-sub-menu>-->
 
-        <a-sub-menu key="sub2">
+        <!-- <a-sub-menu key="sub2">
           <span slot="title">
             <a-icon type="laptop" />
             <span>display</span>
@@ -121,7 +197,7 @@
           </a-menu-item>
           <a-menu-item key="5">DataFlow</a-menu-item>
           <a-menu-item key="6">OprationFlow</a-menu-item>
-        </a-sub-menu>
+        </a-sub-menu>-->
 
         <a-sub-menu key="sub3">
           <span slot="title">
@@ -148,7 +224,7 @@
             <!-- col为工具栏和视图 -->
             <a-row style="padding: 5px 0 5px 0">
               <!-- row工具栏 -->
-              <a-col :span="6">
+              <a-col :span="2">
                 <a-button @click="viewUndo" shape="circle" :disabled="undoDisabled">
                   <a-icon type="undo" />
                 </a-button>
@@ -161,8 +237,21 @@
                   <a-icon type="redo" />
                 </a-button>
               </a-col>
-              <a-col :span="6">
-                <!-- 分组的图例 -->
+              <a-col :span="5">
+                <a-badge
+                  :count="markedVisualData.length"
+                  showZero
+                  :numberStyle="{backgroundColor: '#52c41a'} "
+                >
+                  <a-button @click="markedsVisible=true">
+                    <a-icon type="database" />Marked Views
+                  </a-button>
+                </a-badge>
+                <a-button @click="marked=!marked">
+                  <a-icon type="book" :theme="visualData.marked?'filled':'outlined'" />
+                </a-button>
+              </a-col>
+              <a-col :span="8">
                 <a-tag
                   v-for="(color, index) in colorPalette"
                   :color="color"
@@ -170,14 +259,18 @@
                   :key="index"
                 >{{index}}</a-tag>
               </a-col>
-              <a-col :span="6">col-6</a-col>
-              <a-col :span="3">col-3</a-col>
-              <a-col :span="3">
-                <a-button-group>
-                  <a-button @click="marked=!marked">
-                    <a-icon type="book" :theme="visualData.marked?'filled':'outlined'" />
-                  </a-button>
-                </a-button-group>
+              <a-col :span="4">
+                <a-button
+                  type="primary"
+                  size="small"
+                  @click="viewFilter"
+                  :style="{ marginLeft:'0',width: '70px' }"
+                >filter</a-button>
+              </a-col>
+              <a-col :span="5">
+                <a-icon type="tags" />
+                <span>showIds</span>
+                <a-switch v-model="visShowIds" :disabled="showIdsDisabled" />
               </a-col>
             </a-row>
             <keep-alive>
@@ -326,7 +419,6 @@ export default {
       zoom = false,
       showIds = false
     } = {}) {
-      this.saveDisabled = save;
       this.clickDisabled = click;
       this.dragDisabled = drag;
       this.mouseoverDisabled = mouseover;
@@ -335,8 +427,7 @@ export default {
       this.zoomDisabled = zoom;
       this.showIdsDisabled = showIds;
     },
-    // save相关
-    saveViewData() {},
+
     viewUndo() {
       this.$store.commit("changeUndoRedo", (undo, redo) => {
         if (!undo.length) {
@@ -411,7 +502,6 @@ export default {
           this.$set(d, "group", group);
         }
       });
-
     },
     // test
     test(event, i, a) {
@@ -447,7 +537,8 @@ export default {
       "viewSlice",
       "generateUUID",
       "beforeEvent",
-      "existingViews"
+      "existingViews",
+      "markedVisualData"
     ]),
 
     marked: {

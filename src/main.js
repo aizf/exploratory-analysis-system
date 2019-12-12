@@ -5,6 +5,7 @@ import * as d3 from "d3";
 // import Antd from 'ant-design-vue'
 import "ant-design-vue/dist/antd.css";
 import {
+  Badge,
   Button,
   Card,
   Checkbox,
@@ -34,6 +35,7 @@ Vue.prototype.$axios = axios;
 Vue.prototype.$d3 = d3;
 
 // TODO: Vue.use(Antd);
+Vue.use(Badge);
 Vue.use(Button);
 Vue.use(Card);
 Vue.use(Checkbox);

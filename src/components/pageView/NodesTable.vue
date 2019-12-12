@@ -31,7 +31,7 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       needUpdate: state => state.view.chartsNeedUpdate.table
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber", "dimensions"]),
+    ...mapGetters(["nodes", "links", "nodesNumber", "nodeFields"]),
 
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -51,7 +51,7 @@ export default {
     },
 
     columns() {
-      return this.dimensions.map(d => ({
+      return this.nodeFields.map(d => ({
         title: d,
         dataIndex: d,
         key: d,
@@ -71,13 +71,11 @@ export default {
     data() {
       return this.nodes.map((node, i) => {
         let datum = { key: i };
-        // console.log(this.dimensions);
-        for (let dimension of this.dimensions) {
-          // console.log(node[dimension]);
-          datum[dimension] =
-            node[dimension] === undefined || node[dimension] === null
+        for (let field of this.nodeFields) {
+          datum[field] =
+            node[field] === undefined || node[field] === null
               ? "-"
-              : node[dimension].toString();
+              : node[field].toString();
         }
         // console.log(datum);
         return datum;

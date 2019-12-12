@@ -340,7 +340,7 @@ export default {
   },
 
   deactivated() {
-    this.simulation.stop();
+    // this.simulation.stop();
   },
 
   methods: {

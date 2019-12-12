@@ -19,23 +19,23 @@
     <div :style="{float:'left',height:chartHeight+'px',margin:'0 5px',padding:'0 0 40px 0'}">
       <a-select
         showSearch
-        placeholder="Select X Dimension"
+        placeholder="Select X Field"
         optionFilterProp="children"
         style="width: 160px"
         @change="xDimensionChange"
         :filterOption="filterOption"
       >
-        <a-select-option v-for="i in dimensions" :key="i">{{i}}</a-select-option>
+        <a-select-option v-for="i in nodeFields" :key="i">{{i}}</a-select-option>
       </a-select>
       <a-select
         showSearch
-        placeholder="Select Y Dimension"
+        placeholder="Select Y Field"
         optionFilterProp="children"
         style="width: 160px"
         @change="yDimensionChange"
         :filterOption="filterOption"
       >
-        <a-select-option v-for="i in dimensions" :key="i">{{i}}</a-select-option>
+        <a-select-option v-for="i in nodeFields" :key="i">{{i}}</a-select-option>
       </a-select>
     </div>
   </div>
@@ -104,7 +104,7 @@ export default {
       "nodes",
       "links",
       "nodesNumber",
-      "dimensions",
+      "nodeFields",
       "generateUUID"
     ]),
 

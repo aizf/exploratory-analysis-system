@@ -34,7 +34,7 @@ const data = {
             },
         },
         sourceData: {},
-        visualData: {},
+        visualData: {}
     },
     mutations: {
         updateSourceData: (state, data) => {
