@@ -224,6 +224,20 @@
             <!-- col为工具栏和视图 -->
             <a-row style="padding: 5px 0 5px 0">
               <!-- row工具栏 -->
+              <a-col :span="5">
+                <a-badge
+                  :count="markedVisualData.length"
+                  showZero
+                  :numberStyle="{backgroundColor: '#1890ff'}"
+                >
+                  <a-button @click="markedsVisible=true">
+                    <a-icon type="database" />Marked Views
+                  </a-button>
+                </a-badge>
+                <a-button @click="marked=!marked">
+                  <a-icon type="book" :theme="visualData.marked?'filled':'outlined'" />
+                </a-button>
+              </a-col>
               <a-col :span="2">
                 <a-button @click="viewUndo" shape="circle" :disabled="undoDisabled">
                   <a-icon type="undo" />
@@ -235,20 +249,6 @@
                   style="margin:0 0 0 5px"
                 >
                   <a-icon type="redo" />
-                </a-button>
-              </a-col>
-              <a-col :span="5">
-                <a-badge
-                  :count="markedVisualData.length"
-                  showZero
-                  :numberStyle="{backgroundColor: '#52c41a'} "
-                >
-                  <a-button @click="markedsVisible=true">
-                    <a-icon type="database" />Marked Views
-                  </a-button>
-                </a-badge>
-                <a-button @click="marked=!marked">
-                  <a-icon type="book" :theme="visualData.marked?'filled':'outlined'" />
                 </a-button>
               </a-col>
               <a-col :span="8">
