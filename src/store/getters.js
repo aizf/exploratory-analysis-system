@@ -4,24 +4,11 @@ const getters = {
   links: state => state.data.visualData.links,
   nodesNumber: state => state.data.visualData.nodes.length,
   linksNumber: state => state.data.visualData.links.length,
+  nodeFields__: state => {
+    return state.data.datasets[state.data.selectedDataset].nodeFields;
+  },
   nodeFields: (state, getters) => {
-    // 获得node的属性(维度)有哪些
-    let privateArr = [
-      "fx", "fy",
-      "x", "y",
-      "xx", "yy",
-      "vx", "vy",
-      "x0", "y0",
-      "x1", "y1",
-      "children"
-    ];
-    let dSet = new Set();
-    getters.nodes.forEach(node => {
-      Object.keys(node).forEach(d => {
-        dSet.add(d);
-      })
-    });
-    return [...dSet].filter(d => privateArr.includes(d)).sort();
+    return Object.keys(getters.nodeFields__).sort();
   },
   hierarchical2nodeLink: state => {
     if (!state.data.sourceData) return;

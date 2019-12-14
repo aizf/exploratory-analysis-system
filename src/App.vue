@@ -47,7 +47,7 @@ export default {
   methods: {},
   computed: {
     ...mapState({
-      visualData: state => state.data.visualData
+      selectedDataset: state => state.data.selectedDataset
     }),
     currentPage() {
       switch (this.currentPageKey) {
@@ -66,7 +66,7 @@ export default {
     },
     dataSelected() {
       // 判断是否选择了数据集
-      return Object.values(this.visualData).some(val => val.length > 0);
+      return this.selectedDataset !== "";
     },
     pageViewTooltipTitle() {
       return !this.dataSelected ? "请先在左侧选择数据" : "数据可视化界面";

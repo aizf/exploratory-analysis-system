@@ -97,7 +97,6 @@ export default {
       collapsed: false, // 侧边栏
       tabs: ["SourceData", "VisualData"],
       tabContents: Array(2),
-      lastSelect: undefined,
       // codemirror
       cmOptions: {
         // codemirror options
@@ -113,6 +112,7 @@ export default {
   },
   computed: {
     ...mapState({
+      selectedDataset: state => state.data.selectedDataset,
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
       datasets: state => state.data.datasets,
@@ -125,7 +125,8 @@ export default {
       let that = this;
       let dataset = this.datasets[event.key];
       let datasetPath = "./static/" + dataset.fileName;
-      if (event.key === this.lastSelect) return;
+      if (event.key === this.selectedDataset) return;
+      store.commit("changeSelectedDataset", event.key);
       let visualData;
       this.tabContents = []; // 清空数据
       this.$message.loading("Action in progress..", 0.3).then(() => {
@@ -205,8 +206,6 @@ export default {
           that.$set(d, "mouseover_show", true);
         });
 
-        console.log("change!");
-        that.lastSelect = event.key;
         // 源数据改变后更新store状态
         store.commit("ChartsNeedUpdate", {
           force: true,
