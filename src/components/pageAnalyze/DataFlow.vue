@@ -85,7 +85,7 @@
           <text
             v-for="node in nodes"
             :x="node.x1 + 6"
-            :y="node.y0"
+            :y="(node.y0+node.y1)/2-markCircleR"
             dx="-0.35em"
             text-anchor="start"
             :key="node.uuid"
@@ -150,6 +150,11 @@ export default {
         node.targetLinks = [];
       });
       return nodes;
+      let tempDict = { startUUID: {}, op:"",opTime: 0, endUUID: {} };
+    },
+    nodesNum() {
+      // 用recordFlow，而非nodes，因为nodes是通过this.sankey()计算而来
+      return this.recordFlow.nodes.length;
     },
     links() {
       // 先在nodes增加in和out的links，
@@ -185,11 +190,12 @@ export default {
         link.x1 = isLeft2Right ? link.target.x0 : link.target.x1;
         links.push(link);
 
-        // nodes
+        // nodes添加sourceLinks和targetLinks
         nodesDict[recordNodes[i - 1].uuid].sourceLinks.push(link);
         nodesDict[recordNodes[i].uuid].targetLinks.push(link);
       }
 
+      // 设置link的y0和y1
       this.nodes.forEach(node => {
         // const height = node.y1 - node.y0;
         const height = 2 * this.markCircleR;
@@ -250,9 +256,7 @@ export default {
     this.linkG = this.vis.select("g.links");
     this.textG = this.vis.select("g.texts");
   },
-  activated() {
-    // this.update();
-  },
+  activated() {},
   methods: {
     update() {
       const that = this;
@@ -538,6 +542,14 @@ export default {
     //   this.sankey.update(this.dataFlow);
     //   this.node.attr("x", d => d.x0).attr("y", d => d.y0);
     // }
+  },
+  watch: {
+    nodesNum: function(newV, oldV) {
+      if (Math.floor(newV / 10) === Math.floor(oldV / 10)) return;
+      // k为extent放缩系数
+      let k = Math.floor(newV / 10) + 1;
+      this.sankey.extent([[1, 5], [this.width * k - 1, this.height - 5]]);
+    }
   }
 };
 </script>

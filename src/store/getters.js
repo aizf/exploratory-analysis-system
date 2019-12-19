@@ -103,6 +103,7 @@ const getters = {
           break;
       }
       links.push({
+        operation: rs[i - 1].operation,
         source: rs[i - 1].uuid,
         target: rs[i].uuid,
       })
