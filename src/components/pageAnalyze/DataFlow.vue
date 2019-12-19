@@ -138,7 +138,7 @@ export default {
       operations: state => state.analyze.operations,
       recordset: state => state.analyze.recordset
     }),
-    ...mapGetters(["recordFlow"]),
+    ...mapGetters(["recordFlow","dijkstra"]),
 
     graph() {
       return this.sankey(this.recordFlow);
@@ -150,7 +150,7 @@ export default {
         node.targetLinks = [];
       });
       return nodes;
-      let tempDict = { startUUID: {}, op:"",opTime: 0, endUUID: {} };
+      // let tempDict = { startUUID: {}, op:"",opTime: 0, endUUID: {} };
     },
     nodesNum() {
       // 用recordFlow，而非nodes，因为nodes是通过this.sankey()计算而来
@@ -169,6 +169,12 @@ export default {
         nodesDict[node.uuid] = node;
       });
 
+      // 计算最短路径
+      const matrix = new Array(this.nodesNum).fill(
+        new Array(this.nodesNum).fill(Infinity)
+      );
+      const uuidArr = this.nodes.map(node => node.uuid);
+
       for (let i = 1; i < recordNodes.length; i++) {
         // links
         const link = {
@@ -181,7 +187,8 @@ export default {
           x0: 0,
           y0: 0,
           x1: 0,
-          y1: 0
+          y1: 0,
+          isShortestPath: false
         };
 
         // 判断路径方向
@@ -193,6 +200,11 @@ export default {
         // nodes添加sourceLinks和targetLinks
         nodesDict[recordNodes[i - 1].uuid].sourceLinks.push(link);
         nodesDict[recordNodes[i].uuid].targetLinks.push(link);
+
+        // 设置路径
+        matrix[uuidArr.indexOf(recordNodes[i - 1].uuid)][
+          uuidArr.indexOf(recordNodes[i].uuid)
+        ] = 1;
       }
 
       // 设置link的y0和y1
@@ -215,6 +227,8 @@ export default {
             y0 + (height * (i + 1)) / (targetLinks.length + 1);
         }
       });
+
+      this.dijkstra(matrix,uuidArr.indexOf("root"))
       return links;
     },
     currentNode() {

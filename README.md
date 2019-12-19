@@ -89,6 +89,8 @@ recordset中重复的nodes    done
 3.dataflow方框变pie图   done !
 4.加社交网络dataset
 5.view能够分析出信息
-6.多个相同操作合一  idea：遍历links，再根据links的source和target，filter nodes  TODO:
+6.多个相同操作合一  idea：遍历links，再根据links的source和target，filter nodes idea2:最短路径 TODO:
+7.dataflow增加辅助视图
 
 issue: undo 再操作，两个会同时marked
+pie图留空值(filter)

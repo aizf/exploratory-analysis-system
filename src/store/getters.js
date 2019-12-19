@@ -214,7 +214,36 @@ const getters = {
       operation: operation,
       time: new Date(),
     }
+  },
+  /**
+   * @param matrix 邻接矩阵
+   * @param start 起点
+   * */
+  dijkstra: () => (matrix, start = 0) => {
+    const rows = matrix.length,
+      cols = matrix[0].length;
+
+    if (rows !== cols || start >= rows) throw new Error("邻接矩阵错误或者源点错误");
+
+    //初始化distance
+    const distance = new Array(rows).fill({ value: Infinity, path: [] });
+    distance[start].value = 0;
+
+    for (let i = 0; i < rows; i++) {
+      //达到不了的顶点不能作为中转跳点
+      if (distance[i].value < Infinity) {
+        for (let j = 0; j < cols; j++) {
+          // 通过比较distance[i].value + matrix[i][j]和distance[j].value的大小来决定是否更新distance[j]
+          if (matrix[i][j] + distance[i].value < distance[j].value) {
+            distance[j].value = matrix[i][j] + distance[i].value;
+          }
+        }
+      }
+    }
+    // TODO: 增加路径
+    return distance;
   }
+
 }
 
 export default getters
