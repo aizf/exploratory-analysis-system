@@ -57,7 +57,7 @@ const view = {
             chartsNeedUpdate.table = false;
         },
         ChartsNeedUpdate: ({ chartsNeedUpdate }) => {
-            for (let key in chartsNeedUpdate) {
+            for (const key in chartsNeedUpdate) {
                 chartsNeedUpdate[key] = true;
             }
         }

@@ -217,7 +217,7 @@
       </a-menu>
     </a-layout-sider>
 
-    <a-layout style="padding: 0 0px 0 5px">
+    <a-layout style="padding: 0 0 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
         <a-row>
           <a-col :span="20">
@@ -296,6 +296,7 @@
         </a-row>
       </a-layout-content>
     </a-layout>
+
     <a-drawer
       title="Marked Views"
       placement="right"
@@ -433,7 +434,7 @@ export default {
         if (!undo.length) {
           return;
         }
-        let args = {
+        const args = {
           data: this.visualData,
           deepClone: !this.existingViews.has(this.currentUUID),
           uuid: this.currentUUID,
@@ -441,7 +442,7 @@ export default {
           time: new Date()
         };
         this.$store.commit("addRecordData", args);
-        let record = undo.pop();
+        const record = undo.pop();
         this.$store.commit("updateVisualData", record.data);
         this.$store.commit("updateParentUUID", this.currentUUID);
         this.$store.commit("updateCurrentUUID", record.uuid);
@@ -453,7 +454,7 @@ export default {
         if (!redo.length) {
           return;
         }
-        let args = {
+        const args = {
           data: this.visualData,
           deepClone: false,
           uuid: this.currentUUID,
@@ -461,7 +462,7 @@ export default {
           time: new Date()
         };
         this.$store.commit("addRecordData", args);
-        let record = redo.shift();
+        const record = redo.shift();
         this.$store.commit("updateVisualData", record.data);
         this.$store.commit("updateParentUUID", this.currentUUID);
         this.$store.commit("updateCurrentUUID", record.uuid);
@@ -470,7 +471,7 @@ export default {
     },
     // filter别名，切片和切片回退
     viewFilter() {
-      let slicedData = this.viewSlice();
+      const slicedData = this.viewSlice();
       if (!slicedData.nodes.length) {
         this.$message.error("No nodes are selected !");
         return;

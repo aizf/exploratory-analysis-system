@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     rollback(d) {
-      let args = {
+      const args = {
         data: this.visualData,
         deepClone: !this.existingViews.has(this.currentUUID),
         uuid: this.currentUUID,

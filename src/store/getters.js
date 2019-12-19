@@ -14,7 +14,7 @@ const getters = {
     if (!state.data.sourceData) return;
 
     // nodes
-    let nodes = [];
+    const nodes = [];
 
     function recurse(node) {
       if (node.children) node.children.forEach(recurse);
@@ -26,7 +26,7 @@ const getters = {
 
     // links
     function getLinks(nodes) {
-      let links = [];
+      const links = [];
       nodes.forEach(function (node) {
         if (node.children) { // Don’t include the root’s parent, if any.
           node.children.forEach(function (child) {
@@ -48,7 +48,8 @@ const getters = {
   // view
   existingViews: state => {
     // {uuid1:data1,...}
-    let map = new Map();
+    // 不包含当前
+    const map = new Map();
     state.analyze.recordset.forEach(d => {
       map.set(d.data.uuid, d.data);
     });
@@ -56,7 +57,7 @@ const getters = {
   },
   uniqueViews: (state, getters) => {
     // {uuid1:data1,...}
-    let map = new Map(getters.existingViews);
+    const map = new Map(getters.existingViews);
     map.set(state.view.currentUUID, state.data.visualData);
     return map;
   },
@@ -64,7 +65,7 @@ const getters = {
   recordFlow: state => {
     // 返回格式化后的记录流
     // 先增加尾节点
-    let rs = [...state.analyze.recordset];
+    const rs = [...state.analyze.recordset];
     rs.push(state.analyze.recordData({
       data: state.data.visualData,
       deepClone: !((rs.map(d => d.data.uuid)).includes(state.view.currentUUID)),
@@ -75,9 +76,9 @@ const getters = {
     }));
     // debugger
     // 去除uuid相同的node
-    let uuids = new Set();
-    let nodes = [];
-    let links = [];
+    const uuids = new Set();
+    const nodes = [];
+    const links = [];
     for (let i = 0; i < rs.length; i++) {
       // nodes
       if (!uuids.has(rs[i].uuid)) {
@@ -116,17 +117,17 @@ const getters = {
   viewSlice: state => () => {
     // 返回slice后的nodes和links
     // console.log(this);
-    let removedNodes = [];
-    let slicedNodes = state.data.visualData.nodes.filter(d => {
+    const removedNodes = [];
+    const slicedNodes = state.data.visualData.nodes.filter(d => {
       if (d.selected) return true;
       else {
         removedNodes.push(d);
         return false;
       }
     });
-    let slicedLinks = state.data.visualData.links.filter(d =>
+    const slicedLinks = state.data.visualData.links.filter(d =>
       removedNodes.every(rd => {
-        let id = rd.id ? "id" : "name";
+        const id = rd.id ? "id" : "name";
         return rd[id] !== d.source[id] && rd[id] !== d.target[id];
       })
     );
@@ -141,13 +142,13 @@ const getters = {
   },
   layoutRange: () => (data, args) => {
     // args 上右下左的属性field
-    let dict = [];
-    for (let i in args) {
+    const dict = [];
+    for (const i in args) {
       dict[+i] = data[0][args[+i]];
     }
 
-    for (let d of data.slice(1)) {
-      for (let i in args) {
+    for (const d of data.slice(1)) {
+      for (const i in args) {
         switch (i) {
           case "0": // 上
           case 0:
@@ -190,7 +191,7 @@ const getters = {
   // },
   beforeEvent: (state, getters) => (operation, vueComponent) => {
     // vueComponent为调用此函数的组件实例
-    let args = {
+    const args = {
       index: state.analyze.recordset.length,
       data: state.data.visualData,
       deepClone: true,
@@ -205,7 +206,7 @@ const getters = {
     state.data.visualData.uuid = state.view.currentUUID;
   },
   afterEvent: (state, getters) => (operation, subjects, vueComponent) => {
-    let args = {
+    const args = {
       index: state.analyze.recordset.length - 1,
       visualData: state.analyze.recordset[state.analyze.recordset.length - 2].data,
       subjects: subjects,

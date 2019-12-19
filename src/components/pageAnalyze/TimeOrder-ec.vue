@@ -89,7 +89,7 @@ export default {
           },
           tooltip: {
             formatter: function(obj) {
-              let data = obj.data;
+              const data = obj.data;
               return (
                 '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">' +
                 obj.seriesName +

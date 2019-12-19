@@ -11,7 +11,13 @@
         </filter>
       </defs>
       <g>
-        <rect
+        <circle
+          :cx="currentNode.x0"
+          :cy="(currentNode.y0+currentNode.y1)/2"
+          :r="markCircleR"
+          :style="{fill:'none',strokeWidth:'10',stroke:'#1890ff'}"
+        />
+        <!-- <rect
           :x="currentNode.x0"
           :y="currentNode.y0"
           :width="currentNode.x1-currentNode.x0"
@@ -19,25 +25,36 @@
           fill="none"
           stroke-width="8"
           stroke="#1890ff"
-        />
+        />-->
         <g class="nodes" stroke="#000">
-          <g v-for="node in nodes" @click="updateTooltip(node.data)" :key="node.uuid">
-            <g
-              v-if="node.data.marked"
-              :transform="`translate(${(node.x0+node.x1)/2},${node.y0-20})`"
-            >
+          <!-- g用来包裹node，transform从桑吉图node.x0开始 -->
+          <g
+            v-for="node in nodes"
+            @click="updateTooltip(node.data)"
+            :transform="`translate(${node.x0},${0})`"
+            :key="node.uuid"
+          >
+            <g v-if="node.data.marked" :transform="`translate(${0},${(node.y0+node.y1)/2})`">
               <path :d="markedSymbol('star',180)" stroke="#1890ff" stroke-width="2" />
             </g>
-            <rect
+            <g :transform="`translate(${-markCircleR},${(node.y0+node.y1)/2-markCircleR})`">
+              <ChartPie
+                :nodes="createPieData(node)"
+                :radius="markCircleR"
+                :valueFn="d=>d.nodesNum"
+              />
+            </g>
+            <!-- <rect
               v-for="rect in createMultipleColorRects(node)"
               :fill="colorPalette[rect.group]"
               :x="node.x0"
               :y="rect.y"
               :width="node.x1 - node.x0"
               :height="rect.height"
+              s
               :key="rect.group"
-            />
-            <title>{{node.uuid}}{{"\n"}}{{node.value}}</title>
+            />-->
+            <!-- <title>{{node.uuid}}{{"\n"}}{{node.value}}</title> -->
           </g>
         </g>
         <g class="links" fill="none">
@@ -50,7 +67,9 @@
               stroke-opacity="0.5"
             />
             <title>{{link.operation}}</title>
-            <g :transform="`translate(${link.x1+(link.x1>link.x0?-15:15)},${link.y1})`">
+            <g
+              :transform="`translate(${link.x1+(link.x1>link.x0?-15-markCircleR:20)},${link.y1})`"
+            >
               <path
                 :d="markedSymbol('triangle',180)"
                 :stroke="pathColor(link.operation)"
@@ -81,14 +100,20 @@
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import * as d3Sankey from "d3-sankey";
+import ChartPie from "@/components/commonUse/ChartPie.vue";
 
 export default {
   name: "DataFlow",
+  components: {
+    ChartPie
+  },
   data() {
     return {
       link: d3.selectAll(),
       node: d3.selectAll(),
+      nodeWidth: 45,
       linkWidth: 8,
+      markCircleR: 50,
       vis: d3.selectAll(),
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
@@ -119,7 +144,7 @@ export default {
       return this.sankey(this.recordFlow);
     },
     nodes() {
-      let nodes = this.graph.nodes;
+      const nodes = this.graph.nodes;
       nodes.forEach(node => {
         node.sourceLinks = [];
         node.targetLinks = [];
@@ -130,18 +155,18 @@ export default {
       // 先在nodes增加in和out的links，
       // 再根据node上links的数量设计y0(at source node),y1(at target node)
 
-      let links = [];
+      const links = [];
       // sourceLinks: [] outgoing links
       // targetLinks: []  incoming links
-      let recordNodes = [...this.recordset, this.currentNode];
-      let nodesDict = {};
+      const recordNodes = [...this.recordset, this.currentNode];
+      const nodesDict = {};
       this.nodes.forEach(node => {
         nodesDict[node.uuid] = node;
       });
 
       for (let i = 1; i < recordNodes.length; i++) {
         // links
-        let link = {
+        const link = {
           index: i - 1,
           // uuid: recordNodes[i - 1].uuid,
           operation: recordNodes[i - 1].operation,
@@ -153,27 +178,35 @@ export default {
           x1: 0,
           y1: 0
         };
-        let isLeft2Right = link.target.x0 > link.source.x0;
+
+        // 判断路径方向
+        const isLeft2Right = link.target.x0 > link.source.x0;
         link.x0 = isLeft2Right ? link.source.x1 : link.source.x0;
         link.x1 = isLeft2Right ? link.target.x0 : link.target.x1;
         links.push(link);
+
         // nodes
         nodesDict[recordNodes[i - 1].uuid].sourceLinks.push(link);
         nodesDict[recordNodes[i].uuid].targetLinks.push(link);
       }
 
       this.nodes.forEach(node => {
-        let height = node.y1 - node.y0;
-        let sourceLinks = node.sourceLinks;
+        // const height = node.y1 - node.y0;
+        const height = 2 * this.markCircleR;
+        const sourceLinks = node.sourceLinks;
         for (let i = 0; i < sourceLinks.length; i++) {
+          const y0 = (node.y0 + node.y1) / 2 - this.markCircleR;
+          // const y0 = node.y0;
           sourceLinks[i].y0 =
-            node.y0 + (height * (i + 1)) / (sourceLinks.length + 1);
+            y0 + (height * (i + 1)) / (sourceLinks.length + 1);
         }
 
-        let targetLinks = node.targetLinks;
+        const targetLinks = node.targetLinks;
         for (let i = 0; i < targetLinks.length; i++) {
+          const y0 = (node.y0 + node.y1) / 2 - this.markCircleR;
+          // const y0 = node.y0;
           targetLinks[i].y1 =
-            node.y0 + (height * (i + 1)) / (targetLinks.length + 1);
+            y0 + (height * (i + 1)) / (targetLinks.length + 1);
         }
       });
       return links;
@@ -187,7 +220,7 @@ export default {
       .sankey()
       .nodeAlign(d3Sankey["sankeyLeft"])
       .nodeId(d => d.uuid)
-      .nodeWidth(45)
+      .nodeWidth(this.nodeWidth)
       .nodePadding(60)
       .extent([[1, 5], [this.width - 1, this.height - 5]]);
   },
@@ -195,7 +228,7 @@ export default {
     console.log("DataFlow", this);
     // console.log("d3Sankey", d3Sankey);
     // console.log(d3);
-    let svg = d3
+    const svg = d3
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.width, this.height]);
@@ -207,7 +240,7 @@ export default {
           .zoom()
           .extent([[0, 0], [this.width, this.height]])
           .on("zoom", () => {
-            let transform = d3.event.transform;
+            const transform = d3.event.transform;
             this.vis.attr("transform", transform);
           })
       )
@@ -222,7 +255,7 @@ export default {
   },
   methods: {
     update() {
-      let that = this;
+      const that = this;
       console.log("recordFlow:", this.recordFlow);
       // this.$store.state.formattedDataFlow();
       // let { nodes, links } = this.sankey(this.recordFlow);
@@ -284,28 +317,25 @@ export default {
       // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
     generatePath(d) {
-      let isLeft2Right = d.target.x0 > d.source.x0;
-      let offset = 21.87;
+      const isLeft2Right = d.target.x0 > d.source.x0;
+      const offset = 21.87;
       return isLeft2Right
         ? d3
             .linkHorizontal()
-            .source(() => [d.x0, d.y0])
-            .target(() => [d.x1 - offset, d.y1])()
+            .source(() => [d.source.x0 + this.markCircleR, d.y0])
+            .target(() => [d.target.x0 - this.markCircleR - offset, d.y1])()
         : d3
             .linkHorizontal()
-            .source(() => [d.x0, d.y0])
-            .target(() => [d.x1 + offset, d.y1])();
+            .source(() => [d.source.x0 - this.markCircleR, d.y0])
+            .target(() => [d.target.x0 + this.markCircleR + offset, d.y1])();
     },
     pathColor(op) {
       return this.colorPalette2[this.operationTypes.indexOf(op)];
     },
-    createMultipleColorRects(d) {
+    createPieData(d) {
       // 在<g>元素之内添加多颜色矩形
-      let height = d.y1 - d.y0;
-      let width = d.x1 - d.x0;
-      let nodes = d.data.nodes;
-      let totalNum = nodes.length;
-      let eachGroupNum = {};
+      const nodes = d.data.nodes;
+      const eachGroupNum = {};
       nodes.forEach(node => {
         if (!node.group) {
           // group 为0，或undefined
@@ -319,11 +349,40 @@ export default {
         }
       });
 
-      let rects = [];
-      let groups = Object.keys(eachGroupNum).sort();
+      const rects = [];
+      const groups = Object.keys(eachGroupNum).sort();
+      groups.forEach(group => {
+        rects.push({
+          group: group,
+          nodesNum: eachGroupNum[group]
+        });
+      });
+      return rects;
+    },
+    createMultipleColorRects(d) {
+      // 在<g>元素之内添加多颜色矩形
+      const height = d.y1 - d.y0;
+      const nodes = d.data.nodes;
+      const totalNum = nodes.length;
+      const eachGroupNum = {};
+      nodes.forEach(node => {
+        if (!node.group) {
+          // group 为0，或undefined
+          eachGroupNum["0"] === undefined
+            ? (eachGroupNum["0"] = 1)
+            : eachGroupNum["0"]++;
+        } else {
+          eachGroupNum[node.group + ""] === undefined
+            ? (eachGroupNum[node.group + ""] = 1)
+            : eachGroupNum[node.group + ""]++;
+        }
+      });
+
+      const rects = [];
+      const groups = Object.keys(eachGroupNum).sort();
       let preDy = 0;
       groups.forEach(group => {
-        let h = (height * eachGroupNum[group]) / totalNum;
+        const h = (height * eachGroupNum[group]) / totalNum;
         rects.push({
           group: group,
           nodesNum: eachGroupNum[group],
@@ -337,11 +396,11 @@ export default {
 
     createMultipleColorsRect__(d, i, p) {
       // 在<g>元素之内添加多颜色矩形
-      let height = d.y1 - d.y0;
-      let width = d.x1 - d.x0;
-      let nodes = d.data.nodes;
-      let totalNum = d.data.nodes.length;
-      let eachGroupNum = {};
+      const height = d.y1 - d.y0;
+      const width = d.x1 - d.x0;
+      const nodes = d.data.nodes;
+      const totalNum = d.data.nodes.length;
+      const eachGroupNum = {};
       nodes.forEach(node => {
         if (!node.group) {
           eachGroupNum["0"] === undefined
@@ -353,11 +412,11 @@ export default {
             : eachGroupNum[node.group + ""]++;
         }
       });
-      let groups = Object.keys(eachGroupNum).sort();
-      let g = d3.select(p[i]);
+      const groups = Object.keys(eachGroupNum).sort();
+      const g = d3.select(p[i]);
       let preDy = 0; // 偏移量
       groups.forEach(group => {
-        let h = (height * eachGroupNum[group]) / totalNum;
+        const h = (height * eachGroupNum[group]) / totalNum;
         g.append("rect")
           .attr("fill", this.colorPalette[group])
           .attr("x", d.x0)
@@ -378,21 +437,21 @@ export default {
       // this.link.selectAll("path").remove();
       this.link.each((d, i, p) => {
         // console.log(d);
-        let operations = d.operations.map(d => d.action);
-        let op_num = operations.length;
+        const operations = d.operations.map(d => d.action);
+        const op_num = operations.length;
         if (!op_num) return;
         d3.select(p[i])
           .select("path")
           .remove();
-        let left = [d.source.x1, (d.source.y0 + d.source.y1) / 2];
-        let right = [d.target.x0, d.y1];
-        let padding = [
+        const left = [d.source.x1, (d.source.y0 + d.source.y1) / 2];
+        const right = [d.target.x0, d.y1];
+        const padding = [
           (right[0] - left[0]) / (op_num + 1),
           (right[1] - left[1]) / (op_num + 1)
         ];
 
-        let links = new Array(op_num + 1).fill({});
-        let op_link = d3
+        const links = new Array(op_num + 1).fill({});
+        const op_link = d3
           .select(p[i])
           .selectAll("path")
           .data(links)
@@ -409,7 +468,7 @@ export default {
           .attr("stroke", "#aaa")
           .attr("stroke-width", 5);
         console.log(op_link);
-        let op_node = d3
+        const op_node = d3
           .select(p[i])
           .attr("class", "linkLink")
           .selectAll("circle")

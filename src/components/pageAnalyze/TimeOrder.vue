@@ -96,7 +96,7 @@ export default {
       .position("time*action")
       .color("action")
       .size("nodes", nodes => {
-        let size = Math.sqrt(nodes.length);
+        const size = Math.sqrt(nodes.length);
         return size > 4.5 ? size : 4.5;
       })
       .opacity(0.8)
@@ -200,7 +200,7 @@ export default {
           values: [false, true]
         }
       };
-      let ops = this.operations.forEach(d => {
+      const ops = this.operations.forEach(d => {
         switch (d.action) {
           case "drag":
           case "mouseover":
@@ -223,7 +223,7 @@ export default {
         .position("time*isChangeSource")
         .color("action")
         .size("nodes", nodes => {
-          let size = Math.sqrt(nodes.length);
+          const size = Math.sqrt(nodes.length);
           return size > 4.5 ? size : 4.5;
         })
         .opacity(0.8)
@@ -239,7 +239,7 @@ export default {
       this.chart.render();
     },
     yAxis2() {
-      let ops = this.operations.forEach(d => {
+      const ops = this.operations.forEach(d => {
         d.nodesNum = d.nodes.length;
       });
       this.view.changeData(ops);

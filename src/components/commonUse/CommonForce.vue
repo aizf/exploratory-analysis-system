@@ -56,12 +56,12 @@ export default {
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
-    let that = this;
-    let svg = d3
+    const that = this;
+    const svg = d3
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.width, this.height]);
-    let width = this.width,
+    const width = this.width,
       height = this.height;
     // console.log(svg);
 
@@ -89,14 +89,14 @@ export default {
     this.update();
 
     function zoomed() {
-      let transform = d3.event.transform;
+      const transform = d3.event.transform;
       that.vis.attr("transform", transform);
     }
     function zoomEnd() {
-      let transform = d3.event.transform;
-      let extentStart = transform.invert([0, 0]); // 视口的开始坐标
-      let extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
-      let t = that.node.filter(d => {
+      const transform = d3.event.transform;
+      const extentStart = transform.invert([0, 0]); // 视口的开始坐标
+      const extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
+      const t = that.node.filter(d => {
         return (
           extentStart[0] <= d.x &&
           extentStart[1] <= d.y &&
@@ -124,7 +124,7 @@ export default {
         return;
       }
       // 更新数据
-      let color = d => {
+      const color = d => {
         return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
       };
       // debugger;
@@ -138,7 +138,7 @@ export default {
         .data(this.nodes)
         .join("circle")
         .attr("r", d => {
-          let size = Math.sqrt(d.size) / 10;
+          const size = Math.sqrt(d.size) / 10;
           return size > 4.5 ? size : 4.5;
         })
         .attr("class", "display")

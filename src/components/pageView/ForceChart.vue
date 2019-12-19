@@ -152,7 +152,7 @@ export default {
       visualData: state => state.data.visualData,
       datasets: state => state.data.datasets,
 
-      chartWidth: state => state.view.dpiX * 0.7,
+      chartWidth: state => state.view.dpiX * 0.6,
       chartHeight: state => state.view.dpiY * 0.7,
       colorPalette: state => state.view.colorPalette,
       backgroundColor: state => state.view.backgroundColor,

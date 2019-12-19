@@ -132,10 +132,10 @@ export default {
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
-    let that = this;
+    const that = this;
     console.log(this);
     console.log(d3);
-    let svg = d3
+    const svg = d3
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.chartWidth, this.chartHeight]);
@@ -202,7 +202,7 @@ export default {
 
     function zoomed() {
       if (!that.visZoom) return;
-      let transform = d3.event.transform.translate(
+      const transform = d3.event.transform.translate(
         that.axisMargin,
         that.axisMargin
       );
@@ -210,13 +210,13 @@ export default {
     }
     function zoomEnd() {
       if (!that.visZoom) return;
-      let transform = d3.event.transform.translate(
+      const transform = d3.event.transform.translate(
         that.axisMargin,
         that.axisMargin
       );
-      let extentStart = transform.invert([0, 0]); // 视口的开始坐标
-      let extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
-      let t = that.node.filter(d => {
+      const extentStart = transform.invert([0, 0]); // 视口的开始坐标
+      const extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
+      const t = that.node.filter(d => {
         return (
           extentStart[0] <= d.xx &&
           extentStart[1] <= d.yy &&
@@ -227,7 +227,7 @@ export default {
       t.each(d => {
         d.attentionTimes += 1;
       });
-      let operation = {
+      const operation = {
         action: "zoom",
         nodes: t.nodes(),
         time: new Date()
@@ -248,11 +248,11 @@ export default {
   methods: {
     update() {
       // 更新数据
-      let that = this;
-      let color = d => {
+      const that = this;
+      const color = d => {
         return d.group ? this.colorPalette[d.group] : this.colorPalette[8];
       };
-      let xTicksNum = this.xDimensionData.length || 0;
+      const xTicksNum = this.xDimensionData.length || 0;
       this.xScale = d3
         .scaleOrdinal()
         .domain(this.xDimensionData)
@@ -265,7 +265,7 @@ export default {
       // let xAxisCreator = g => g.call(d3.axisTop(x));
       this.xAxis.call(d3.axisTop(this.xScale));
 
-      let yTicksNum = this.yDimensionData.length || 0;
+      const yTicksNum = this.yDimensionData.length || 0;
       this.yScale = d3
         .scaleOrdinal()
         .domain(this.yDimensionData)
@@ -333,7 +333,7 @@ export default {
       this.node.on("click", this.clickSelect);
       this.node.on("mouseover", this.mouseover);
       this.node.on("mouseout", this.mouseout);
-      let node = this.node;
+      const node = this.node;
 
       // this.text.call(
       //   d3
@@ -348,28 +348,28 @@ export default {
 
       function textEvent2Node(d) {
         // 将text接受的事件分发给node
-        let theIndex = d.index;
-        let theNode = node.filter(d => d.index === theIndex);
+        const theIndex = d.index;
+        const theNode = node.filter(d => d.index === theIndex);
         theNode.dispatch(d3.event.type);
         // console.log(d3.event.type);
       }
     },
     brushed() {
       if (d3.event.selection === null) return;
-      let transform = this.visTransform().translate(
+      const transform = this.visTransform().translate(
         this.axisMargin,
         this.axisMargin
       );
-      let extent = d3.event.selection; // brush的一个事件
-      let extentStart = transform.invert(extent[0]); // brush的开始坐标
-      let extentEnd = transform.invert(extent[1]); // brush的结束坐标
+      const extent = d3.event.selection; // brush的一个事件
+      const extentStart = transform.invert(extent[0]); // brush的开始坐标
+      const extentEnd = transform.invert(extent[1]); // brush的结束坐标
       // console.log(extent);
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
       if (d3.event.type === "start") {
       }
 
-      let className = this.visBrush ? "brushing" : "invertBrushing";
+      const className = this.visBrush ? "brushing" : "invertBrushing";
       this.node.classed(className, d => {
         return (
           extentStart[0] <= d.xx &&
@@ -392,7 +392,7 @@ export default {
       this.brushedNodes.each(d => {
         d.attentionTimes += 1;
       });
-      let operation = {
+      const operation = {
         action: "brush",
         nodes: this.brushedNodes.nodes(),
         time: new Date()
@@ -409,7 +409,7 @@ export default {
         .each(d => {
           d.selected = false;
         });
-      let operation = {
+      const operation = {
         action: "invertBrush",
         nodes: this.invertBrushedNodes.nodes(),
         time: new Date()
@@ -446,8 +446,8 @@ export default {
       if (!this.visDrag) return;
       if (this.isDraging) {
         d.attentionTimes += 1;
-        let t = d3.select(p[i]);
-        let operation = {
+        const t = d3.select(p[i]);
+        const operation = {
           action: "drag",
           nodes: t.nodes(),
           time: new Date()
@@ -460,7 +460,7 @@ export default {
     },
     clickSelect(d, i, p) {
       if (this.visClick) {
-        let t = d3.select(p[i]);
+        const t = d3.select(p[i]);
         if (t.classed("selected")) {
           t.classed("selected", false);
           d.selected = false;
@@ -468,7 +468,7 @@ export default {
           t.classed("selected", true);
           d.selected = true;
           d.attentionTimes += 1;
-          let operation = {
+          const operation = {
             action: "click",
             nodes: t.nodes(),
             time: new Date()
@@ -485,7 +485,7 @@ export default {
       // let opacityNodes = null;
       let displayLinks = null;
       // let opacityLinks = null;
-      let thisId = d.id;
+      const thisId = d.id;
       // console.log(thisId);
       this.opacityLinks = this.link.filter(d => {
         return d.source.id !== thisId && d.target.id !== thisId;
@@ -495,8 +495,8 @@ export default {
       });
       this.opacityNodes = this.node.filter(d => {
         // console.log("d",d);
-        let displayLinksData = displayLinks.data();
-        for (let i in displayLinksData) {
+        const displayLinksData = displayLinks.data();
+        for (const i in displayLinksData) {
           // console.log(i);
           if (
             d.id === displayLinksData[i].source.id ||
@@ -508,8 +508,8 @@ export default {
         return true;
       });
       displayNodes = this.node.filter(d => {
-        let displayLinksData = displayLinks.data();
-        for (let i in displayLinksData) {
+        const displayLinksData = displayLinks.data();
+        for (const i in displayLinksData) {
           // console.log(i);
           if (
             d.id === displayLinksData[i].source.id ||
@@ -521,7 +521,7 @@ export default {
         return false;
       });
 
-      let opacityIndex = this.opacityNodes.data().map(val => val.index);
+      const opacityIndex = this.opacityNodes.data().map(val => val.index);
       // console.log(opacityIndex);
       this.opacityTexts = this.text.filter(
         d => opacityIndex.find(val => val === d.index) !== undefined //!==undefined 防止返回0误认为false
@@ -536,7 +536,7 @@ export default {
       this.opacityTexts.transition().style("fill-opacity", 0);
       if (!this.isDraging) {
         d.attentionTimes += 1;
-        let operation = {
+        const operation = {
           action: "mouseover",
           nodes: displayNodes.nodes(),
           time: new Date()

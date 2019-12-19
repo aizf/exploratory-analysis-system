@@ -122,9 +122,9 @@ export default {
   },
   methods: {
     loadData(event) {
-      let that = this;
-      let dataset = this.datasets[event.key];
-      let datasetPath = "./static/" + dataset.fileName;
+      const that = this;
+      const dataset = this.datasets[event.key];
+      const datasetPath = "./static/" + dataset.fileName;
       if (event.key === this.selectedDataset) return;
       store.commit("changeSelectedDataset", event.key);
       let visualData;

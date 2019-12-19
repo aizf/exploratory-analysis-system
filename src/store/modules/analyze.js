@@ -47,18 +47,18 @@ const analyze = {
                 }
                 dataDeepClone(oldData) {
                     // 深拷贝数据集，格式data={nodes:[],links:[]}
-                    let oldNodes = oldData.nodes;
-                    let oldLinks = oldData.links;
-                    let newNodes = [];
-                    let newLinks = [];
-                    let tempDict = {};  // 查找字典
-                    for (let oldNode of oldNodes) {
-                        let newNode = Object.assign({}, oldNode);
+                    const oldNodes = oldData.nodes;
+                    const oldLinks = oldData.links;
+                    const newNodes = [];
+                    const newLinks = [];
+                    const tempDict = {};  // 查找字典
+                    for (const oldNode of oldNodes) {
+                        const newNode = Object.assign({}, oldNode);
                         newNodes.push(newNode);
                         tempDict[newNode.id] = newNode;
                     }
-                    for (let oldLink of oldLinks) {
-                        let newLink = Object.assign({}, oldLink);
+                    for (const oldLink of oldLinks) {
+                        const newLink = Object.assign({}, oldLink);
                         // 更改 source 和 target 指向的 node
                         newLink.source = tempDict[newLink.source.id];
                         newLink.target = tempDict[newLink.target.id];
@@ -78,7 +78,7 @@ const analyze = {
     mutations: {
         addRecordData: (state, args) => {
             // args 格式: [data, uuid, operation,time]
-            let d = state.recordData(args);
+            const d = state.recordData(args);
             state.recordset.push(d);
             if (args.operation === "undo") {
                 state.redoList.push(d);
@@ -93,7 +93,7 @@ const analyze = {
         },
         addOperation: (state, data) => {
             state.operations.push(data);
-            // let data = { chart: "", time: "", action: "", nodes: {} };
+            // const data = { chart: "", time: "", action: "", nodes: {} };
         },
         addOperation_: (state, data) => {
             state.operations_.push({

@@ -75,12 +75,12 @@ export default {
     console.log("StaticForce", this);
     // console.log(d3);
     // console.log(_.VERSION);
-    let that = this;
-    let svg = d3
+    const that = this;
+    const svg = d3
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.width, this.height]);
-    let width = this.width,
+    const width = this.width,
       height = this.height;
     // console.log(svg);
 
@@ -91,7 +91,7 @@ export default {
     this.nodeG = this.vis.select("g.nodes");
 
     function zoomed() {
-      let transform = d3.event.transform;
+      const transform = d3.event.transform;
       // console.log(d3.event.transform === that.visTransform());
       that.vis.attr("transform", transform);
     }
@@ -157,21 +157,21 @@ export default {
       // this.vis.attr("transform", t);
     },
     adjustTransform() {
-      let layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
+      const layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
       // console.log(layoutRange);
-      let t = this.visTransform();
+      const t = this.visTransform();
       // t 存储在svg的__zoom中，更改t的属性，不能更换对象
-      let vw = layoutRange[1] - layoutRange[3]; // vis的宽
-      let vh = layoutRange[2] - layoutRange[0]; // vis的高
-      let k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
+      const vw = layoutRange[1] - layoutRange[3]; // vis的宽
+      const vh = layoutRange[2] - layoutRange[0]; // vis的高
+      const k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
 
       // 计算svg中心坐标和vis中心坐标
-      let svgP = [this.width / 2, this.height / 2];
-      let visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
+      const svgP = [this.width / 2, this.height / 2];
+      const visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
 
       // Xvis*k + x = Xsvg
-      let x = svgP[0] - visP[0] * k;
-      let y = svgP[1] - visP[1] * k;
+      const x = svgP[0] - visP[0] * k;
+      const y = svgP[1] - visP[1] * k;
 
       t.x = x;
       t.y = y;

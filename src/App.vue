@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Test @welcome="testFn" />
     <a-layout id="app-layout" style="min-height: 100vh">
       <a-layout-header class="header" style="height:50px">
         <div class="logo" />
@@ -30,13 +31,15 @@ import { mapState } from "vuex";
 import PageData from "@/components/PageData.vue";
 import PageView from "@/components/PageView.vue";
 import PageAnalyze from "@/components/PageAnalyze.vue";
+import Test from "@/components/Test.vue";
 
 export default {
   name: "app",
   components: {
     PageData,
     PageView,
-    PageAnalyze
+    PageAnalyze,
+    Test
   },
   data() {
     return {
@@ -44,7 +47,11 @@ export default {
       t: { a: 1, b: 2 }
     };
   },
-  methods: {},
+  methods: {
+    testFn() {
+      alert("123");
+    }
+  },
   computed: {
     ...mapState({
       selectedDataset: state => state.data.selectedDataset

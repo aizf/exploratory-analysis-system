@@ -35,14 +35,14 @@ export default {
 
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
-      let nodes = this.simulation.nodes(),
+      const nodes = this.simulation.nodes(),
         links = this.simulation.force("link").links();
-      let n = nodes.length,
+      const n = nodes.length,
         m = links.length;
       // console.log(n, m);
-      let degree = new Array(n);
+      const degree = new Array(n);
       // links包含source，target，nodes没有
-      for (let link of links) {
+      for (const link of links) {
         // console.log(link);
         degree[link.source.index] = (degree[link.source.index] || 0) + 1;
         degree[link.target.index] = (degree[link.target.index] || 0) + 1;
@@ -70,8 +70,8 @@ export default {
     },
     data() {
       return this.nodes.map((node, i) => {
-        let datum = { key: i };
-        for (let field of this.nodeFields) {
+        const datum = { key: i };
+        for (const field of this.nodeFields) {
           datum[field] =
             node[field] === undefined || node[field] === null
               ? "-"
@@ -90,18 +90,7 @@ export default {
 
   deactivated() {},
 
-  methods: {
-    update() {
-      // 更新数据
-      let color = d => {
-        return d.group ? this.colorPalette[d.group] : this.colorPalette[3]; // FIXME 指定group
-      };
-      // this.load(nodeData, linkData);
-    },
-    test() {
-      this.update();
-    }
-  },
+  methods: {},
   watch: {
     needUpdate: function(val) {
       if (val) {

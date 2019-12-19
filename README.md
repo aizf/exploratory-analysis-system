@@ -89,3 +89,5 @@ recordset中重复的nodes    done
 3.dataflow方框变pie图
 4.加社交网络dataset
 5.view能够分析出信息
+
+issue: undo 再操作，两个会同时marked
