@@ -13,7 +13,7 @@ const analyze = {
         // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
         undoList: [], // index: 0,1,2,3,4
         redoList: [], // index: 5,6,7,...
-        
+
         // PageAnalyze.DataFlow
         pageAnalyzeTooltipData: {
             "nodes": [],
@@ -67,7 +67,7 @@ const analyze = {
                     return {
                         nodes: newNodes,
                         links: newLinks,
-                        uuid: oldData.uuid,
+                        uuid: this.uuid,
                         marked: oldData.marked
                     }
                 }
@@ -81,7 +81,7 @@ const analyze = {
             const d = state.recordData(args);
             state.recordset.push(d);
             if (args.operation === "undo") {
-                state.redoList.push(d);
+                state.redoList.unshift(d);
             }
             else {
                 state.undoList.push(d);

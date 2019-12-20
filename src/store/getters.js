@@ -204,7 +204,6 @@ const getters = {
     state.data.visualData.marked = false;
     vueComponent.$store.commit("updateParentUUID", state.view.currentUUID);
     vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
-    state.data.visualData.uuid = state.view.currentUUID;
   },
   afterEvent: (state, getters) => (operation, subjects, vueComponent) => {
     const args = {
