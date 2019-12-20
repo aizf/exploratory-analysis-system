@@ -583,7 +583,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scope>
 .DataFlow line {
 }
 
@@ -591,13 +591,11 @@ export default {
   pointer-events: all;
   stroke: none;
 }
-
 .DataFlow circle.selected {
   /* fill: red; */
   stroke: red;
   stroke-width: 1.5;
 }
-
 .DataFlow circle.brushing {
   /* fill: red; */
   stroke: red;

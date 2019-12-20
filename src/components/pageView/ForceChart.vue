@@ -11,6 +11,17 @@
             <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
           </filter>
         </defs>
+        <text
+          :x="0"
+          :y="0"
+          dx="0.5em"
+          dy="1.5em"
+          :fill="contrastColor"
+          text-anchor="start"
+          font-family="Avenir"
+          font-size="10"
+          style="user-select: none;"
+        >{{currentUUID}}</text>
         <g>
           <g class="links">
             <line
@@ -156,6 +167,7 @@ export default {
       chartHeight: state => state.view.dpiY * 0.7,
       colorPalette: state => state.view.colorPalette,
       backgroundColor: state => state.view.backgroundColor,
+      contrastColor: state => state.view.contrastColor,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
       needUpdate: state => state.view.chartsNeedUpdate.force,
@@ -713,7 +725,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scope>
 .ForceChart line {
   stroke: #aaa;
   stroke-opacity: 0.8;
@@ -723,40 +735,33 @@ export default {
 .ForceChart circle {
   pointer-events: all;
   stroke: none;
-  /*描边*/
-  /* fill-opacity: 0.85; */
-  /* filter:drop-shadow(-25px 25px 25px rgba(0, 243, 53, 0.7)); */
 }
-
 .ForceChart circle.display {
   /**/
 }
-
 .ForceChart circle.selected {
   /* fill: red; */
   stroke: red;
   stroke-width: 0.8;
 }
-
 .ForceChart circle.brushing {
   /* fill: red; */
   stroke: red;
   stroke-width: 0.8;
 }
-
 .ForceChart circle.invertBrushing {
   stroke: none;
   stroke-width: 0px;
 }
 
-circle.mouseover_opacity {
+.ForceChart circle.mouseover_opacity {
   fill-opacity: 0.2;
   stroke-opacity: 0.2;
 }
-line.mouseover_opacity {
+.ForceChart line.mouseover_opacity {
   stroke-opacity: 0;
 }
-text.mouseover_opacity {
+.ForceChart text.mouseover_opacity {
   fill-opacity: 0;
 }
 
