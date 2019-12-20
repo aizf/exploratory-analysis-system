@@ -230,12 +230,13 @@ const getters = {
     const distance = new Array(rows);
     for (let i = 0; i < rows; i++) {
       distance[i] = { value: Infinity, path: [] };
+      // value为路径长度，path路径
     }
-    const book = [];
+    // const book = [];
     distance[start].value = 0;
 
     for (let i = 0; i < rows; i++) {
-      book.push(i);
+      // book.push(i);
       // 达到不了的顶点不能作为中转跳点
       if (distance[i].value < Infinity) {
         for (let j = 0; j < cols; j++) {

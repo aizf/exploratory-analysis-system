@@ -75,7 +75,7 @@
                 :stroke="pathColor(link.operation)"
                 stroke-width="2"
                 :fill="pathColor(link.operation)"
-                opacity="0.5"
+                :opacity="link.isShortestPath ? 0.7 : 0.2"
                 :transform="`rotate(${link.x1>link.x0?-30:30})`"
               />
             </g>
@@ -234,7 +234,9 @@ export default {
       // debugger
       const currentNodeIndex = uuidArr.indexOf(this.currentNode.uuid);
       const pathIndex = [...distances[currentNodeIndex].path, currentNodeIndex];
+      // pathUuid:最短路径上的节点
       const pathUuid = pathIndex.map(d => uuidArr[d]);
+      // 将关键路径的isShortestPath设置为true
       for (let i = 1; i < pathUuid.length; i++) {
         const objLink = nodesDict[pathUuid[i - 1]].sourceLinks.find(
           link => link.target.uuid === pathUuid[i]
