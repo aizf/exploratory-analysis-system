@@ -64,7 +64,7 @@
               :d="generatePath(link)"
               :stroke="pathColor(link.operation)"
               :stroke-width="link.width"
-              stroke-opacity="0.5"
+              :stroke-opacity="link.isShortestPath ? 0.7 : 0.2"
             />
             <title>{{link.operation}}</title>
             <g
@@ -138,7 +138,7 @@ export default {
       operations: state => state.analyze.operations,
       recordset: state => state.analyze.recordset
     }),
-    ...mapGetters(["recordFlow","dijkstra"]),
+    ...mapGetters(["recordFlow", "dijkstra"]),
 
     graph() {
       return this.sankey(this.recordFlow);
@@ -170,9 +170,10 @@ export default {
       });
 
       // 计算最短路径
-      const matrix = new Array(this.nodesNum).fill(
-        new Array(this.nodesNum).fill(Infinity)
-      );
+      const matrix = new Array(this.nodesNum);
+      for (let i = 0; i < this.nodesNum; i++) {
+        matrix[i] = new Array(this.nodesNum).fill(Infinity);
+      }
       const uuidArr = this.nodes.map(node => node.uuid);
 
       for (let i = 1; i < recordNodes.length; i++) {
@@ -205,6 +206,7 @@ export default {
         matrix[uuidArr.indexOf(recordNodes[i - 1].uuid)][
           uuidArr.indexOf(recordNodes[i].uuid)
         ] = 1;
+        // debugger;
       }
 
       // 设置link的y0和y1
@@ -228,7 +230,19 @@ export default {
         }
       });
 
-      this.dijkstra(matrix,uuidArr.indexOf("root"))
+      const distances = this.dijkstra(matrix, uuidArr.indexOf("root"));
+      // debugger
+      const currentNodeIndex = uuidArr.indexOf(this.currentNode.uuid);
+      const pathIndex = [...distances[currentNodeIndex].path, currentNodeIndex];
+      const pathUuid = pathIndex.map(d => uuidArr[d]);
+      for (let i = 1; i < pathUuid.length; i++) {
+        const objLink = nodesDict[pathUuid[i - 1]].sourceLinks.find(
+          link => link.target.uuid === pathUuid[i]
+        );
+        objLink.isShortestPath = true;
+      }
+      // console.log(matrix);
+      // console.log(this.dijkstra(matrix, uuidArr.indexOf("root")));
       return links;
     },
     currentNode() {
