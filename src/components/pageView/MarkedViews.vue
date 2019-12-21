@@ -54,22 +54,13 @@ export default {
       "savedViewData",
       "generateUUID",
       "uniqueViews",
-      "markedVisualData"
+      "markedVisualData",
+      "beforeEvent"
     ])
   },
   methods: {
     rollback(d) {
-      const args = {
-        data: this.visualData,
-        deepClone: !this.existingViews.has(this.currentUUID),
-        uuid: this.currentUUID,
-        operation: "rollback",
-        time: new Date()
-      };
-      this.$store.commit("addRecordData", args);
-      this.$store.commit("updateVisualData", d);
-      this.$store.commit("updateParentUUID", this.currentUUID);
-      this.$store.commit("updateCurrentUUID", d.uuid);
+      this.beforeEvent("rollback", this, d);
       console.log("rollback");
     },
     deleteMarked(d) {
@@ -78,7 +69,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scope>
 .MarkedViews .ant-card-grid {
   width: 100%;
   height: 400px;

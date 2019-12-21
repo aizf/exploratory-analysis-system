@@ -354,6 +354,75 @@ export default {
       currentChartKey: "force"
     };
   },
+  computed: {
+    ...mapState({
+      sourceData: state => state.data.sourceData,
+      visualData: state => state.data.visualData,
+      datasets: state => state.data.datasets,
+
+      colorPalette: state => state.view.colorPalette,
+      parentUUID: state => state.view.parentUUID,
+      currentUUID: state => state.view.currentUUID,
+
+      currentOperations: state => state.analyze.currentOperations,
+      undoList: state => state.analyze.undoList,
+      redoList: state => state.analyze.redoList,
+      rollbacked: state => state.analyze.rollbacked
+      //toolbox
+    }),
+    ...mapGetters([
+      "nodes",
+      "links",
+      "viewSlice",
+      "generateUUID",
+      "beforeEvent",
+      "existingViews",
+      "uniqueViews",
+      "markedVisualData"
+    ]),
+
+    marked: {
+      get: function() {
+        return this.uniqueViews.get(this.currentUUID).marked;
+      },
+      set: function(val) {
+        this.uniqueViews.get(this.currentUUID).marked = val;
+      }
+    },
+    currentChart() {
+      switch (this.currentChartKey) {
+        case "scatter":
+          this.changeDisabledState({ drag: true });
+          return "ScatterChart";
+          break;
+        case "force":
+          this.changeDisabledState({ save: false });
+          return "ForceChart";
+          break;
+        case "table":
+          this.changeDisabledState({
+            click: true,
+            drag: true,
+            mouseover: true,
+            brush: true,
+            invertBrush: true,
+            zoom: true,
+            showIds: true
+          });
+          return "NodesTable";
+          break;
+        default:
+          this.changeDisabledState();
+          break;
+      }
+    },
+    undoDisabled() {
+      return !this.undoList.length;
+    },
+    redoDisabled() {
+      return !this.redoList.length;
+    }
+  },
   mounted() {
     console.log("PageView", this);
   },
@@ -434,18 +503,7 @@ export default {
         if (!undo.length) {
           return;
         }
-        const args = {
-          data: this.visualData,
-          deepClone: !this.existingViews.has(this.currentUUID),
-          uuid: this.currentUUID,
-          operation: "undo",
-          time: new Date()
-        };
-        this.$store.commit("addRecordData", args);
-        const record = undo.pop();
-        this.$store.commit("updateVisualData", record.data);
-        this.$store.commit("updateParentUUID", this.currentUUID);
-        this.$store.commit("updateCurrentUUID", record.uuid);
+        this.beforeEvent("undo", this, undo.pop());
         console.info("undo!");
       });
     },
@@ -454,18 +512,7 @@ export default {
         if (!redo.length) {
           return;
         }
-        const args = {
-          data: this.visualData,
-          deepClone: false,
-          uuid: this.currentUUID,
-          operation: "redo",
-          time: new Date()
-        };
-        this.$store.commit("addRecordData", args);
-        const record = redo.shift();
-        this.$store.commit("updateVisualData", record.data);
-        this.$store.commit("updateParentUUID", this.currentUUID);
-        this.$store.commit("updateCurrentUUID", record.uuid);
+        this.beforeEvent("redo", this, redo.shift());
         console.info("redo!");
       });
     },
@@ -514,74 +561,6 @@ export default {
     test1(e) {
       console.log(e);
       console.log(e.target);
-    }
-  },
-  computed: {
-    ...mapState({
-      sourceData: state => state.data.sourceData,
-      visualData: state => state.data.visualData,
-      datasets: state => state.data.datasets,
-
-      colorPalette: state => state.view.colorPalette,
-      parentUUID: state => state.view.parentUUID,
-      currentUUID: state => state.view.currentUUID,
-
-      currentOperations: state => state.analyze.currentOperations,
-      undoList: state => state.analyze.undoList,
-      redoList: state => state.analyze.redoList,
-      rollbacked: state => state.analyze.rollbacked
-      //toolbox
-    }),
-    ...mapGetters([
-      "nodes",
-      "links",
-      "viewSlice",
-      "generateUUID",
-      "beforeEvent",
-      "existingViews",
-      "markedVisualData"
-    ]),
-
-    marked: {
-      get: function() {
-        return this.$store.state.data.visualData.marked;
-      },
-      set: function(val) {
-        this.$store.state.data.visualData.marked = val;
-      }
-    },
-    currentChart() {
-      switch (this.currentChartKey) {
-        case "scatter":
-          this.changeDisabledState({ drag: true });
-          return "ScatterChart";
-          break;
-        case "force":
-          this.changeDisabledState({ save: false });
-          return "ForceChart";
-          break;
-        case "table":
-          this.changeDisabledState({
-            click: true,
-            drag: true,
-            mouseover: true,
-            brush: true,
-            invertBrush: true,
-            zoom: true,
-            showIds: true
-          });
-          return "NodesTable";
-          break;
-        default:
-          this.changeDisabledState();
-          break;
-      }
-    },
-    undoDisabled() {
-      return !this.undoList.length;
-    },
-    redoDisabled() {
-      return !this.redoList.length;
     }
   },
   watch: {

@@ -132,7 +132,6 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
       operationTypes: state => state.view.operationTypes,
-      backOps: state => state.view.backOps,
       currentUUID: state => state.view.currentUUID,
 
       operations: state => state.analyze.operations,

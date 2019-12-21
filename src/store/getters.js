@@ -62,13 +62,13 @@ const getters = {
     return map;
   },
   // analyze
-  recordFlow: state => {
+  recordFlow: (state, getters) => {
     // 返回格式化后的记录流
     // 先增加尾节点
     const rs = [...state.analyze.recordset];
     rs.push(state.analyze.recordData({
       data: state.data.visualData,
-      deepClone: !((rs.map(d => d.data.uuid)).includes(state.view.currentUUID)),
+      deepClone: !getters.existingViews.has(state.view.currentUUID),
       uuid: state.view.currentUUID,
       operation: "current",
       time: new Date(),
@@ -190,20 +190,52 @@ const getters = {
   //   });
   //   return uuid;
   // },
-  beforeEvent: (state, getters) => (operation, vueComponent) => {
+  dataDeepClone: () => (oldData) => {
+    // 深拷贝数据集，格式data={nodes:[],links:[]}
+    const oldNodes = oldData.nodes;
+    const oldLinks = oldData.links;
+    const newNodes = [];
+    const newLinks = [];
+    const tempDict = {};  // 查找字典
+    for (const oldNode of oldNodes) {
+      const newNode = Object.assign({}, oldNode);
+      newNodes.push(newNode);
+      tempDict[newNode.id] = newNode;
+    }
+    for (const oldLink of oldLinks) {
+      const newLink = Object.assign({}, oldLink);
+      // 更改 source 和 target 指向的 node
+      newLink.source = tempDict[newLink.source.id];
+      newLink.target = tempDict[newLink.target.id];
+      newLinks.push(newLink);
+    }
+    return {
+      nodes: newNodes,
+      links: newLinks,
+      marked: oldData.marked
+    }
+  },
+  beforeEvent: (state, getters) => (operation, vueComponent, backData = {}) => {
     // vueComponent为调用此函数的组件实例
+    const backOps = state.view.backOps;
     const args = {
       index: state.analyze.recordset.length,
       data: state.data.visualData,
-      deepClone: true,
+      deepClone: !getters.existingViews.has(state.view.currentUUID),
       uuid: state.view.currentUUID,
       operation: operation,
       time: new Date(),
     };
     vueComponent.$store.commit("addRecordData", args);
-    state.data.visualData.marked = false;
     vueComponent.$store.commit("updateParentUUID", state.view.currentUUID);
-    vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
+
+    if (backOps.includes(operation)) {
+      vueComponent.$store.commit("updateVisualData", getters.dataDeepClone(backData.data));
+      vueComponent.$store.commit("updateCurrentUUID", backData.uuid);
+    } else {
+      state.data.visualData.marked = false;
+      vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
+    }
   },
   afterEvent: (state, getters) => (operation, subjects, vueComponent) => {
     const args = {
