@@ -39,7 +39,6 @@ export default {
 
       operations: state => state.analyze.operations,
       operations_: state => state.analyze.operations_,
-      dataFlow: state => state.analyze.dataFlow
     }),
     ...mapGetters(["nodes", "links", "recordFlow", "generateUUID"])
   },

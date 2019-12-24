@@ -32,7 +32,7 @@
             v-for="node in nodes"
             @click="updateTooltip(node.data)"
             :transform="`translate(${node.x0},${0})`"
-            :key="node.uuid"
+            :key="node.data.uuid"
           >
             <g v-if="node.data.marked" :transform="`translate(${0},${(node.y0+node.y1)/2})`">
               <path :d="markedSymbol('star',180)" stroke="#1890ff" stroke-width="2" />
@@ -88,8 +88,8 @@
             :y="(node.y0+node.y1)/2-markCircleR"
             dx="-0.35em"
             text-anchor="start"
-            :key="node.uuid"
-          >{{node.uuid}}</text>
+            :key="node.data.uuid"
+          >{{node.data.uuid}}</text>
         </g>
       </g>
     </svg>
@@ -165,7 +165,7 @@ export default {
       const recordNodes = [...this.recordset, this.currentNode];
       const nodesDict = {};
       this.nodes.forEach(node => {
-        nodesDict[node.uuid] = node;
+        nodesDict[node.data.uuid] = node;
       });
 
       // 计算最短路径
@@ -173,7 +173,7 @@ export default {
       for (let i = 0; i < this.nodesNum; i++) {
         matrix[i] = new Array(this.nodesNum).fill(Infinity);
       }
-      const uuidArr = this.nodes.map(node => node.uuid);
+      const uuidArr = this.nodes.map(node => node.data.uuid);
 
       for (let i = 1; i < recordNodes.length; i++) {
         // links
@@ -181,8 +181,8 @@ export default {
           index: i - 1,
           // uuid: recordNodes[i - 1].uuid,
           operation: recordNodes[i - 1].operation,
-          source: nodesDict[recordNodes[i - 1].uuid],
-          target: nodesDict[recordNodes[i].uuid],
+          source: nodesDict[recordNodes[i - 1].data.uuid],
+          target: nodesDict[recordNodes[i].data.uuid],
           width: this.linkWidth,
           x0: 0,
           y0: 0,
@@ -198,12 +198,12 @@ export default {
         links.push(link);
 
         // nodes添加sourceLinks和targetLinks
-        nodesDict[recordNodes[i - 1].uuid].sourceLinks.push(link);
-        nodesDict[recordNodes[i].uuid].targetLinks.push(link);
+        nodesDict[recordNodes[i - 1].data.uuid].sourceLinks.push(link);
+        nodesDict[recordNodes[i].data.uuid].targetLinks.push(link);
 
         // 设置路径
-        matrix[uuidArr.indexOf(recordNodes[i - 1].uuid)][
-          uuidArr.indexOf(recordNodes[i].uuid)
+        matrix[uuidArr.indexOf(recordNodes[i - 1].data.uuid)][
+          uuidArr.indexOf(recordNodes[i].data.uuid)
         ] = 1;
         // debugger;
       }
@@ -231,14 +231,18 @@ export default {
 
       const distances = this.dijkstra(matrix, uuidArr.indexOf("root"));
       // debugger
-      const currentNodeIndex = uuidArr.indexOf(this.currentNode.uuid);
+      const currentNodeIndex = uuidArr.indexOf(this.currentNode.data.uuid);
       const pathIndex = [...distances[currentNodeIndex].path, currentNodeIndex];
       // pathUuid:最短路径上的节点
       const pathUuid = pathIndex.map(d => uuidArr[d]);
+      console.log("matrix", matrix);
+      console.log("pathIndex", pathIndex);
+      console.log(`${uuidArr.indexOf("root")} to ${currentNodeIndex}`);
       // 将关键路径的isShortestPath设置为true
       for (let i = 1; i < pathUuid.length; i++) {
+        // pathUuid增加了currentNodeUUID，因此length大于等于1
         const objLink = nodesDict[pathUuid[i - 1]].sourceLinks.find(
-          link => link.target.uuid === pathUuid[i]
+          link => link.target.data.uuid === pathUuid[i]
         );
         objLink.isShortestPath = true;
       }
@@ -247,14 +251,14 @@ export default {
       return links;
     },
     currentNode() {
-      return this.nodes.find(node => node.uuid === this.currentUUID);
+      return this.nodes.find(node => node.data.uuid === this.currentUUID);
     }
   },
   created() {
     this.sankey = d3Sankey
       .sankey()
       .nodeAlign(d3Sankey["sankeyLeft"])
-      .nodeId(d => d.uuid)
+      .nodeId(d => d.data.uuid)
       .nodeWidth(this.nodeWidth)
       .nodePadding(60)
       .extent([[1, 5], [this.width - 1, this.height - 5]]);
@@ -281,9 +285,11 @@ export default {
       )
       .on("dblclick.zoom", null);
 
-    this.nodeG = this.vis.select("g.nodes");
-    this.linkG = this.vis.select("g.links");
-    this.textG = this.vis.select("g.texts");
+    this.$nextTick(function() {
+      this.nodeG = this.vis.select("g.nodes");
+      this.linkG = this.vis.select("g.links");
+      this.textG = this.vis.select("g.texts");
+    });
   },
   activated() {},
   methods: {

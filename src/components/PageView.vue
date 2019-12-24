@@ -235,7 +235,7 @@
                   </a-button>
                 </a-badge>
                 <a-button @click="marked=!marked">
-                  <a-icon type="book" :theme="visualData.marked?'filled':'outlined'" />
+                  <a-icon type="book" :theme="marked?'filled':'outlined'" />
                 </a-button>
               </a-col>
               <a-col :span="2">
@@ -376,17 +376,16 @@ export default {
       "viewSlice",
       "generateUUID",
       "beforeEvent",
-      "existingViews",
-      "uniqueViews",
-      "markedVisualData"
+      "markedVisualData",
+      "tmpExistingViews"
     ]),
 
     marked: {
       get: function() {
-        return this.uniqueViews.get(this.currentUUID).marked;
+        return this.tmpExistingViews[this.currentUUID].marked;
       },
       set: function(val) {
-        this.uniqueViews.get(this.currentUUID).marked = val;
+        this.tmpExistingViews[this.currentUUID].marked = val;
       }
     },
     currentChart() {

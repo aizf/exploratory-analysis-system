@@ -118,7 +118,7 @@ export default {
       datasets: state => state.data.datasets,
       currentUUID: state => state.view.currentUUID
     }),
-    ...mapGetters(["nodes", "generateUUID"])
+    ...mapGetters(["nodes", "generateUUID", "dataDeepClone"])
   },
   methods: {
     loadData(event) {
@@ -192,6 +192,7 @@ export default {
       // the last step
       function changeState() {
         that.$set(visualData, "marked", false);
+        const tmpDict = {};
         visualData.nodes.forEach((d, i) => {
           that.$set(d, "uid", i);
           that.$set(d, "x", 0);
@@ -200,9 +201,12 @@ export default {
           that.$set(d, "mouseover_show", true);
           that.$set(d, "brushing", false);
           that.$set(d, "invertBrushing", false);
+          tmpDict[d.id] = d;
         });
         visualData.links.forEach(d => {
           that.$set(d, "mouseover_show", true);
+          d.source = tmpDict[d.source];
+          d.target = tmpDict[d.target];
         });
 
         // 源数据改变后更新store状态
@@ -213,10 +217,6 @@ export default {
         });
         store.commit("updateVisualData", visualData);
         store.dispatch("resetAll");
-        store.commit("addDataFlow", {
-          type: "nodes",
-          data: { id: that.currentUUID, data: { ...visualData } }
-        });
 
         that.$message.success("Data loaded.");
       }

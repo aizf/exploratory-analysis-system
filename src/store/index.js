@@ -22,7 +22,7 @@ export default new Vuex.Store({
 
   },
   actions: {
-    resetAll({ getters, commit }) {
+    resetAll({ state, getters, commit }) {
       commit("updateParentUUID", "none");
       commit("updateCurrentUUID", "root");
       getters.generateUUID(1);
@@ -36,12 +36,12 @@ export default new Vuex.Store({
         uuids.clear();
         uuids.add("root");
       });
-      commit("resetDataFlow");
       commit("resetRecordset");
       commit("updatePageAnalyzeTooltip", {
         "nodes": [],
         "links": []
       });
+      commit("clearExistingViews")
     }
   },
   getters

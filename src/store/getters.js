@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const getters = {
   // data
   nodes: state => state.data.visualData.nodes,
@@ -45,54 +47,43 @@ const getters = {
       "links": getLinks(nodes)
     };
   },
+
   // view
-  existingViews: state => {
-    // {uuid1:data1,...}
-    // 不包含当前
-    const map = new Map();
-    state.analyze.recordset.forEach(d => {
-      map.set(d.data.uuid, d.data);
-    });
-    return map;
+  tmpExistingViews: (state, getters) => {
+    const uuid = state.view.currentUUID; // 该record对应的view的uuid
+    if (Object.keys(state.analyze.existingViews).includes(uuid + "")) {
+      return state.analyze.existingViews;
+    } else {
+      state.data.visualData.uuid = uuid;
+      return {
+        ...state.analyze.existingViews,
+        [uuid]: state.data.visualData
+      };
+    }
   },
-  uniqueViews: (state, getters) => {
-    // {uuid1:data1,...}
-    const map = new Map(getters.existingViews);
-    map.set(state.view.currentUUID, state.data.visualData);
-    return map;
-  },
+
   // analyze
   recordFlow: (state, getters) => {
     // 返回格式化后的记录流
     // 先增加尾节点
     const rs = [...state.analyze.recordset];
     rs.push(state.analyze.recordData({
-      data: state.data.visualData,
-      deepClone: !getters.existingViews.has(state.view.currentUUID),
-      uuid: state.view.currentUUID,
+      index: state.analyze.recordset.length,
+      data: getters.tmpExistingViews[state.view.currentUUID],
       operation: "current",
       time: new Date(),
-      marked: state.view.marked
     }));
     // debugger
     // 去除uuid相同的node
-    const uuids = new Set();
-    const nodes = [];
+    const nodes = Object.values(getters.tmpExistingViews).map(d => ({
+      data: d,
+      // time: rs[i].time,
+      fixedValue: d.nodes.length,
+    }));
+
+    // links
     const links = [];
-    for (let i = 0; i < rs.length; i++) {
-      // nodes
-      if (!uuids.has(rs[i].uuid)) {
-        uuids.add(rs[i].uuid);
-        nodes.push({
-          data: rs[i].data,
-          uuid: rs[i].uuid,
-          time: rs[i].time,
-          fixedValue: rs[i].data.nodes.length,
-          marked: rs[i].data.marked
-        });
-      }
-      // links
-      if (i === 0) continue;
+    for (let i = 1; i < rs.length; i++) {
       // 防止连通
       switch (rs[i - 1].operation) {
         case "undo":
@@ -104,15 +95,15 @@ const getters = {
       }
       links.push({
         operation: rs[i - 1].operation,
-        source: rs[i - 1].uuid,
-        target: rs[i].uuid,
+        source: rs[i - 1].data.uuid,
+        target: rs[i].data.uuid,
       })
     }
 
     return { "nodes": nodes, "links": links };
   },
   markedVisualData: (state, getters) => {
-    return [...getters.uniqueViews.values()].filter(d => d.marked);
+    return Object.values(getters.tmpExistingViews).filter(d => d.marked);
   },
   // function
   viewSlice: state => () => {
@@ -190,7 +181,7 @@ const getters = {
   //   });
   //   return uuid;
   // },
-  dataDeepClone: () => (oldData) => {
+  dataDeepClone: () => (oldData, uuid = oldData.uuid) => {
     // 深拷贝数据集，格式data={nodes:[],links:[]}
     const oldNodes = oldData.nodes;
     const oldLinks = oldData.links;
@@ -210,6 +201,7 @@ const getters = {
       newLinks.push(newLink);
     }
     return {
+      uuid: uuid,
       nodes: newNodes,
       links: newLinks,
       marked: oldData.marked
@@ -218,19 +210,28 @@ const getters = {
   beforeEvent: (state, getters) => (operation, vueComponent, backData = {}) => {
     // vueComponent为调用此函数的组件实例
     const backOps = state.view.backOps;
+    const index = state.analyze.recordset.length;  // record的index
+    const uuid = state.view.currentUUID; // 该record对应的view的uuid
+    const time = new Date(); //
+
+    if (!Object.keys(state.analyze.existingViews).includes(uuid + "")) {
+      vueComponent.$store.commit("handleExistingViews", (views) => {
+        Vue.set(views, uuid, getters.dataDeepClone(state.data.visualData, uuid));
+      });
+    }
+    const data = state.analyze.existingViews[uuid];
+
     const args = {
-      index: state.analyze.recordset.length,
-      data: state.data.visualData,
-      deepClone: !getters.existingViews.has(state.view.currentUUID),
-      uuid: state.view.currentUUID,
-      operation: operation,
-      time: new Date(),
+      index,  // record的index
+      data, // 该record对应的view的uuid
+      operation, // view之后的操作
+      time, //
     };
     vueComponent.$store.commit("addRecordData", args);
-    vueComponent.$store.commit("updateParentUUID", state.view.currentUUID);
+    vueComponent.$store.commit("updateParentUUID", uuid);
 
     if (backOps.includes(operation)) {
-      vueComponent.$store.commit("updateVisualData", getters.dataDeepClone(backData.data));
+      vueComponent.$store.commit("updateVisualData", getters.dataDeepClone(backData));
       vueComponent.$store.commit("updateCurrentUUID", backData.uuid);
     } else {
       state.data.visualData.marked = false;

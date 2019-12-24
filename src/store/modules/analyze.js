@@ -1,13 +1,6 @@
 const analyze = {
     state: {
         currentOperations: [], // dataFlow中，存储source和target中间的操作，view切换后清空
-        dataFlow: {
-            // 记录view切换过程及其view中的操作，nodes为view的信息，links为view的切换顺序及之间的操作
-            // nodes:{id:UUID,data:{nodes:,links:},}
-            nodes: [],
-            // links:{source:,target:,options:[]}
-            links: []
-        },
         uuids: new Set(),
 
         // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
@@ -24,52 +17,21 @@ const analyze = {
         operations: [], // operation={action:,nodes:,time:}
         operations_: [], // 切换view的操作
 
+        // 已经存储的visualData
+        existingViews: {},
+
         // record
         // recordset是存储recordData的列表
         recordset: [],
         recordData(args) {
             // 返回一个类的实例，用来存储节点信息
             class RecordData {
-                constructor({ data, deepClone, uuid, operation, time, change = null }) {
+                constructor({ index, data, operation, time }) {
                     // 存储的数据在操作之前
-                    this.uuid = uuid;   // data的uuid
-                    this.data = this.handleData(data, deepClone); // 操作之前的数据
+                    this.index = index;
+                    this.data = data; // 操作之前的数据
                     this.operation = operation;
                     this.time = time;
-                    this.change = change; // 当data变化不大时，data指向上一次的data，用change保存变化
-                }
-                handleData(data, deepClone) {
-                    if (deepClone) {
-                        return this.dataDeepClone(data);
-                    } else {
-                        return data;
-                    }
-                }
-                dataDeepClone(oldData) {
-                    // 深拷贝数据集，格式data={nodes:[],links:[]}
-                    const oldNodes = oldData.nodes;
-                    const oldLinks = oldData.links;
-                    const newNodes = [];
-                    const newLinks = [];
-                    const tempDict = {};  // 查找字典
-                    for (const oldNode of oldNodes) {
-                        const newNode = Object.assign({}, oldNode);
-                        newNodes.push(newNode);
-                        tempDict[newNode.id] = newNode;
-                    }
-                    for (const oldLink of oldLinks) {
-                        const newLink = Object.assign({}, oldLink);
-                        // 更改 source 和 target 指向的 node
-                        newLink.source = tempDict[newLink.source.id];
-                        newLink.target = tempDict[newLink.target.id];
-                        newLinks.push(newLink);
-                    }
-                    return {
-                        nodes: newNodes,
-                        links: newLinks,
-                        uuid: this.uuid,
-                        marked: oldData.marked
-                    }
                 }
             }
             return new RecordData(args);
@@ -77,14 +39,13 @@ const analyze = {
     },
     mutations: {
         addRecordData: (state, args) => {
-            // args 格式: [data, uuid, operation,time]
             const d = state.recordData(args);
             state.recordset.push(d);
             if (args.operation === "undo") {
-                state.redoList.unshift(d);
+                state.redoList.unshift(args.data);
             }
             else {
-                state.undoList.push(d);
+                state.undoList.push(args.data);
                 if (args.operation !== "redo") {
                     // 若有其他操作，redo清空
                     state.redoList = [];
@@ -107,16 +68,6 @@ const analyze = {
         change_uuids: (state, fn) => {
             fn(state.uuids);
         },
-        addDataFlow: (state, item) => {
-            // 数据流图数据
-            // item={type:["nodes","links"],data:data}
-            if (item.type !== "nodes" && item.type !== "links") {
-                throw ("addDataFlow() 'item.type' error !");
-            }
-            // nodes:{id:UUID,data:{nodes:,links:},}
-            // links:{source:,target:,options:[]}
-            state.dataFlow[item.type].push(item.data);
-        },
         addCurrentOperations: (state, data) => {
             state.currentOperations.push(data);
         },
@@ -134,11 +85,11 @@ const analyze = {
             state.operations = [];
             state.operations_ = [];
         },
-        resetDataFlow: (state) => {
-            state.dataFlow = {
-                nodes: [],
-                links: []
-            };
+        handleExistingViews: (state, fn) => {
+            fn(state.existingViews);
+        },
+        clearExistingViews: (state) => {
+            state.existingViews = {};
         },
         resetRecordset: (state) => {
             state.recordset = [];

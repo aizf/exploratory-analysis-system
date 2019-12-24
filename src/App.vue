@@ -85,6 +85,8 @@ export default {
   mounted() {
     console.log(this);
     console.log(this.$children);
+    console.log("state", this.$store.state);
+    console.log("getters", this.$store.getters);
   }
 };
 </script>
