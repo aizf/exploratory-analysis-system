@@ -49,7 +49,7 @@ const getters = {
   },
 
   // view
-  tmpExistingViews: (state, getters) => {
+  tmpExistingViews: (state) => {
     const uuid = state.view.currentUUID; // 该record对应的view的uuid
     if (Object.keys(state.analyze.existingViews).includes(uuid + "")) {
       return state.analyze.existingViews;

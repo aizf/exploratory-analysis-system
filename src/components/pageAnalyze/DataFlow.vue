@@ -37,7 +37,10 @@
             <g v-if="node.data.marked" :transform="`translate(${0},${(node.y0+node.y1)/2})`">
               <path :d="markedSymbol('star',180)" stroke="#1890ff" stroke-width="2" />
             </g>
-            <g :transform="`translate(${-markCircleR},${(node.y0+node.y1)/2-markCircleR})`">
+            <g
+              :transform="`translate(${-markCircleR},${(node.y0+node.y1)/2-markCircleR})`"
+              :opacity="node.isShortestPath ? 1 : 0.3"
+            >
               <ChartPie
                 :nodes="createPieData(node)"
                 :radius="markCircleR"
@@ -118,7 +121,8 @@ export default {
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
       textG: d3.selectAll(),
-      sankey: {}
+      sankey: {},
+      nodesUpdater: 0
     };
   },
   computed: {
@@ -143,8 +147,11 @@ export default {
       return this.sankey(this.recordFlow);
     },
     nodes() {
+      // nodes不是data，因此不是响应的，所以设置nodesUpdater
+      this.nodesUpdater;
       const nodes = this.graph.nodes;
       nodes.forEach(node => {
+        // this.$set(node, "isShortestPath", false);
         node.sourceLinks = [];
         node.targetLinks = [];
       });
@@ -154,6 +161,13 @@ export default {
     nodesNum() {
       // 用recordFlow，而非nodes，因为nodes是通过this.sankey()计算而来
       return this.recordFlow.nodes.length;
+    },
+    nodesDict() {
+      const dict = {};
+      this.nodes.forEach(node => {
+        dict[node.data.uuid] = node;
+      });
+      return dict;
     },
     links() {
       // 先在nodes增加in和out的links，
@@ -210,6 +224,8 @@ export default {
 
       // 设置link的y0和y1
       this.nodes.forEach(node => {
+        node.isShortestPath = false;
+
         // const height = node.y1 - node.y0;
         const height = 2 * this.markCircleR;
         const sourceLinks = node.sourceLinks;
@@ -239,7 +255,11 @@ export default {
       console.log("pathIndex", pathIndex);
       console.log(`${uuidArr.indexOf("root")} to ${currentNodeIndex}`);
       // 将关键路径的isShortestPath设置为true
-      for (let i = 1; i < pathUuid.length; i++) {
+      for (let i = 0; i < pathUuid.length; i++) {
+        this.nodesDict[pathUuid[i]].isShortestPath = true;
+        if (!i) {
+          continue;
+        }
         // pathUuid增加了currentNodeUUID，因此length大于等于1
         const objLink = nodesDict[pathUuid[i - 1]].sourceLinks.find(
           link => link.target.data.uuid === pathUuid[i]
@@ -248,6 +268,7 @@ export default {
       }
       // console.log(matrix);
       // console.log(this.dijkstra(matrix, uuidArr.indexOf("root")));
+      this.nodesUpdater++;
       return links;
     },
     currentNode() {
