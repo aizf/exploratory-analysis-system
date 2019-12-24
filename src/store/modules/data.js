@@ -74,7 +74,8 @@ const data = {
         },
         selectedDataset: "",
         sourceData: {},
-        visualData: {}
+        visualData: {},
+        nodesTotalNum: 0,
     },
     mutations: {
         changeSelectedDataset: (state, payload) => {
@@ -85,6 +86,9 @@ const data = {
         },
         updateVisualData: (state, data) => {
             state.visualData = data;
+        },
+        updateNodesTotalNum: (state, data) => {
+            state.nodesTotalNum = data;
         },
     },
     actions: {}

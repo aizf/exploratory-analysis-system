@@ -22,7 +22,8 @@ export default new Vuex.Store({
 
   },
   actions: {
-    resetAll({ state, getters, commit }) {
+    resetAll({ getters, commit }) {
+      commit("updateNodesTotalNum", getters.nodes.length);
       commit("updateParentUUID", "none");
       commit("updateCurrentUUID", "root");
       getters.generateUUID(1);

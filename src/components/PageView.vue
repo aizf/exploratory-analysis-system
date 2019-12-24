@@ -539,7 +539,7 @@ export default {
         nodes: slicedData,
         time: new Date()
       });
-      console.log("filter", slicedData);
+      console.log("filter");
     },
     groupTheSelectedNodes(group) {
       // console.log(group);

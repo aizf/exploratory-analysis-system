@@ -4,8 +4,9 @@
       <path
         v-for="arc in arcs"
         :d="generateArc(arc.startAngle,arc.endAngle)"
-        :fill="colorPalette[arc.data.group]"
+        :fill="fillColor(arc.data.group)"
         stroke-width="0"
+        :opacity="arc.data.group==='null' ? 0 : 1"
         :key="arc.index"
       >
         <title>{{arc.data.id}}</title>
@@ -55,6 +56,13 @@ export default {
         startAngle: startAngle,
         endAngle: endAngle
       });
+    },
+    fillColor(group) {
+      if (group === "null") {
+        return "null";
+      } else {
+        return this.colorPalette[group];
+      }
     },
     // color() {
     //   d3.scaleOrdinal()

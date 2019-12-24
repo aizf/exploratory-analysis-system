@@ -128,6 +128,7 @@ export default {
   computed: {
     ...mapState({
       visualData: state => state.data.visualData,
+      nodesTotalNum: state => state.data.nodesTotalNum,
 
       width: state => state.view.dpiX * 0.7,
       height: state => (state.view.dpiY - 64) * 0.55,
@@ -417,6 +418,15 @@ export default {
           nodesNum: eachGroupNum[group]
         });
       });
+
+      const nullNum = this.nodesTotalNum - nodes.length;
+      if (nullNum > 0) {
+        rects.push({
+          group: "null",
+          nodesNum: nullNum
+        });
+      }
+
       return rects;
     },
     createMultipleColorRects(d) {
