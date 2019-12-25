@@ -1,26 +1,16 @@
 <template>
-  <div :style="{float:'left'}">
-    <div :style="{float:'left',width:width}">
-      <TimeOrder></TimeOrder>
+  <a-row>
+    <a-col :span="18">
       <DataFlow></DataFlow>
-    </div>
-    <div :style="{float:'left'}">
-      <a-card hoverable style="width: 240px">
-        <keep-alive>
-          <!-- 可视化视图 -->
-          <StaticForce
-            :width="500"
-            :height="500"
-            :nodes="tooltipNodes"
-            :links="tooltipLinks"
-          ></StaticForce>
-        </keep-alive>
-        <a-card-meta title="Europe Street beat">
-          <template slot="description">www.instagram.com</template>
-        </a-card-meta>
-      </a-card>
-    </div>
-  </div>
+      <TimeOrder></TimeOrder>
+    </a-col>
+    <a-col :span="6">
+      <keep-alive>
+        <!-- 可视化视图 -->
+        <StaticForce :width="500" :height="500" :nodes="tooltipNodes" :links="tooltipLinks"></StaticForce>
+      </keep-alive>
+    </a-col>
+  </a-row>
 </template>
 
 <script>
@@ -55,9 +45,9 @@ export default {
       operations: state => state.analyze.operations,
       currentOperations: state => state.analyze.currentOperations,
       tooltipNodes: state => state.analyze.pageAnalyzeTooltipData.nodes,
-      tooltipLinks: state => state.analyze.pageAnalyzeTooltipData.links,
+      tooltipLinks: state => state.analyze.pageAnalyzeTooltipData.links
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber","generateUUID"])
+    ...mapGetters(["nodes", "links", "nodesNumber", "generateUUID"])
   },
   mounted() {},
   activated() {},

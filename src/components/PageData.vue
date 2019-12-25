@@ -138,13 +138,10 @@ export default {
         switch (dataType) {
           case "node-link":
             return __loadNodeLinkData;
-            break;
           case "hierarchical":
             return __loadHierarchicalData;
-            break;
           case "node":
             return __loadNodeData;
-            break;
           default:
             break;
         }
