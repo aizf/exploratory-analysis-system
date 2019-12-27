@@ -105,6 +105,9 @@ const getters = {
   markedVisualData: (state, getters) => {
     return Object.values(getters.tmpExistingViews).filter(d => d.marked);
   },
+  operations: (state, getters) => {
+    return Object.values(getters.tmpExistingViews).filter(d => d.marked);
+  },
   // function
   viewSlice: state => () => {
     // 返回slice后的nodes和links

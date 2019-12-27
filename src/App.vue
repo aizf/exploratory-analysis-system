@@ -57,19 +57,21 @@ export default {
       selectedDataset: state => state.data.selectedDataset
     }),
     currentPage() {
+      let page;
       switch (this.currentPageKey) {
         case "1":
-          return "PageData";
+          page = "PageData";
           break;
         case "2":
-          return "PageView";
+          page = "PageView";
           break;
         case "3":
-          return "PageAnalyze";
+          page = "PageAnalyze";
           break;
         default:
           break;
       }
+      return page;
     },
     dataSelected() {
       // 判断是否选择了数据集

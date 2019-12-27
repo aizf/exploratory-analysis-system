@@ -3,7 +3,7 @@
     <svg
       :width="width"
       :height="height"
-      :style="{border:'1px solid #305dff',background:backgroundColor}"
+      :style="{background:backgroundColor}"
     >
       <defs>
         <filter id="shadow">
@@ -131,7 +131,7 @@ export default {
       nodesTotalNum: state => state.data.nodesTotalNum,
 
       width: state => state.view.dpiX * 0.7,
-      height: state => (state.view.dpiY - 64) * 0.55,
+      height: state => (state.view.dpiY - 64) * 0.45,
       colorPalette: state => state.view.colorPalette,
       colorPalette2: state => state.view.colorPalette2,
       backgroundColor: state => state.view.backgroundColor,
