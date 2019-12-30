@@ -1,5 +1,5 @@
 <template>
-  <div class="TimeOrder" :style="{width:width+'px',height:height+'px'}">
+  <div class="TimeOrder">
     <a-select :defaultValue="xDimension" size="small" style="width: 180px" @change="handleXChange">
       <a-select-option
         v-for="dimension in dimensions"
@@ -10,6 +10,19 @@
         <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
       </a-select-option>
     </a-select>
+
+    <a-select :defaultValue="yDimension" size="small" style="width: 180px" @change="handleYChange">
+      <a-select-option
+        v-for="dimension in dimensions"
+        :value="dimension.name"
+        :key="dimension.name"
+      >
+        {{dimension.name}}
+        <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
+      </a-select-option>
+    </a-select>
+
+    <div class="main" :style="{width:width+'px',height:height+'px'}"></div>
   </div>
 </template>
 
@@ -23,9 +36,10 @@ export default {
     return {
       chart: {},
       option: {},
+      // number,ordinal,float,int,time
       dimensions: [
         { name: "time", type: "time" },
-        { name: "operation", type: "ordinal" }
+        { name: "operation", type: "ordinal", data: this.operationTypes }
       ],
       xDimension: "time",
       yDimension: "operation"
@@ -58,7 +72,7 @@ export default {
   },
 
   mounted() {
-    this.chart = echarts.init(document.querySelector(".TimeOrder"), null, {
+    this.chart = echarts.init(document.querySelector(".main"), null, {
       renderer: "svg"
     });
     this.option = {
@@ -119,7 +133,7 @@ export default {
       },
       tooltip: {
         formatter: function(params) {
-          console.log(params);
+          // console.log(params);
           const dimensionNames = params.dimensionNames;
           const value = params.value;
           const n = dimensionNames.length;
@@ -159,30 +173,57 @@ export default {
       ]
     });
   },
-  methods: {},
-  watch: {
-    xDimension: function(newV) {
+  methods: {
+    handleXChange(value) {
+      this.xDimension = value;
+      const dimension = this.dimensions.find(d => d.name === value);
       this.chart.setOption({
         series: [
           {
             encode: {
-              x: newV
+              x: value
             }
           }
-        ]
+        ],
+        xAxis: this.handleAxisChange(dimension)
       });
     },
-    yDimension: function(newV) {
+    handleYChange(value) {
+      this.yDimension = value;
+      const dimension = this.dimensions.find(d => d.name === value);
       this.chart.setOption({
         series: [
           {
             encode: {
-              y: newV
+              y: value
             }
           }
-        ]
+        ],
+        yAxis: this.handleAxisChange(dimension)
       });
+    },
+    handleAxisChange(dimension) {
+      console.log(dimension);
+      const type = dimension.type;
+      let axisOption;
+      switch (type) {
+        case "time":
+          axisOption = { type };
+          break;
+        case "ordinal":
+          axisOption = { type: "category", data: dimension.data };
+          break;
+        case "value":
+          break;
+        case "log":
+          break;
+        default:
+          alert("type error");
+          break;
+      }
+      return axisOption;
     }
-  }
+  },
+  watch: {}
 };
 </script>
