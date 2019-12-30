@@ -11,6 +11,7 @@ import {
   Checkbox,
   Col,
   Drawer,
+  Dropdown,
   Icon,
   Input,
   InputNumber,
@@ -41,6 +42,7 @@ Vue.use(Card);
 Vue.use(Checkbox);
 Vue.use(Col);
 Vue.use(Drawer);
+Vue.use(Dropdown);
 Vue.use(Icon);
 Vue.use(Input);
 Vue.use(InputNumber);

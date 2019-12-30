@@ -1,5 +1,16 @@
 <template>
-  <div class="TimeOrder" :style="{width:width+'px',height:height+'px'}"></div>
+  <div class="TimeOrder" :style="{width:width+'px',height:height+'px'}">
+    <a-select :defaultValue="xDimension" size="small" style="width: 180px" @change="handleXChange">
+      <a-select-option
+        v-for="dimension in dimensions"
+        :value="dimension.name"
+        :key="dimension.name"
+      >
+        {{dimension.name}}
+        <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
+      </a-select-option>
+    </a-select>
+  </div>
 </template>
 
 <script>
@@ -11,7 +22,13 @@ export default {
   data() {
     return {
       chart: {},
-      option: {}
+      option: {},
+      dimensions: [
+        { name: "time", type: "time" },
+        { name: "operation", type: "ordinal" }
+      ],
+      xDimension: "time",
+      yDimension: "operation"
     };
   },
   computed: {
@@ -28,7 +45,8 @@ export default {
 
       recordset: state => state.analyze.recordset
     }),
-    ...mapGetters(["nodes", "links", "operations"]),
+    ...mapGetters(["operations"]),
+
     chartData() {
       return this.recordset.map(d => ({
         value: [d.time, d.operation],
@@ -38,12 +56,11 @@ export default {
       }));
     }
   },
+
   mounted() {
-    this.chart = echarts.init(
-      document.getElementsByClassName("TimeOrder")[0],
-      null,
-      { renderer: "svg" }
-    );
+    this.chart = echarts.init(document.querySelector(".TimeOrder"), null, {
+      renderer: "svg"
+    });
     this.option = {
       color: [
         "#c23531",
@@ -63,8 +80,6 @@ export default {
         color: this.contrastColor
       },
       xAxis: {
-        data: this.operationTypes,
-        scale: true,
         type: "time",
         axisLine: {
           lineStyle: {
@@ -102,24 +117,29 @@ export default {
           }
         }
       },
+      tooltip: {
+        formatter: function(params) {
+          console.log(params);
+          const dimensionNames = params.dimensionNames;
+          const value = params.value;
+          const n = dimensionNames.length;
+          let string = `<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 12px;padding-bottom: 7px;margin-bottom: 7px">`;
+          for (let i = 0; i < n; i++) {
+            if (i) string += "<br/>";
+            string += dimensionNames[i] + ": " + value[i];
+          }
+          string += "</div>";
+          return string;
+        }
+      },
       series: [
         {
           type: "scatter",
+          dimensions: this.dimensions,
           data: this.chartData,
-
-          tooltip: {
-            formatter: function(obj) {
-              const data = obj.data;
-              return (
-                '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">' +
-                // obj.seriesName +
-                "</div>" +
-                "action" +
-                "：" +
-                data.operation +
-                "<br>"
-              );
-            }
+          encode: {
+            x: this.xDimension,
+            y: this.yDimension
           }
         }
       ]
@@ -130,11 +150,39 @@ export default {
     this.chart.setOption({
       series: [
         {
-          data: this.chartData
+          data: this.chartData,
+          encode: {
+            x: this.xDimension,
+            y: this.yDimension
+          }
         }
       ]
     });
   },
-  methods: {}
+  methods: {},
+  watch: {
+    xDimension: function(newV) {
+      this.chart.setOption({
+        series: [
+          {
+            encode: {
+              x: newV
+            }
+          }
+        ]
+      });
+    },
+    yDimension: function(newV) {
+      this.chart.setOption({
+        series: [
+          {
+            encode: {
+              y: newV
+            }
+          }
+        ]
+      });
+    }
+  }
 };
 </script>

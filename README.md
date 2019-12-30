@@ -94,3 +94,5 @@ recordset中重复的nodes    done
 
 issue: undo 再操作，两个会同时marked
 pie图留空值(filter)
+
+数据结构类型 层次数据  网络数据(网络和图)
