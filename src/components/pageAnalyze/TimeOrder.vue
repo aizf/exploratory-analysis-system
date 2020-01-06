@@ -73,6 +73,13 @@ export default {
           color: this.colorPalette2[this.operationTypes.indexOf(d.operation)]
         }
       }));
+    },
+    chartEncode() {
+      return {
+        x: this.xDimension,
+        y: this.yDimension,
+        tooltip: this.dimensions.map(d => d.name)
+      };
     }
   },
 
@@ -102,29 +109,27 @@ export default {
       },
       xAxis: this.xAxis(this.dimensions[0]),
       yAxis: this.yAxis(this.dimensions[1]),
-      tooltip: {
-        formatter: function(params) {
-          // console.log(params);
-          const dimensionNames = params.dimensionNames;
-          const value = params.value;
-          const n = dimensionNames.length;
-          let string = `<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 12px;padding-bottom: 7px;margin-bottom: 7px">`;
-          for (let i = 0; i < n; i++) {
-            if (i) string += "<br/>";
-            string += dimensionNames[i] + ": " + value[i];
-          }
-          string += "</div>";
-          return string;
-        }
-      },
+      tooltip: {},
+      // tooltip: {
+      //   formatter: function(params) {
+      //     // console.log(params);
+      //     const dimensionNames = params.dimensionNames;
+      //     const value = params.value;
+      //     const n = dimensionNames.length;
+      //     let string = `<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 12px;padding-bottom: 7px;margin-bottom: 7px">`;
+      //     for (let i = 0; i < n; i++) {
+      //       if (i) string += "<br/>";
+      //       string += dimensionNames[i] + ": " + value[i];
+      //     }
+      //     string += "</div>";
+      //     return string;
+      //   }
+      // },
       series: {
         type: "scatter",
         dimensions: this.dimensions,
         data: this.chartData,
-        encode: {
-          x: this.xDimension,
-          y: this.yDimension
-        }
+        encode: this.chartEncode
       }
     };
     this.chart.setOption(this.option, true);
@@ -133,10 +138,7 @@ export default {
     this.chart.setOption({
       series: {
         data: this.chartData,
-        encode: {
-          x: this.xDimension,
-          y: this.yDimension
-        }
+        encode: this.chartEncode
       }
     });
   },
@@ -205,14 +207,13 @@ export default {
       }
       return axis;
     },
+
     handleXChange(value) {
       this.xDimension = value;
       const dimension = this.dimensions.find(d => d.name === value);
       this.chart.setOption({
         series: {
-          encode: {
-            x: value
-          }
+          encode: this.chartEncode
         },
         xAxis: this.xAxis(dimension)
       });
@@ -222,9 +223,7 @@ export default {
       const dimension = this.dimensions.find(d => d.name === value);
       this.chart.setOption({
         series: {
-          encode: {
-            y: value
-          }
+          encode: this.chartEncode
         },
         yAxis: this.yAxis(dimension)
       });
