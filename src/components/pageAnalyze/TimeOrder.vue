@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import echarts from "echarts";
 
@@ -39,7 +40,11 @@ export default {
       // number,ordinal,float,int,time
       dimensions: [
         { name: "time", type: "time" },
-        { name: "operation", type: "ordinal", data: this.operationTypes }
+        {
+          name: "operation",
+          type: "ordinal",
+          data: store.state.view.operationTypes
+        }
       ],
       xDimension: "time",
       yDimension: "operation"
@@ -72,9 +77,11 @@ export default {
   },
 
   mounted() {
+    console.log("TimeOrder", this);
     this.chart = echarts.init(document.querySelector(".main"), null, {
       renderer: "svg"
     });
+    console.log("chart", this.chart);
     this.option = {
       color: [
         "#c23531",
@@ -93,14 +100,56 @@ export default {
       textStyle: {
         color: this.contrastColor
       },
-      xAxis: {
-        type: "time",
+      xAxis: this.xAxis(this.dimensions[0]),
+      yAxis: this.yAxis(this.dimensions[1]),
+      tooltip: {
+        formatter: function(params) {
+          // console.log(params);
+          const dimensionNames = params.dimensionNames;
+          const value = params.value;
+          const n = dimensionNames.length;
+          let string = `<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 12px;padding-bottom: 7px;margin-bottom: 7px">`;
+          for (let i = 0; i < n; i++) {
+            if (i) string += "<br/>";
+            string += dimensionNames[i] + ": " + value[i];
+          }
+          string += "</div>";
+          return string;
+        }
+      },
+      series: {
+        type: "scatter",
+        dimensions: this.dimensions,
+        data: this.chartData,
+        encode: {
+          x: this.xDimension,
+          y: this.yDimension
+        }
+      }
+    };
+    this.chart.setOption(this.option, true);
+  },
+  activated() {
+    this.chart.setOption({
+      series: {
+        data: this.chartData,
+        encode: {
+          x: this.xDimension,
+          y: this.yDimension
+        }
+      }
+    });
+  },
+  methods: {
+    xAxis(dimension) {
+      const axis = {
         axisLine: {
           lineStyle: {
             color: this.contrastColor
           }
         },
         axisTick: {
+          alignWithLabel: true,
           lineStyle: {
             color: this.contrastColor
           }
@@ -110,9 +159,11 @@ export default {
             color: this.contrastColor
           }
         }
-      },
-      yAxis: {
-        data: this.operationTypes,
+      };
+      return this.handleAxisType(dimension, axis);
+    },
+    yAxis(dimension) {
+      const axis = {
         axisLine: {
           lineStyle: {
             color: this.contrastColor
@@ -130,98 +181,53 @@ export default {
             color: this.contrastColor
           }
         }
-      },
-      tooltip: {
-        formatter: function(params) {
-          // console.log(params);
-          const dimensionNames = params.dimensionNames;
-          const value = params.value;
-          const n = dimensionNames.length;
-          let string = `<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 12px;padding-bottom: 7px;margin-bottom: 7px">`;
-          for (let i = 0; i < n; i++) {
-            if (i) string += "<br/>";
-            string += dimensionNames[i] + ": " + value[i];
-          }
-          string += "</div>";
-          return string;
-        }
-      },
-      series: [
-        {
-          type: "scatter",
-          dimensions: this.dimensions,
-          data: this.chartData,
-          encode: {
-            x: this.xDimension,
-            y: this.yDimension
-          }
-        }
-      ]
-    };
-    this.chart.setOption(this.option, true);
-  },
-  activated() {
-    this.chart.setOption({
-      series: [
-        {
-          data: this.chartData,
-          encode: {
-            x: this.xDimension,
-            y: this.yDimension
-          }
-        }
-      ]
-    });
-  },
-  methods: {
+      };
+      return this.handleAxisType(dimension, axis);
+    },
+    handleAxisType(dimension, axis) {
+      const type = dimension.type;
+      switch (type) {
+        case "time":
+          Object.assign(axis, { type });
+          break;
+        case "ordinal":
+          Object.assign(axis, { data: dimension.data, type: "category" });
+          break;
+        case "value":
+          Object.assign(axis, { type });
+          break;
+        case "log":
+          Object.assign(axis, { type });
+          break;
+        default:
+          alert("type error");
+          break;
+      }
+      return axis;
+    },
     handleXChange(value) {
       this.xDimension = value;
       const dimension = this.dimensions.find(d => d.name === value);
       this.chart.setOption({
-        series: [
-          {
-            encode: {
-              x: value
-            }
+        series: {
+          encode: {
+            x: value
           }
-        ],
-        xAxis: this.handleAxisChange(dimension)
+        },
+        xAxis: this.xAxis(dimension)
       });
     },
     handleYChange(value) {
       this.yDimension = value;
       const dimension = this.dimensions.find(d => d.name === value);
       this.chart.setOption({
-        series: [
-          {
-            encode: {
-              y: value
-            }
+        series: {
+          encode: {
+            y: value
           }
-        ],
-        yAxis: this.handleAxisChange(dimension)
+        },
+        yAxis: this.yAxis(dimension)
       });
-    },
-    handleAxisChange(dimension) {
-      console.log(dimension);
-      const type = dimension.type;
-      let axisOption;
-      switch (type) {
-        case "time":
-          axisOption = { type };
-          break;
-        case "ordinal":
-          axisOption = { type: "category", data: dimension.data };
-          break;
-        case "value":
-          break;
-        case "log":
-          break;
-        default:
-          alert("type error");
-          break;
-      }
-      return axisOption;
     }
   },
   watch: {}
