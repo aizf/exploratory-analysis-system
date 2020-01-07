@@ -67,12 +67,7 @@ export default {
     ...mapGetters(["operations"]),
 
     chartData() {
-      return this.recordset.map(d => ({
-        value: [d.time, d.operation],
-        itemStyle: {
-          color: this.colorPalette2[this.operationTypes.indexOf(d.operation)]
-        }
-      }));
+      return this.recordset.map(d => [d.time, d.operation]);
     },
     chartEncode() {
       return {
@@ -90,26 +85,23 @@ export default {
     });
     console.log("chart", this.chart);
     this.option = {
-      color: [
-        "#c23531",
-        "#2f4554",
-        "#61a0a8",
-        "#d48265",
-        "#91c7ae",
-        "#749f83",
-        "#ca8622",
-        "#bda29a",
-        "#6e7074",
-        "#546570",
-        "#c4ccd3"
-      ],
+      color: this.colorPalette2,
       backgroundColor: this.backgroundColor,
       textStyle: {
         color: this.contrastColor
       },
       xAxis: this.xAxis(this.dimensions[0]),
       yAxis: this.yAxis(this.dimensions[1]),
+      legend: {
+        orient: "vertical",
+        right: "right",
+        textStyle: {
+          color: this.contrastColor
+        }
+        // data: this.operationTypes
+      },
       tooltip: {},
+      dataZoom: [{ type: "inside" }, { type: "slider" }],
       // tooltip: {
       //   formatter: function(params) {
       //     // console.log(params);
@@ -125,21 +117,27 @@ export default {
       //     return string;
       //   }
       // },
-      series: {
-        type: "scatter",
-        dimensions: this.dimensions,
-        data: this.chartData,
-        encode: this.chartEncode
-      }
+      series: this.operationTypes.map(d => {
+        return {
+          name: d,
+          type: "scatter",
+          dimensions: this.dimensions,
+          // dd[1] because of [d.time, d.operation]
+          data: this.chartData.filter(dd => dd[1] === d),
+          encode: this.chartEncode
+        };
+      })
     };
     this.chart.setOption(this.option, true);
   },
   activated() {
     this.chart.setOption({
-      series: {
-        data: this.chartData,
-        encode: this.chartEncode
-      }
+      series: this.operationTypes.map(d => {
+        return {
+          name: d,
+          data: this.chartData.filter(dd => dd[1] === d)
+        };
+      })
     });
   },
   methods: {
@@ -160,7 +158,8 @@ export default {
           textStyle: {
             color: this.contrastColor
           }
-        }
+        },
+        splitLine: { show: false }
       };
       return this.handleAxisType(dimension, axis);
     },
@@ -182,7 +181,8 @@ export default {
           textStyle: {
             color: this.contrastColor
           }
-        }
+        },
+        splitLine: { show: false }
       };
       return this.handleAxisType(dimension, axis);
     },
@@ -212,9 +212,12 @@ export default {
       this.xDimension = value;
       const dimension = this.dimensions.find(d => d.name === value);
       this.chart.setOption({
-        series: {
-          encode: this.chartEncode
-        },
+        series: this.operationTypes.map(d => {
+          return {
+            name: d,
+            encode: this.chartEncode
+          };
+        }),
         xAxis: this.xAxis(dimension)
       });
     },
@@ -222,9 +225,12 @@ export default {
       this.yDimension = value;
       const dimension = this.dimensions.find(d => d.name === value);
       this.chart.setOption({
-        series: {
-          encode: this.chartEncode
-        },
+        series: this.operationTypes.map(d => {
+          return {
+            name: d,
+            encode: this.chartEncode
+          };
+        }),
         yAxis: this.yAxis(dimension)
       });
     }
