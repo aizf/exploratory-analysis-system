@@ -1,26 +1,46 @@
 <template>
   <div class="TimeOrder">
-    <a-select :defaultValue="xDimension" size="small" style="width: 180px" @change="handleXChange">
-      <a-select-option
-        v-for="dimension in dimensions"
-        :value="dimension.name"
-        :key="dimension.name"
-      >
-        {{dimension.name}}
-        <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
-      </a-select-option>
-    </a-select>
-
-    <a-select :defaultValue="yDimension" size="small" style="width: 180px" @change="handleYChange">
-      <a-select-option
-        v-for="dimension in dimensions"
-        :value="dimension.name"
-        :key="dimension.name"
-      >
-        {{dimension.name}}
-        <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
-      </a-select-option>
-    </a-select>
+    <a-row>
+      <a-col :span="5">
+        <a-select
+          :defaultValue="xDimension"
+          size="small"
+          style="width: 180px"
+          @change="handleXChange"
+        >
+          <a-select-option
+            v-for="dimension in dimensions"
+            :value="dimension.name"
+            :key="dimension.name"
+          >
+            {{dimension.name}}
+            <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
+          </a-select-option>
+        </a-select>
+      </a-col>
+      <a-col :span="5">
+        <a-button size="small" @click="swapXYDimensions">
+          <a-icon type="swap" />
+        </a-button>
+      </a-col>
+      <a-col :span="5">
+        <a-select
+          :defaultValue="yDimension"
+          size="small"
+          style="width: 180px"
+          @change="handleYChange"
+        >
+          <a-select-option
+            v-for="dimension in dimensions"
+            :value="dimension.name"
+            :key="dimension.name"
+          >
+            {{dimension.name}}
+            <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
+          </a-select-option>
+        </a-select>
+      </a-col>
+    </a-row>
 
     <div class="main" :style="{width:width+'px',height:height+'px'}"></div>
   </div>
@@ -38,14 +58,6 @@ export default {
       chart: {},
       option: {},
       // number,ordinal,float,int,time
-      dimensions: [
-        { name: "time", type: "time" },
-        {
-          name: "operation",
-          type: "ordinal",
-          data: store.state.view.operationTypes
-        }
-      ],
       xDimension: "time",
       yDimension: "operation"
     };
@@ -66,8 +78,23 @@ export default {
     }),
     ...mapGetters(["operations"]),
 
+    dimensions() {
+      return [
+        { name: "time", type: "time" },
+        {
+          name: "operation",
+          type: "ordinal",
+          data: this.operationTypes
+        },
+        {
+          name: "index",
+          type: "ordinal",
+          data: this.recordset.map(d => d.index)
+        }
+      ];
+    },
     chartData() {
-      return this.recordset.map(d => [d.time, d.operation]);
+      return this.recordset.map(d => [d.time, d.operation, d.index]);
     },
     chartEncode() {
       return {
@@ -90,8 +117,8 @@ export default {
       textStyle: {
         color: this.contrastColor
       },
-      xAxis: this.xAxis(this.dimensions[0]),
-      yAxis: this.yAxis(this.dimensions[1]),
+      xAxis: this.xAxis(this.dimensions.find(d => d.name === this.xDimension)),
+      yAxis: this.yAxis(this.dimensions.find(d => d.name === this.yDimension)),
       legend: {
         orient: "vertical",
         right: "right",
@@ -232,6 +259,23 @@ export default {
           };
         }),
         yAxis: this.yAxis(dimension)
+      });
+    },
+    swapXYDimensions() {
+      const tmp = this.xDimension;
+      this.xDimension = this.yDimension;
+      this.yDimension = tmp;
+      this.chart.setOption({
+        series: this.operationTypes.map(d => {
+          return {
+            name: d,
+            encode: this.chartEncode
+          };
+        }),
+        xAxis: this.xAxis(
+          this.dimensions.find(d => d.name === this.xDimension)
+        ),
+        yAxis: this.yAxis(this.dimensions.find(d => d.name === this.yDimension))
       });
     }
   },

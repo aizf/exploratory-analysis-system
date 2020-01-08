@@ -389,14 +389,15 @@ export default {
       }
     },
     currentChart() {
+      let chart;
       switch (this.currentChartKey) {
         case "scatter":
           this.changeDisabledState({ drag: true });
-          return "ScatterChart";
+          chart = "ScatterChart";
           break;
         case "force":
           this.changeDisabledState({ save: false });
-          return "ForceChart";
+          chart = "ForceChart";
           break;
         case "table":
           this.changeDisabledState({
@@ -408,12 +409,13 @@ export default {
             zoom: true,
             showIds: true
           });
-          return "NodesTable";
+          chart = "NodesTable";
           break;
         default:
           this.changeDisabledState();
           break;
       }
+      return chart;
     },
     undoDisabled() {
       return !this.undoList.length;

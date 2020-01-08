@@ -186,7 +186,7 @@ export default {
             console.log(err);
           });
       }
-      
+
       // the last step
       function changeState() {
         that.$set(visualData, "marked", false);
