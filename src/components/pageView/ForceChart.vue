@@ -240,14 +240,14 @@ export default {
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
-    let that = this;
+    const that = this;
     console.log("ForceChart", this);
     console.log(d3);
-    let svg = d3
+    const svg = d3
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.chartWidth, this.chartHeight]);
-    let width = this.chartWidth,
+    const width = this.chartWidth,
       height = this.chartHeight;
     // console.log("svg", svg);
 

@@ -152,6 +152,7 @@ export default {
           .then(res => {
             store.commit("updateSourceData", res);
             visualData = store.getters.hierarchical2nodeLink;
+            debugger;
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(JSON.stringify(visualData, null, "\t"));
             changeState();
@@ -203,8 +204,10 @@ export default {
         });
         visualData.links.forEach(d => {
           that.$set(d, "mouseover_show", true);
-          d.source = tmpDict[d.source];
-          d.target = tmpDict[d.target];
+          if (typeof d.source !== "object") {
+            d.source = tmpDict[d.source];
+            d.target = tmpDict[d.target];
+          }
         });
 
         // 源数据改变后更新store状态
