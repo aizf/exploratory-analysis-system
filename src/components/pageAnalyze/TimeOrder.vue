@@ -4,7 +4,7 @@
       <a-row>
         <a-col :span="3">
           <a-select
-            :defaultValue="xDimension"
+            :value="xDimension"
             size="small"
             style="width: 100%"
             @change="handleXChange"
@@ -22,13 +22,13 @@
           </a-select>
         </a-col>
         <a-col :span="1">
-          <a-button size="small" ghost :style="{width: '100%',margin:'0 14%'}" @click="swapXYDimensions">
+          <a-button size="small" ghost :style="{width: '70%',margin:'0 14%'}" @click="swapXYDimensions">
             <a-icon type="swap" />
           </a-button>
         </a-col>
         <a-col :span="3">
           <a-select
-            :defaultValue="yDimension"
+            :value="yDimension"
             size="small"
             style="width: 100%"
             @change="handleYChange"
