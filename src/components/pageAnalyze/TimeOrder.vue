@@ -1,46 +1,52 @@
 <template>
   <div class="TimeOrder">
-    <a-row>
-      <a-col :span="5">
-        <a-select
-          :defaultValue="xDimension"
-          size="small"
-          style="width: 180px"
-          @change="handleXChange"
-        >
-          <a-select-option
-            v-for="dimension in dimensions"
-            :value="dimension.name"
-            :key="dimension.name"
+    <div :style="{width:width+'px',background:backgroundColor}">
+      <a-row>
+        <a-col :span="3">
+          <a-select
+            :defaultValue="xDimension"
+            size="small"
+            style="width: 100%"
+            @change="handleXChange"
           >
-            {{dimension.name}}
-            <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
-          </a-select-option>
-        </a-select>
-      </a-col>
-      <a-col :span="5">
-        <a-button size="small" @click="swapXYDimensions">
-          <a-icon type="swap" />
-        </a-button>
-      </a-col>
-      <a-col :span="5">
-        <a-select
-          :defaultValue="yDimension"
-          size="small"
-          style="width: 180px"
-          @change="handleYChange"
-        >
-          <a-select-option
-            v-for="dimension in dimensions"
-            :value="dimension.name"
-            :key="dimension.name"
+            <a-select-option
+              v-for="dimension in dimensions"
+              :value="dimension.name"
+              :key="dimension.name"
+            >
+              {{dimension.name}}
+              <span
+                :style="{color:'rgba(0, 0, 0, 0.45)'}"
+              >type: {{dimension.type}}</span>
+            </a-select-option>
+          </a-select>
+        </a-col>
+        <a-col :span="1">
+          <a-button size="small" ghost :style="{width: '100%',margin:'0 14%'}" @click="swapXYDimensions">
+            <a-icon type="swap" />
+          </a-button>
+        </a-col>
+        <a-col :span="3">
+          <a-select
+            :defaultValue="yDimension"
+            size="small"
+            style="width: 100%"
+            @change="handleYChange"
           >
-            {{dimension.name}}
-            <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
-          </a-select-option>
-        </a-select>
-      </a-col>
-    </a-row>
+            <a-select-option
+              v-for="dimension in dimensions"
+              :value="dimension.name"
+              :key="dimension.name"
+            >
+              {{dimension.name}}
+              <span
+                :style="{color:'rgba(0, 0, 0, 0.45)'}"
+              >type: {{dimension.type}}</span>
+            </a-select-option>
+          </a-select>
+        </a-col>
+      </a-row>
+    </div>
 
     <div class="main" :style="{width:width+'px',height:height+'px'}"></div>
   </div>
