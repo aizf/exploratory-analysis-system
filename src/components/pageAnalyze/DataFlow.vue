@@ -1,6 +1,9 @@
 <template>
-  <div class="DataFlow">
-    <svg :width="width" :height="height" :style="{background:backgroundColor}">
+  <div
+    class="DataFlow"
+    :style="{width:width+'px',height:height+'px'}"
+  >
+    <svg :width="width" :height="height">
       <defs>
         <filter id="shadow">
           <feDropShadow dx="0" dy="0" stdDeviation="0.3" />

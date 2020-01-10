@@ -1,7 +1,8 @@
 <template>
-  <a-row>
-    <a-col :span="18">
+  <a-row :style="{background:backgroundColor}">
+    <a-col :span="18" :style="{borderRight :`1px dashed ${contrastColor}`}">
       <DataFlow></DataFlow>
+      <div :style="{width:'100%',borderTop :`1px dashed ${contrastColor}`}" />
       <TimeOrder></TimeOrder>
     </a-col>
     <a-col :span="6">
@@ -41,6 +42,7 @@ export default {
       height: state => state.view.dpiY - 64,
       colorPalette: state => state.view.colorPalette,
       backgroundColor: state => state.view.backgroundColor,
+      contrastColor: state => state.view.contrastColor,
 
       operations: state => state.analyze.operations,
       currentOperations: state => state.analyze.currentOperations,

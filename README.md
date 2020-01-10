@@ -54,8 +54,6 @@ ant 时间轴+表格（nodes）ing
 克里化，先选类型再有属性
 各个属性在store中存储，如node-link，层级，nodes，links等，再大分类(关系型，非关系型)
 
-普通操作正常，save不弄,slice,rollback,sliceBack明显标注，显示概览图，按时间排序
-
 饼图，各种操作的比例，等
 
 迷你图  done !

@@ -1,14 +1,10 @@
 <template>
   <div class="TimeOrder">
-    <div :style="{width:width+'px',background:backgroundColor}">
+    <div :style="{width:width+'px'}">
       <a-row>
-        <a-col :span="3">
-          <a-select
-            :value="xDimension"
-            size="small"
-            style="width: 100%"
-            @change="handleXChange"
-          >
+        <a-col :span="4">
+          <span :style="{color:contrastColor}">xAxis :</span>
+          <a-select :value="xDimension" size="small" style="width: 100%" @change="handleXChange">
             <a-select-option
               v-for="dimension in dimensions"
               :value="dimension.name"
@@ -22,17 +18,20 @@
           </a-select>
         </a-col>
         <a-col :span="1">
-          <a-button size="small" ghost :style="{width: '70%',margin:'0 14%'}" @click="swapXYDimensions">
+          <a-button
+            size="small"
+            ghost
+            :style="{width: '70%',margin:'0 14%'}"
+            @click="swapXYDimensions"
+          >
             <a-icon type="swap" />
           </a-button>
         </a-col>
+        <a-col :span="1">
+          <span :style="{color:contrastColor}">yAxis :</span>
+        </a-col>
         <a-col :span="3">
-          <a-select
-            :value="yDimension"
-            size="small"
-            style="width: 100%"
-            @change="handleYChange"
-          >
+          <a-select :value="yDimension" size="small" style="width: 100%" @change="handleYChange">
             <a-select-option
               v-for="dimension in dimensions"
               :value="dimension.name"
@@ -85,22 +84,54 @@ export default {
     ...mapGetters(["operations"]),
 
     dimensions() {
+      // chartData的列定义
       return [
+        // 0
         { name: "time", type: "time" },
+        // 1
         {
           name: "operation",
           type: "ordinal",
           data: this.operationTypes
         },
+        // 2
         {
           name: "index",
           type: "ordinal",
           data: this.recordset.map(d => d.index)
+        },
+        // 3
+        {
+          name: "Adjust Layout ? ",
+          type: "ordinal",
+          data: ["Yes", "No"]
+        },
+        // 4
+        {
+          name: "Switch Layout ? ",
+          type: "ordinal",
+          data: ["Yes", "No"]
         }
       ];
     },
     chartData() {
-      return this.recordset.map(d => [d.time, d.operation, d.index]);
+      // const arr=["click", "drag", "mouseover",
+      //    "brush", "classification", "invertBrush",
+      //     "zoom", "filter", "undo", "redo", "rollback"];
+      // 数据
+      function adjustView(op) {
+        const arr = ["drag", "classification", "zoom", "filter"];
+        return arr.includes(op) ? "Yes" : "No";
+      }
+      function switchView(op) {
+        const arr = ["undo", "redo", "rollback"];
+        return arr.includes(op) ? "Yes" : "No";
+      }
+
+      return this.recordset.map(d => {
+        const op = d.operation;
+        return [d.time, op, d.index, adjustView(op), switchView(op)];
+      });
     },
     chartEncode() {
       return {
@@ -288,3 +319,5 @@ export default {
   watch: {}
 };
 </script>
+<style scope>
+</style>
