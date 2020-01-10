@@ -2,9 +2,9 @@
   <div class="TimeOrder">
     <div :style="{width:width+'px'}">
       <a-row>
-        <a-col :span="4">
-          <span :style="{color:contrastColor}">xAxis :</span>
-          <a-select :value="xDimension" size="small" style="width: 100%" @change="handleXChange">
+        <a-col :span="4" :style="{border :`1px solid ${contrastColor}`}">
+          <span :style="{color:contrastColor}">xAxis : </span>
+          <a-select :value="xDimension" size="small" style="width: 80%" @change="handleXChange">
             <a-select-option
               v-for="dimension in dimensions"
               :value="dimension.name"
@@ -27,11 +27,9 @@
             <a-icon type="swap" />
           </a-button>
         </a-col>
-        <a-col :span="1">
-          <span :style="{color:contrastColor}">yAxis :</span>
-        </a-col>
-        <a-col :span="3">
-          <a-select :value="yDimension" size="small" style="width: 100%" @change="handleYChange">
+        <a-col :span="4" :style="{border :`1px solid ${contrastColor}`}">
+          <span :style="{color:contrastColor}">yAxis : </span>
+          <a-select :value="yDimension" size="small" style="width: 80%" @change="handleYChange">
             <a-select-option
               v-for="dimension in dimensions"
               :value="dimension.name"
