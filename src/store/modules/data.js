@@ -1,8 +1,10 @@
 const data = {
     state: {
+        datasetsTypes: ["node-link", "hierarchical","node"],
         datasets: {
             // Node-Link
             "energy": {
+                name:"energy",
                 fileName: "energy.json",
                 dataType: "node-link",
                 nodeFields: {
@@ -10,6 +12,7 @@ const data = {
                 }
             },
             "miserables": {
+                name:"miserables",
                 fileName: "miserables.json",
                 dataType: "node-link",
                 nodeFields: {
@@ -17,8 +20,19 @@ const data = {
                     "group": { alias: "group", type: "cat" }
                 }
             },
+            "epinions": {
+                name:"epinions",
+                fileName: "epinions.json",
+                dataType: "node-link",
+                nodeFields: {
+                    "id": { alias: "id", type: "cat" },
+                    "group": { alias: "group", type: "cat" },
+                    "type": { alias: "type", type: "cat" }
+                }
+            },
             // Hierarchical
             "readme": {
+                name:"readme",
                 fileName: "readme.json",
                 dataType: "hierarchical",
                 nodeFields: {
@@ -27,6 +41,7 @@ const data = {
                 }
             },
             "test": {
+                name:"test",
                 fileName: "test.json",
                 dataType: "hierarchical",
                 nodeFields: {
@@ -36,6 +51,7 @@ const data = {
             },
             // Only Node
             "cars": {
+                name:"cars",
                 fileName: "cars.json",
                 dataType: "node",
                 nodeFields: {
@@ -51,6 +67,7 @@ const data = {
                 }
             },
             "jobs": {
+                name:"jobs",
                 fileName: "jobs.json",
                 dataType: "node",
                 nodeFields: {
@@ -62,6 +79,7 @@ const data = {
                 }
             },
             "barley": {
+                name:"barley",
                 fileName: "barley.json",
                 dataType: "node",
                 nodeFields: {

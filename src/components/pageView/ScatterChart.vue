@@ -88,7 +88,7 @@ export default {
     ...mapState({
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
-      datasets: state => state.data.datasets,
+      // datasets: state => state.data.datasets,
 
       chartWidth: state => state.view.dpiX * 0.7,
       chartHeight: state => state.view.dpiY * 0.7,

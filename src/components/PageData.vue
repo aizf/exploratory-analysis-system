@@ -20,20 +20,12 @@
             <span>Dataset</span>
           </span>
           <!--  -->
-          <a-menu-item-group key="node-link" title="node-link">
-            <a-menu-item key="miserables" @click="loadData">miserables</a-menu-item>
-            <a-menu-item key="energy" @click="loadData">energy</a-menu-item>
-          </a-menu-item-group>
-
-          <a-menu-item-group key="node" title="node">
-            <a-menu-item key="cars" @click="loadData">cars</a-menu-item>
-            <a-menu-item key="jobs" @click="loadData">jobs</a-menu-item>
-            <a-menu-item key="barley" @click="loadData">barley</a-menu-item>
-          </a-menu-item-group>
-
-          <a-menu-item-group key="hierarchical" title="hierarchical">
-            <a-menu-item key="readme" @click="loadData">readme</a-menu-item>
-            <a-menu-item key="test" @click="loadData">test(2196N,2195L)</a-menu-item>
+          <a-menu-item-group v-for="type in datasetsTypes" :key="type" :title="type">
+            <a-menu-item
+              v-for="ds in datasetsTypeDict[type]"
+              :key="ds.name"
+              @click="loadData"
+            >{{ds.name}}</a-menu-item>
           </a-menu-item-group>
         </a-sub-menu>
 
@@ -116,9 +108,26 @@ export default {
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
       datasets: state => state.data.datasets,
+      datasetsTypes: state => state.data.datasetsTypes,
       currentUUID: state => state.view.currentUUID
     }),
-    ...mapGetters(["nodes", "generateUUID", "dataDeepClone"])
+    ...mapGetters(["nodes", "generateUUID", "dataDeepClone"]),
+
+    datasetsNames() {
+      return Object.keys(this.datasets);
+    },
+    datasetsTypeDict() {
+      const res = {};
+      this.datasetsTypes.forEach(d => {
+        res[d] = [];
+      });
+      this.datasetsNames.forEach(d => {
+        const data = this.datasets[d];
+        const dataType = data.dataType;
+        res[dataType].push(data);
+      });
+      return res;
+    }
   },
   methods: {
     loadData(event) {
@@ -152,7 +161,6 @@ export default {
           .then(res => {
             store.commit("updateSourceData", res);
             visualData = store.getters.hierarchical2nodeLink;
-            debugger;
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(JSON.stringify(visualData, null, "\t"));
             changeState();
@@ -164,6 +172,8 @@ export default {
       function __loadNodeLinkData(datasetPath) {
         d3.json(datasetPath)
           .then(res => {
+            // debugger
+            visualData = { nodes: res.nodes, links: [] };
             store.commit("updateSourceData", res);
             visualData = res;
             that.tabContents.push(JSON.stringify(res, null, "\t"));

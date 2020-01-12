@@ -358,7 +358,7 @@ export default {
     ...mapState({
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
-      datasets: state => state.data.datasets,
+      // datasets: state => state.data.datasets,
 
       colorPalette: state => state.view.colorPalette,
       parentUUID: state => state.view.parentUUID,

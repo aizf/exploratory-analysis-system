@@ -21,7 +21,29 @@
           font-family="Avenir"
           font-size="10"
           style="user-select: none;"
-        >{{currentUUID}}</text>
+        >UUID : {{currentUUID}}</text>
+        <text
+          :x="0"
+          :y="0"
+          dx="0.5em"
+          dy="3.0em"
+          :fill="contrastColor"
+          text-anchor="start"
+          font-family="Avenir"
+          font-size="10"
+          style="user-select: none;"
+        >Nodes : {{nodesNumber}}</text>
+        <text
+          :x="0"
+          :y="0"
+          dx="0.5em"
+          dy="4.5em"
+          :fill="contrastColor"
+          text-anchor="start"
+          font-family="Avenir"
+          font-size="10"
+          style="user-select: none;"
+        >Edges : {{linksNumber}}</text>
         <g>
           <g class="links">
             <line
@@ -161,7 +183,7 @@ export default {
     ...mapState({
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
-      datasets: state => state.data.datasets,
+      // datasets: state => state.data.datasets,
 
       chartWidth: state => state.view.dpiX * 0.6,
       chartHeight: state => state.view.dpiY * 0.7,
@@ -179,6 +201,7 @@ export default {
       "nodes",
       "links",
       "nodesNumber",
+      "linksNumber",
       "generateUUID",
       "beforeEvent"
     ]),
