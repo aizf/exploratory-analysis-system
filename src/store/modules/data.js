@@ -20,8 +20,18 @@ const data = {
                     "group": { alias: "group", type: "cat" }
                 }
             },
+            "epinions_1_percent": {
+                name:"epinions_1_percent",
+                fileName: "epinions_1_percent.json",
+                dataType: "node-link",
+                nodeFields: {
+                    "id": { alias: "id", type: "cat" },
+                    "group": { alias: "group", type: "cat" },
+                    "type": { alias: "type", type: "cat" }
+                }
+            },
             "epinions": {
-                name:"epinions",
+                name: "epinions",
                 fileName: "epinions.json",
                 dataType: "node-link",
                 nodeFields: {
