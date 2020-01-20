@@ -1,6 +1,6 @@
 <template>
   <div class="ForceChart">
-    <div class="chart" :style="{width:width+'px', height:height+'px'}"></div>
+    <div class="chart" :style="{width:width+'px', height:height+'px'}" @mousewheel.prevent></div>
   </div>
 </template>
 <script>
@@ -66,6 +66,7 @@ export default {
     this.option = {
       // color: this.colorPalette,
       backgroundColor: this.backgroundColor,
+      tooltip: {},
       series: [
         {
           type: "graphGL",
@@ -129,4 +130,7 @@ export default {
 };
 </script>
 <style scope>
+/* .chart canvas {
+  pointer-events: none;
+} */
 </style>
