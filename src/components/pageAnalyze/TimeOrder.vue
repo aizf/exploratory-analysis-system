@@ -45,7 +45,7 @@
       </a-row>
     </div>
 
-    <div class="main" :style="{width:width+'px',height:height+'px'}"></div>
+    <div class="chart" :style="{width:width+'px',height:height+'px'}"></div>
   </div>
 </template>
 
@@ -142,7 +142,7 @@ export default {
 
   mounted() {
     console.log("TimeOrder", this);
-    this.chart = echarts.init(document.querySelector(".main"), null, {
+    this.chart = echarts.init(document.querySelector(".chart"), null, {
       renderer: "svg"
     });
     console.log("chart", this.chart);

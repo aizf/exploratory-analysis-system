@@ -114,9 +114,11 @@ export default {
     ...mapGetters(["nodes", "generateUUID", "dataDeepClone"]),
 
     datasetsNames() {
+      // datasets的名字
       return Object.keys(this.datasets);
     },
     datasetsTypeDict() {
+      // datasets的名字为key的字典
       const res = {};
       this.datasetsTypes.forEach(d => {
         res[d] = [];
@@ -203,21 +205,21 @@ export default {
         that.$set(visualData, "marked", false);
         const tmpDict = {};
         visualData.nodes.forEach((d, i) => {
-          that.$set(d, "uid", i);
-          that.$set(d, "x", 0);
-          that.$set(d, "y", 0);
-          that.$set(d, "selected", false);
-          that.$set(d, "mouseover_show", true);
-          that.$set(d, "brushing", false);
-          that.$set(d, "invertBrushing", false);
-          tmpDict[d.id] = d;
+          // that.$set(d, "uid", i);
+          // that.$set(d, "x", 0);
+          // that.$set(d, "y", 0);
+          // that.$set(d, "selected", false);
+          // that.$set(d, "mouseover_show", true);
+          // that.$set(d, "brushing", false);
+          // that.$set(d, "invertBrushing", false);
+          // tmpDict[d.id] = d;
         });
         visualData.links.forEach(d => {
-          that.$set(d, "mouseover_show", true);
-          if (typeof d.source !== "object") {
-            d.source = tmpDict[d.source];
-            d.target = tmpDict[d.target];
-          }
+          // that.$set(d, "mouseover_show", true);
+          // if (typeof d.source !== "object") {
+          //   d.source = tmpDict[d.source];
+          //   d.target = tmpDict[d.target];
+          // }
         });
 
         // 源数据改变后更新store状态
