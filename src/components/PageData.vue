@@ -158,11 +158,13 @@ export default {
         }
       }
 
-      function __loadHierarchicalData(datasetPath) {
+      function __loadNodeLinkData(datasetPath) {
         d3.json(datasetPath)
           .then(res => {
+            // debugger
+            visualData = { nodes: res.nodes, links: [] };
             store.commit("updateSourceData", res);
-            visualData = store.getters.hierarchical2nodeLink;
+            visualData = res;
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(JSON.stringify(visualData, null, "\t"));
             changeState();
@@ -171,13 +173,11 @@ export default {
             console.log(err);
           });
       }
-      function __loadNodeLinkData(datasetPath) {
+      function __loadHierarchicalData(datasetPath) {
         d3.json(datasetPath)
           .then(res => {
-            // debugger
-            visualData = { nodes: res.nodes, links: [] };
             store.commit("updateSourceData", res);
-            visualData = res;
+            visualData = store.getters.hierarchical2nodeLink;
             that.tabContents.push(JSON.stringify(res, null, "\t"));
             that.tabContents.push(JSON.stringify(visualData, null, "\t"));
             changeState();
@@ -223,11 +223,6 @@ export default {
         });
 
         // 源数据改变后更新store状态
-        store.commit("ChartsNeedUpdate", {
-          force: true,
-          scatter: true,
-          table: true
-        });
         store.commit("updateVisualData", visualData);
         store.dispatch("resetAll");
 

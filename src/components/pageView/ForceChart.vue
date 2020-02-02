@@ -82,7 +82,8 @@ export default {
           forceAtlas2: {
             steps: 5,
             jitterTolerence: 10,
-            edgeWeightInfluence: 4
+            edgeWeightInfluence: 4,
+            // stopThreshold: 0
           }
         }
       ]

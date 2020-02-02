@@ -22,7 +22,15 @@ export default new Vuex.Store({
 
   },
   actions: {
-    resetAll({ getters, commit }) {
+    resetAll({
+      getters,
+      commit
+    }) {
+      commit("ChartsNeedUpdate", {
+        force: true,
+        scatter: true,
+        table: true
+      });
       commit("updateNodesTotalNum", getters.nodes.length);
       commit("updateParentUUID", "none");
       commit("updateCurrentUUID", "root");
