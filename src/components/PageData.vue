@@ -65,7 +65,8 @@
 </template>
 <script>
 import Vue from 'vue'
-import {Tabs} from 'ant-design-vue'
+import {Icon,Tabs} from 'ant-design-vue'
+Vue.use(Icon);
 Vue.use(Tabs);
 
 import store from "@/store/";

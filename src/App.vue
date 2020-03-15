@@ -40,18 +40,18 @@ Vue.use(Layout);
 Vue.use(Menu);
 Vue.use(Tooltip);
 import { mapState } from "vuex";
-import PageData from "@/components/PageData.vue";
-import PageView from "@/components/PageView.vue";
-import PageAnalyze from "@/components/PageAnalyze.vue";
-import Test from "@/components/Test.vue";
+// import PageData from "@/components/PageData.vue";
+// import PageView from "@/components/PageView.vue";
+// import PageAnalyze from "@/components/PageAnalyze.vue";
+// import Test from "@/components/Test.vue";
 
 export default {
   name: "app",
   components: {
-    PageData,
-    PageView,
-    PageAnalyze,
-    Test
+    // PageData,
+    // PageView,
+    // PageAnalyze,
+    // Test
   },
   data() {
     return {
@@ -78,8 +78,10 @@ export default {
       return !this.dataSelected ? "请先在左侧选择数据" : "交互分析界面";
     }
   },
-  created(){
-
+  created() {
+    if (this.$route.name !== "Data" && !this.dataSelected) {
+      this.$router.push("/Data");
+    }
   },
   mounted() {
     console.log(this);
