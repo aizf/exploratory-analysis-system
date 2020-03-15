@@ -15,7 +15,7 @@
         <a-row>
           <a-col :span="12" offset="4">
             <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" @.stop :mouseEnterDelay="0.4">
-              <span style="fontSize: 18px; fontWeight: 500">click</span>
+              <span class="vSubMenu">click</span>
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
@@ -25,7 +25,7 @@
         <a-row>
           <a-col :span="12" offset="4">
             <a-tooltip placement="top" title="单点操作，拖动一个点" :mouseEnterDelay="0.4">
-              <span style="fontSize: 18px; fontWeight: 500">drag</span>
+              <span class="vSubMenu">drag</span>
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
@@ -35,7 +35,7 @@
         <a-row>
           <a-col :span="12" offset="4">
             <a-tooltip placement="top" title="单点操作，展示与该点相关联的点" :mouseEnterDelay="0.4">
-              <span style="fontSize: 18px; fontWeight: 500">hover</span>
+              <span class="vSubMenu">hover</span>
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
@@ -49,7 +49,7 @@
                 <a-checkbox :checked="!brushKeep" @change="brushKeep=!brushKeep">no</a-checkbox>
                 <a-checkbox :checked="brushKeep" @change="brushKeep=!brushKeep">yes</a-checkbox>
               </template>
-              <span style="fontSize: 18px; fontWeight: 500">brush</span>
+              <span class="vSubMenu">brush</span>
             </a-popover>
           </a-col>
           <a-col :span="4" offset="2">
@@ -59,7 +59,7 @@
         <a-row>
           <a-col :span="12" offset="4">
             <a-tooltip placement="top" title="多点操作，取消选中多个点" :mouseEnterDelay="0.4">
-              <span style="fontSize: 18px; fontWeight: 500">invert brush</span>
+              <span class="vSubMenu">invert brush</span>
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
@@ -73,7 +73,7 @@
         <a-row>
           <a-col :span="12" offset="4">
             <a-tooltip placement="top" title="多点操作，放大、缩小或平移视图" :mouseEnterDelay="0.4">
-              <span style="fontSize: 18px; fontWeight: 500">zoom</span>
+              <span class="vSubMenu">zoom</span>
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
@@ -93,16 +93,36 @@
         </a-row>
       </a-card>
 
-      <a-menu
+      <a-card
+        title="Chart Type"
+        :headStyle="{padding:'0 24px 0 24px'}"
+        :bodyStyle="{padding:'5px 10px 5px 10px'}"
+      >
+        <!-- <a-icon type="area-chart" /> -->
+        <div class="vSubMenu">
+          <a-icon type="deployment-unit" />
+          <span @click="changeChart" style="marginLeft:8px">force</span>
+        </div>
+        <div class="vSubMenu">
+          <a-icon type="dot-chart" />
+          <span @click="changeChart" style="marginLeft:8px">scatter</span>
+        </div>
+        <div class="vSubMenu">
+          <a-icon type="table" />
+          <span @click="changeChart" style="marginLeft:8px">table</span>
+        </div>
+      </a-card>
+
+      <!-- <a-menu
         mode="inline"
         :defaultSelectedKeys="['1']"
         :defaultOpenKeys="['sub1']"
         :openKeys="openKeys"
         @openChange="onOpenChange"
-        :style="{ height: '100%', borderRight: 0 }"
+        :style="{ borderRight: 0 }"
         :inlineIndent="24"
-      >
-        <!-- <a-sub-menu key="sub1">
+      >-->
+      <!-- <a-sub-menu key="sub1">
           <span slot="title">
             <a-icon type="user" />
             <span>oprations</span>
@@ -178,9 +198,9 @@
               </span>
             </a-menu-item>
           </a-menu-item-group>
-        </a-sub-menu>-->
+      </a-sub-menu>-->
 
-        <!-- <a-sub-menu key="sub2">
+      <!-- <a-sub-menu key="sub2">
           <span slot="title">
             <a-icon type="laptop" />
             <span>display</span>
@@ -197,9 +217,9 @@
           </a-menu-item>
           <a-menu-item key="5">DataFlow</a-menu-item>
           <a-menu-item key="6">OprationFlow</a-menu-item>
-        </a-sub-menu>-->
+      </a-sub-menu>-->
 
-        <a-sub-menu key="sub3">
+      <!-- <a-sub-menu key="sub3">
           <span slot="title">
             <a-icon type="area-chart" />
             <span>change chart</span>
@@ -214,7 +234,7 @@
             <a-icon type="table" />table
           </a-menu-item>
         </a-sub-menu>
-      </a-menu>
+      </a-menu>-->
     </a-layout-sider>
 
     <a-layout style="padding: 0 0 0 5px">
@@ -310,6 +330,29 @@
   </a-layout>
 </template>
 <script>
+import Vue from "vue";
+import {
+  Badge,
+  Button,
+  Checkbox,
+  Col,
+  Drawer,
+  Icon,
+  Popover,
+  Row,
+  Switch,
+  Tag
+} from "ant-design-vue";
+Vue.use(Badge);
+Vue.use(Button);
+Vue.use(Checkbox);
+Vue.use(Col);
+Vue.use(Drawer);
+Vue.use(Icon);
+Vue.use(Popover);
+Vue.use(Row);
+Vue.use(Switch);
+Vue.use(Tag);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
@@ -475,7 +518,7 @@ export default {
       }
     },
     changeChart(option) {
-      this.currentChartKey = option.key;
+      this.currentChartKey = option.target.innerText;
     },
     // 改变开关的禁用状态
     changeDisabledState({
@@ -573,4 +616,14 @@ export default {
   }
 };
 </script>
-<style></style>
+<style scoped>
+.vSubMenu {
+  font-size: 18px;
+  font-weight: 500;
+  text-indent: 20px;
+}
+.vSubMenu:hover {
+  color: #1890ff;
+  cursor: pointer;
+}
+</style>

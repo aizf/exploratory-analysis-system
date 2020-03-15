@@ -89,6 +89,7 @@
             :x="node.x1 + 6"
             :y="(node.y0+node.y1)/2-markCircleR"
             dx="-0.35em"
+            :stroke="contrastColor"
             text-anchor="start"
             :key="node.data.uuid"
           >{{node.data.uuid}}</text>

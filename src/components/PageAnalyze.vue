@@ -15,6 +15,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import {Col,Row} from 'ant-design-vue'
+Vue.use(Col);
+Vue.use(Row);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import StaticForce from "./commonUse/StaticForce.vue";

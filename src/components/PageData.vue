@@ -64,6 +64,10 @@
   </a-layout>
 </template>
 <script>
+import Vue from 'vue'
+import {Tabs} from 'ant-design-vue'
+Vue.use(Tabs);
+
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";

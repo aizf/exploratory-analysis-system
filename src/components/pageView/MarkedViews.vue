@@ -24,6 +24,12 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
+import {Button,Card,Col,Row} from 'ant-design-vue'
+Vue.use(Button);
+Vue.use(Card);
+Vue.use(Col);
+Vue.use(Row);
 import { mapState, mapGetters } from "vuex";
 import StaticForce from "@/components/commonUse/StaticForce.vue";
 

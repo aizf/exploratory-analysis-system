@@ -50,6 +50,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import {Col,Row,Select} from 'ant-design-vue'
+Vue.use(Col);
+Vue.use(Row);
+Vue.use(Select);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import echarts from "echarts";

@@ -10,23 +10,35 @@
           :defaultSelectedKeys="['1']"
           :style="{ lineHeight: '50px' }"
         >
-          <a-menu-item key="1" @click="currentPageKey='1'">Data</a-menu-item>
-          <a-menu-item key="2" @click="currentPageKey='2'" :disabled="!dataSelected">
-            <a-tooltip placement="bottom" :title="pageViewTooltipTitle">View</a-tooltip>
+          <a-menu-item key="Data">
+            <router-link to="/Data">Data</router-link>
           </a-menu-item>
-          <a-menu-item key="3" @click="currentPageKey='3'" :disabled="!dataSelected">
-            <a-tooltip placement="bottom" :title="pageAnalyzeTooltipTitle">Analyze</a-tooltip>
+          <a-menu-item key="View" :disabled="!dataSelected">
+            <a-tooltip placement="bottom" :title="pageViewTooltipTitle">
+              <router-link to="/View">View</router-link>
+            </a-tooltip>
+          </a-menu-item>
+          <a-menu-item key="Analyze" :disabled="!dataSelected">
+            <a-tooltip placement="bottom" :title="pageAnalyzeTooltipTitle">
+              <router-link to="/Analyze">Analyze</router-link>
+            </a-tooltip>
           </a-menu-item>
         </a-menu>
       </a-layout-header>
-      <keep-alive>
-        <component :is="currentPage"></component>
-      </keep-alive>
+      <router-view></router-view>
+      <!-- <keep-alive> -->
+      <!-- <component :is="currentPage"></component> -->
+      <!-- </keep-alive> -->
     </a-layout>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
+import { Layout, Menu, Tooltip } from "ant-design-vue";
+Vue.use(Layout);
+Vue.use(Menu);
+Vue.use(Tooltip);
 import { mapState } from "vuex";
 import PageData from "@/components/PageData.vue";
 import PageView from "@/components/PageView.vue";
@@ -43,7 +55,6 @@ export default {
   },
   data() {
     return {
-      currentPageKey: "1",
       t: { a: 1, b: 2 }
     };
   },
@@ -56,23 +67,6 @@ export default {
     ...mapState({
       selectedDataset: state => state.data.selectedDataset
     }),
-    currentPage() {
-      let page;
-      switch (this.currentPageKey) {
-        case "1":
-          page = "PageData";
-          break;
-        case "2":
-          page = "PageView";
-          break;
-        case "3":
-          page = "PageAnalyze";
-          break;
-        default:
-          break;
-      }
-      return page;
-    },
     dataSelected() {
       // 判断是否选择了数据集
       return this.selectedDataset !== "";
@@ -83,6 +77,9 @@ export default {
     pageAnalyzeTooltipTitle() {
       return !this.dataSelected ? "请先在左侧选择数据" : "交互分析界面";
     }
+  },
+  created(){
+
   },
   mounted() {
     console.log(this);

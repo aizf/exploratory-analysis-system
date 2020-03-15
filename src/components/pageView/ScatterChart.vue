@@ -41,6 +41,9 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
+import {Select} from 'ant-design-vue'
+Vue.use(Select);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";

@@ -2,6 +2,9 @@
   <a-table :columns="columns" :dataSource="data" size="small"></a-table>
 </template>
 <script>
+import Vue from 'vue'
+import {Table} from 'ant-design-vue'
+Vue.use(Table);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 // import * as _ from "lodash";
