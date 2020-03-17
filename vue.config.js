@@ -25,6 +25,10 @@ module.exports = {
   //         }
   //     }
   // },
+  devServer: {
+    host: '127.0.0.1',
+    hot: true
+  },
   configureWebpack: config => { // webpack配置，值位对象时会合并配置，为方法时会改写配置
     // if (debug) { // 开发环境配置
     //     config.devtool = 'cheap-module-eval-source-map'

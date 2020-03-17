@@ -1,5 +1,5 @@
 <template>
-  <a-layout>
+  <a-layout id="pageView">
     <a-layout-sider
       width="250"
       theme="light"
@@ -14,7 +14,7 @@
       >
         <a-row>
           <a-col :span="12" offset="4">
-            <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" @.stop :mouseEnterDelay="0.4">
+            <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" :mouseEnterDelay="0.4">
               <span class="vSubMenu">click</span>
             </a-tooltip>
           </a-col>
@@ -94,23 +94,81 @@
       </a-card>
 
       <a-card
-        title="Chart Type"
+        title="Chart Option"
         :headStyle="{padding:'0 24px 0 24px'}"
         :bodyStyle="{padding:'5px 10px 5px 10px'}"
       >
         <!-- <a-icon type="area-chart" /> -->
-        <div class="vSubMenu">
-          <a-icon type="deployment-unit" />
-          <span @click="changeChart" style="marginLeft:8px">force</span>
-        </div>
-        <div class="vSubMenu">
-          <a-icon type="dot-chart" />
-          <span @click="changeChart" style="marginLeft:8px">scatter</span>
-        </div>
-        <div class="vSubMenu">
-          <a-icon type="table" />
-          <span @click="changeChart" style="marginLeft:8px">table</span>
-        </div>
+        <a-tabs tabPosition="left" :activeKey="currentChartKey" @change="changeChart">
+          <a-tab-pane key="force">
+            <span slot="tab">
+              <a-icon type="deployment-unit" />force
+            </span>
+            <div class="chartOption">
+              <span class="vSubTitle">node</span>
+              <div>
+                <span class="vSubMenu">size</span>
+                <a-input-number
+                  class="optionInput"
+                  :min="0.1"
+                  :max="70"
+                  :step="0.2"
+                  v-model="chartOption.node.nodeSize"
+                />
+                <br />
+                <span class="vSubMenu">border color</span>
+                <a-input class="optionInput" :value="chartOption.node.borderColor" />
+                <span class="vSubMenu">border width</span>
+                <a-input-number
+                  class="optionInput"
+                  :min="0.1"
+                  :max="70"
+                  :step="0.2"
+                  v-model="chartOption.node.borderWidth"
+                />
+              </div>
+              <span class="vSubTitle">link</span>
+              <div>
+                <span class="vSubMenu">color</span>
+                <a-input class="optionInput" :value="chartOption.link.color" />
+                <span class="vSubMenu">width</span>
+                <a-input-number
+                  class="optionInput"
+                  :min="0.1"
+                  :max="10"
+                  :step="0.1"
+                  v-model="chartOption.link.width"
+                />
+                <span class="vSubMenu">distance</span>
+                <a-input-number
+                  class="optionInput"
+                  :min="1"
+                  :max="200"
+                  :step="1"
+                  v-model="chartOption.link.distance"
+                />
+                <span class="vSubMenu">opacity</span>
+                <a-input-number
+                  class="optionInput"
+                  :min="0"
+                  :max="1"
+                  :step="0.1"
+                  v-model="chartOption.link.opacity"
+                />
+              </div>
+            </div>
+          </a-tab-pane>
+          <a-tab-pane key="scatter">
+            <span slot="tab">
+              <a-icon type="dot-chart" />scatter
+            </span>
+          </a-tab-pane>
+          <a-tab-pane key="table">
+            <span slot="tab">
+              <a-icon type="table" />table
+            </span>
+          </a-tab-pane>
+        </a-tabs>
       </a-card>
 
       <!-- <a-menu
@@ -338,9 +396,11 @@ import {
   Col,
   Drawer,
   Icon,
+  Input,
   Popover,
   Row,
   Switch,
+  Tabs,
   Tag
 } from "ant-design-vue";
 Vue.use(Badge);
@@ -349,13 +409,15 @@ Vue.use(Checkbox);
 Vue.use(Col);
 Vue.use(Drawer);
 Vue.use(Icon);
+Vue.use(Input);
 Vue.use(Popover);
 Vue.use(Row);
 Vue.use(Switch);
+Vue.use(Tabs);
 Vue.use(Tag);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
-import * as d3 from "d3";
+// import * as d3 from "d3";
 import ForceChart from "./pageView/ForceChart.vue";
 import ScatterChart from "./pageView/ScatterChart.vue";
 import NodesTable from "./pageView/NodesTable.vue";
@@ -384,6 +446,11 @@ export default {
       visZoom: true,
       visShowIds: false,
       markedsVisible: false,
+      // option
+      chartOption: {
+        node: { nodeSize: 4.5, borderColor: "red", borderWidth: 0.8 },
+        link: { color: "#aaa", width: 0.3, opacity: 0.8, distance: 30 }
+      },
       // switch disabled
       saveDisabled: false,
       clickDisabled: false,
@@ -517,8 +584,8 @@ export default {
         this.openKeys = latestOpenKey ? [latestOpenKey] : [];
       }
     },
-    changeChart(option) {
-      this.currentChartKey = option.target.innerText;
+    changeChart(key) {
+      this.currentChartKey = key;
     },
     // 改变开关的禁用状态
     changeDisabledState({
@@ -543,7 +610,7 @@ export default {
     },
 
     viewUndo() {
-      this.$store.commit("changeUndoRedo", (undo, redo) => {
+      this.$store.commit("changeUndoRedo", undo => {
         if (!undo.length) {
           return;
         }
@@ -618,12 +685,34 @@ export default {
 </script>
 <style scoped>
 .vSubMenu {
-  font-size: 18px;
-  font-weight: 500;
-  text-indent: 20px;
+  font-size: 14px;
+  font-weight: 400;
+  width: 30px;
+  margin-left: 10px;
 }
-.vSubMenu:hover {
+.vSubTitle {
+  font-size: 15px;
+  font-weight: 650;
+}
+/* .vSubMenu:hover {
   color: #1890ff;
   cursor: pointer;
+} */
+.chartOption .ant-input-number {
+  height: 26px;
+}
+.optionInput {
+  width: 90%;
+  margin-left: 10px;
+}
+</style>
+<style>
+#pageView .ant-tabs-tab {
+  text-align: left;
+  padding: 2px 5px;
+  margin-bottom: 6px;
+}
+#pageView .ant-tabs-left-content {
+  padding-left: 4px;
 }
 </style>

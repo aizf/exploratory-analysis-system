@@ -41,8 +41,8 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
-import {Select} from 'ant-design-vue'
+import Vue from "vue";
+import { Select } from "ant-design-vue";
 Vue.use(Select);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
@@ -101,7 +101,7 @@ export default {
       currentUUID: state => state.view.currentUUID,
       needUpdate: state => state.view.chartsNeedUpdate.scatter,
 
-      currentOperations: state => state.analyze.currentOperations,
+      currentOperations: state => state.analyze.currentOperations
     }),
     ...mapGetters([
       "nodes",
@@ -170,7 +170,10 @@ export default {
     // brush
     this.brush = d3
       .brush()
-      .extent([[0, 0], [this.chartWidth, this.chartHeight]])
+      .extent([
+        [0, 0],
+        [this.chartWidth, this.chartHeight]
+      ])
       .on("start brush", this.brushed)
       .on("end", this.brushEnd);
     this.brushG = svg
@@ -184,7 +187,10 @@ export default {
     // invertBrush
     this.invertBrush = d3
       .brush()
-      .extent([[0, 0], [this.chartWidth, this.chartHeight]])
+      .extent([
+        [0, 0],
+        [this.chartWidth, this.chartHeight]
+      ])
       .on("start brush", this.brushed)
       .on("end", this.invertBrushEnd);
     this.invertBrushG = svg
@@ -369,8 +375,9 @@ export default {
       // console.log(extent);
       // console.log(this.vis.node());
       // console.log(d3.zoomTransform(this.vis.node()));
-      if (d3.event.type === "start") {
-      }
+      // if (d3.event.type === "start") {
+      //   null;
+      // }
 
       const className = this.visBrush ? "brushing" : "invertBrushing";
       this.node.classed(className, d => {

@@ -72,7 +72,7 @@ export default {
     ...mapGetters(["layoutRange"])
   },
   mounted() {
-    console.log("StaticForce", this);
+    // console.log("StaticForce", this);
     // console.log(d3);
     // console.log(_.VERSION);
     const that = this;
@@ -80,8 +80,8 @@ export default {
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.width, this.height]);
-    const width = this.width,
-      height = this.height;
+    // const width = this.width,
+    // height = this.height;
     // console.log(svg);
 
     this.vis = svg.select("g");
