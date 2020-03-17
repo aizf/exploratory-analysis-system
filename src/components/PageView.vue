@@ -1,10 +1,6 @@
 <template>
   <a-layout id="pageView">
-    <a-layout-sider
-      width="250"
-      theme="light"
-      style="background: #fff"
-    >
+    <a-layout-sider width="250" theme="light" style="background: #fff">
       <a-card
         title="Oprations"
         :headStyle="{padding:'0 24px 0 24px'}"
@@ -113,26 +109,25 @@
                   :step="0.2"
                   v-model="chartOption.node.nodeSize"
                 />
-                <br />
                 <span class="vSubMenu">border color</span>
                 <a-input class="optionInput" :value="chartOption.node.borderColor" />
-                <span class="vSubMenu">border width</span>
+                <span class="vSubMenu">charge force</span>
                 <a-input-number
                   class="optionInput"
-                  :min="0.1"
+                  :min="-70"
                   :max="70"
-                  :step="0.2"
-                  v-model="chartOption.node.borderWidth"
+                  :step="5"
+                  v-model="chartOption.node.chargeForce"
                 />
               </div>
               <span class="vSubTitle">link</span>
               <div>
                 <span class="vSubMenu">color</span>
-                <a-input class="optionInput" :value="chartOption.link.color" />
+                <a-input class="optionInput" v-model="chartOption.link.color" />
                 <span class="vSubMenu">width</span>
                 <a-input-number
                   class="optionInput"
-                  :min="0.1"
+                  :min="0"
                   :max="10"
                   :step="0.1"
                   v-model="chartOption.link.width"
@@ -140,7 +135,7 @@
                 <span class="vSubMenu">distance</span>
                 <a-input-number
                   class="optionInput"
-                  :min="1"
+                  :min="0"
                   :max="200"
                   :step="1"
                   v-model="chartOption.link.distance"
@@ -363,6 +358,7 @@
                 :visZoom="visZoom"
                 :visShowIds="visShowIds"
                 :chartOption="chartOption"
+                @changeChartOption="handleChartOption"
               ></component>
             </keep-alive>
           </a-col>
@@ -447,7 +443,7 @@ export default {
       markedsVisible: false,
       // option
       chartOption: {
-        node: { nodeSize: 4.5, borderColor: "red", borderWidth: 0.8 },
+        node: { nodeSize: 4.5, borderColor: "red", chargeForce: -30 },
         link: { color: "#aaa", width: 0.3, opacity: 0.8, distance: 30 }
       },
       // switch disabled
@@ -661,6 +657,14 @@ export default {
         }
       });
     },
+    handleChartOption(val) {
+      // 处理ForceChart.vue更改Chart Option的callback
+      Object.keys(val).forEach(d => {
+        Object.keys(val[d]).forEach(dd => {
+          this.chartOption[d][dd] = val[d][dd];
+        });
+      });
+    },
     // test
     test(event, i, a) {
       console.log(event);
@@ -687,22 +691,21 @@ export default {
   font-size: 14px;
   font-weight: 400;
   width: 30px;
-  margin-left: 10px;
+  margin-left: 8%;
 }
 .vSubTitle {
   font-size: 15px;
   font-weight: 650;
+  margin-left: 2%;
 }
 /* .vSubMenu:hover {
   color: #1890ff;
   cursor: pointer;
 } */
-.chartOption .ant-input-number {
-  height: 26px;
-}
 .optionInput {
-  width: 90%;
-  margin-left: 10px;
+  height: 26px;
+  width: 85%;
+  margin: 0 8%;
 }
 </style>
 <style>
@@ -712,6 +715,6 @@ export default {
   margin-bottom: 6px;
 }
 #pageView .ant-tabs-left-content {
-  padding-left: 4px;
+  padding-left: 0px;
 }
 </style>

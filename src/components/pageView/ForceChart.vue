@@ -53,6 +53,8 @@
               :y1="link.source.y"
               :x2="link.target.x"
               :y2="link.target.y"
+              :stroke="chartOption.link.color"
+              :stroke-width="fixedLinkWidth"
               :key="link.uid"
             />
           </g>
@@ -60,7 +62,7 @@
             <circle
               v-for="node in nodes"
               :class="{'display':true,'selected':node.selected,'mouseover_opacity':!node.mouseover_show,'brushing':node.brushing,'invertBrushing':node.invertBrushing}"
-              :r="chartOption.node.nodeSize"
+              :r="fixedNodeSize"
               :cx="node.x"
               :cy="node.y"
               :fill="colorPalette[node.group || 0]"
@@ -133,7 +135,8 @@ export default {
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
       isDraging: false, // 区分click和drag等
-      mousePoint: [] // 相对于原始坐标系
+      mousePoint: [], // 相对于原始坐标系
+      transform: { k: 1, x: 0, y: 0 }
     };
   },
   computed: {
@@ -185,7 +188,14 @@ export default {
         .force("link")
         .links(this.links)
         .distance(this.chartOption.link.distance);
+      simulation.force("charge").strength(this.chartOption.node.chargeForce);
       return simulation;
+    },
+    fixedNodeSize() {
+      return this.chartOption.node.nodeSize / this.transform.k;
+    },
+    fixedLinkWidth() {
+      return this.chartOption.link.width / this.transform.k;
     },
 
     degreeArray() {
@@ -295,6 +305,7 @@ export default {
       if (!that.visZoom) return;
       let transform = d3.event.transform;
       that.vis.attr("transform", transform);
+      that.transform.k = transform.k;
     }
     function zoomEnd() {
       if (!that.visZoom) return;
@@ -354,6 +365,9 @@ export default {
         return;
       }
       // debugger;
+      this.transform.k = 1;
+      this.transform.x = 0;
+      this.transform.y = 0;
       let t = this.visTransform();
       t.x = 0;
       t.y = 0;
@@ -701,15 +715,19 @@ export default {
       setTimeout(() => {
         this.simulation.alphaTarget(0).stop();
       }, 400);
+    },
+    "chartOption.node.chargeForce": function() {
+      this.simulation.alphaTarget(0.5).restart();
+      setTimeout(() => {
+        this.simulation.alphaTarget(0).stop();
+      }, 400);
     }
   }
 };
 </script>
 <style scope>
 .ForceChart line {
-  stroke: #aaa;
   stroke-opacity: 0.8;
-  stroke-width: 0.3;
 }
 
 .ForceChart circle {
