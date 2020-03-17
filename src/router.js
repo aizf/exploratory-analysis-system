@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import PageData from "@/components/PageData.vue";
 
 Vue.use(Router)
 
+const PageData = () => import("@/components/PageData.vue");
 const PageView = () => import('@/components/PageView.vue')
 const PageAnalyze = () => import('@/components/PageAnalyze.vue')
 const About = () => import('@/views/About.vue')

@@ -60,7 +60,7 @@
             <circle
               v-for="node in nodes"
               :class="{'display':true,'selected':node.selected,'mouseover_opacity':!node.mouseover_show,'brushing':node.brushing,'invertBrushing':node.invertBrushing}"
-              :r="Math.max(Math.sqrt(!!node.size) / 10, 4.5)"
+              :r="chartOption.node.nodeSize"
               :cx="node.x"
               :cy="node.y"
               :fill="colorPalette[node.group || 0]"
@@ -95,8 +95,8 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
-import {InputNumber,Slider} from 'ant-design-vue'
+import Vue from "vue";
+import { InputNumber, Slider } from "ant-design-vue";
 Vue.use(InputNumber);
 Vue.use(Slider);
 import store from "@/store/";
@@ -114,7 +114,8 @@ export default {
     visDrag: Boolean,
     visMouseover: Boolean,
     visZoom: Boolean,
-    visShowIds: Boolean
+    visShowIds: Boolean,
+    chartOption: Object
   },
   data() {
     return {
@@ -180,7 +181,10 @@ export default {
     simulation() {
       let simulation = this.simulation__;
       simulation.nodes(this.nodes);
-      simulation.force("link").links(this.links);
+      simulation
+        .force("link")
+        .links(this.links)
+        .distance(this.chartOption.link.distance);
       return simulation;
     },
 
@@ -204,7 +208,10 @@ export default {
   created() {
     this.simulation__ = d3
       .forceSimulation()
-      .force("link", d3.forceLink().id(d => d.id || d.name))
+      .force(
+        "link",
+        d3.forceLink().id(d => d.id || d.name)
+      )
       .force("charge", d3.forceManyBody())
       .force(
         "center",
@@ -244,7 +251,10 @@ export default {
     // brush
     this.brush = d3
       .brush()
-      .extent([[0, 0], [width, height]])
+      .extent([
+        [0, 0],
+        [width, height]
+      ])
       .on("start", this.brushStart)
       .on("brush", this.brushed)
       .on("end", this.brushEnd);
@@ -262,7 +272,10 @@ export default {
     // invertBrush
     this.invertBrush = d3
       .brush()
-      .extent([[0, 0], [width, height]])
+      .extent([
+        [0, 0],
+        [width, height]
+      ])
       .on("start", this.brushStart)
       .on("brush", this.brushed)
       .on("end", this.invertBrushEnd);
@@ -533,7 +546,7 @@ export default {
         this.isDraging = true;
       }
     },
-    dragended(d, i, p) {
+    dragended(d) {
       if (!this.visDrag) return;
       if (!d3.event.active) this.simulation.alphaTarget(0);
       d.fx = null;
@@ -682,6 +695,12 @@ export default {
         ? this.invertBrushG.style("display", "inline")
         : (this.invertBrushG.style("display", "none"),
           this.invertBrush.clear(this.invertBrushG));
+    },
+    "chartOption.link.distance": function() {
+      this.simulation.alphaTarget(0.5).restart();
+      setTimeout(() => {
+        this.simulation.alphaTarget(0).stop();
+      }, 400);
     }
   }
 };

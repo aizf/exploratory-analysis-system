@@ -4,8 +4,6 @@
       width="250"
       theme="light"
       style="background: #fff"
-      collapsible
-      collapsedWidth="80"
     >
       <a-card
         title="Oprations"
@@ -364,6 +362,7 @@
                 :visMouseover="visMouseover"
                 :visZoom="visZoom"
                 :visShowIds="visShowIds"
+                :chartOption="chartOption"
               ></component>
             </keep-alive>
           </a-col>
