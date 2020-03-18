@@ -1,5 +1,7 @@
 const path = require('path')
-// const debug = process.env.NODE_ENV !== 'production'
+const debug = process.env.NODE_ENV !== 'production'
+const CompressionPlugin = require("compression-webpack-plugin")
+const UglifyPlugin = require('uglifyjs-webpack-plugin')
 //const VueConf = require('./src/assets/js/libs/vue_config_class')
 //const vueConf = new VueConf(process.argv)
 
@@ -30,10 +32,37 @@ module.exports = {
     hot: true
   },
   configureWebpack: config => { // webpack配置，值位对象时会合并配置，为方法时会改写配置
-    // if (debug) { // 开发环境配置
-    //     config.devtool = 'cheap-module-eval-source-map'
-    // } else { // 生产环境配置
-    // }
+    if (debug) { // 开发环境配置
+      config.mode = 'development';
+    } else { // 生产环境配置
+      config.mode = 'production';
+
+      // Gzip
+      config.plugins = [
+        ...config.plugins,
+        new CompressionPlugin({
+          test: /\.js$|\.html$|\.css/, //匹配文件名
+          threshold: 10240,//对超过10k的数据压缩
+          deleteOriginalAssets: false //不删除源文件
+        })
+      ];
+      // drop console
+      // let optimization = {
+      //   minimizer: [new UglifyPlugin({
+      //     uglifyOptions: {
+      //       compress: {
+      //         // warnings: false,
+      //         drop_console: true, // console
+      //         drop_debugger: false,
+      //         pure_funcs: ['console.log'] // 移除console
+      //       }
+      //     }
+      //   })]
+      // }
+      // Object.assign(config, {
+      //   optimization
+      // })
+    }
     Object.assign(config, { // 开发生产共同配置，配置别名
       resolve: {
         alias: {

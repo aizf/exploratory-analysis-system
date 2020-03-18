@@ -104,6 +104,7 @@ Vue.use(Slider);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
+import throttle from "lodash/throttle";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
 export default {
@@ -230,7 +231,7 @@ export default {
     this.drag__ = d3
       .drag()
       .on("start", this.dragstarted)
-      .on("drag", this.dragged)
+      .on("drag", this.dragged())
       .on("end", this.dragended);
   },
   mounted() {
@@ -403,13 +404,13 @@ export default {
       // let nodeDrag = d3
       //   .drag()
       //   .on("start", this.dragstarted)
-      //   .on("drag", this.dragged)
+      //   .on("drag", this.dragged())
       //   .on("end", this.dragended);
       this.node.call(
         d3
           .drag()
           .on("start", this.dragstarted)
-          .on("drag", this.dragged)
+          .on("drag", this.dragged())
           .on("end", this.dragended)
       );
       // this.node.on("click", this.clickSelect);
@@ -421,7 +422,7 @@ export default {
         d3
           .drag()
           .on("start", this.dragstarted)
-          .on("drag", this.dragged)
+          .on("drag", this.dragged())
           .on("end", this.dragended)
       );
       // this.text.on("click", textEvent2Node);
@@ -541,16 +542,24 @@ export default {
     dragstarted(d) {
       if (!this.visDrag) return;
       this.beforeEvent("drag", this);
-      if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
+      // if (!d3.event.active) this.simulation.alphaTarget(0.1).restart();
+      if (this.chartOption.simulation.run) {
+        d.fx = d.x;
+        d.fy = d.y;
+      }
       this.mousePoint = [d3.event.x, d3.event.y];
     },
-    dragged(d) {
+    dragging(d) {
+      // dragging
       if (!this.visDrag) return;
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-      // console.log([d3.event.x,d3.event.y]);
+      if (this.chartOption.simulation.run) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+      } else {
+        d.x = d3.event.x;
+        d.y = d3.event.y;
+      }
+      // console.log([d3.event.x, d3.event.y]);
       if (
         // 如果mousePoint没变过，则没有发生drag,当this.isDraging==false时判断
         !this.isDraging &&
@@ -560,9 +569,13 @@ export default {
         this.isDraging = true;
       }
     },
+    dragged() {
+      // 节流，防止运算阻塞dom渲染
+      return throttle(this.dragging, 16, { leading: true, trailing: false });
+    },
     dragended(d) {
       if (!this.visDrag) return;
-      if (!d3.event.active) this.simulation.alphaTarget(0);
+      // if (!d3.event.active) this.simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
       if (this.isDraging) {
@@ -711,16 +724,37 @@ export default {
           this.invertBrush.clear(this.invertBrushG));
     },
     "chartOption.link.distance": function() {
+      if (this.chartOption.simulation.run) return;
       this.simulation.alphaTarget(0.5).restart();
       setTimeout(() => {
+        if (this.chartOption.simulation.run) return;
         this.simulation.alphaTarget(0).stop();
       }, 400);
     },
     "chartOption.node.chargeForce": function() {
+      if (this.chartOption.simulation.run) return;
       this.simulation.alphaTarget(0.5).restart();
       setTimeout(() => {
+        if (this.chartOption.simulation.run) return;
         this.simulation.alphaTarget(0).stop();
       }, 400);
+    },
+    "chartOption.simulation.run": function(val) {
+      val
+        ? this.simulation
+            .alphaTarget(this.chartOption.simulation.alphaTarget)
+            .restart()
+        : this.simulation.alphaTarget(0).stop();
+    },
+    "chartOption.simulation.alphaTarget": function(val) {
+      if (this.chartOption.simulation.run) {
+        if (val < 0.01) {
+          this.chartOption.simulation.run = false;
+        }
+        this.simulation
+          .alphaTarget(this.chartOption.simulation.alphaTarget)
+          .restart();
+      }
     }
   }
 };

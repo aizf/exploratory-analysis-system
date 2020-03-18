@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="DataFlow"
-    :style="{width:width+'px',height:height+'px'}"
-  >
+  <div class="DataFlow" :style="{width:width+'px',height:height+'px'}">
     <svg :width="width" :height="height">
       <defs>
         <filter id="shadow">
@@ -283,7 +280,10 @@ export default {
       .nodeId(d => d.data.uuid)
       .nodeWidth(this.nodeWidth)
       .nodePadding(60)
-      .extent([[1, 5], [this.width - 1, this.height - 5]]);
+      .extent([
+        [1, 5],
+        [this.width * Math.floor(this.nodesNum / 10 + 1) - 1, this.height - 5]
+      ]);
   },
   mounted() {
     console.log("DataFlow", this);
@@ -299,7 +299,10 @@ export default {
       .call(
         d3
           .zoom()
-          .extent([[0, 0], [this.width, this.height]])
+          .extent([
+            [0, 0],
+            [this.width, this.height]
+          ])
           .on("zoom", () => {
             const transform = d3.event.transform;
             this.vis.attr("transform", transform);
@@ -501,8 +504,8 @@ export default {
     },
     dataFlowShowOperations(_ = true) {
       // const width = this.sankey.nodeWidth() / 2;
-      const width = 10;
-      const height = 50;
+      // const width = 10;
+      // const height = 50;
       const r = 10;
       // this.link.selectAll("path").remove();
       this.link.each((d, i, p) => {
@@ -611,10 +614,14 @@ export default {
   },
   watch: {
     nodesNum: function(newV, oldV) {
-      if (Math.floor(newV / 10) === Math.floor(oldV / 10)) return;
+      // if (Math.floor(newV / 10) === Math.floor(oldV / 10)) return;
       // k为extent放缩系数
       let k = Math.floor(newV / 10) + 1;
-      this.sankey.extent([[1, 5], [this.width * k - 1, this.height - 5]]);
+      // console.log("watch", this);
+      this.sankey.extent([
+        [1, 5],
+        [this.width * k - 1, this.height - 5]
+      ]);
     }
   }
 };

@@ -99,6 +99,19 @@
               <a-icon type="deployment-unit" />force
             </span>
             <div class="chartOption">
+              <span class="vSubTitle">simulation</span>
+              <div class="vMenu">
+                <span class="vSubMenu">run</span>
+                <a-switch v-model="chartOption.simulation.run" style="margin-left:40%"/>
+                <span class="vSubMenu">alphaTarget</span>
+                <a-input-number
+                  class="optionInput"
+                  :min="0"
+                  :max="1"
+                  :step="0.1"
+                  v-model="chartOption.simulation.alphaTarget"
+                />
+              </div>
               <span class="vSubTitle">node</span>
               <div>
                 <span class="vSubMenu">size</span>
@@ -443,6 +456,7 @@ export default {
       markedsVisible: false,
       // option
       chartOption: {
+        simulation: { run: false, alphaTarget: 0.3 },
         node: { nodeSize: 4.5, borderColor: "red", chargeForce: -30 },
         link: { color: "#aaa", width: 0.3, opacity: 0.8, distance: 30 }
       },
@@ -687,6 +701,11 @@ export default {
 };
 </script>
 <style scoped>
+/* .vMenu {
+  display: -webkit-flex;
+  display: flex;
+  flex-wrap: wrap;
+} */
 .vSubMenu {
   font-size: 14px;
   font-weight: 400;
