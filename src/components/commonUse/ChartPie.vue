@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     ...mapState({
-      colorPalette: state => state.view.colorPalette
+      classificationPalette: state => state.view.classificationPalette
     })
   },
   created() {
@@ -61,7 +61,7 @@ export default {
       if (group === "null") {
         return "null";
       } else {
-        return this.colorPalette[group];
+        return this.classificationPalette[group];
       }
     },
     // color() {

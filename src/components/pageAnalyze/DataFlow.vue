@@ -45,7 +45,7 @@
             </g>
             <!-- <rect
               v-for="rect in createMultipleColorRects(node)"
-              :fill="colorPalette[rect.group]"
+              :fill="classificationPalette[rect.group]"
               :x="node.x0"
               :y="rect.y"
               :width="node.x1 - node.x0"
@@ -129,8 +129,8 @@ export default {
 
       width: state => state.view.dpiX * 0.7,
       height: state => (state.view.dpiY - 64) * 0.45,
-      colorPalette: state => state.view.colorPalette,
-      colorPalette2: state => state.view.colorPalette2,
+      classificationPalette: state => state.view.classificationPalette,
+      classificationPalette2: state => state.view.classificationPalette2,
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
       operationTypes: state => state.view.operationTypes,
@@ -394,7 +394,7 @@ export default {
             .target(() => [d.target.x0 + this.markCircleR + offset, d.y1])();
     },
     pathColor(op) {
-      return this.colorPalette2[this.operationTypes.indexOf(op)];
+      return this.classificationPalette2[this.operationTypes.indexOf(op)];
     },
     createPieData(d) {
       // 在<g>元素之内添加多颜色矩形
@@ -491,7 +491,7 @@ export default {
       groups.forEach(group => {
         const h = (height * eachGroupNum[group]) / totalNum;
         g.append("rect")
-          .attr("fill", this.colorPalette[group])
+          .attr("fill", this.classificationPalette[group])
           .attr("x", d.x0)
           .attr("y", d.y0 + preDy)
           .attr("width", width)
@@ -550,7 +550,7 @@ export default {
           .attr("cx", (d, i) => left[0] + (i + 1) * padding[0])
           .attr("cy", (d, i) => left[1] + (i + 1) * padding[1])
           .attr("r", r)
-          .attr("fill", d => this.colorPalette[this.operationTypes.indexOf(d)]);
+          .attr("fill", d => this.classificationPalette[this.operationTypes.indexOf(d)]);
         // debugger
         op_node.append("title").text(d => d);
         // console.log(op_node);

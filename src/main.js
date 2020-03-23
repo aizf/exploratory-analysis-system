@@ -29,7 +29,7 @@ import {
 } from 'ant-design-vue'
 
 import store from '@/store/'
-import router from './router'
+import router from '@/router/'
 
 Vue.prototype.$message = message;
 Vue.prototype.$axios = axios;

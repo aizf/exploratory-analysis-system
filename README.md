@@ -1,4 +1,4 @@
-# test-antd
+# exploratory-analysis-system
 
 ## Project setup
 ```

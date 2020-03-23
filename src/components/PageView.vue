@@ -337,7 +337,7 @@
               </a-col>
               <a-col :span="8">
                 <a-tag
-                  v-for="(color, index) in colorPalette"
+                  v-for="(color, index) in classificationPalette"
                   :color="color"
                   @click="groupTheSelectedNodes(index)"
                   :key="index"
@@ -479,7 +479,7 @@ export default {
       visualData: state => state.data.visualData,
       // datasets: state => state.data.datasets,
 
-      colorPalette: state => state.view.colorPalette,
+      classificationPalette: state => state.view.classificationPalette,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
 

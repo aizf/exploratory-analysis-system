@@ -26,7 +26,7 @@
             v-for="node in nodes"
             :r="Math.max(Math.sqrt(!!node.size) / 10, 4.5)"
             :class="{'display':true,'selected':node.selected}"
-            :fill="colorPalette[node.group || 0]"
+            :fill="classificationPalette[node.group || 0]"
             filter="url(#shadow)"
             :cx="node.x"
             :cy="node.y"
@@ -67,7 +67,7 @@ export default {
   computed: {
     ...mapState({
       backgroundColor: state => state.view.backgroundColor,
-      colorPalette: state => state.view.colorPalette
+      classificationPalette: state => state.view.classificationPalette
     }),
     ...mapGetters(["layoutRange"])
   },
@@ -112,7 +112,7 @@ export default {
       // }
       // // 更新数据
       // let color = d => {
-      //   return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
+      //   return d.group ? this.classificationPalette[d.group] : this.classificationPalette[0]; // FIXME 指定group
       // };
       // // debugger;
       // this.link = this.linkG

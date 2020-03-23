@@ -95,7 +95,7 @@ export default {
 
       chartWidth: state => state.view.dpiX * 0.7,
       chartHeight: state => state.view.dpiY * 0.7,
-      colorPalette: state => state.view.colorPalette,
+      classificationPalette: state => state.view.classificationPalette,
       backgroundColor: state => state.view.backgroundColor,
       parentUUID: state => state.view.parentUUID,
       currentUUID: state => state.view.currentUUID,
@@ -259,7 +259,7 @@ export default {
       // 更新数据
       const that = this;
       const color = d => {
-        return d.group ? this.colorPalette[d.group] : this.colorPalette[8];
+        return d.group ? this.classificationPalette[d.group] : this.classificationPalette[8];
       };
       const xTicksNum = this.xDimensionData.length || 0;
       this.xScale = d3

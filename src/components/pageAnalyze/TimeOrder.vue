@@ -76,8 +76,8 @@ export default {
 
       width: state => state.view.dpiX * 0.7,
       height: state => (state.view.dpiY - 64) * 0.35,
-      colorPalette: state => state.view.colorPalette,
-      colorPalette2: state => state.view.colorPalette2,
+      classificationPalette: state => state.view.classificationPalette,
+      classificationPalette2: state => state.view.classificationPalette2,
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
       operationTypes: state => state.view.operationTypes,
@@ -152,7 +152,7 @@ export default {
     });
     console.log("chart", this.chart);
     this.option = {
-      color: this.colorPalette2,
+      color: this.classificationPalette2,
       backgroundColor: this.backgroundColor,
       textStyle: {
         color: this.contrastColor

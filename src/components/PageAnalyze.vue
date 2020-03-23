@@ -43,7 +43,7 @@ export default {
 
       width: state => state.view.dpiX * 0.7,
       height: state => state.view.dpiY - 64,
-      colorPalette: state => state.view.colorPalette,
+      classificationPalette: state => state.view.classificationPalette,
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
 

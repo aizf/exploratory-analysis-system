@@ -49,8 +49,8 @@ export default {
     backgroundColor() {
       return this.$store.state.view.backgroundColor;
     },
-    colorPalette() {
-      return this.$store.state.view.colorPalette;
+    classificationPalette() {
+      return this.$store.state.view.classificationPalette;
     }
   },
   mounted() {
@@ -110,7 +110,7 @@ export default {
   activated() {
     // this.node
     //   .classed("selected", d => d.selected)
-    //   .attr("fill", d => this.colorPalette[d.group || 0]);
+    //   .attr("fill", d => this.classificationPalette[d.group || 0]);
     this.simulation.tick();
   },
 
@@ -125,7 +125,7 @@ export default {
       }
       // 更新数据
       const color = d => {
-        return d.group ? this.colorPalette[d.group] : this.colorPalette[0]; // FIXME 指定group
+        return d.group ? this.classificationPalette[d.group] : this.classificationPalette[0]; // FIXME 指定group
       };
       // debugger;
       this.link = this.linkG

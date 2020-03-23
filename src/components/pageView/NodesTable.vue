@@ -30,7 +30,7 @@ export default {
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
 
-      colorPalette: state => state.view.colorPalette,
+      classificationPalette: state => state.view.classificationPalette,
       backgroundColor: state => state.view.backgroundColor,
       needUpdate: state => state.view.chartsNeedUpdate.table
     }),

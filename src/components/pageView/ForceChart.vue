@@ -65,7 +65,7 @@
               :r="fixedNodeSize"
               :cx="node.x"
               :cy="node.y"
-              :fill="colorPalette[node.group || 0]"
+              :fill="classificationPalette[node.group || 0]"
               filter="url(#shadow)"
               @click="clickSelect(node)"
               @mouseover="mouseover(node)"
@@ -80,7 +80,7 @@
               :x="node.x"
               :y="node.y"
               dy="-0.5em"
-              :fill="colorPalette[node.group || 0]"
+              :fill="classificationPalette[node.group || 0]"
               text-anchor="middle"
               font-family="Avenir"
               font-size="10"
@@ -148,7 +148,7 @@ export default {
 
       chartWidth: state => state.view.dpiX * 0.6,
       chartHeight: state => state.view.dpiY * 0.7,
-      colorPalette: state => state.view.colorPalette,
+      classificationPalette: state => state.view.classificationPalette,
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
       parentUUID: state => state.view.parentUUID,

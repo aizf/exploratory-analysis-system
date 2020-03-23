@@ -4,7 +4,7 @@ const view = {
         dpiY: 1080,
         backgroundColor: "#333",
         contrastColor: "#eee",
-        colorPalette: [
+        classificationPalette: [
             // 11类
             // 分组
             "#dd6b66",
@@ -19,7 +19,7 @@ const view = {
             "#91ca8c",
             "#f49f42"
         ],
-        colorPalette2: [
+        classificationPalette2: [
             // 12类
             // 操作种类
             "#8dd3c7", "#ffffb3", "#bebada",
