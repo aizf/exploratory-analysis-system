@@ -7,8 +7,11 @@ const CompressionPlugin = require("compression-webpack-plugin")
 
 
 module.exports = {
+  publicPath: !debug
+    ? '/exploratory-analysis-system/'
+    : '/',
   // 构建输出目录
-  outputDir: 'dist',
+  outputDir: 'D:/Documents/GitHub/aizf.github.io/exploratory-analysis-system',
 
   // 静态资源目录 (js, css, img, fonts)
   assetsDir: 'assets',
