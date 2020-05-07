@@ -99,8 +99,8 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
-import * as d3Sankey from "d3-sankey";
 import ChartPie from "@/components/commonUse/ChartPie.vue";
+import * as d3Sankey from "d3-sankey";
 
 export default {
   name: "DataFlow",
@@ -550,7 +550,10 @@ export default {
           .attr("cx", (d, i) => left[0] + (i + 1) * padding[0])
           .attr("cy", (d, i) => left[1] + (i + 1) * padding[1])
           .attr("r", r)
-          .attr("fill", d => this.classificationPalette[this.operationTypes.indexOf(d)]);
+          .attr(
+            "fill",
+            d => this.classificationPalette[this.operationTypes.indexOf(d)]
+          );
         // debugger
         op_node.append("title").text(d => d);
         // console.log(op_node);

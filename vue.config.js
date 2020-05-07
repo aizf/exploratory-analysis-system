@@ -1,21 +1,45 @@
 const path = require('path')
-const debug = process.env.NODE_ENV !== 'production'
-const CompressionPlugin = require("compression-webpack-plugin")
-//const VueConf = require('./src/assets/js/libs/vue_config_class')
-//const vueConf = new VueConf(process.argv)
+const prod = process.env.NODE_ENV === 'production'
+const TerserPlugin = require('terser-webpack-plugin')
+// const CompressionPlugin = require("compression-webpack-plugin")
 
+const assetsCDN = {
+  externals: {
+    vue: 'Vue',
+    vuex: 'Vuex',
+    'vue-router': 'VueRouter',
 
+    // 'vue-codemirror': 'VueCodemirror',
+    axios: 'axios',
+    'ant-design-vue': 'antd',
+
+    echarts: 'echarts',
+    d3: 'd3',
+    // 'd3-sankey':''
+  },
+  css: [],
+  // https://unpkg.com/browse/vue@2.6.10/
+  js: [
+    '//cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js',
+    '//cdn.jsdelivr.net/npm/vuex@3/dist/vuex.min.js',
+    '//cdn.jsdelivr.net/npm/vue-router@3/dist/vue-router.min.js',
+
+    // '//cdn.jsdelivr.net/npm/vue-codemirror@4/dist/vue-codemirror.min.js',
+    '//cdn.jsdelivr.net/npm/axios/dist/axios.min.js',
+    '//cdn.jsdelivr.net/npm/ant-design-vue@1/dist/antd.min.js',
+
+    '//cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js',
+    '//cdn.jsdelivr.net/npm/d3@5/dist/d3.min.js',
+    // '//cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js',
+  ]
+}
 
 module.exports = {
-  publicPath: !debug
+  publicPath: prod
     ? '/exploratory-analysis-system/'
     : '/',
-  // 构建输出目录
   outputDir: 'D:/Documents/GitHub/aizf.github.io/exploratory-analysis-system',
-
-  // 静态资源目录 (js, css, img, fonts)
   assetsDir: 'assets',
-
   indexPath: 'index.html',
 
   // lintOnSave: true, // 是否开启eslint保存检测，有效值：ture | false | 'error'
@@ -39,43 +63,45 @@ module.exports = {
     host: '127.0.0.1',
     hot: true
   },
-
-  // chainWebpack: config => { // webpack链接API，用于生成和修改webapck配置，
-  //     if (debug) {
-  //         // 本地开发配置
-  //     } else {
-  //         // 生产开发配置
-  //     }
-  // },
   // parallel: require('os').cpus().length > 1, // 构建时开启多进程处理babel编译
   // pluginOptions: { // 第三方插件配置
   // },
   // pwa: { // 单页插件相关配置 https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
   // },
-  configureWebpack: config => { // webpack配置，值位对象时会合并配置，为方法时会改写配置
-    if (debug) { // 开发环境配置
-      config.mode = 'development';
-    } else { // 生产环境配置
-      config.mode = 'production';
-
-      // Gzip
-      config.plugins = [
-        ...config.plugins,
-        new CompressionPlugin({
-          test: /\.js$|\.html$|\.css/, //匹配文件名
-          threshold: 10240,//对超过10k的数据压缩
-          deleteOriginalAssets: false //不删除源文件
-        })
-      ];
-    }
-    Object.assign(config, { // 开发生产共同配置，配置别名
-      resolve: {
-        alias: {
-          '@': path.resolve(__dirname, './src'),
-          '@c': path.resolve(__dirname, './src/components'),
-          // 'vue$': 'vue/dist/vue.esm.js'
-        }
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+        '@c': path.resolve(__dirname, './src/components'),
+        // 'vue$': 'vue/dist/vue.esm.js'
       }
-    })
+    },
+    externals: prod ? assetsCDN.externals : {},
+    // externals: assetsCDN.externals,
+    optimization: {
+      minimizer: [
+        !prod ? new TerserPlugin() : new TerserPlugin({
+          terserOptions: {
+            ecma: undefined,
+            warnings: false,
+            parse: {},
+            compress: {
+              drop_console: true,
+              drop_debugger: true,
+              // pure_funcs: ['console.log']
+            }
+          },
+        }),
+      ]
+    }
+  },
+  chainWebpack: (config) => {
+    if (prod) {
+      config.plugin('html').tap(args => {
+        args[0].cdn = assetsCDN;
+        args[0].prod = prod;
+        return args
+      })
+    }
   }
 }
