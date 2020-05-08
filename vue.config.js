@@ -9,29 +9,40 @@ const assetsCDN = {
     vuex: 'Vuex',
     'vue-router': 'VueRouter',
 
-    // 'vue-codemirror': 'VueCodemirror',
+    'codemirror': 'CodeMirror',
+    'codemirror/mode/javascript/javascript': 'CodeMirror',
+    'vue-codemirror': 'VueCodemirror',
     axios: 'axios',
     'ant-design-vue': 'antd',
 
     echarts: 'echarts',
     d3: 'd3',
-    // 'd3-sankey':''
+    'd3-sankey': 'd3'
   },
-  css: [],
-  // https://unpkg.com/browse/vue@2.6.10/
   js: [
     '//cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js',
     '//cdn.jsdelivr.net/npm/vuex@3/dist/vuex.min.js',
     '//cdn.jsdelivr.net/npm/vue-router@3/dist/vue-router.min.js',
 
-    // '//cdn.jsdelivr.net/npm/vue-codemirror@4/dist/vue-codemirror.min.js',
+    '//cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.min.js',
+    // js高亮
+    '//cdn.jsdelivr.net/npm/codemirror@5/mode/javascript/javascript.min.js',
+    '//cdn.jsdelivr.net/npm/vue-codemirror@4/dist/vue-codemirror.min.js',
+
     '//cdn.jsdelivr.net/npm/axios/dist/axios.min.js',
     '//cdn.jsdelivr.net/npm/ant-design-vue@1/dist/antd.min.js',
 
     '//cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js',
     '//cdn.jsdelivr.net/npm/d3@5/dist/d3.min.js',
-    // '//cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js',
-  ]
+    '//cdn.jsdelivr.net/npm/d3-sankey@0/dist/d3-sankey.min.js',
+  ],
+  css: [
+    '//cdn.jsdelivr.net/npm/ant-design-vue@1/dist/antd.min.css',
+
+    '//cdn.jsdelivr.net/npm/codemirror@5/lib/codemirror.min.css',
+    // 主题
+    '//cdn.jsdelivr.net/npm/codemirror@5/theme/lucario.min.css'
+  ],
 }
 
 module.exports = {
@@ -42,13 +53,8 @@ module.exports = {
   assetsDir: 'assets',
   indexPath: 'index.html',
 
-  // lintOnSave: true, // 是否开启eslint保存检测，有效值：ture | false | 'error'
-  // runtimeCompiler: true, // 运行时版本是否需要编译
-  // transpileDependencies: [], // 默认babel-loader忽略mode_modules，这里可增加例外的依赖包名
-  // 是否在构建生产包时生成 sourceMap 文件，false将提高构建速度
   productionSourceMap: false,
 
-  // productionSourceMap: true, // 是否在构建生产包时生成 sourceMap 文件，false将提高构建速度
   //     css: { // 配置高于chainWebpack中关于css loader的配置
   //     modules: true, // 是否开启支持‘foo.module.css’样式
   //     extract: true, // 是否使用css分离插件 ExtractTextPlugin，采用独立样式文件载入，不采用<style>方式内联至html文件中
@@ -73,11 +79,9 @@ module.exports = {
       alias: {
         '@': path.resolve(__dirname, './src'),
         '@c': path.resolve(__dirname, './src/components'),
-        // 'vue$': 'vue/dist/vue.esm.js'
       }
     },
     externals: prod ? assetsCDN.externals : {},
-    // externals: assetsCDN.externals,
     optimization: {
       minimizer: [
         !prod ? new TerserPlugin() : new TerserPlugin({
@@ -96,12 +100,12 @@ module.exports = {
     }
   },
   chainWebpack: (config) => {
-    if (prod) {
-      config.plugin('html').tap(args => {
-        args[0].cdn = assetsCDN;
-        args[0].prod = prod;
-        return args
-      })
-    }
+    config.plugin('html').tap(args => {
+      args[0].prod = prod;
+      args[0].cdn = {};
+      args[0].cdn.js = prod ? assetsCDN.js : [];
+      args[0].cdn.css = assetsCDN.css;
+      return args
+    })
   }
 }

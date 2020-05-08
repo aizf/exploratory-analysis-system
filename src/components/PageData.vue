@@ -74,16 +74,8 @@ import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 
 import { codemirror } from "vue-codemirror";
-import "codemirror/lib/codemirror.css";
-// 主题
-import "codemirror/theme/lucario.css";
-// js高亮
+
 import "codemirror/mode/javascript/javascript";
-// 导入自动提示核心文件及样式
-import "codemirror/addon/hint/show-hint.css";
-import "codemirror/addon/hint/show-hint.js";
-// 导入指定语言的提示文件
-import "codemirror/addon/hint/javascript-hint.js";
 
 export default {
   name: "PageData",

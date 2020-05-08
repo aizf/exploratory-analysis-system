@@ -98,9 +98,12 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import * as d3 from "d3";
 import ChartPie from "@/components/commonUse/ChartPie.vue";
+import * as d3 from "d3";
 import * as d3Sankey from "d3-sankey";
+if (process.env.NODE_ENV === "development") {
+  Object.assign(d3, d3Sankey);
+}
 
 export default {
   name: "DataFlow",
@@ -274,9 +277,9 @@ export default {
     }
   },
   created() {
-    this.sankey = d3Sankey
+    this.sankey = d3
       .sankey()
-      .nodeAlign(d3Sankey["sankeyLeft"])
+      .nodeAlign(d3.sankeyLeft)
       .nodeId(d => d.data.uuid)
       .nodeWidth(this.nodeWidth)
       .nodePadding(60)
