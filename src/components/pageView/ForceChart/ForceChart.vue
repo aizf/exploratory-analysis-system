@@ -48,46 +48,38 @@
           <g class="links">
             <line
               v-for="link in links"
-              :class="{'mouseover_opacity':!link.mouseover_show}"
+              :class="{link:true,'mouseover_opacity':!link.mouseover_show}"
               :x1="link.source.x"
               :y1="link.source.y"
               :x2="link.target.x"
               :y2="link.target.y"
-              :stroke="chartOption.link.color"
-              :stroke-width="fixedLinkWidth"
+              :style="{stroke:chartOption.link.color,'stroke-width':fixedLinkWidth}"
               :key="link.uid"
             />
           </g>
           <g class="nodes">
             <circle
               v-for="node in nodes"
-              :class="{'display':true,'selected':node.selected,'mouseover_opacity':!node.mouseover_show,'brushing':node.brushing,'invertBrushing':node.invertBrushing}"
-              :r="fixedNodeSize"
-              :cx="node.x"
-              :cy="node.y"
-              :fill="classificationPalette[node.group || 0]"
+              :class="{node:true, 'display':true,'selected':node.selected,'mouseover_opacity':!node.mouseover_show,'brushing':node.brushing,'invertBrushing':node.invertBrushing}"
               filter="url(#shadow)"
               @click="clickSelect(node)"
               @mouseover="mouseover(node)"
               @mouseout="mouseout"
+              :style="{r:fixedNodeSize,cx:node.x,cy:node.y,fill:classificationPalette[node.group || 0]}"
               :key="node.uid"
             />
           </g>
           <g class="texts" v-show="visShowIds">
             <text
               v-for="node in nodes"
-              :class="{'mouseover_opacity':!node.mouseover_show}"
+              :class="{text:true,'mouseover_opacity':!node.mouseover_show}"
               :x="node.x"
               :y="node.y"
-              dy="-0.5em"
-              :fill="classificationPalette[node.group || 0]"
-              text-anchor="middle"
-              font-family="Avenir"
-              font-size="10"
-              style="user-select: none;"
+              dy="-0.8em"
               @click="clickSelect(node)"
               @mouseover="mouseover(node)"
               @mouseout="mouseout"
+              :style="{'font-size':10,fill:classificationPalette[node.group || 0]}"
               :key="node.uid"
             >{{node.id}}</text>
           </g>
@@ -760,40 +752,59 @@ export default {
 };
 </script>
 <style scope>
-.ForceChart line {
-  stroke-opacity: 0.8;
-}
-
-.ForceChart circle {
+.node {
   pointer-events: all;
-  stroke: none;
-}
-.ForceChart circle.display {
-  /**/
-}
-.ForceChart circle.selected {
-  /* fill: red; */
-  stroke: red;
-  stroke-width: 0.8;
-}
-.ForceChart circle.brushing {
-  /* fill: red; */
-  stroke: red;
-  stroke-width: 0.8;
-}
-.ForceChart circle.invertBrushing {
-  stroke: none;
-  stroke-width: 0px;
-}
+  stroke: transparent;
 
-.ForceChart circle.mouseover_opacity {
+  transition: fill 0.6s ease, fill-opacity 0.3s ease, stroke-opacity 0.3s ease;
+  /* cx 0.016s linear, cy 0.016s linear; */
+}
+.node.selected {
+  /* fill: red; */
+  stroke: red;
+  stroke-width: 0.8;
+}
+.node.brushing {
+  animation: stroke-blink 1s ease 0s infinite;
+}
+.node.invertBrushing {
+  animation: stroke-blink 1s ease 0s infinite;
+}
+.node.mouseover_opacity {
   fill-opacity: 0.2;
   stroke-opacity: 0.2;
 }
-.ForceChart line.mouseover_opacity {
+
+@keyframes stroke-blink {
+  0% {
+    stroke: transparent;
+    stroke-width: 0;
+  }
+  50% {
+    stroke: red;
+    stroke-width: 1.8;
+  }
+  100% {
+    stroke: transparent;
+    stroke-width: 0;
+  }
+}
+
+.link {
+  transition: stroke 0.6s ease, stroke-width 0.3s ease, stroke-opacity 0.3s ease;
+  stroke-opacity: 0.8;
+}
+.link.mouseover_opacity {
   stroke-opacity: 0;
 }
-.ForceChart text.mouseover_opacity {
+
+.text {
+  user-select: none;
+  text-anchor: middle;
+  font-family: Avenir;
+  transition: fill 0.6s ease, fill-opacity 0.3s ease;
+}
+.text.mouseover_opacity {
   fill-opacity: 0;
 }
 

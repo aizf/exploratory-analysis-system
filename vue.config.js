@@ -1,6 +1,7 @@
 const path = require('path')
 const prod = process.env.NODE_ENV === 'production'
 const TerserPlugin = require('terser-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const CompressionPlugin = require("compression-webpack-plugin")
 
 const assetsCDN = {
@@ -97,7 +98,8 @@ module.exports = {
           },
         }),
       ]
-    }
+    },
+    plugins: [new BundleAnalyzerPlugin()]
   },
   chainWebpack: (config) => {
     config.plugin('html').tap(args => {

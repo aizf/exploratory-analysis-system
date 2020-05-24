@@ -426,7 +426,7 @@ Vue.use(Tag);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 // import * as d3 from "d3";
-import ForceChart from "./pageView/ForceChart.vue";
+import ForceChart from "./pageView/ForceChart/ForceChart.vue";
 import ScatterChart from "./pageView/ScatterChart.vue";
 import NodesTable from "./pageView/NodesTable.vue";
 import MarkedViews from "./pageView/MarkedViews.vue";
