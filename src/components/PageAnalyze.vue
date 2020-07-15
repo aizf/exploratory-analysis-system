@@ -1,22 +1,25 @@
 <template>
-  <a-row :style="{background:backgroundColor}">
-    <a-col :span="18" :style="{borderRight :`1px dashed ${contrastColor}`}">
-      <DataFlow></DataFlow>
-      <div :style="{width:'100%',borderTop :`1px dashed ${contrastColor}`}" />
-      <TimeOrder></TimeOrder>
-    </a-col>
-    <a-col :span="6">
-      <keep-alive>
-        <!-- 可视化视图 -->
-        <StaticForce :width="500" :height="500" :nodes="tooltipNodes" :links="tooltipLinks"></StaticForce>
-      </keep-alive>
-    </a-col>
-  </a-row>
+  <div class="pageAnalyze" :style="{background:backgroundColor}">
+    <DataFlow @staticForceShowChanged="changeStaticForceShow"></DataFlow>
+    <div :style="{width:'100%',borderTop :`1px dashed ${contrastColor}`}" />
+    <TimeOrder></TimeOrder>
+    <keep-alive>
+      <!-- 可视化视图 -->
+      <StaticForce
+        v-show="isStaticForceShow"
+        :width="450"
+        :height="450"
+        :nodes="tooltipNodes"
+        :links="tooltipLinks"
+        class="staticForce"
+      ></StaticForce>
+    </keep-alive>
+  </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import {Col,Row} from 'ant-design-vue'
+import Vue from "vue";
+import { Col, Row } from "ant-design-vue";
 Vue.use(Col);
 Vue.use(Row);
 // import store from "@/store/";
@@ -34,7 +37,8 @@ export default {
   },
   data() {
     return {
-      chart: {}
+      chart: {},
+      isStaticForceShow: false
     };
   },
   computed: {
@@ -56,6 +60,26 @@ export default {
   },
   mounted() {},
   activated() {},
-  methods: {}
+  methods: {
+    changeStaticForceShow(val) {
+      this.isStaticForceShow = val;
+    }
+  }
 };
 </script>
+<style scoped>
+.pageAnalyze {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.staticForce {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* border: 1px solid #305dff; */
+}
+</style>

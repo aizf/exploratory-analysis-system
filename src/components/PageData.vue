@@ -28,27 +28,6 @@
             >{{ds.name}}</a-menu-item>
           </a-menu-item-group>
         </a-sub-menu>
-
-        <!-- <a-sub-menu key="sub2">
-          <span slot="title">
-            <a-icon type="laptop" />
-            <span>hierarchical</span>
-          </span>
-
-          <a-menu-item key="5">DataFlow</a-menu-item>
-          <a-menu-item key="6">OprationFlow</a-menu-item>
-        </a-sub-menu>
-
-        <a-sub-menu key="sub3">
-          <span slot="title">
-            <a-icon type="notification" />
-            <span>sub3</span>
-          </span>
-          <a-menu-item key="9">option9</a-menu-item>
-          <a-menu-item key="10">option10</a-menu-item>
-          <a-menu-item key="11">option11</a-menu-item>
-          <a-menu-item key="12">option12</a-menu-item>
-        </a-sub-menu>-->
       </a-menu>
     </a-layout-sider>
 
@@ -64,8 +43,8 @@
   </a-layout>
 </template>
 <script>
-import Vue from 'vue'
-import {Icon,Tabs} from 'ant-design-vue'
+import Vue from "vue";
+import { Icon, Tabs } from "ant-design-vue";
 Vue.use(Icon);
 Vue.use(Tabs);
 
@@ -121,6 +100,7 @@ export default {
       this.datasetsNames.forEach(d => {
         const data = this.datasets[d];
         const dataType = data.dataType;
+        if (!res[dataType]) return;
         res[dataType].push(data);
       });
       return res;

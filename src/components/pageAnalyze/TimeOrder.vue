@@ -1,48 +1,43 @@
 <template>
   <div class="TimeOrder">
-    <div :style="{width:width+'px'}">
-      <a-row>
-        <a-col :span="4" :style="{border :`1px solid ${contrastColor}`}">
-          <span :style="{color:contrastColor}">xAxis : </span>
-          <a-select :value="xDimension" size="small" style="width: 80%" @change="handleXChange">
-            <a-select-option
-              v-for="dimension in dimensions"
-              :value="dimension.name"
-              :key="dimension.name"
-            >
-              {{dimension.name}}
-              <span
-                :style="{color:'rgba(0, 0, 0, 0.45)'}"
-              >type: {{dimension.type}}</span>
-            </a-select-option>
-          </a-select>
-        </a-col>
-        <a-col :span="1">
-          <a-button
-            size="small"
-            ghost
-            :style="{width: '70%',margin:'0 14%'}"
-            @click="swapXYDimensions"
+    <div class="TimeOrder-board">
+      <div class="TimeOrder-board-item1">
+        <span :style="{color:contrastColor}">xAxis :</span>
+        <a-select :value="xDimension" size="small" @change="handleXChange">
+          <a-select-option
+            v-for="dimension in dimensions"
+            :value="dimension.name"
+            :key="dimension.name"
           >
-            <a-icon type="swap" />
-          </a-button>
-        </a-col>
-        <a-col :span="4" :style="{border :`1px solid ${contrastColor}`}">
-          <span :style="{color:contrastColor}">yAxis : </span>
-          <a-select :value="yDimension" size="small" style="width: 80%" @change="handleYChange">
-            <a-select-option
-              v-for="dimension in dimensions"
-              :value="dimension.name"
-              :key="dimension.name"
-            >
-              {{dimension.name}}
-              <span
-                :style="{color:'rgba(0, 0, 0, 0.45)'}"
-              >type: {{dimension.type}}</span>
-            </a-select-option>
-          </a-select>
-        </a-col>
-      </a-row>
+            {{dimension.name}}
+            <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
+          </a-select-option>
+        </a-select>
+      </div>
+
+      <div class="TimeOrder-board-item2">
+        <a-button
+          size="small"
+          ghost
+          @click="swapXYDimensions"
+        >
+          <a-icon type="swap" />
+        </a-button>
+      </div>
+
+      <div class="TimeOrder-board-item1">
+        <span :style="{color:contrastColor}">yAxis :</span>
+        <a-select :value="yDimension" size="small" @change="handleYChange">
+          <a-select-option
+            v-for="dimension in dimensions"
+            :value="dimension.name"
+            :key="dimension.name"
+          >
+            {{dimension.name}}
+            <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
+          </a-select-option>
+        </a-select>
+      </div>
     </div>
 
     <div class="main" :style="{width:width+'px',height:height+'px'}"></div>
@@ -50,8 +45,9 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import {Col,Row,Select} from 'ant-design-vue'
+import Vue from "vue";
+import { Button, Col, Row, Select } from "ant-design-vue";
+Vue.use(Button);
 Vue.use(Col);
 Vue.use(Row);
 Vue.use(Select);
@@ -323,4 +319,29 @@ export default {
 };
 </script>
 <style scope>
+.TimeOrder{
+height: 100%;
+}
+.TimeOrder-board {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.TimeOrder-board-item1 {
+  display: flex;
+  justify-content: start;
+  flex: 0 0 210px;
+}
+.TimeOrder-board-item2{
+  margin-left: -20px;
+  margin-right: 10px;
+}
+</style>
+<style>
+.TimeOrder-board-item1 .ant-select {
+  width: 120px;
+  margin-left: 1em;
+}
 </style>

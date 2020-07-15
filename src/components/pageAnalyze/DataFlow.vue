@@ -25,8 +25,9 @@
         <g class="nodes" stroke="#000">
           <!-- g用来包裹node，transform从桑吉图node.x0开始 -->
           <g
+            class="node"
             v-for="node in nodes"
-            @click="updateTooltip(node.data)"
+            @click.stop="updateTooltip(node.data)"
             :transform="`translate(${node.x0},${0})`"
             :key="node.data.uuid"
           >
@@ -296,6 +297,9 @@ export default {
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.width, this.height]);
+    svg.node().addEventListener("click",()=>{
+      this.$emit("staticForceShowChanged", false);
+    },false);
     this.vis = svg.select("g");
 
     svg
@@ -573,6 +577,7 @@ export default {
     },
     updateTooltip(data) {
       this.$store.commit("updatePageAnalyzeTooltip", data);
+      this.$emit("staticForceShowChanged", true);
     },
     markedSymbol(type, size) {
       let __type;
@@ -653,5 +658,8 @@ export default {
 
 .DataFlow .nodes rect {
   stroke: none;
+}
+.node {
+  cursor: pointer;
 }
 </style>

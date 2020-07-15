@@ -2,7 +2,7 @@ const path = require('path')
 const prod = process.env.NODE_ENV === 'production'
 const TerserPlugin = require('terser-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-// const CompressionPlugin = require("compression-webpack-plugin")
+const CompressionPlugin = require("compression-webpack-plugin")
 
 const assetsCDN = {
   externals: {
@@ -50,7 +50,7 @@ module.exports = {
   publicPath: prod
     ? '/exploratory-analysis-system/'
     : '/',
-  outputDir: 'D:/Documents/GitHub/aizf.github.io/exploratory-analysis-system',
+  outputDir: '../index-deploy/www/exploratory-analysis-system',
   assetsDir: 'assets',
   indexPath: 'index.html',
 
@@ -99,7 +99,16 @@ module.exports = {
         }),
       ]
     },
-    plugins: [new BundleAnalyzerPlugin()]
+    plugins: [
+      new BundleAnalyzerPlugin(),
+      new CompressionPlugin({
+        algorithm: 'gzip',
+        test: /\.(js|css)$/,// 匹配文件名
+        threshold: 10240, // 对超过10k的数据压缩
+        deleteOriginalAssets: false, // 不删除源文件
+        minRatio: 0.8 // 压缩比
+      })
+    ]
   },
   chainWebpack: (config) => {
     config.plugin('html').tap(args => {

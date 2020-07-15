@@ -3,7 +3,7 @@
     <svg
       :width="width"
       :height="height"
-      :style="{border:'1px solid #305dff',background:backgroundColor}"
+      :style="{background:backgroundColor}"
     >
       <defs>
         <filter id="shadow">

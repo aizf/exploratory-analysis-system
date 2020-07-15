@@ -102,7 +102,7 @@
               <span class="vSubTitle">simulation</span>
               <div class="vMenu">
                 <span class="vSubMenu">run</span>
-                <a-switch v-model="chartOption.simulation.run" style="margin-left:40%"/>
+                <a-switch v-model="chartOption.simulation.run" style="margin-left:40%" />
                 <span class="vSubMenu">alphaTarget</span>
                 <a-input-number
                   class="optionInput"
@@ -176,210 +176,80 @@
           </a-tab-pane>
         </a-tabs>
       </a-card>
-
-      <!-- <a-menu
-        mode="inline"
-        :defaultSelectedKeys="['1']"
-        :defaultOpenKeys="['sub1']"
-        :openKeys="openKeys"
-        @openChange="onOpenChange"
-        :style="{ borderRight: 0 }"
-        :inlineIndent="24"
-      >-->
-      <!-- <a-sub-menu key="sub1">
-          <span slot="title">
-            <a-icon type="user" />
-            <span>oprations</span>
-          </span>
-          <a-menu-item>
-            <a-button
-              type="primary"
-              @click="viewFilter"
-              :style="{ marginLeft:'5px',width: '100px' }"
-            >filter</a-button>
-          </a-menu-item>
-          <a-menu-item-group key="g1" title="single point">
-            <a-menu-item @click="onVisClick" :disabled="clickDisabled">
-              <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" @.stop :mouseEnterDelay="0.4">
-                <span>click</span>
-              </a-tooltip>
-              <span :style="{display:'block',float:'right'}" @click.stop>
-                <a-switch v-model="visClick" :disabled="clickDisabled" />
-              </span>
-            </a-menu-item>
-            <a-menu-item key="1" @click="onVisDrag" :disabled="dragDisabled">
-              <a-tooltip placement="top" title="单点操作，拖动一个点" :mouseEnterDelay="0.4">
-                <span>drag</span>
-              </a-tooltip>
-              <span :style="{display:'block',float:'right'}" @click.stop>
-                <a-switch v-model="visDrag" :disabled="dragDisabled" />
-              </span>
-            </a-menu-item>
-            <a-menu-item @click="onVisMouseover" :disabled="mouseoverDisabled">
-              <a-tooltip placement="top" title="单点操作，展示与该点相关联的点" :mouseEnterDelay="0.4">
-                <span>mouseover</span>
-              </a-tooltip>
-              <span :style="{display:'block',float:'right'}" @click.stop>
-                <a-switch v-model="visMouseover" :disabled="mouseoverDisabled" />
-              </span>
-            </a-menu-item>
-          </a-menu-item-group>
-          <a-menu-item-group key="g2" title="multiple point">
-            <a-menu-item @click="onVisBrush" :disabled="brushDisabled">
-              <a-popover placement="top" title="keep last selected nodes ?" :mouseEnterDelay="0.4">
-                <template slot="content">
-                  <a-checkbox :checked="!brushKeep" @change="brushKeep=!brushKeep">no</a-checkbox>
-                  <a-checkbox :checked="brushKeep" @change="brushKeep=!brushKeep">yes</a-checkbox>
-                </template>
-                <span>brush</span>
-              </a-popover>
-              <span :style="{display:'block',float:'right'}" @click.stop>
-                <a-switch
-                  v-model="visBrush"
-                  @change="onVisBrush('switch')"
-                  :disabled="brushDisabled"
-                />
-              </span>
-            </a-menu-item>
-            <a-menu-item @click="onVisInvertBrush" :disabled="invertBrushDisabled">
-              <a-tooltip placement="top" title="多点操作，取消选中多个点" :mouseEnterDelay="0.4">
-                <span>invert brush</span>
-              </a-tooltip>
-              <span :style="{display:'block',float:'right'}" @click.stop>
-                <a-switch
-                  v-model="visInvertBrush"
-                  @change="onVisInvertBrush('switch')"
-                  :disabled="invertBrushDisabled"
-                />
-              </span>
-            </a-menu-item>
-            <a-menu-item @click="onVisZoom" :disabled="zoomDisabled">
-              <a-tooltip placement="top" title="多点操作，放大、缩小或平移视图" :mouseEnterDelay="0.4">
-                <span>zoom</span>
-              </a-tooltip>
-              <span :style="{display:'block',float:'right'}" @click.stop>
-                <a-switch v-model="visZoom" :disabled="zoomDisabled" />
-              </span>
-            </a-menu-item>
-          </a-menu-item-group>
-      </a-sub-menu>-->
-
-      <!-- <a-sub-menu key="sub2">
-          <span slot="title">
-            <a-icon type="laptop" />
-            <span>display</span>
-          </span>
-          <a-menu-item key="showIdsDisabled" @click="onVisShowIds" :disabled="showIdsDisabled">
-            <a-icon type="tags" />
-            <span>showIds</span>
-            <span :style="{display:'block',float:'right'}" @click.stop>
-              <a-switch v-model="visShowIds" :disabled="showIdsDisabled" />
-            </span>
-          </a-menu-item>
-          <a-menu-item key="marked-views" @click="markedsVisible=true">
-            <a-icon type="database" />Marked Views
-          </a-menu-item>
-          <a-menu-item key="5">DataFlow</a-menu-item>
-          <a-menu-item key="6">OprationFlow</a-menu-item>
-      </a-sub-menu>-->
-
-      <!-- <a-sub-menu key="sub3">
-          <span slot="title">
-            <a-icon type="area-chart" />
-            <span>change chart</span>
-          </span>
-          <a-menu-item key="force" @click="changeChart">
-            <a-icon type="deployment-unit" />force
-          </a-menu-item>
-          <a-menu-item key="scatter" @click="changeChart">
-            <a-icon type="dot-chart" />scatter
-          </a-menu-item>
-          <a-menu-item key="table" @click="changeChart">
-            <a-icon type="table" />table
-          </a-menu-item>
-        </a-sub-menu>
-      </a-menu>-->
     </a-layout-sider>
 
     <a-layout style="padding: 0 0 0 5px">
       <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
-        <a-row>
-          <a-col :span="20">
-            <!-- col为工具栏和视图 -->
-            <a-row style="padding: 5px 0 5px 0">
-              <!-- row工具栏 -->
-              <a-col :span="5">
-                <a-badge
-                  :count="markedVisualData.length"
-                  showZero
-                  :numberStyle="{backgroundColor: '#1890ff'}"
-                >
-                  <a-button @click="markedsVisible=true">
-                    <a-icon type="database" />Marked Views
-                  </a-button>
-                </a-badge>
-                <a-button @click="marked=!marked">
-                  <a-icon type="book" :theme="marked?'filled':'outlined'" />
-                </a-button>
-              </a-col>
-              <a-col :span="2">
-                <a-button @click="viewUndo" shape="circle" :disabled="undoDisabled">
-                  <a-icon type="undo" />
-                </a-button>
-                <a-button
-                  @click="viewRedo"
-                  shape="circle"
-                  :disabled="redoDisabled"
-                  style="margin:0 0 0 5px"
-                >
-                  <a-icon type="redo" />
-                </a-button>
-              </a-col>
-              <a-col :span="8">
-                <a-tag
-                  v-for="(color, index) in classificationPalette"
-                  :color="color"
-                  @click="groupTheSelectedNodes(index)"
-                  :key="index"
-                >{{index}}</a-tag>
-              </a-col>
-              <a-col :span="4">
-                <a-button
-                  type="primary"
-                  size="small"
-                  @click="viewFilter"
-                  :style="{ marginLeft:'0',width: '70px' }"
-                >filter</a-button>
-              </a-col>
-              <a-col :span="5">
-                <a-icon type="tags" />
-                <span>showIds</span>
-                <a-switch v-model="visShowIds" :disabled="showIdsDisabled" />
-              </a-col>
-            </a-row>
-            <keep-alive>
-              <!-- 可视化视图 -->
-              <component
-                ref="theView"
-                :is="currentChart"
-                :visClick="visClick"
-                :visBrush="visBrush"
-                :brushKeep="brushKeep"
-                :visInvertBrush="visInvertBrush"
-                :visDrag="visDrag"
-                :visMouseover="visMouseover"
-                :visZoom="visZoom"
-                :visShowIds="visShowIds"
-                :chartOption="chartOption"
-                @changeChartOption="handleChartOption"
-              ></component>
-            </keep-alive>
-          </a-col>
-          <a-col :span="4">
-            <!-- 右侧暂时空白 -->
-            a-col-4
-          </a-col>
-        </a-row>
+        <div class="view-tools-board">
+          <div class="view-tools-item">
+            <a-button @click="marked=!marked">
+              <a-icon type="book" :theme="marked?'filled':'outlined'" />
+            </a-button>
+            <a-badge
+              :count="markedVisualData.length"
+              showZero
+              :numberStyle="{backgroundColor: '#1890ff'}"
+            >
+              <a-button @click="markedsVisible=true">
+                <a-icon type="database" />Marked Views
+              </a-button>
+            </a-badge>
+          </div>
+          <div class="view-tools-item">
+            <a-button @click="viewUndo" shape="circle" :disabled="undoDisabled">
+              <a-icon type="undo" />
+            </a-button>
+            <a-button
+              @click="viewRedo"
+              shape="circle"
+              :disabled="redoDisabled"
+              style="margin:0 0 0 5px"
+            >
+              <a-icon type="redo" />
+            </a-button>
+          </div>
+          <div class="view-tools-item">
+            <a-tag
+              v-for="(color, index) in classificationPalette"
+              :color="color"
+              @click="groupTheSelectedNodes(index)"
+              :key="index"
+            >{{index}}</a-tag>
+          </div>
+          <div class="view-tools-item">
+            <a-button
+              type="primary"
+              size="small"
+              @click="viewFilter"
+              :style="{ marginLeft:'0',width: '70px' }"
+            >filter</a-button>
+          </div>
+          <div class="view-tools-item">
+            <a-icon type="tags" />
+            <span>showIds</span>
+            <a-switch v-model="visShowIds" :disabled="showIdsDisabled" />
+          </div>
+        </div>
+
+        <div class="main-view">
+          <keep-alive>
+            <!-- 可视化视图 -->
+            <component
+              ref="theView"
+              :is="currentChart"
+              :visClick="visClick"
+              :visBrush="visBrush"
+              :brushKeep="brushKeep"
+              :visInvertBrush="visInvertBrush"
+              :visDrag="visDrag"
+              :visMouseover="visMouseover"
+              :visZoom="visZoom"
+              :visShowIds="visShowIds"
+              :chartOption="chartOption"
+              @changeChartOption="handleChartOption"
+            ></component>
+          </keep-alive>
+        </div>
       </a-layout-content>
     </a-layout>
 
@@ -725,6 +595,16 @@ export default {
   height: 26px;
   width: 85%;
   margin: 0 8%;
+}
+.view-tools-board {
+  height: 26px;
+  width: 1152px;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+}
+.main-view {
+  padding: 10px 0 0 0;
 }
 </style>
 <style>

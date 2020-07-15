@@ -1,10 +1,14 @@
 const data = {
     state: {
-        datasetsTypes: ["node-link", "hierarchical","node"],
+        datasetsTypes: [
+            "node-link",
+            "hierarchical",
+            // "node"
+        ],
         datasets: {
             // Node-Link
             "energy": {
-                name:"energy",
+                name: "energy",
                 fileName: "energy.json",
                 dataType: "node-link",
                 nodeFields: {
@@ -12,7 +16,7 @@ const data = {
                 }
             },
             "miserables": {
-                name:"miserables",
+                name: "miserables",
                 fileName: "miserables.json",
                 dataType: "node-link",
                 nodeFields: {
@@ -21,7 +25,7 @@ const data = {
                 }
             },
             "epinions_1_percent": {
-                name:"epinions_1_percent",
+                name: "epinions_1_percent",
                 fileName: "epinions_1_percent.json",
                 dataType: "node-link",
                 nodeFields: {
@@ -42,7 +46,7 @@ const data = {
             },
             // Hierarchical
             "readme": {
-                name:"readme",
+                name: "readme",
                 fileName: "readme.json",
                 dataType: "hierarchical",
                 nodeFields: {
@@ -51,7 +55,7 @@ const data = {
                 }
             },
             "test": {
-                name:"test",
+                name: "test",
                 fileName: "test.json",
                 dataType: "hierarchical",
                 nodeFields: {
@@ -61,7 +65,7 @@ const data = {
             },
             // Only Node
             "cars": {
-                name:"cars",
+                name: "cars",
                 fileName: "cars.json",
                 dataType: "node",
                 nodeFields: {
@@ -77,7 +81,7 @@ const data = {
                 }
             },
             "jobs": {
-                name:"jobs",
+                name: "jobs",
                 fileName: "jobs.json",
                 dataType: "node",
                 nodeFields: {
@@ -89,7 +93,7 @@ const data = {
                 }
             },
             "barley": {
-                name:"barley",
+                name: "barley",
                 fileName: "barley.json",
                 dataType: "node",
                 nodeFields: {
