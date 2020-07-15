@@ -48,9 +48,9 @@ const assetsCDN = {
 
 module.exports = {
   publicPath: prod
-    ? '/exploratory-analysis-system/'
+    ? '/projects/exploratory-analysis-system/'
     : '/',
-  outputDir: '../index-deploy/www/exploratory-analysis-system',
+  outputDir: '../index-deploy/www/projects/exploratory-analysis-system',
   assetsDir: 'assets',
   indexPath: 'index.html',
 
