@@ -51,8 +51,6 @@ export default {
       backgroundColor: state => state.view.backgroundColor,
       contrastColor: state => state.view.contrastColor,
 
-      operations: state => state.analyze.operations,
-      currentOperations: state => state.analyze.currentOperations,
       tooltipNodes: state => state.analyze.pageAnalyzeTooltipData.nodes,
       tooltipLinks: state => state.analyze.pageAnalyzeTooltipData.links
     }),

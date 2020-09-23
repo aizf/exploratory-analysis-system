@@ -140,7 +140,6 @@ export default {
       operationTypes: state => state.view.operationTypes,
       currentUUID: state => state.view.currentUUID,
 
-      operations: state => state.analyze.operations,
       recordset: state => state.analyze.recordset
     }),
     ...mapGetters(["recordFlow", "dijkstra"]),
@@ -328,64 +327,6 @@ export default {
     update() {
       const that = this;
       console.log("recordFlow:", this.recordFlow);
-      // this.$store.state.formattedDataFlow();
-      // let { nodes, links } = this.sankey(this.recordFlow);
-      // console.log(nodes, links);
-
-      // this.node = this.nodeG
-      //   .selectAll("g")
-      //   .data(this.nodes)
-      //   .join("g")
-      //   .each((d, i, p) => {
-      //     // debugger;
-      //     this.createMultipleColorsRect(d, i, p);
-      //   });
-      // .attr("fill", "green");
-      // this.node.append("title").text(d => `${d.uuid}\n${d.value}`);
-      // .call(d3.drag().on("drag", this.dragged));
-
-      // this.link = this.linkG
-      //   .selectAll("g")
-      //   .data(this.links)
-      //   .join("g")
-      //   .style("mix-blend-mode", "multiply");
-
-      // this.link
-      //   .append("path")
-      //   .attr("d", d =>
-      //     d3
-      //       .linkHorizontal()
-      //       .source(() => [d.source.x1, (d.source.y0 + d.source.y1) / 2])
-      //       .target(() => [d.target.x0, (d.target.y0 + d.target.y1) / 2])()
-      //   )
-      //   .attr("stroke", "#aaa")
-      //   .attr("stroke-width", 5);
-      // this.link.append("title").text(d => {
-      //   // let operations = d.operations.map(d => d.action).join("→");
-      //   // return `${d.source.id} → ${d.target.id}\n${operations}`;
-      //   return d.operation;
-      // });
-      //**
-      // // text的x，y反向，值为相反数
-      // this.textG
-      //   .selectAll("text")
-      //   .data(nodes)
-      //   .join("text")
-      //   .attr("y", d => -(d.x1 + 6))
-      //   // .attr("x", d => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
-      //   .attr("x", d => -d.y0)
-      //   .attr("dx", "-0.35em")
-      //   .attr("text-anchor", "start")
-      //   // .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
-      //   .text(d => d.uuid)
-      //   .attr("transform", "rotate(90)")
-      //   .attr("transform-origin", "(left,bottom)");
-      //**
-      // this.textG
-      // .attr("x", d => (d.x0 < this.width / 2 ? d.x1 + 6 : d.x0 - 6))
-      // .attr("text-anchor", d => (d.x0 < this.width / 2 ? "start" : "end"))
-
-      // this.dataFlowShowOperations(); // 显示视图节点间的操作
     },
     generatePath(d) {
       const isLeft2Right = d.target.x0 > d.source.x0;
@@ -507,69 +448,6 @@ export default {
       });
       g.on("click", () => {
         this.updateTooltip(d.data);
-      });
-    },
-    dataFlowShowOperations(_ = true) {
-      // const width = this.sankey.nodeWidth() / 2;
-      // const width = 10;
-      // const height = 50;
-      const r = 10;
-      // this.link.selectAll("path").remove();
-      this.link.each((d, i, p) => {
-        // console.log(d);
-        const operations = d.operations.map(d => d.action);
-        const op_num = operations.length;
-        if (!op_num) return;
-        d3.select(p[i])
-          .select("path")
-          .remove();
-        const left = [d.source.x1, (d.source.y0 + d.source.y1) / 2];
-        const right = [d.target.x0, d.y1];
-        const padding = [
-          (right[0] - left[0]) / (op_num + 1),
-          (right[1] - left[1]) / (op_num + 1)
-        ];
-
-        const links = new Array(op_num + 1).fill({});
-        const op_link = d3
-          .select(p[i])
-          .selectAll("path")
-          .data(links)
-          .join("path")
-          .attr("d", (d, i) =>
-            d3
-              .linkHorizontal()
-              .source(d => [left[0] + i * padding[0], left[1] + i * padding[1]])
-              .target(d => [
-                left[0] + (i + 1) * padding[0],
-                left[1] + (i + 1) * padding[1]
-              ])()
-          )
-          .attr("stroke", "#aaa")
-          .attr("stroke-width", 5);
-        console.log(op_link);
-        const op_node = d3
-          .select(p[i])
-          .attr("class", "linkLink")
-          .selectAll("circle")
-          .data(operations)
-          .join("circle")
-          .attr("cx", (d, i) => left[0] + (i + 1) * padding[0])
-          .attr("cy", (d, i) => left[1] + (i + 1) * padding[1])
-          .attr("r", r)
-          .attr(
-            "fill",
-            d => this.classificationPalette[this.operationTypes.indexOf(d)]
-          );
-        // debugger
-        op_node.append("title").text(d => d);
-        // console.log(op_node);
-        // console.log(
-        //   d3
-        //     .linkHorizontal()
-        //     .source([0, 0])
-        //     .target(1, 1)
-        // );
       });
     },
     visTransform() {

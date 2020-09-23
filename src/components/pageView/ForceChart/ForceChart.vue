@@ -121,6 +121,7 @@ export default {
       simulation__: {},
       drag__: {},
       brush: {},
+      brushedNodes:[],
       invertBrush: {},
       brushG: d3.selectAll(),
       invertBrushG: d3.selectAll(),
@@ -318,10 +319,9 @@ export default {
       });
       let operation = {
         action: "zoom",
-        nodes: t.nodes(),
-        time: new Date()
+        nodes: t.data(),
       };
-      that.$store.commit("addOperation", operation);
+      that.$store.dispatch("addOperation", operation);
       console.log("zoom");
     }
 
@@ -392,12 +392,6 @@ export default {
       console.log("render");
     },
     bindEvents() {
-      // 更新后绑定事件
-      // let nodeDrag = d3
-      //   .drag()
-      //   .on("start", this.dragstarted)
-      //   .on("drag", this.dragged())
-      //   .on("end", this.dragended);
       this.node.call(
         d3
           .drag()
@@ -405,9 +399,6 @@ export default {
           .on("drag", this.dragged())
           .on("end", this.dragended)
       );
-      // this.node.on("click", this.clickSelect);
-      // this.node.on("mouseover", this.mouseover);
-      // this.node.on("mouseout", this.mouseout);
       let node = this.node;
 
       this.text.call(
@@ -417,9 +408,6 @@ export default {
           .on("drag", this.dragged())
           .on("end", this.dragended)
       );
-      // this.text.on("click", textEvent2Node);
-      // this.text.on("mouseover", textEvent2Node);
-      // this.text.on("mouseout", textEvent2Node);
 
       function textEvent2Node(d) {
         // 将text接受的事件分发给node
@@ -454,6 +442,7 @@ export default {
       }
     },
     brushStart() {
+      console.log("brushstart");
       // 记录之前的状态
       // console.log(d3.event);
       // debugger
@@ -509,9 +498,8 @@ export default {
       let operation = {
         action: "brush",
         nodes: brushedNodes,
-        time: new Date()
       };
-      this.$store.commit("addOperation", operation);
+      this.$store.dispatch("addOperation", operation);
       console.log("brush");
     },
     invertBrushEnd() {
@@ -525,9 +513,8 @@ export default {
       let operation = {
         action: "invertBrush",
         nodes: invertBrushedNodes,
-        time: new Date()
       };
-      this.$store.commit("addOperation", operation);
+      this.$store.dispatch("addOperation", operation);
       console.log("invertBrush");
     },
     // drag
@@ -576,34 +563,12 @@ export default {
         let t = this.node.filter(dd => dd.uid === d.uid);
         let operation = {
           action: "drag",
-          nodes: t.nodes(),
-          time: new Date()
+          nodes: t.data(),
         };
-        this.$store.commit("addOperation", operation);
+        this.$store.dispatch("addOperation", operation);
         this.isDraging = false;
         console.log("drag");
         t.dispatch("mouseout");
-      }
-    },
-    d3_clickSelect(d, i, p) {
-      if (this.visClick) {
-        this.beforeEvent("click", this);
-        let t = d3.select(p[i]);
-        if (t.classed("selected")) {
-          t.classed("selected", false);
-          d.selected = false;
-        } else {
-          t.classed("selected", true);
-          d.selected = true;
-          d.attentionTimes += 1;
-          let operation = {
-            action: "click",
-            nodes: t.nodes(),
-            time: new Date()
-          };
-          this.$store.commit("addOperation", operation);
-          console.log("click");
-        }
       }
     },
     clickSelect(d) {
@@ -617,9 +582,8 @@ export default {
           let operation = {
             action: "click",
             nodes: [d],
-            time: new Date()
           };
-          this.$store.commit("addOperation", operation);
+          this.$store.dispatch("addOperation", operation);
           console.log("click");
         }
       }
@@ -669,10 +633,9 @@ export default {
         });
         let operation = {
           action: "mouseover",
-          nodes: displayNodes.nodes(),
-          time: new Date()
+          nodes: displayNodes.data(),
         };
-        this.$store.commit("addOperation", operation);
+        this.$store.dispatch("addOperation", operation);
         console.log("mouseover");
       }
     },

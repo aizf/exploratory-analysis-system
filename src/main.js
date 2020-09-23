@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import axios from 'axios';
+import Amark from 'amark'
 // import Antd from 'ant-design-vue'
 import {
   // Badge,
@@ -27,11 +28,14 @@ import {
   // Tooltip
 } from 'ant-design-vue'
 
-import store from '@/store/'
-import router from '@/router/'
-
 Vue.prototype.$message = message;
 Vue.prototype.$axios = axios;
+Vue.prototype.$amark = new Amark({
+  url:"http://localhost:3000/interactive-data"
+});
+
+import store from '@/store/'
+import router from '@/router/'
 
 // TODO: Vue.use(Antd);
 // Vue.use(Badge);

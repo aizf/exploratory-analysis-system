@@ -46,13 +46,11 @@
 
 <script>
 import Vue from "vue";
-import { Button, Col, Row, Select } from "ant-design-vue";
+import { Button,  Select } from "ant-design-vue";
 Vue.use(Button);
-Vue.use(Col);
-Vue.use(Row);
 Vue.use(Select);
 // import store from "@/store/";
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import echarts from "echarts";
 
 export default {
@@ -80,7 +78,6 @@ export default {
 
       recordset: state => state.analyze.recordset
     }),
-    ...mapGetters(["operations"]),
 
     dimensions() {
       // chartData的列定义

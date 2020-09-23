@@ -100,7 +100,7 @@ module.exports = {
       ]
     },
     plugins: [
-      new BundleAnalyzerPlugin(),
+      // new BundleAnalyzerPlugin(),
       new CompressionPlugin({
         algorithm: 'gzip',
         test: /\.(js|css)$/,// 匹配文件名

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+const { v4: uuidv4 } = require('uuid');
 
 import data from './modules/data'
 import view from './modules/view'
@@ -23,6 +24,9 @@ export default new Vuex.Store({
   },
   actions: {
     resetAll({ getters, commit }) {
+      const uuid = uuidv4();
+      window.sessionStorage.setItem('user-uuid', uuid);
+
       commit("updateNodesTotalNum", getters.nodes.length);
       commit("updateParentUUID", "none");
       commit("updateCurrentUUID", "root");

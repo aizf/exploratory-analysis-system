@@ -1,3 +1,4 @@
+import Vue from 'vue'
 const analyze = {
     state: {
         currentOperations: [], // dataFlow中，存储source和target中间的操作，view切换后清空
@@ -95,7 +96,19 @@ const analyze = {
             state.recordset = [];
         },
     },
-    actions: {}
+    actions: {
+        addOperation(context, data) {
+            context.commit('addOperation', data)
+            const amark = Vue.prototype.$amark;
+            const payload = {
+                "user-uuid": window.sessionStorage.getItem("user-uuid"),
+                time: +new Date(),
+                ...data
+            }
+            amark.add(payload)
+            console.log(payload);
+        }
+    }
 }
 
 export default analyze
