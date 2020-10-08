@@ -106,6 +106,13 @@ if (process.env.NODE_ENV === "development") {
   Object.assign(d3, d3Sankey);
 }
 
+import {
+  backgroundColor,
+  contrastColor,
+  classificationPalette,
+  classificationPalette2,
+} from "@/config/color";
+
 export default {
   name: "DataFlow",
   components: {
@@ -133,10 +140,6 @@ export default {
 
       width: state => state.view.dpiX * 0.7,
       height: state => (state.view.dpiY - 64) * 0.45,
-      classificationPalette: state => state.view.classificationPalette,
-      classificationPalette2: state => state.view.classificationPalette2,
-      backgroundColor: state => state.view.backgroundColor,
-      contrastColor: state => state.view.contrastColor,
       operationTypes: state => state.view.operationTypes,
       currentUUID: state => state.view.currentUUID,
 
@@ -277,6 +280,10 @@ export default {
     }
   },
   created() {
+    this.contrastColor = contrastColor;
+    this.backgroundColor = backgroundColor;
+    this.classificationPalette = classificationPalette;
+    this.classificationPalette2 = classificationPalette2;
     this.sankey = d3
       .sankey()
       .nodeAlign(d3.sankeyLeft)

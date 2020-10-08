@@ -51,6 +51,7 @@ Vue.use(Tabs);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
+import datasets from "@/config/datasets"
 
 import { codemirror } from "vue-codemirror";
 
@@ -83,14 +84,13 @@ export default {
       selectedDataset: state => state.data.selectedDataset,
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
-      datasets: state => state.data.datasets,
       datasetsTypes: state => state.data.datasetsTypes,
       currentUUID: state => state.view.currentUUID
     }),
     ...mapGetters(["nodes", "generateUUID", "dataDeepClone"]),
 
     datasetsNames() {
-      return Object.keys(this.datasets);
+      return Object.keys(datasets);
     },
     datasetsTypeDict() {
       const res = {};
@@ -98,7 +98,7 @@ export default {
         res[d] = [];
       });
       this.datasetsNames.forEach(d => {
-        const data = this.datasets[d];
+        const data = datasets[d];
         const dataType = data.dataType;
         if (!res[dataType]) return;
         res[dataType].push(data);
@@ -109,7 +109,7 @@ export default {
   methods: {
     loadData(event) {
       const that = this;
-      const dataset = this.datasets[event.key];
+      const dataset = datasets[event.key];
       const datasetPath = "./static/" + dataset.fileName;
       if (event.key === this.selectedDataset) return;
       store.commit("changeSelectedDataset", event.key);

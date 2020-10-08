@@ -2,57 +2,65 @@
   <div class="TimeOrder">
     <div class="TimeOrder-board">
       <div class="TimeOrder-board-item1">
-        <span :style="{color:contrastColor}">xAxis :</span>
+        <span :style="{ color: contrastColor }">xAxis :</span>
         <a-select :value="xDimension" size="small" @change="handleXChange">
           <a-select-option
             v-for="dimension in dimensions"
             :value="dimension.name"
             :key="dimension.name"
           >
-            {{dimension.name}}
-            <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
+            {{ dimension.name }}
+            <span :style="{ color: 'rgba(0, 0, 0, 0.45)' }"
+              >type: {{ dimension.type }}</span
+            >
           </a-select-option>
         </a-select>
       </div>
 
       <div class="TimeOrder-board-item2">
-        <a-button
-          size="small"
-          ghost
-          @click="swapXYDimensions"
-        >
+        <a-button size="small" ghost @click="swapXYDimensions">
           <a-icon type="swap" />
         </a-button>
       </div>
 
       <div class="TimeOrder-board-item1">
-        <span :style="{color:contrastColor}">yAxis :</span>
+        <span :style="{ color: contrastColor }">yAxis :</span>
         <a-select :value="yDimension" size="small" @change="handleYChange">
           <a-select-option
             v-for="dimension in dimensions"
             :value="dimension.name"
             :key="dimension.name"
           >
-            {{dimension.name}}
-            <span :style="{color:'rgba(0, 0, 0, 0.45)'}">type: {{dimension.type}}</span>
+            {{ dimension.name }}
+            <span :style="{ color: 'rgba(0, 0, 0, 0.45)' }"
+              >type: {{ dimension.type }}</span
+            >
           </a-select-option>
         </a-select>
       </div>
     </div>
 
-    <div class="main" :style="{width:width+'px',height:height+'px'}"></div>
+    <div
+      class="main"
+      :style="{ width: width + 'px', height: height + 'px' }"
+    ></div>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import { Button,  Select } from "ant-design-vue";
+import { Button, Select } from "ant-design-vue";
 Vue.use(Button);
 Vue.use(Select);
 // import store from "@/store/";
 import { mapState } from "vuex";
 import echarts from "echarts";
-
+import {
+  backgroundColor,
+  contrastColor,
+  classificationPalette,
+  classificationPalette2,
+} from "@/config/color";
 export default {
   name: "TimeOrder",
   data() {
@@ -61,22 +69,18 @@ export default {
       option: {},
       // number,ordinal,float,int,time
       xDimension: "time",
-      yDimension: "operation"
+      yDimension: "operation",
     };
   },
   computed: {
     ...mapState({
-      visualData: state => state.data.visualData,
+      visualData: (state) => state.data.visualData,
 
-      width: state => state.view.dpiX * 0.7,
-      height: state => (state.view.dpiY - 64) * 0.35,
-      classificationPalette: state => state.view.classificationPalette,
-      classificationPalette2: state => state.view.classificationPalette2,
-      backgroundColor: state => state.view.backgroundColor,
-      contrastColor: state => state.view.contrastColor,
-      operationTypes: state => state.view.operationTypes,
+      width: (state) => state.view.dpiX * 0.7,
+      height: (state) => (state.view.dpiY - 64) * 0.35,
+      operationTypes: (state) => state.view.operationTypes,
 
-      recordset: state => state.analyze.recordset
+      recordset: (state) => state.analyze.recordset,
     }),
 
     dimensions() {
@@ -88,26 +92,26 @@ export default {
         {
           name: "operation",
           type: "ordinal",
-          data: this.operationTypes
+          data: this.operationTypes,
         },
         // 2
         {
           name: "index",
           type: "ordinal",
-          data: this.recordset.map(d => d.index)
+          data: this.recordset.map((d) => d.index),
         },
         // 3
         {
           name: "Adjust Layout ? ",
           type: "ordinal",
-          data: ["Yes", "No"]
+          data: ["Yes", "No"],
         },
         // 4
         {
           name: "Switch Layout ? ",
           type: "ordinal",
-          data: ["Yes", "No"]
-        }
+          data: ["Yes", "No"],
+        },
       ];
     },
     chartData() {
@@ -124,7 +128,7 @@ export default {
         return arr.includes(op) ? "Yes" : "No";
       }
 
-      return this.recordset.map(d => {
+      return this.recordset.map((d) => {
         const op = d.operation;
         return [d.time, op, d.index, adjustView(op), switchView(op)];
       });
@@ -133,31 +137,40 @@ export default {
       return {
         x: this.xDimension,
         y: this.yDimension,
-        tooltip: this.dimensions.map(d => d.name)
+        tooltip: this.dimensions.map((d) => d.name),
       };
-    }
+    },
   },
-
+  created() {
+    this.contrastColor = contrastColor;
+    this.backgroundColor = backgroundColor;
+    this.classificationPalette = classificationPalette;
+    this.classificationPalette2 = classificationPalette2;
+  },
   mounted() {
     console.log("TimeOrder", this);
     this.chart = echarts.init(document.querySelector(".main"), null, {
-      renderer: "svg"
+      renderer: "svg",
     });
     console.log("chart", this.chart);
     this.option = {
       color: this.classificationPalette2,
       backgroundColor: this.backgroundColor,
       textStyle: {
-        color: this.contrastColor
+        color: this.contrastColor,
       },
-      xAxis: this.xAxis(this.dimensions.find(d => d.name === this.xDimension)),
-      yAxis: this.yAxis(this.dimensions.find(d => d.name === this.yDimension)),
+      xAxis: this.xAxis(
+        this.dimensions.find((d) => d.name === this.xDimension)
+      ),
+      yAxis: this.yAxis(
+        this.dimensions.find((d) => d.name === this.yDimension)
+      ),
       legend: {
         orient: "vertical",
         right: "right",
         textStyle: {
-          color: this.contrastColor
-        }
+          color: this.contrastColor,
+        },
         // data: this.operationTypes
       },
       tooltip: {},
@@ -177,27 +190,27 @@ export default {
       //     return string;
       //   }
       // },
-      series: this.operationTypes.map(d => {
+      series: this.operationTypes.map((d) => {
         return {
           name: d,
           type: "scatter",
           dimensions: this.dimensions,
           // dd[1] because of [d.time, d.operation]
-          data: this.chartData.filter(dd => dd[1] === d),
-          encode: this.chartEncode
+          data: this.chartData.filter((dd) => dd[1] === d),
+          encode: this.chartEncode,
         };
-      })
+      }),
     };
     this.chart.setOption(this.option, true);
   },
   activated() {
     this.chart.setOption({
-      series: this.operationTypes.map(d => {
+      series: this.operationTypes.map((d) => {
         return {
           name: d,
-          data: this.chartData.filter(dd => dd[1] === d)
+          data: this.chartData.filter((dd) => dd[1] === d),
         };
-      })
+      }),
     });
   },
   methods: {
@@ -205,21 +218,21 @@ export default {
       const axis = {
         axisLine: {
           lineStyle: {
-            color: this.contrastColor
-          }
+            color: this.contrastColor,
+          },
         },
         axisTick: {
           alignWithLabel: true,
           lineStyle: {
-            color: this.contrastColor
-          }
+            color: this.contrastColor,
+          },
         },
         axisLabel: {
           textStyle: {
-            color: this.contrastColor
-          }
+            color: this.contrastColor,
+          },
         },
-        splitLine: { show: false }
+        splitLine: { show: false },
       };
       return this.handleAxisType(dimension, axis);
     },
@@ -227,22 +240,22 @@ export default {
       const axis = {
         axisLine: {
           lineStyle: {
-            color: this.contrastColor
-          }
+            color: this.contrastColor,
+          },
         },
         axisTick: {
           alignWithLabel: true,
           lineStyle: {
-            color: this.contrastColor
-          }
+            color: this.contrastColor,
+          },
         },
         axisLabel: {
           align: "right",
           textStyle: {
-            color: this.contrastColor
-          }
+            color: this.contrastColor,
+          },
         },
-        splitLine: { show: false }
+        splitLine: { show: false },
       };
       return this.handleAxisType(dimension, axis);
     },
@@ -270,28 +283,28 @@ export default {
 
     handleXChange(value) {
       this.xDimension = value;
-      const dimension = this.dimensions.find(d => d.name === value);
+      const dimension = this.dimensions.find((d) => d.name === value);
       this.chart.setOption({
-        series: this.operationTypes.map(d => {
+        series: this.operationTypes.map((d) => {
           return {
             name: d,
-            encode: this.chartEncode
+            encode: this.chartEncode,
           };
         }),
-        xAxis: this.xAxis(dimension)
+        xAxis: this.xAxis(dimension),
       });
     },
     handleYChange(value) {
       this.yDimension = value;
-      const dimension = this.dimensions.find(d => d.name === value);
+      const dimension = this.dimensions.find((d) => d.name === value);
       this.chart.setOption({
-        series: this.operationTypes.map(d => {
+        series: this.operationTypes.map((d) => {
           return {
             name: d,
-            encode: this.chartEncode
+            encode: this.chartEncode,
           };
         }),
-        yAxis: this.yAxis(dimension)
+        yAxis: this.yAxis(dimension),
       });
     },
     swapXYDimensions() {
@@ -299,25 +312,27 @@ export default {
       this.xDimension = this.yDimension;
       this.yDimension = tmp;
       this.chart.setOption({
-        series: this.operationTypes.map(d => {
+        series: this.operationTypes.map((d) => {
           return {
             name: d,
-            encode: this.chartEncode
+            encode: this.chartEncode,
           };
         }),
         xAxis: this.xAxis(
-          this.dimensions.find(d => d.name === this.xDimension)
+          this.dimensions.find((d) => d.name === this.xDimension)
         ),
-        yAxis: this.yAxis(this.dimensions.find(d => d.name === this.yDimension))
+        yAxis: this.yAxis(
+          this.dimensions.find((d) => d.name === this.yDimension)
+        ),
       });
-    }
+    },
   },
-  watch: {}
+  watch: {},
 };
 </script>
 <style scope>
-.TimeOrder{
-height: 100%;
+.TimeOrder {
+  height: 100%;
 }
 .TimeOrder-board {
   width: 100%;
@@ -331,7 +346,7 @@ height: 100%;
   justify-content: start;
   flex: 0 0 210px;
 }
-.TimeOrder-board-item2{
+.TimeOrder-board-item2 {
   margin-left: -20px;
   margin-right: 10px;
 }

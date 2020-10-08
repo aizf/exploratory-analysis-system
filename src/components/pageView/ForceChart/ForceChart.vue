@@ -4,7 +4,7 @@
       <svg
         :width="chartWidth"
         :height="chartHeight"
-        :style="{border:'1px solid #305dff',background:backgroundColor}"
+        :style="{ border: '1px solid #305dff', background: backgroundColor }"
       >
         <defs>
           <filter id="shadow">
@@ -20,8 +20,10 @@
           text-anchor="start"
           font-family="Avenir"
           font-size="10"
-          style="user-select: none;"
-        >UUID : {{currentUUID}}</text>
+          style="user-select: none"
+        >
+          UUID : {{ currentUUID }}
+        </text>
         <text
           :x="0"
           :y="0"
@@ -31,8 +33,10 @@
           text-anchor="start"
           font-family="Avenir"
           font-size="10"
-          style="user-select: none;"
-        >Nodes : {{nodesNumber}}</text>
+          style="user-select: none"
+        >
+          Nodes : {{ nodesNumber }}
+        </text>
         <text
           :x="0"
           :y="0"
@@ -42,46 +46,65 @@
           text-anchor="start"
           font-family="Avenir"
           font-size="10"
-          style="user-select: none;"
-        >Edges : {{linksNumber}}</text>
+          style="user-select: none"
+        >
+          Edges : {{ linksNumber }}
+        </text>
         <g>
           <g class="links">
             <line
               v-for="link in links"
-              :class="{link:true,'mouseover_opacity':!link.mouseover_show}"
+              :class="{ link: true, mouseover_opacity: !link.mouseover_show }"
               :x1="link.source.x"
               :y1="link.source.y"
               :x2="link.target.x"
               :y2="link.target.y"
-              :style="{stroke:chartOption.link.color,'stroke-width':fixedLinkWidth}"
+              :style="{
+                stroke: chartOption.link.color,
+                'stroke-width': fixedLinkWidth,
+              }"
               :key="link.uid"
             />
           </g>
           <g class="nodes">
             <circle
               v-for="node in nodes"
-              :class="{node:true, 'display':true,'selected':node.selected,'mouseover_opacity':!node.mouseover_show,'brushing':node.brushing,'invertBrushing':node.invertBrushing}"
+              :class="{
+                node: true,
+                display: true,
+                selected: node.selected,
+                mouseover_opacity: !node.mouseover_show,
+                brushing: node.brushing,
+                invertBrushing: node.invertBrushing,
+              }"
               filter="url(#shadow)"
               @click="clickSelect(node)"
               @mouseover="mouseover(node)"
               @mouseout="mouseout"
-              :style="{r:fixedNodeSize,cx:node.x,cy:node.y,fill:classificationPalette[node.group || 0]}"
+              :style="{
+                r: fixedNodeSize,
+                cx: node.x,
+                cy: node.y,
+                fill: fillColor(node.group),
+              }"
               :key="node.uid"
             />
           </g>
           <g class="texts" v-show="visShowIds">
             <text
               v-for="node in nodes"
-              :class="{text:true,'mouseover_opacity':!node.mouseover_show}"
+              :class="{ text: true, mouseover_opacity: !node.mouseover_show }"
               :x="node.x"
               :y="node.y"
               dy="-0.8em"
               @click="clickSelect(node)"
               @mouseover="mouseover(node)"
               @mouseout="mouseout"
-              :style="{'font-size':10,fill:classificationPalette[node.group || 0]}"
+              :style="{ 'font-size': 10, fill: fillColor(node.group) }"
               :key="node.uid"
-            >{{node.id}}</text>
+            >
+              {{ node.id }}
+            </text>
           </g>
         </g>
       </svg>
@@ -97,6 +120,12 @@ import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import throttle from "lodash/throttle";
+
+import {
+  backgroundColor,
+  contrastColor,
+  classificationPalette,
+} from "@/config/color";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
 export default {
@@ -110,7 +139,7 @@ export default {
     visMouseover: Boolean,
     visZoom: Boolean,
     visShowIds: Boolean,
-    chartOption: Object
+    chartOption: Object,
   },
   data() {
     return {
@@ -121,7 +150,7 @@ export default {
       simulation__: {},
       drag__: {},
       brush: {},
-      brushedNodes:[],
+      brushedNodes: [],
       invertBrush: {},
       brushG: d3.selectAll(),
       invertBrushG: d3.selectAll(),
@@ -130,26 +159,22 @@ export default {
       opacityTexts: d3.selectAll(),
       isDraging: false, // 区分click和drag等
       mousePoint: [], // 相对于原始坐标系
-      transform: { k: 1, x: 0, y: 0 }
+      transform: { k: 1, x: 0, y: 0 },
     };
   },
   computed: {
     ...mapState({
-      sourceData: state => state.data.sourceData,
-      visualData: state => state.data.visualData,
-      // datasets: state => state.data.datasets,
+      sourceData: (state) => state.data.sourceData,
+      visualData: (state) => state.data.visualData,
 
-      chartWidth: state => state.view.dpiX * 0.6,
-      chartHeight: state => state.view.dpiY * 0.7,
-      classificationPalette: state => state.view.classificationPalette,
-      backgroundColor: state => state.view.backgroundColor,
-      contrastColor: state => state.view.contrastColor,
-      parentUUID: state => state.view.parentUUID,
-      currentUUID: state => state.view.currentUUID,
-      needUpdate: state => state.view.chartsNeedUpdate.force,
+      chartWidth: (state) => state.view.dpiX * 0.6,
+      chartHeight: (state) => state.view.dpiY * 0.7,
+      parentUUID: (state) => state.view.parentUUID,
+      currentUUID: (state) => state.view.currentUUID,
+      needUpdate: (state) => state.view.chartsNeedUpdate.force,
 
-      currentOperations: state => state.analyze.currentOperations,
-      rollbacked: state => state.analyze.rollbacked
+      currentOperations: (state) => state.analyze.currentOperations,
+      rollbacked: (state) => state.analyze.rollbacked,
     }),
     ...mapGetters([
       "nodes",
@@ -157,7 +182,7 @@ export default {
       "nodesNumber",
       "linksNumber",
       "generateUUID",
-      "beforeEvent"
+      "beforeEvent",
     ]),
 
     link() {
@@ -207,14 +232,16 @@ export default {
         degree[link.target.uid] = (degree[link.target.uid] || 0) + 1;
       }
       return degree;
-    }
+    },
   },
   created() {
+    this.contrastColor = contrastColor;
+    this.backgroundColor = backgroundColor;
     this.simulation__ = d3
       .forceSimulation()
       .force(
         "link",
-        d3.forceLink().id(d => d.id || d.name)
+        d3.forceLink().id((d) => d.id || d.name)
       )
       .force("charge", d3.forceManyBody())
       .force(
@@ -232,23 +259,19 @@ export default {
     // console.log(_.VERSION);
     const that = this;
     console.log("ForceChart", this);
-    console.log(d3);
+    // console.log(d3);
     const svg = d3
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.chartWidth, this.chartHeight]);
     const width = this.chartWidth,
       height = this.chartHeight;
-    // console.log("svg", svg);
+    console.log("svg", svg);
 
     this.vis = svg.select("g");
     svg
       .call(
-        d3
-          .zoom()
-          .on("start", zoomStart)
-          .on("zoom", zoomed)
-          .on("end", zoomEnd)
+        d3.zoom().on("start", zoomStart).on("zoom", zoomed).on("end", zoomEnd)
       )
       .on("dblclick.zoom", null);
 
@@ -257,15 +280,12 @@ export default {
       .brush()
       .extent([
         [0, 0],
-        [width, height]
+        [width, height],
       ])
       .on("start", this.brushStart)
       .on("brush", this.brushed)
       .on("end", this.brushEnd);
-    this.brushG = svg
-      .append("g")
-      .call(this.brush)
-      .attr("class", "brush");
+    this.brushG = svg.append("g").call(this.brush).attr("class", "brush");
     // console.log(this.brushG);
 
     // 使鼠标不能触发
@@ -278,7 +298,7 @@ export default {
       .brush()
       .extent([
         [0, 0],
-        [width, height]
+        [width, height],
       ])
       .on("start", this.brushStart)
       .on("brush", this.brushed)
@@ -306,7 +326,7 @@ export default {
       let transform = d3.event.transform;
       let extentStart = transform.invert([0, 0]); // 视口的开始坐标
       let extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
-      let t = that.node.filter(d => {
+      let t = that.node.filter((d) => {
         return (
           extentStart[0] <= d.x &&
           extentStart[1] <= d.y &&
@@ -314,7 +334,7 @@ export default {
           d.y <= extentEnd[1]
         );
       });
-      t.each(d => {
+      t.each((d) => {
         d.attentionTimes += 1;
       });
       let operation = {
@@ -326,7 +346,7 @@ export default {
     }
 
     // mounted---nextTick
-    this.$nextTick(function() {
+    this.$nextTick(function () {
       // 初始化<g>，防止update()产生多个<g>
       this.linkG = this.vis.select("g.links");
       this.nodeG = this.vis.select("g.nodes");
@@ -412,7 +432,7 @@ export default {
       function textEvent2Node(d) {
         // 将text接受的事件分发给node
         let theUid = d.uid;
-        let theNode = node.filter(d => d.uid === theUid);
+        let theNode = node.filter((d) => d.uid === theUid);
         theNode.dispatch(d3.event.type);
         // console.log(d3.event.type);
       }
@@ -438,7 +458,7 @@ export default {
       // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
 
       if (!this.visShowIds) {
-        this.text.attr("x", d => d.x).attr("y", d => d.y);
+        this.text.attr("x", (d) => d.x).attr("y", (d) => d.y);
       }
     },
     brushStart() {
@@ -450,7 +470,7 @@ export default {
       this.beforeEvent(this.visBrush ? "brush" : "invertBrush", this);
 
       if (!this.brushKeep && this.visBrush) {
-        this.nodes.forEach(d => {
+        this.nodes.forEach((d) => {
           d.selected = false;
         });
       }
@@ -468,7 +488,7 @@ export default {
       // console.log(d3.zoomTransform(this.vis.node()));
 
       let type = this.visBrush ? "brushing" : "invertBrushing";
-      this.nodes.forEach(node => {
+      this.nodes.forEach((node) => {
         extentStart[0] <= node.x &&
         extentStart[1] <= node.y &&
         node.x <= extentEnd[0] &&
@@ -488,8 +508,8 @@ export default {
     brushEnd() {
       if (d3.event.selection === null) return;
       console.log("brushed");
-      let brushedNodes = this.nodes.filter(d => d.brushing);
-      brushedNodes.forEach(node => {
+      let brushedNodes = this.nodes.filter((d) => d.brushing);
+      brushedNodes.forEach((node) => {
         node.brushing = false;
         node.selected = true;
         node.attentionTimes += 1;
@@ -504,8 +524,8 @@ export default {
     },
     invertBrushEnd() {
       if (d3.event.selection === null) return;
-      let invertBrushedNodes = this.nodes.filter(d => d.invertBrushing);
-      invertBrushedNodes.forEach(node => {
+      let invertBrushedNodes = this.nodes.filter((d) => d.invertBrushing);
+      invertBrushedNodes.forEach((node) => {
         node.invertBrushing = false;
         node.selected = false;
       });
@@ -560,7 +580,7 @@ export default {
       if (this.isDraging) {
         d.attentionTimes += 1;
         // drag <text>时，通过以下返回node
-        let t = this.node.filter(dd => dd.uid === d.uid);
+        let t = this.node.filter((dd) => dd.uid === d.uid);
         let operation = {
           action: "drag",
           nodes: t.data(),
@@ -599,10 +619,10 @@ export default {
       let id = d.id ? "id" : "name";
       let thisId = d[id];
 
-      this.nodes.forEach(d => {
+      this.nodes.forEach((d) => {
         d.mouseover_show = false;
       });
-      this.links.forEach(d => {
+      this.links.forEach((d) => {
         d.mouseover_show = d.source[id] === thisId || d.target[id] === thisId;
         if (d.mouseover_show) {
           // 如果link显示，则它两头的node也会显示
@@ -612,13 +632,13 @@ export default {
       });
 
       // link
-      this.opacityLinks = this.link.filter(d => !d.mouseover_show);
-      displayLinks = this.link.filter(d => d.mouseover_show);
+      this.opacityLinks = this.link.filter((d) => !d.mouseover_show);
+      displayLinks = this.link.filter((d) => d.mouseover_show);
       // node
-      this.opacityNodes = this.node.filter(d => !d.mouseover_show);
-      displayNodes = this.node.filter(d => d.mouseover_show);
+      this.opacityNodes = this.node.filter((d) => !d.mouseover_show);
+      displayNodes = this.node.filter((d) => d.mouseover_show);
       // text
-      this.opacityTexts = this.text.filter(d => !d.mouseover_show);
+      this.opacityTexts = this.text.filter((d) => !d.mouseover_show);
 
       // this.opacityNodes
       //   .transition()
@@ -628,7 +648,7 @@ export default {
       // this.opacityTexts.transition().style("fill-opacity", 0);
 
       if (!this.isDraging) {
-        displayNodes.each(d => {
+        displayNodes.each((d) => {
           d.attentionTimes += 1;
         });
         let operation = {
@@ -654,31 +674,34 @@ export default {
       //   .transition()
       //   .delay(200)
       //   .style("fill-opacity", null);
-      this.links.forEach(d => {
+      this.links.forEach((d) => {
         d.mouseover_show = true;
       });
-      this.nodes.forEach(d => {
+      this.nodes.forEach((d) => {
         d.mouseover_show = true;
       });
     },
     visTransform() {
       return d3.zoomTransform(this.vis.node());
     },
-    test() {}
+    fillColor(group) {
+      return classificationPalette[group || 0];
+    },
+    test() {},
   },
   watch: {
-    visBrush: function(val) {
+    visBrush: function (val) {
       val
         ? this.brushG.style("display", "inline")
         : (this.brushG.style("display", "none"), this.brush.clear(this.brushG));
     },
-    visInvertBrush: function(val) {
+    visInvertBrush: function (val) {
       val
         ? this.invertBrushG.style("display", "inline")
         : (this.invertBrushG.style("display", "none"),
           this.invertBrush.clear(this.invertBrushG));
     },
-    "chartOption.link.distance": function() {
+    "chartOption.link.distance": function () {
       if (this.chartOption.simulation.run) return;
       this.simulation.alphaTarget(0.5).restart();
       setTimeout(() => {
@@ -686,7 +709,7 @@ export default {
         this.simulation.alphaTarget(0).stop();
       }, 400);
     },
-    "chartOption.node.chargeForce": function() {
+    "chartOption.node.chargeForce": function () {
       if (this.chartOption.simulation.run) return;
       this.simulation.alphaTarget(0.5).restart();
       setTimeout(() => {
@@ -694,14 +717,14 @@ export default {
         this.simulation.alphaTarget(0).stop();
       }, 400);
     },
-    "chartOption.simulation.run": function(val) {
+    "chartOption.simulation.run": function (val) {
       val
         ? this.simulation
             .alphaTarget(this.chartOption.simulation.alphaTarget)
             .restart()
         : this.simulation.alphaTarget(0).stop();
     },
-    "chartOption.simulation.alphaTarget": function(val) {
+    "chartOption.simulation.alphaTarget": function (val) {
       if (this.chartOption.simulation.run) {
         if (val < 0.01) {
           this.chartOption.simulation.run = false;
@@ -710,8 +733,8 @@ export default {
           .alphaTarget(this.chartOption.simulation.alphaTarget)
           .restart();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scope>

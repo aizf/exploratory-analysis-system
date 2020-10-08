@@ -1,7 +1,7 @@
 <template>
-  <div class="pageAnalyze" :style="{background:backgroundColor}">
+  <div class="pageAnalyze" :style="{ background: backgroundColor }">
     <DataFlow @staticForceShowChanged="changeStaticForceShow"></DataFlow>
-    <div :style="{width:'100%',borderTop :`1px dashed ${contrastColor}`}" />
+    <div :style="{ width: '100%', borderTop: `1px dashed ${contrastColor}` }" />
     <TimeOrder></TimeOrder>
     <keep-alive>
       <!-- 可视化视图 -->
@@ -28,41 +28,44 @@ import StaticForce from "./commonUse/StaticForce.vue";
 import TimeOrder from "./pageAnalyze/TimeOrder.vue";
 import DataFlow from "./pageAnalyze/DataFlow.vue";
 
+import { backgroundColor, contrastColor } from "@/config/color";
+
 export default {
   name: "PageAnalyze",
   components: {
     TimeOrder,
     DataFlow,
-    StaticForce
+    StaticForce,
   },
   data() {
     return {
       chart: {},
-      isStaticForceShow: false
+      isStaticForceShow: false,
     };
   },
   computed: {
     ...mapState({
-      visualData: state => state.data.visualData,
+      visualData: (state) => state.data.visualData,
 
-      width: state => state.view.dpiX * 0.7,
-      height: state => state.view.dpiY - 64,
-      classificationPalette: state => state.view.classificationPalette,
-      backgroundColor: state => state.view.backgroundColor,
-      contrastColor: state => state.view.contrastColor,
+      width: (state) => state.view.dpiX * 0.7,
+      height: (state) => state.view.dpiY - 64,
 
-      tooltipNodes: state => state.analyze.pageAnalyzeTooltipData.nodes,
-      tooltipLinks: state => state.analyze.pageAnalyzeTooltipData.links
+      tooltipNodes: (state) => state.analyze.pageAnalyzeTooltipData.nodes,
+      tooltipLinks: (state) => state.analyze.pageAnalyzeTooltipData.links,
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber", "generateUUID"])
+    ...mapGetters(["nodes", "links", "nodesNumber", "generateUUID"]),
+  },
+  created() {
+    this.contrastColor = contrastColor;
+    this.backgroundColor = backgroundColor;
   },
   mounted() {},
   activated() {},
   methods: {
     changeStaticForceShow(val) {
       this.isStaticForceShow = val;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
