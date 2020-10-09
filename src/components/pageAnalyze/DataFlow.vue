@@ -111,6 +111,7 @@
 </template>
 
 <script>
+import Vue from "vue";
 import { mapState, mapGetters } from "vuex";
 import ChartPie from "@/components/commonUse/ChartPie.vue";
 import * as d3 from "d3";
@@ -135,17 +136,10 @@ export default {
   },
   data() {
     return {
-      link: d3.selectAll(),
-      node: d3.selectAll(),
       nodeWidth: 45,
       linkWidth: 8,
       markCircleR: 50,
       vis: d3.selectAll(),
-      linkG: d3.selectAll(),
-      nodeG: d3.selectAll(),
-      textG: d3.selectAll(),
-      sankey: {},
-      nodesUpdater: 0,
     };
   },
   computed: {
@@ -163,19 +157,22 @@ export default {
     ...mapGetters(["recordFlow"]),
 
     graph() {
+      // if (Math.floor(newV / 10) === Math.floor(oldV / 10)) return;
+      // k为extent放缩系数
+      const k = Math.floor(this.nodesNum / 10) + 1;
+      this.sankey.extent([
+        [1, 5],
+        [this.width * k - 1, this.height - 5],
+      ]);
       return this.sankey(this.recordFlow);
     },
     nodes() {
-      // nodes不是data，因此不是响应的，所以设置nodesUpdater
-      this.nodesUpdater;
       const nodes = this.graph.nodes;
       nodes.forEach((node) => {
-        // this.$set(node, "isShortestPath", false);
         node.sourceLinks = [];
         node.targetLinks = [];
       });
       return nodes;
-      // let tempDict = { startUUID: {}, op:"",opTime: 0, endUUID: {} };
     },
     nodesNum() {
       // 用recordFlow，而非nodes，因为nodes是通过this.sankey()计算而来
@@ -198,6 +195,7 @@ export default {
       const recordNodes = [...this.recordset, this.currentNode];
       const nodesDict = {};
       this.nodes.forEach((node) => {
+        this.$set(node, "isShortestPath", false);
         nodesDict[node.data.uuid] = node;
       });
 
@@ -243,8 +241,6 @@ export default {
 
       // 设置link的y0和y1
       this.nodes.forEach((node) => {
-        node.isShortestPath = false;
-
         // const height = node.y1 - node.y0;
         const height = 2 * this.markCircleR;
         const sourceLinks = node.sourceLinks;
@@ -287,7 +283,6 @@ export default {
       }
       // console.log(matrix);
       // console.log(this.dijkstra(matrix, uuidArr.indexOf("root")));
-      this.nodesUpdater++;
       return links;
     },
     currentNode() {
@@ -309,6 +304,7 @@ export default {
         [1, 5],
         [this.width * Math.floor(this.nodesNum / 10 + 1) - 1, this.height - 5],
       ]);
+    // Vue.observable(this.sankey);
   },
   mounted() {
     console.log("DataFlow", this);
@@ -343,17 +339,12 @@ export default {
       .on("dblclick.zoom", null);
 
     this.$nextTick(function () {
-      this.nodeG = this.vis.select("g.nodes");
-      this.linkG = this.vis.select("g.links");
-      this.textG = this.vis.select("g.texts");
+      // this.nodeG = this.vis.select("g.nodes");
+      // this.linkG = this.vis.select("g.links");
+      // this.textG = this.vis.select("g.texts");
     });
   },
-  activated() {},
   methods: {
-    update() {
-      const that = this;
-      console.log("recordFlow:", this.recordFlow);
-    },
     generatePath(d) {
       const isLeft2Right = d.target.x0 > d.source.x0;
       const offset = 21.87;
@@ -440,42 +431,6 @@ export default {
       });
       return rects;
     },
-
-    createMultipleColorsRect__(d, i, p) {
-      // 在<g>元素之内添加多颜色矩形
-      const height = d.y1 - d.y0;
-      const width = d.x1 - d.x0;
-      const nodes = d.data.nodes;
-      const totalNum = d.data.nodes.length;
-      const eachGroupNum = {};
-      nodes.forEach((node) => {
-        if (!node.group) {
-          eachGroupNum["0"] === undefined
-            ? (eachGroupNum["0"] = 0)
-            : eachGroupNum["0"]++;
-        } else {
-          eachGroupNum[node.group + ""] === undefined
-            ? (eachGroupNum[node.group + ""] = 0)
-            : eachGroupNum[node.group + ""]++;
-        }
-      });
-      const groups = Object.keys(eachGroupNum).sort();
-      const g = d3.select(p[i]);
-      let preDy = 0; // 偏移量
-      groups.forEach((group) => {
-        const h = (height * eachGroupNum[group]) / totalNum;
-        g.append("rect")
-          .attr("fill", this.classificationPalette[group])
-          .attr("x", d.x0)
-          .attr("y", d.y0 + preDy)
-          .attr("width", width)
-          .attr("height", h);
-        preDy += h;
-      });
-      g.on("click", () => {
-        this.updateTooltip(d.data);
-      });
-    },
     visTransform() {
       return d3.zoomTransform(this.vis.node());
     },
@@ -515,26 +470,9 @@ export default {
       return d3.symbol().type(__type).size(size)();
       // return this.$d3.symbol().type(this.$d3.symbols[4])();
     },
-    // dragged(d) {
-    //   d.x0 = d3.event.x;
-    //   d.x1 = d3.event.x + this.sankey.nodeWidth();
-    //   d.y0 = d3.event.y;
-    //   d.y1 = d3.event.y + d.value;
-    //   this.sankey.update(this.dataFlow);
-    //   this.node.attr("x", d => d.x0).attr("y", d => d.y0);
-    // }
   },
   watch: {
-    nodesNum: function (newV, oldV) {
-      // if (Math.floor(newV / 10) === Math.floor(oldV / 10)) return;
-      // k为extent放缩系数
-      let k = Math.floor(newV / 10) + 1;
-      // console.log("watch", this);
-      this.sankey.extent([
-        [1, 5],
-        [this.width * k - 1, this.height - 5],
-      ]);
-    },
+
   },
 };
 </script>

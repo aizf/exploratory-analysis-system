@@ -7,6 +7,7 @@ import view from './modules/view'
 import analyze from './modules/analyze'
 
 import getters from './getters'
+import { generateUUID } from "@/utils/methods";
 
 Vue.use(Vuex)
 
@@ -30,7 +31,7 @@ export default new Vuex.Store({
       commit("updateNodesTotalNum", getters.nodes.length);
       commit("updateParentUUID", "none");
       commit("updateCurrentUUID", "root");
-      getters.generateUUID(1);
+      generateUUID(1);
 
       commit("changeUndoRedo", (undo, redo) => {
         undo.splice(0, undo.length);

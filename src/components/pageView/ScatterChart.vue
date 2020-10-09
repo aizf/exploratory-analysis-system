@@ -25,7 +25,7 @@
         @change="xDimensionChange"
         :filterOption="filterOption"
       >
-        <a-select-option v-for="i in nodeFields" :key="i">{{i}}</a-select-option>
+        <a-select-option v-for="(d,i) in nodeFields" :key="i">{{i}}</a-select-option>
       </a-select>
       <a-select
         showSearch
@@ -35,7 +35,7 @@
         @change="yDimensionChange"
         :filterOption="filterOption"
       >
-        <a-select-option v-for="i in nodeFields" :key="i">{{i}}</a-select-option>
+        <a-select-option v-for="(d,i) in nodeFields" :key="i">{{i}}</a-select-option>
       </a-select>
     </div>
   </div>
@@ -91,6 +91,7 @@ export default {
     ...mapState({
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
+      nodeFields:state => state.data.nodeFields,
       // datasets: state => state.data.datasets,
 
       chartWidth: state => state.view.dpiX * 0.7,
@@ -107,8 +108,6 @@ export default {
       "nodes",
       "links",
       "nodesNumber",
-      "nodeFields",
-      "generateUUID"
     ]),
 
     xDimensionData() {

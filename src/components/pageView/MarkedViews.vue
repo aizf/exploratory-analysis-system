@@ -52,11 +52,9 @@ export default {
       currentUUID: state => state.view.currentUUID,
 
       recordset: state => state.analyze.recordset,
-      recordData: state => state.analyze.recordData
     }),
     ...mapGetters([
       "savedViewData",
-      "generateUUID",
       "markedVisualData",
       "beforeEvent"
     ])

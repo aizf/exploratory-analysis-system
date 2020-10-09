@@ -1,14 +1,9 @@
 const data = {
     state: {
-        datasetsTypes: [
-            "node-link",
-            "hierarchical",
-            // "node"
-        ],
-        
         sourceData: "",
         visualData: {},
         nodesTotalNum: 0,
+        nodeFields: {}
     },
     mutations: {
         updateSourceData: (state, data) => {
@@ -19,6 +14,9 @@ const data = {
         },
         updateNodesTotalNum: (state, data) => {
             state.nodesTotalNum = data;
+        },
+        updateNodeFields: (state, data) => {
+            state.nodeFields = data;
         },
     },
     actions: {}

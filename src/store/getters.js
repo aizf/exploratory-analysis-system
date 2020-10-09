@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import { dataDeepClone, generateUUID } from "@/utils/methods";
+import { RecordData } from '@/utils/classes'
 
 const getters = {
   // data
@@ -6,12 +8,6 @@ const getters = {
   links: state => state.data.visualData.links,
   nodesNumber: state => state.data.visualData.nodes.length,
   linksNumber: state => state.data.visualData.links.length,
-  nodeFields__: state => {
-    return state.data.datasets[state.data.selectedDataset].nodeFields;
-  },
-  nodeFields: (state, getters) => {
-    return Object.keys(getters.nodeFields__).sort();
-  },
 
   // view
   tmpExistingViews: (state) => {
@@ -32,7 +28,7 @@ const getters = {
     // 返回格式化后的记录流
     // 先增加尾节点
     const rs = [...state.analyze.recordset];
-    rs.push(state.analyze.recordData({
+    rs.push(new RecordData({
       index: state.analyze.recordset.length,
       data: getters.tmpExistingViews[state.view.currentUUID],
       operation: "current",
@@ -65,7 +61,7 @@ const getters = {
       })
     }
 
-    return { "nodes": nodes, "links": links };
+    return Vue.observable({ "nodes": nodes, "links": links });
   },
   markedVisualData: (state, getters) => {
     return Object.values(getters.tmpExistingViews).filter(d => d.marked);
@@ -97,69 +93,6 @@ const getters = {
     };
     // console.log("123", this);
   },
-  layoutRange: () => (data, args) => {
-    // args 上右下左的属性field
-    const dict = [];
-    for (const i in args) {
-      dict[+i] = data[0][args[+i]];
-    }
-
-    for (const d of data.slice(1)) {
-      for (const i in args) {
-        switch (i) {
-          case "0": // 上
-          case 0:
-          case "3": // 左
-          case 3:
-            dict[+i] = Math.min(d[args[+i]], dict[+i]);
-            break;
-          case "1": // 右
-          case 1:
-          case "2": // 下
-          case 2:
-            dict[+i] = Math.max(d[args[+i]], dict[+i]);
-            break;
-          default:
-            throw new Error(`layoutRange args error`);
-        }
-      }
-    }
-
-    return Object.values(dict);
-  },
-  generateUUID: () => {
-    // 全局产生视图uid的function
-    let uid = 1;
-    return function (_) {
-      return arguments.length ? (uid = +_) : uid++;
-    };
-  },
-  dataDeepClone: () => (oldData, uuid = oldData.uuid) => {
-    // 深拷贝数据集，格式data={nodes:[],links:[]}
-    const oldNodes = oldData.nodes;
-    const oldLinks = oldData.links;
-    const newNodes = [];
-    const newLinks = [];
-    const tempDict = {};  // 查找字典
-    for (const oldNode of oldNodes) {
-      const newNode = Object.assign({}, oldNode);
-      newNodes.push(newNode);
-      tempDict[newNode.id] = newNode;
-    }
-    for (const oldLink of oldLinks) {
-      const newLink = Object.assign({}, oldLink);
-      // 更改 source 和 target 指向的 node
-      newLink.source = tempDict[newLink.source.id];
-      newLink.target = tempDict[newLink.target.id];
-      newLinks.push(newLink);
-    }
-    return {
-      uuid: uuid,
-      nodes: newNodes,
-      links: newLinks,
-      marked: oldData.marked
-    }
-  },
   beforeEvent: (state, getters) => (operation, vueComponent, backData = {}) => {
     // vueComponent为调用此函数的组件实例
     const backOps = state.view.backOps;
@@ -169,7 +102,7 @@ const getters = {
 
     if (!Object.keys(state.analyze.existingViews).includes(uuid + "")) {
       vueComponent.$store.commit("handleExistingViews", (views) => {
-        Vue.set(views, uuid, getters.dataDeepClone(state.data.visualData, uuid));
+        Vue.set(views, uuid, dataDeepClone(state.data.visualData, uuid));
       });
     }
     const data = state.analyze.existingViews[uuid];
@@ -184,11 +117,11 @@ const getters = {
     vueComponent.$store.commit("updateParentUUID", uuid);
 
     if (backOps.includes(operation)) {
-      vueComponent.$store.commit("updateVisualData", getters.dataDeepClone(backData));
+      vueComponent.$store.commit("updateVisualData", dataDeepClone(backData));
       vueComponent.$store.commit("updateCurrentUUID", backData.uuid);
     } else {
       state.data.visualData.marked = false;
-      vueComponent.$store.commit("updateCurrentUUID", getters.generateUUID());
+      vueComponent.$store.commit("updateCurrentUUID", generateUUID());
     }
   },
   afterEvent: (state, getters) => (operation, subjects, vueComponent) => {

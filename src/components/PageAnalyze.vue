@@ -53,7 +53,7 @@ export default {
       tooltipNodes: (state) => state.analyze.pageAnalyzeTooltipData.nodes,
       tooltipLinks: (state) => state.analyze.pageAnalyzeTooltipData.links,
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber", "generateUUID"]),
+    ...mapGetters(["nodes", "links", "nodesNumber"]),
   },
   created() {
     this.contrastColor = contrastColor;

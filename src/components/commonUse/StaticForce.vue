@@ -1,9 +1,9 @@
 <template>
-  <div class="StaticForce" style="float:left;">
+  <div class="StaticForce" style="float: left">
     <svg
       :width="width"
       :height="height"
-      :style="{background:backgroundColor}"
+      :style="{ background: backgroundColor }"
     >
       <defs>
         <filter id="shadow">
@@ -25,7 +25,7 @@
           <circle
             v-for="node in nodes"
             :r="Math.max(Math.sqrt(!!node.size) / 10, 4.5)"
-            :class="{'display':true,'selected':node.selected}"
+            :class="{ display: true, selected: node.selected }"
             :fill="classificationPalette[node.group || 0]"
             filter="url(#shadow)"
             :cx="node.x"
@@ -40,6 +40,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
+import { layoutRange } from "@/utils/methods";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
 export default {
@@ -49,40 +50,33 @@ export default {
     links: {},
     width: {
       type: Number,
-      required: true
+      required: true,
     },
     height: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       linkG: d3.selectAll(),
       nodeG: d3.selectAll(),
       vis: d3.selectAll(),
-      mousePoint: [] // 相对于原始坐标系
+      mousePoint: [], // 相对于原始坐标系
     };
   },
   computed: {
     ...mapState({
-      backgroundColor: state => state.view.backgroundColor,
-      classificationPalette: state => state.view.classificationPalette
+      backgroundColor: (state) => state.view.backgroundColor,
+      classificationPalette: (state) => state.view.classificationPalette,
     }),
-    ...mapGetters(["layoutRange"])
   },
   mounted() {
-    // console.log("StaticForce", this);
-    // console.log(d3);
-    // console.log(_.VERSION);
     const that = this;
     const svg = d3
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.width, this.height]);
-    // const width = this.width,
-    // height = this.height;
-    // console.log(svg);
 
     this.vis = svg.select("g");
     svg.call(d3.zoom().on("zoom", zoomed)).on("dblclick.zoom", null);
@@ -106,68 +100,18 @@ export default {
   deactivated() {},
 
   methods: {
-    render() {
-      // if (this.nodes.length === 0) {
-      //   return;
-      // }
-      // // 更新数据
-      // let color = d => {
-      //   return d.group ? this.classificationPalette[d.group] : this.classificationPalette[0]; // FIXME 指定group
-      // };
-      // // debugger;
-      // this.link = this.linkG
-      //   .selectAll("line")
-      //   .data(this.links)
-      //   .join("line");
-      // this.link
-      //   .attr("x1", d => d.source.x)
-      //   .attr("y1", d => d.source.y)
-      //   .attr("x2", d => d.target.x)
-      //   .attr("y2", d => d.target.y);
-      // this.node = this.nodeG
-      //   .selectAll("circle")
-      //   .data(this.nodes)
-      //   .join("circle")
-      //   .attr("r", d => {
-      //     let size = Math.sqrt(d.size) / 10;
-      //     return size > 4.5 ? size : 4.5;
-      //   })
-      //   .attr("class", "display")
-      //   .attr("fill", color)
-      //   .attr("filter", "url(#shadow)")
-      //   .classed("selected", d => d.selected);
-      // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
-      // // 调整布局，使图显示在画布中间，并调整大小
-      // let layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
-      // // console.log(layoutRange);
-      // let t = this.visTransform();
-      // // t 存储在svg的__zoom中，更改t的属性，不能更换对象
-      // let vw = layoutRange[1] - layoutRange[3]; // vis的宽
-      // let vh = layoutRange[2] - layoutRange[0]; // vis的高
-      // let k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
-      // // 计算svg中心坐标和vis中心坐标
-      // let svgP = [this.width / 2, this.height / 2];
-      // let visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
-      // // Xvis*k + x = Xsvg
-      // let x = svgP[0] - visP[0] * k;
-      // let y = svgP[1] - visP[1] * k;
-      // t.x = x;
-      // t.y = y;
-      // t.k = k;
-      // this.vis.attr("transform", t);
-    },
     adjustTransform() {
-      const layoutRange = this.layoutRange(this.nodes, ["y", "x", "y", "x"]);
-      // console.log(layoutRange);
+      const layout = layoutRange(this.nodes, ["y", "x", "y", "x"]);
+      // console.log(layout);
       const t = this.visTransform();
       // t 存储在svg的__zoom中，更改t的属性，不能更换对象
-      const vw = layoutRange[1] - layoutRange[3]; // vis的宽
-      const vh = layoutRange[2] - layoutRange[0]; // vis的高
+      const vw = layout[1] - layout[3]; // vis的宽
+      const vh = layout[2] - layout[0]; // vis的高
       const k = Math.min(this.width / vw, this.height / vh) * 0.8; // 放缩系数
 
       // 计算svg中心坐标和vis中心坐标
       const svgP = [this.width / 2, this.height / 2];
-      const visP = [vw / 2 + layoutRange[3], vh / 2 + layoutRange[0]];
+      const visP = [vw / 2 + layout[3], vh / 2 + layout[0]];
 
       // Xvis*k + x = Xsvg
       const x = svgP[0] - visP[0] * k;
@@ -180,13 +124,13 @@ export default {
     },
     visTransform() {
       return d3.zoomTransform(this.vis.node());
-    }
+    },
   },
   watch: {
-    nodes: function() {
+    nodes: function () {
       this.adjustTransform();
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

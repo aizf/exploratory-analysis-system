@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <Test @welcome="testFn" /> -->
     <a-layout id="app-layout" style="min-height: 100vh">
-      <a-layout-header class="header" style="height:50px">
+      <a-layout-header class="header" style="height: 50px">
         <div class="logo" />
         <a-menu
           theme="dark"
@@ -55,28 +55,28 @@ export default {
   },
   data() {
     return {
-      t: { a: 1, b: 2 }
+      t: { a: 1, b: 2 },
     };
   },
   methods: {
     testFn() {
       alert("123");
-    }
+    },
   },
   computed: {
     ...mapState({
-      selectedDataset: state => state.data.selectedDataset
+      nodeFields: (state) => state.data.nodeFields,
     }),
     dataSelected() {
       // 判断是否选择了数据集
-      return this.selectedDataset !== "";
+      return !!Object.keys(this.nodeFields).length;
     },
     pageViewTooltipTitle() {
       return !this.dataSelected ? "请先在左侧选择数据" : "数据可视化界面";
     },
     pageAnalyzeTooltipTitle() {
       return !this.dataSelected ? "请先在左侧选择数据" : "交互分析界面";
-    }
+    },
   },
   created() {
     if (this.$route.name !== "Data" && !this.dataSelected) {
@@ -88,7 +88,7 @@ export default {
     console.log(this.$children);
     console.log("state", this.$store.state);
     console.log("getters", this.$store.getters);
-  }
+  },
 };
 </script>
 

@@ -55,18 +55,16 @@
 </template>
 <script>
 import Vue from "vue";
+import { mapState, mapGetters } from "vuex";
+import * as d3 from "d3";
+import { codemirror } from "vue-codemirror";
+import "codemirror/mode/javascript/javascript";
 import { Icon, Tabs } from "ant-design-vue";
 Vue.use(Icon);
 Vue.use(Tabs);
 
 import store from "@/store/";
-import { mapState, mapGetters } from "vuex";
-import * as d3 from "d3";
 import datasets from "@/config/datasets";
-
-import { codemirror } from "vue-codemirror";
-
-import "codemirror/mode/javascript/javascript";
 import { hierarchical2nodeLink } from "@/utils/methods";
 
 export default {
@@ -74,11 +72,15 @@ export default {
   components: { codemirror },
   data() {
     return {
-      // interface
+      datasetsTypes: [
+        "node-link",
+        "hierarchical",
+        // "node"
+      ],
       collapsed: false, // 侧边栏
-      codeContent:{
-        SourceData:"",
-        VisualData:""
+      codeContent: {
+        SourceData: "",
+        VisualData: "",
       },
       selectedDataset: "",
       // codemirror
@@ -97,10 +99,9 @@ export default {
     ...mapState({
       sourceData: (state) => state.data.sourceData,
       visualData: (state) => state.data.visualData,
-      datasetsTypes: (state) => state.data.datasetsTypes,
       currentUUID: (state) => state.view.currentUUID,
     }),
-    ...mapGetters(["nodes", "generateUUID", "dataDeepClone"]),
+    ...mapGetters(["nodes"]),
 
     datasetsNames() {
       return Object.keys(datasets);
@@ -126,6 +127,8 @@ export default {
       const datasetPath = "./static/" + dataset.fileName;
       if (event.key === this.selectedDataset) return;
       this.selectedDataset = event.key;
+      const nodeFields = dataset.nodeFields;
+      store.commit("updateNodeFields", nodeFields);
 
       let visualData;
       this.tabContents = []; // 清空数据
@@ -141,8 +144,12 @@ export default {
             .then((res) => {
               store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
               visualData = res;
-              this.codeContent["SourceData"]=this.sourceData;
-              this.codeContent["VisualData"]=JSON.stringify(visualData, null, "\t");
+              this.codeContent["SourceData"] = this.sourceData;
+              this.codeContent["VisualData"] = JSON.stringify(
+                visualData,
+                null,
+                "\t"
+              );
               changeState();
             })
             .catch((err) => {
@@ -154,8 +161,12 @@ export default {
             .then((res) => {
               store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
               visualData = hierarchical2nodeLink(res);
-              this.codeContent["SourceData"]=this.sourceData;
-              this.codeContent["VisualData"]=JSON.stringify(visualData, null, "\t");
+              this.codeContent["SourceData"] = this.sourceData;
+              this.codeContent["VisualData"] = JSON.stringify(
+                visualData,
+                null,
+                "\t"
+              );
               changeState();
             })
             .catch((err) => {
@@ -167,8 +178,12 @@ export default {
             .then((res) => {
               store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
               visualData = { nodes: res, links: [] };
-              this.codeContent["SourceData"]=this.sourceData;
-              this.codeContent["VisualData"]=JSON.stringify(visualData, null, "\t");
+              this.codeContent["SourceData"] = this.sourceData;
+              this.codeContent["VisualData"] = JSON.stringify(
+                visualData,
+                null,
+                "\t"
+              );
               changeState();
             })
             .catch((err) => {
@@ -213,7 +228,7 @@ export default {
     },
     test() {
       console.log("c");
-    }
+    },
   },
 };
 </script>

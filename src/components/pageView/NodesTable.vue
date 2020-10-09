@@ -29,12 +29,13 @@ export default {
     ...mapState({
       sourceData: state => state.data.sourceData,
       visualData: state => state.data.visualData,
+      nodeFields: state => state.data.nodeFields,
 
       classificationPalette: state => state.view.classificationPalette,
       backgroundColor: state => state.view.backgroundColor,
       needUpdate: state => state.view.chartsNeedUpdate.table
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber", "nodeFields"]),
+    ...mapGetters(["nodes", "links", "nodesNumber"]),
 
     degreeArray() {
       // 返回一个包含各个节点出入度的数组
@@ -54,7 +55,7 @@ export default {
     },
 
     columns() {
-      return this.nodeFields.map(d => ({
+      return Object.keys(this.nodeFields).map(d => ({
         title: d,
         dataIndex: d,
         key: d,
@@ -74,7 +75,7 @@ export default {
     data() {
       return this.nodes.map((node, i) => {
         const datum = { key: i };
-        for (const field of this.nodeFields) {
+        for (const field of Object.keys(this.nodeFields)) {
           datum[field] =
             node[field] === undefined || node[field] === null
               ? "-"

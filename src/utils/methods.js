@@ -2,7 +2,7 @@
   * @param matrix 邻接矩阵
   * @param start 起点
   * */
-const dijkstra = () => (matrix, start = 0) => {
+const dijkstra = (matrix, start = 0) => {
     const rows = matrix.length,
         cols = matrix[0].length;
     // 剩余的indexes
@@ -78,4 +78,70 @@ const hierarchical2nodeLink = hData => {
     };
 }
 
-module.exports = { hierarchical2nodeLink, dijkstra }
+const dataDeepClone = (oldData, uuid = oldData.uuid) => {
+    // 深拷贝数据集，格式data={nodes:[],links:[]}
+    const oldNodes = oldData.nodes;
+    const oldLinks = oldData.links;
+    const newNodes = [];
+    const newLinks = [];
+    const tempDict = {};  // 查找字典
+    for (const oldNode of oldNodes) {
+        const newNode = Object.assign({}, oldNode);
+        newNodes.push(newNode);
+        tempDict[newNode.id] = newNode;
+    }
+    for (const oldLink of oldLinks) {
+        const newLink = Object.assign({}, oldLink);
+        // 更改 source 和 target 指向的 node
+        newLink.source = tempDict[newLink.source.id];
+        newLink.target = tempDict[newLink.target.id];
+        newLinks.push(newLink);
+    }
+    return {
+        uuid: uuid,
+        nodes: newNodes,
+        links: newLinks,
+        marked: oldData.marked
+    }
+}
+
+const generateUUID = (() => {
+    // 全局产生视图uid的function
+    let uid = 1;
+    return function (_) {
+        return arguments.length ? (uid = +_) : uid++;
+    };
+})()
+
+const layoutRange = (data, args) => {
+    // args 上右下左的属性field
+    const dict = [];
+    for (const i in args) {
+        dict[+i] = data[0][args[+i]];
+    }
+
+    for (const d of data.slice(1)) {
+        for (const i in args) {
+            switch (i) {
+                case "0": // 上
+                case 0:
+                case "3": // 左
+                case 3:
+                    dict[+i] = Math.min(d[args[+i]], dict[+i]);
+                    break;
+                case "1": // 右
+                case 1:
+                case "2": // 下
+                case 2:
+                    dict[+i] = Math.max(d[args[+i]], dict[+i]);
+                    break;
+                default:
+                    throw new Error(`layoutRange args error`);
+            }
+        }
+    }
+
+    return Object.values(dict);
+}
+
+module.exports = { hierarchical2nodeLink, dijkstra, dataDeepClone, generateUUID, layoutRange }

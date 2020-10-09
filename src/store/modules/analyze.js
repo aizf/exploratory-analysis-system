@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { RecordData } from '@/utils/classes'
 const analyze = {
     state: {
         currentOperations: [], // dataFlow中，存储source和target中间的操作，view切换后清空
@@ -24,23 +25,10 @@ const analyze = {
         // record
         // recordset是存储recordData的列表
         recordset: [],
-        recordData(args) {
-            // 返回一个类的实例，用来存储节点信息
-            class RecordData {
-                constructor({ index, data, operation, time }) {
-                    // 存储的数据在操作之前
-                    this.index = index;
-                    this.data = data; // 操作之前的数据
-                    this.operation = operation;
-                    this.time = time;
-                }
-            }
-            return new RecordData(args);
-        }
     },
     mutations: {
         addRecordData: (state, args) => {
-            const d = state.recordData(args);
+            const d = new RecordData(args);
             state.recordset.push(d);
             if (args.operation === "undo") {
                 state.redoList.unshift(args.data);

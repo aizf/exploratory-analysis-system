@@ -181,7 +181,6 @@ export default {
       "links",
       "nodesNumber",
       "linksNumber",
-      "generateUUID",
       "beforeEvent",
     ]),
 
@@ -208,6 +207,7 @@ export default {
         .links(this.links)
         .distance(this.chartOption.link.distance);
       simulation.force("charge").strength(this.chartOption.node.chargeForce);
+      simulation.on("tick", this.ticked);
       return simulation;
     },
     fixedNodeSize() {
@@ -386,27 +386,6 @@ export default {
       t.y = 0;
       t.k = 1;
       this.vis.attr("transform", t);
-
-      // .join("text")
-      // .attr("text-anchor", "middle")
-      // .attr("font-family", "Avenir")
-      // .attr("font-size", "10")
-      // .attr("dy", "-0.5em")
-      // .text(d => d.id || d.name)
-      // .attr("fill", color)
-      // .style("-webkit-user-select", "none") // 字体不被选中
-      // .style("-moz-user-select", "none")
-      // .style("-ms-user-select", "none")
-      // .style("user-select", "none");
-      // console.log("before simulation");
-      // console.log(this.node);
-      // console.log(this.simulation.nodes());
-      // this.simulation.nodes(this.nodes);
-      // this.simulation.on("tick", this.ticked).on("end", this.tickEnd);
-      // this.simulation.force("link").links(this.links);
-      // console.log("after simulation");
-      // console.log(this.node);
-      // console.log(this.simulation.nodes());
       this.bindEvents(); // 给显示的dom绑定元素
       this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
       console.log("render");
@@ -438,6 +417,7 @@ export default {
       }
     },
     ticked() {
+      console.log("ticked");
       // this.link
       //   .attr("x1", d => d.source.x)
       //   .attr("y1", d => d.source.y)
@@ -738,6 +718,9 @@ export default {
 };
 </script>
 <style scope>
+.ForceChart svg{
+  /* display: none; */
+}
 .node {
   pointer-events: all;
   stroke: transparent;

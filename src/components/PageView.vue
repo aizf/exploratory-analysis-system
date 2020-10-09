@@ -407,7 +407,6 @@ export default {
       "nodes",
       "links",
       "viewSlice",
-      "generateUUID",
       "beforeEvent",
       "markedVisualData",
       "tmpExistingViews",
