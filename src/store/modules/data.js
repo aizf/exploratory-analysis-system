@@ -6,15 +6,11 @@ const data = {
             // "node"
         ],
         
-        selectedDataset: "",
-        sourceData: {},
+        sourceData: "",
         visualData: {},
         nodesTotalNum: 0,
     },
     mutations: {
-        changeSelectedDataset: (state, payload) => {
-            state.selectedDataset = payload;
-        },
         updateSourceData: (state, data) => {
             state.sourceData = data;
         },

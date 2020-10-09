@@ -20,22 +20,33 @@
             <span>Dataset</span>
           </span>
           <!--  -->
-          <a-menu-item-group v-for="type in datasetsTypes" :key="type" :title="type">
+          <a-menu-item-group
+            v-for="type in datasetsTypes"
+            :key="type"
+            :title="type"
+          >
             <a-menu-item
               v-for="ds in datasetsTypeDict[type]"
               :key="ds.name"
               @click="loadData"
-            >{{ds.name}}</a-menu-item>
+              >{{ ds.name }}</a-menu-item
+            >
           </a-menu-item-group>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
 
     <a-layout style="padding: 0 0px 0 5px">
-      <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
-        <a-tabs defaultActiveKey="0" :style="{ height: '100%'}">
-          <a-tab-pane v-for="(content, index) in tabContents" :tab="tabs[index]" :key="index+1">
-            <codemirror ref="myCm" :value="content" :options="cmOptions"></codemirror>
+      <a-layout-content
+        :style="{ background: '#fff', padding: '24px', margin: 0 }"
+      >
+        <a-tabs defaultActiveKey="0" :style="{ height: '100%' }">
+          <a-tab-pane
+            v-for="(content, key) in codeContent"
+            :tab="key"
+            :key="key"
+          >
+            <codemirror :value="content" :options="cmOptions"></codemirror>
           </a-tab-pane>
         </a-tabs>
       </a-layout-content>
@@ -51,11 +62,12 @@ Vue.use(Tabs);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
-import datasets from "@/config/datasets"
+import datasets from "@/config/datasets";
 
 import { codemirror } from "vue-codemirror";
 
 import "codemirror/mode/javascript/javascript";
+import { hierarchical2nodeLink } from "@/utils/methods";
 
 export default {
   name: "PageData",
@@ -64,8 +76,11 @@ export default {
     return {
       // interface
       collapsed: false, // 侧边栏
-      tabs: ["SourceData", "VisualData"],
-      tabContents: Array(2),
+      codeContent:{
+        SourceData:"",
+        VisualData:""
+      },
+      selectedDataset: "",
       // codemirror
       cmOptions: {
         // codemirror options
@@ -74,18 +89,16 @@ export default {
         theme: "lucario",
         lineNumbers: true,
         line: true,
-        readOnly: "nocursor"
-        // more codemirror options, 更多 codemirror 的高级配置...
-      }
+        readOnly: "nocursor",
+      },
     };
   },
   computed: {
     ...mapState({
-      selectedDataset: state => state.data.selectedDataset,
-      sourceData: state => state.data.sourceData,
-      visualData: state => state.data.visualData,
-      datasetsTypes: state => state.data.datasetsTypes,
-      currentUUID: state => state.view.currentUUID
+      sourceData: (state) => state.data.sourceData,
+      visualData: (state) => state.data.visualData,
+      datasetsTypes: (state) => state.data.datasetsTypes,
+      currentUUID: (state) => state.view.currentUUID,
     }),
     ...mapGetters(["nodes", "generateUUID", "dataDeepClone"]),
 
@@ -94,17 +107,17 @@ export default {
     },
     datasetsTypeDict() {
       const res = {};
-      this.datasetsTypes.forEach(d => {
+      this.datasetsTypes.forEach((d) => {
         res[d] = [];
       });
-      this.datasetsNames.forEach(d => {
+      this.datasetsNames.forEach((d) => {
         const data = datasets[d];
         const dataType = data.dataType;
         if (!res[dataType]) return;
         res[dataType].push(data);
       });
       return res;
-    }
+    },
   },
   methods: {
     loadData(event) {
@@ -112,68 +125,57 @@ export default {
       const dataset = datasets[event.key];
       const datasetPath = "./static/" + dataset.fileName;
       if (event.key === this.selectedDataset) return;
-      store.commit("changeSelectedDataset", event.key);
+      this.selectedDataset = event.key;
+
       let visualData;
       this.tabContents = []; // 清空数据
       this.$message.loading("Action in progress..", 0.3).then(() => {
-        __loadData(dataset.dataType)(datasetPath);
+        const loadFun = loadFuns[dataset.dataType];
+        loadFun(datasetPath);
       });
 
-      function __loadData(dataType) {
-        // 先传入类型，再传入路径
-        switch (dataType) {
-          case "node-link":
-            return __loadNodeLinkData;
-          case "hierarchical":
-            return __loadHierarchicalData;
-          case "node":
-            return __loadNodeData;
-          default:
-            break;
-        }
-      }
-
-      function __loadHierarchicalData(datasetPath) {
-        d3.json(datasetPath)
-          .then(res => {
-            store.commit("updateSourceData", res);
-            visualData = store.getters.hierarchical2nodeLink;
-            that.tabContents.push(JSON.stringify(res, null, "\t"));
-            that.tabContents.push(JSON.stringify(visualData, null, "\t"));
-            changeState();
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-      function __loadNodeLinkData(datasetPath) {
-        d3.json(datasetPath)
-          .then(res => {
-            // debugger
-            visualData = { nodes: res.nodes, links: [] };
-            store.commit("updateSourceData", res);
-            visualData = res;
-            that.tabContents.push(JSON.stringify(res, null, "\t"));
-            that.tabContents.push(JSON.stringify(visualData, null, "\t"));
-            changeState();
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-      function __loadNodeData(datasetPath) {
-        d3.json(datasetPath)
-          .then(res => {
-            store.commit("updateSourceData", res);
-            visualData = { nodes: res, links: [] };
-            that.tabContents.push(JSON.stringify(res, null, "\t"));
-            that.tabContents.push(JSON.stringify(visualData, null, "\t"));
-            changeState();
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
+      // 三种数据加载函数
+      const loadFuns = {
+        "node-link": (datasetPath) => {
+          d3.json(datasetPath)
+            .then((res) => {
+              store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
+              visualData = res;
+              this.codeContent["SourceData"]=this.sourceData;
+              this.codeContent["VisualData"]=JSON.stringify(visualData, null, "\t");
+              changeState();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+        hierarchical: (datasetPath) => {
+          d3.json(datasetPath)
+            .then((res) => {
+              store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
+              visualData = hierarchical2nodeLink(res);
+              this.codeContent["SourceData"]=this.sourceData;
+              this.codeContent["VisualData"]=JSON.stringify(visualData, null, "\t");
+              changeState();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+        node: (datasetPath) => {
+          d3.json(datasetPath)
+            .then((res) => {
+              store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
+              visualData = { nodes: res, links: [] };
+              this.codeContent["SourceData"]=this.sourceData;
+              this.codeContent["VisualData"]=JSON.stringify(visualData, null, "\t");
+              changeState();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+      };
 
       // the last step
       function changeState() {
@@ -189,7 +191,7 @@ export default {
           that.$set(d, "invertBrushing", false);
           tmpDict[d.id] = d;
         });
-        visualData.links.forEach(d => {
+        visualData.links.forEach((d) => {
           that.$set(d, "mouseover_show", true);
           if (typeof d.source !== "object") {
             d.source = tmpDict[d.source];
@@ -201,7 +203,7 @@ export default {
         store.commit("ChartsNeedUpdate", {
           force: true,
           scatter: true,
-          table: true
+          table: true,
         });
         store.commit("updateVisualData", visualData);
         store.dispatch("resetAll");
@@ -211,12 +213,8 @@ export default {
     },
     test() {
       console.log("c");
-    },
-    test1(e) {
-      console.log(e);
-      console.log(e.target);
     }
-  }
+  },
 };
 </script>
 <style>

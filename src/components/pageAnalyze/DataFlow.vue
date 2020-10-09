@@ -1,5 +1,5 @@
 <template>
-  <div class="DataFlow" :style="{width:width+'px',height:height+'px'}">
+  <div class="DataFlow" :style="{ width: width + 'px', height: height + 'px' }">
     <svg :width="width" :height="height">
       <defs>
         <filter id="shadow">
@@ -9,9 +9,9 @@
       <g>
         <circle
           :cx="currentNode.x0"
-          :cy="(currentNode.y0+currentNode.y1)/2"
+          :cy="(currentNode.y0 + currentNode.y1) / 2"
           :r="markCircleR"
-          :style="{fill:'none',strokeWidth:'10',stroke:'#1890ff'}"
+          :style="{ fill: 'none', strokeWidth: '10', stroke: '#1890ff' }"
         />
         <!-- <rect
           :x="currentNode.x0"
@@ -31,17 +31,26 @@
             :transform="`translate(${node.x0},${0})`"
             :key="node.data.uuid"
           >
-            <g v-if="node.data.marked" :transform="`translate(${0},${(node.y0+node.y1)/2})`">
-              <path :d="markedSymbol('star',180)" stroke="#1890ff" stroke-width="2" />
+            <g
+              v-if="node.data.marked"
+              :transform="`translate(${0},${(node.y0 + node.y1) / 2})`"
+            >
+              <path
+                :d="markedSymbol('star', 180)"
+                stroke="#1890ff"
+                stroke-width="2"
+              />
             </g>
             <g
-              :transform="`translate(${-markCircleR},${(node.y0+node.y1)/2-markCircleR})`"
+              :transform="`translate(${-markCircleR},${
+                (node.y0 + node.y1) / 2 - markCircleR
+              })`"
               :opacity="node.isShortestPath ? 1 : 0.3"
             >
               <ChartPie
                 :nodes="createPieData(node)"
                 :radius="markCircleR"
-                :valueFn="d=>d.nodesNum"
+                :valueFn="(d) => d.nodesNum"
               />
             </g>
             <!-- <rect
@@ -66,31 +75,35 @@
               :stroke-width="link.width"
               :stroke-opacity="link.isShortestPath ? 0.7 : 0.2"
             />
-            <title>{{link.operation}}</title>
+            <title>{{ link.operation }}</title>
             <g
-              :transform="`translate(${link.x1+(link.x1>link.x0?-15-markCircleR:20)},${link.y1})`"
+              :transform="`translate(${
+                link.x1 + (link.x1 > link.x0 ? -15 - markCircleR : 20)
+              },${link.y1})`"
             >
               <path
-                :d="markedSymbol('triangle',180)"
+                :d="markedSymbol('triangle', 180)"
                 :stroke="pathColor(link.operation)"
                 stroke-width="2"
                 :fill="pathColor(link.operation)"
                 :opacity="link.isShortestPath ? 0.7 : 0.2"
-                :transform="`rotate(${link.x1>link.x0?-30:30})`"
+                :transform="`rotate(${link.x1 > link.x0 ? -30 : 30})`"
               />
             </g>
           </g>
         </g>
-        <g class="texts" style="font: 10px sans-serif;">
+        <g class="texts" style="font: 10px sans-serif">
           <text
             v-for="node in nodes"
             :x="node.x1 + 6"
-            :y="(node.y0+node.y1)/2-markCircleR"
+            :y="(node.y0 + node.y1) / 2 - markCircleR"
             dx="-0.35em"
             :stroke="contrastColor"
             text-anchor="start"
             :key="node.data.uuid"
-          >{{node.data.uuid}}</text>
+          >
+            {{ node.data.uuid }}
+          </text>
         </g>
       </g>
     </svg>
@@ -113,10 +126,12 @@ import {
   classificationPalette2,
 } from "@/config/color";
 
+import { dijkstra } from "@/utils/methods";
+
 export default {
   name: "DataFlow",
   components: {
-    ChartPie
+    ChartPie,
   },
   data() {
     return {
@@ -130,22 +145,22 @@ export default {
       nodeG: d3.selectAll(),
       textG: d3.selectAll(),
       sankey: {},
-      nodesUpdater: 0
+      nodesUpdater: 0,
     };
   },
   computed: {
     ...mapState({
-      visualData: state => state.data.visualData,
-      nodesTotalNum: state => state.data.nodesTotalNum,
+      visualData: (state) => state.data.visualData,
+      nodesTotalNum: (state) => state.data.nodesTotalNum,
 
-      width: state => state.view.dpiX * 0.7,
-      height: state => (state.view.dpiY - 64) * 0.45,
-      operationTypes: state => state.view.operationTypes,
-      currentUUID: state => state.view.currentUUID,
+      width: (state) => state.view.dpiX * 0.7,
+      height: (state) => (state.view.dpiY - 64) * 0.45,
+      operationTypes: (state) => state.view.operationTypes,
+      currentUUID: (state) => state.view.currentUUID,
 
-      recordset: state => state.analyze.recordset
+      recordset: (state) => state.analyze.recordset,
     }),
-    ...mapGetters(["recordFlow", "dijkstra"]),
+    ...mapGetters(["recordFlow"]),
 
     graph() {
       return this.sankey(this.recordFlow);
@@ -154,7 +169,7 @@ export default {
       // nodes不是data，因此不是响应的，所以设置nodesUpdater
       this.nodesUpdater;
       const nodes = this.graph.nodes;
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         // this.$set(node, "isShortestPath", false);
         node.sourceLinks = [];
         node.targetLinks = [];
@@ -168,7 +183,7 @@ export default {
     },
     nodesDict() {
       const dict = {};
-      this.nodes.forEach(node => {
+      this.nodes.forEach((node) => {
         dict[node.data.uuid] = node;
       });
       return dict;
@@ -182,7 +197,7 @@ export default {
       // targetLinks: []  incoming links
       const recordNodes = [...this.recordset, this.currentNode];
       const nodesDict = {};
-      this.nodes.forEach(node => {
+      this.nodes.forEach((node) => {
         nodesDict[node.data.uuid] = node;
       });
 
@@ -191,7 +206,7 @@ export default {
       for (let i = 0; i < this.nodesNum; i++) {
         matrix[i] = new Array(this.nodesNum).fill(Infinity);
       }
-      const uuidArr = this.nodes.map(node => node.data.uuid);
+      const uuidArr = this.nodes.map((node) => node.data.uuid);
 
       for (let i = 1; i < recordNodes.length; i++) {
         // links
@@ -206,7 +221,7 @@ export default {
           y0: 0,
           x1: 0,
           y1: 0,
-          isShortestPath: false
+          isShortestPath: false,
         };
 
         // 判断路径方向
@@ -227,7 +242,7 @@ export default {
       }
 
       // 设置link的y0和y1
-      this.nodes.forEach(node => {
+      this.nodes.forEach((node) => {
         node.isShortestPath = false;
 
         // const height = node.y1 - node.y0;
@@ -249,12 +264,12 @@ export default {
         }
       });
 
-      const distances = this.dijkstra(matrix, uuidArr.indexOf("root"));
+      const distances = dijkstra(matrix, uuidArr.indexOf("root"));
       // debugger
       const currentNodeIndex = uuidArr.indexOf(this.currentNode.data.uuid);
       const pathIndex = [...distances[currentNodeIndex].path, currentNodeIndex];
       // pathUuid:最短路径上的节点
-      const pathUuid = pathIndex.map(d => uuidArr[d]);
+      const pathUuid = pathIndex.map((d) => uuidArr[d]);
       console.log("matrix", matrix);
       console.log("pathIndex", pathIndex);
       console.log(`${uuidArr.indexOf("root")} to ${currentNodeIndex}`);
@@ -266,7 +281,7 @@ export default {
         }
         // pathUuid增加了currentNodeUUID，因此length大于等于1
         const objLink = nodesDict[pathUuid[i - 1]].sourceLinks.find(
-          link => link.target.data.uuid === pathUuid[i]
+          (link) => link.target.data.uuid === pathUuid[i]
         );
         objLink.isShortestPath = true;
       }
@@ -276,8 +291,8 @@ export default {
       return links;
     },
     currentNode() {
-      return this.nodes.find(node => node.data.uuid === this.currentUUID);
-    }
+      return this.nodes.find((node) => node.data.uuid === this.currentUUID);
+    },
   },
   created() {
     this.contrastColor = contrastColor;
@@ -287,12 +302,12 @@ export default {
     this.sankey = d3
       .sankey()
       .nodeAlign(d3.sankeyLeft)
-      .nodeId(d => d.data.uuid)
+      .nodeId((d) => d.data.uuid)
       .nodeWidth(this.nodeWidth)
       .nodePadding(60)
       .extent([
         [1, 5],
-        [this.width * Math.floor(this.nodesNum / 10 + 1) - 1, this.height - 5]
+        [this.width * Math.floor(this.nodesNum / 10 + 1) - 1, this.height - 5],
       ]);
   },
   mounted() {
@@ -303,9 +318,13 @@ export default {
       .select(this.$el)
       .select("svg")
       .attr("viewBox", [0, 0, this.width, this.height]);
-    svg.node().addEventListener("click",()=>{
-      this.$emit("staticForceShowChanged", false);
-    },false);
+    svg.node().addEventListener(
+      "click",
+      () => {
+        this.$emit("staticForceShowChanged", false);
+      },
+      false
+    );
     this.vis = svg.select("g");
 
     svg
@@ -314,7 +333,7 @@ export default {
           .zoom()
           .extent([
             [0, 0],
-            [this.width, this.height]
+            [this.width, this.height],
           ])
           .on("zoom", () => {
             const transform = d3.event.transform;
@@ -323,7 +342,7 @@ export default {
       )
       .on("dblclick.zoom", null);
 
-    this.$nextTick(function() {
+    this.$nextTick(function () {
       this.nodeG = this.vis.select("g.nodes");
       this.linkG = this.vis.select("g.links");
       this.textG = this.vis.select("g.texts");
@@ -355,7 +374,7 @@ export default {
       // 在<g>元素之内添加多颜色矩形
       const nodes = d.data.nodes;
       const eachGroupNum = {};
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         if (!node.group) {
           // group 为0，或undefined
           eachGroupNum["0"] === undefined
@@ -370,10 +389,10 @@ export default {
 
       const rects = [];
       const groups = Object.keys(eachGroupNum).sort();
-      groups.forEach(group => {
+      groups.forEach((group) => {
         rects.push({
           group: group,
-          nodesNum: eachGroupNum[group]
+          nodesNum: eachGroupNum[group],
         });
       });
 
@@ -381,7 +400,7 @@ export default {
       if (nullNum > 0) {
         rects.push({
           group: "null",
-          nodesNum: nullNum
+          nodesNum: nullNum,
         });
       }
 
@@ -393,7 +412,7 @@ export default {
       const nodes = d.data.nodes;
       const totalNum = nodes.length;
       const eachGroupNum = {};
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         if (!node.group) {
           // group 为0，或undefined
           eachGroupNum["0"] === undefined
@@ -409,13 +428,13 @@ export default {
       const rects = [];
       const groups = Object.keys(eachGroupNum).sort();
       let preDy = 0;
-      groups.forEach(group => {
+      groups.forEach((group) => {
         const h = (height * eachGroupNum[group]) / totalNum;
         rects.push({
           group: group,
           nodesNum: eachGroupNum[group],
           y: d.y0 + preDy,
-          height: h
+          height: h,
         });
         preDy += h;
       });
@@ -429,7 +448,7 @@ export default {
       const nodes = d.data.nodes;
       const totalNum = d.data.nodes.length;
       const eachGroupNum = {};
-      nodes.forEach(node => {
+      nodes.forEach((node) => {
         if (!node.group) {
           eachGroupNum["0"] === undefined
             ? (eachGroupNum["0"] = 0)
@@ -443,7 +462,7 @@ export default {
       const groups = Object.keys(eachGroupNum).sort();
       const g = d3.select(p[i]);
       let preDy = 0; // 偏移量
-      groups.forEach(group => {
+      groups.forEach((group) => {
         const h = (height * eachGroupNum[group]) / totalNum;
         g.append("rect")
           .attr("fill", this.classificationPalette[group])
@@ -493,12 +512,9 @@ export default {
             "type error !\ncircle cross diamond square star triangle wye"
           );
       }
-      return d3
-        .symbol()
-        .type(__type)
-        .size(size)();
+      return d3.symbol().type(__type).size(size)();
       // return this.$d3.symbol().type(this.$d3.symbols[4])();
-    }
+    },
     // dragged(d) {
     //   d.x0 = d3.event.x;
     //   d.x1 = d3.event.x + this.sankey.nodeWidth();
@@ -509,17 +525,17 @@ export default {
     // }
   },
   watch: {
-    nodesNum: function(newV, oldV) {
+    nodesNum: function (newV, oldV) {
       // if (Math.floor(newV / 10) === Math.floor(oldV / 10)) return;
       // k为extent放缩系数
       let k = Math.floor(newV / 10) + 1;
       // console.log("watch", this);
       this.sankey.extent([
         [1, 5],
-        [this.width * k - 1, this.height - 5]
+        [this.width * k - 1, this.height - 5],
       ]);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scope>

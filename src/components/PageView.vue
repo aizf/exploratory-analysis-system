@@ -3,12 +3,16 @@
     <a-layout-sider width="250" theme="light" style="background: #fff">
       <a-card
         title="Oprations"
-        :headStyle="{padding:'0 24px 0 24px'}"
-        :bodyStyle="{padding:'5px 20px 5px 15px'}"
+        :headStyle="{ padding: '0 24px 0 24px' }"
+        :bodyStyle="{ padding: '5px 20px 5px 15px' }"
       >
         <a-row>
           <a-col :span="12" offset="4">
-            <a-tooltip placement="top" title="单点操作，选中或取消选中一个点" :mouseEnterDelay="0.4">
+            <a-tooltip
+              placement="top"
+              title="单点操作，选中或取消选中一个点"
+              :mouseEnterDelay="0.4"
+            >
               <span class="vSubMenu">click</span>
             </a-tooltip>
           </a-col>
@@ -18,7 +22,11 @@
         </a-row>
         <a-row>
           <a-col :span="12" offset="4">
-            <a-tooltip placement="top" title="单点操作，拖动一个点" :mouseEnterDelay="0.4">
+            <a-tooltip
+              placement="top"
+              title="单点操作，拖动一个点"
+              :mouseEnterDelay="0.4"
+            >
               <span class="vSubMenu">drag</span>
             </a-tooltip>
           </a-col>
@@ -28,7 +36,11 @@
         </a-row>
         <a-row>
           <a-col :span="12" offset="4">
-            <a-tooltip placement="top" title="单点操作，展示与该点相关联的点" :mouseEnterDelay="0.4">
+            <a-tooltip
+              placement="top"
+              title="单点操作，展示与该点相关联的点"
+              :mouseEnterDelay="0.4"
+            >
               <span class="vSubMenu">hover</span>
             </a-tooltip>
           </a-col>
@@ -38,21 +50,41 @@
         </a-row>
         <a-row>
           <a-col :span="12" offset="4">
-            <a-popover placement="top" title="keep last selected nodes ?" :mouseEnterDelay="0.4">
+            <a-popover
+              placement="top"
+              title="keep last selected nodes ?"
+              :mouseEnterDelay="0.4"
+            >
               <template slot="content">
-                <a-checkbox :checked="!brushKeep" @change="brushKeep=!brushKeep">no</a-checkbox>
-                <a-checkbox :checked="brushKeep" @change="brushKeep=!brushKeep">yes</a-checkbox>
+                <a-checkbox
+                  :checked="!brushKeep"
+                  @change="brushKeep = !brushKeep"
+                  >no</a-checkbox
+                >
+                <a-checkbox
+                  :checked="brushKeep"
+                  @change="brushKeep = !brushKeep"
+                  >yes</a-checkbox
+                >
               </template>
               <span class="vSubMenu">brush</span>
             </a-popover>
           </a-col>
           <a-col :span="4" offset="2">
-            <a-switch v-model="visBrush" @change="onVisBrush('switch')" :disabled="brushDisabled" />
+            <a-switch
+              v-model="visBrush"
+              @change="onVisBrush('switch')"
+              :disabled="brushDisabled"
+            />
           </a-col>
         </a-row>
         <a-row>
           <a-col :span="12" offset="4">
-            <a-tooltip placement="top" title="多点操作，取消选中多个点" :mouseEnterDelay="0.4">
+            <a-tooltip
+              placement="top"
+              title="多点操作，取消选中多个点"
+              :mouseEnterDelay="0.4"
+            >
               <span class="vSubMenu">invert brush</span>
             </a-tooltip>
           </a-col>
@@ -66,7 +98,11 @@
         </a-row>
         <a-row>
           <a-col :span="12" offset="4">
-            <a-tooltip placement="top" title="多点操作，放大、缩小或平移视图" :mouseEnterDelay="0.4">
+            <a-tooltip
+              placement="top"
+              title="多点操作，放大、缩小或平移视图"
+              :mouseEnterDelay="0.4"
+            >
               <span class="vSubMenu">zoom</span>
             </a-tooltip>
           </a-col>
@@ -78,8 +114,8 @@
 
       <a-card
         title="Data Fields"
-        :headStyle="{padding:'0 24px 0 24px'}"
-        :bodyStyle="{padding:'5px 10px 5px 10px'}"
+        :headStyle="{ padding: '0 24px 0 24px' }"
+        :bodyStyle="{ padding: '5px 10px 5px 10px' }"
       >
         <a-row>
           <a-col :span="12" offset="4"></a-col>
@@ -89,20 +125,25 @@
 
       <a-card
         title="Chart Option"
-        :headStyle="{padding:'0 24px 0 24px'}"
-        :bodyStyle="{padding:'5px 10px 5px 10px'}"
+        :headStyle="{ padding: '0 24px 0 24px' }"
+        :bodyStyle="{ padding: '5px 10px 5px 10px' }"
       >
         <!-- <a-icon type="area-chart" /> -->
-        <a-tabs tabPosition="left" :activeKey="currentChartKey" @change="changeChart">
+        <a-tabs
+          tabPosition="left"
+          :activeKey="currentChartKey"
+          @change="changeChart"
+        >
           <a-tab-pane key="force">
-            <span slot="tab">
-              <a-icon type="deployment-unit" />force
-            </span>
+            <span slot="tab"> <a-icon type="deployment-unit" />force </span>
             <div class="chartOption">
               <span class="vSubTitle">simulation</span>
               <div class="vMenu">
                 <span class="vSubMenu">run</span>
-                <a-switch v-model="chartOption.simulation.run" style="margin-left:40%" />
+                <a-switch
+                  v-model="chartOption.simulation.run"
+                  style="margin-left: 40%"
+                />
                 <span class="vSubMenu">alphaTarget</span>
                 <a-input-number
                   class="optionInput"
@@ -123,7 +164,10 @@
                   v-model="chartOption.node.nodeSize"
                 />
                 <span class="vSubMenu">border color</span>
-                <a-input class="optionInput" :value="chartOption.node.borderColor" />
+                <a-input
+                  class="optionInput"
+                  :value="chartOption.node.borderColor"
+                />
                 <span class="vSubMenu">charge force</span>
                 <a-input-number
                   class="optionInput"
@@ -165,32 +209,30 @@
             </div>
           </a-tab-pane>
           <a-tab-pane key="scatter">
-            <span slot="tab">
-              <a-icon type="dot-chart" />scatter
-            </span>
+            <span slot="tab"> <a-icon type="dot-chart" />scatter </span>
           </a-tab-pane>
           <a-tab-pane key="table">
-            <span slot="tab">
-              <a-icon type="table" />table
-            </span>
+            <span slot="tab"> <a-icon type="table" />table </span>
           </a-tab-pane>
         </a-tabs>
       </a-card>
     </a-layout-sider>
 
     <a-layout style="padding: 0 0 0 5px">
-      <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0 }">
+      <a-layout-content
+        :style="{ background: '#fff', padding: '24px', margin: 0 }"
+      >
         <div class="view-tools-board">
           <div class="view-tools-item">
-            <a-button @click="marked=!marked">
-              <a-icon type="book" :theme="marked?'filled':'outlined'" />
+            <a-button @click="marked = !marked">
+              <a-icon type="book" :theme="marked ? 'filled' : 'outlined'" />
             </a-button>
             <a-badge
               :count="markedVisualData.length"
               showZero
-              :numberStyle="{backgroundColor: '#1890ff'}"
+              :numberStyle="{ backgroundColor: '#1890ff' }"
             >
-              <a-button @click="markedsVisible=true">
+              <a-button @click="markedsVisible = true">
                 <a-icon type="database" />Marked Views
               </a-button>
             </a-badge>
@@ -203,7 +245,7 @@
               @click="viewRedo"
               shape="circle"
               :disabled="redoDisabled"
-              style="margin:0 0 0 5px"
+              style="margin: 0 0 0 5px"
             >
               <a-icon type="redo" />
             </a-button>
@@ -214,15 +256,17 @@
               :color="color"
               @click="groupTheSelectedNodes(index)"
               :key="index"
-            >{{index}}</a-tag>
+              >{{ index }}</a-tag
+            >
           </div>
           <div class="view-tools-item">
             <a-button
               type="primary"
               size="small"
               @click="viewFilter"
-              :style="{ marginLeft:'0',width: '70px' }"
-            >filter</a-button>
+              :style="{ marginLeft: '0', width: '70px' }"
+              >filter</a-button
+            >
           </div>
           <div class="view-tools-item">
             <a-icon type="tags" />
@@ -258,7 +302,7 @@
       placement="right"
       :width="720"
       :closable="false"
-      @close="markedsVisible=false"
+      @close="markedsVisible = false"
       :visible="markedsVisible"
     >
       <MarkedViews />
@@ -279,7 +323,7 @@ import {
   Row,
   Switch,
   Tabs,
-  Tag
+  Tag,
 } from "ant-design-vue";
 Vue.use(Badge);
 Vue.use(Button);
@@ -300,13 +344,14 @@ import ForceChart from "./pageView/ForceChart/ForceChart.vue";
 import ScatterChart from "./pageView/ScatterChart.vue";
 import NodesTable from "./pageView/NodesTable.vue";
 import MarkedViews from "./pageView/MarkedViews.vue";
+import { classificationPalette } from "@/config/color";
 export default {
   name: "PageView",
   components: {
     ForceChart,
     ScatterChart,
     NodesTable,
-    MarkedViews
+    MarkedViews,
   },
   data() {
     return {
@@ -328,7 +373,7 @@ export default {
       chartOption: {
         simulation: { run: false, alphaTarget: 0.3 },
         node: { nodeSize: 4.5, borderColor: "red", chargeForce: -30 },
-        link: { color: "#aaa", width: 0.3, opacity: 0.8, distance: 30 }
+        link: { color: "#aaa", width: 0.3, opacity: 0.8, distance: 30 },
       },
       // switch disabled
       saveDisabled: false,
@@ -340,23 +385,22 @@ export default {
       zoomDisabled: false,
       showIdsDisabled: false,
 
-      currentChartKey: "force"
+      currentChartKey: "force",
     };
   },
   computed: {
     ...mapState({
-      sourceData: state => state.data.sourceData,
-      visualData: state => state.data.visualData,
+      sourceData: (state) => state.data.sourceData,
+      visualData: (state) => state.data.visualData,
       // datasets: state => state.data.datasets,
 
-      classificationPalette: state => state.view.classificationPalette,
-      parentUUID: state => state.view.parentUUID,
-      currentUUID: state => state.view.currentUUID,
+      parentUUID: (state) => state.view.parentUUID,
+      currentUUID: (state) => state.view.currentUUID,
 
-      currentOperations: state => state.analyze.currentOperations,
-      undoList: state => state.analyze.undoList,
-      redoList: state => state.analyze.redoList,
-      rollbacked: state => state.analyze.rollbacked
+      currentOperations: (state) => state.analyze.currentOperations,
+      undoList: (state) => state.analyze.undoList,
+      redoList: (state) => state.analyze.redoList,
+      rollbacked: (state) => state.analyze.rollbacked,
       //toolbox
     }),
     ...mapGetters([
@@ -366,16 +410,16 @@ export default {
       "generateUUID",
       "beforeEvent",
       "markedVisualData",
-      "tmpExistingViews"
+      "tmpExistingViews",
     ]),
 
     marked: {
-      get: function() {
+      get: function () {
         return this.tmpExistingViews[this.currentUUID].marked;
       },
-      set: function(val) {
+      set: function (val) {
         this.tmpExistingViews[this.currentUUID].marked = val;
-      }
+      },
     },
     currentChart() {
       let chart;
@@ -396,7 +440,7 @@ export default {
             brush: true,
             invertBrush: true,
             zoom: true,
-            showIds: true
+            showIds: true,
           });
           chart = "NodesTable";
           break;
@@ -411,7 +455,10 @@ export default {
     },
     redoDisabled() {
       return !this.redoList.length;
-    }
+    },
+  },
+  created() {
+    this.classificationPalette = classificationPalette;
   },
   mounted() {
     console.log("PageView", this);
@@ -455,7 +502,7 @@ export default {
     onOpenChange(openKeys) {
       // 点击菜单，收起其他展开的所有菜单，保持菜单聚焦简洁
       const latestOpenKey = openKeys.find(
-        key => this.openKeys.indexOf(key) === -1
+        (key) => this.openKeys.indexOf(key) === -1
       );
       if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
         this.openKeys = openKeys;
@@ -477,7 +524,7 @@ export default {
       brush = false,
       invertBrush = false,
       zoom = false,
-      showIds = false
+      showIds = false,
     } = {}) {
       this.clickDisabled = click;
       this.dragDisabled = drag;
@@ -489,7 +536,7 @@ export default {
     },
 
     viewUndo() {
-      this.$store.commit("changeUndoRedo", undo => {
+      this.$store.commit("changeUndoRedo", (undo) => {
         if (!undo.length) {
           return;
         }
@@ -517,7 +564,7 @@ export default {
 
       this.beforeEvent("filter", this);
 
-      slicedData.nodes.forEach(d => {
+      slicedData.nodes.forEach((d) => {
         this.$set(d, "selected", false);
       });
 
@@ -528,14 +575,14 @@ export default {
       this.$store.commit("addOperation_", {
         action: "filter",
         nodes: slicedData,
-        time: new Date()
+        time: new Date(),
       });
       console.log("filter");
     },
     groupTheSelectedNodes(group) {
       // console.log(group);
       this.beforeEvent("classification", this);
-      store.state.data.visualData.nodes.forEach(d => {
+      store.state.data.visualData.nodes.forEach((d) => {
         if (d.selected) {
           this.$set(d, "group", group);
         }
@@ -543,8 +590,8 @@ export default {
     },
     handleChartOption(val) {
       // 处理ForceChart.vue更改Chart Option的callback
-      Object.keys(val).forEach(d => {
-        Object.keys(val[d]).forEach(dd => {
+      Object.keys(val).forEach((d) => {
+        Object.keys(val[d]).forEach((dd) => {
           this.chartOption[d][dd] = val[d][dd];
         });
       });
@@ -559,15 +606,15 @@ export default {
     test1(e) {
       console.log(e);
       console.log(e.target);
-    }
+    },
   },
   watch: {
-    currentUUID: function(val) {
-      store.commit("change_uuids", uuids => {
+    currentUUID: function (val) {
+      store.commit("change_uuids", (uuids) => {
         uuids.add(val);
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -601,7 +648,7 @@ export default {
   width: 1152px;
   display: flex;
   align-items: center;
-  justify-content:space-between;
+  justify-content: space-between;
 }
 .main-view {
   padding: 10px 0 0 0;
