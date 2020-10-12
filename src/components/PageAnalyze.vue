@@ -1,6 +1,12 @@
 <template>
   <div class="pageAnalyze" :style="{ background: backgroundColor }">
-    <DataFlow @staticForceShowChanged="changeStaticForceShow"></DataFlow>
+    <FlowController
+      :option.sync="option"
+    ></FlowController>
+    <DataFlow
+      :option="option"
+      @staticForceShowChanged="changeStaticForceShow"
+    ></DataFlow>
     <div :style="{ width: '100%', borderTop: `1px dashed ${contrastColor}` }" />
     <TimeOrder></TimeOrder>
     <keep-alive>
@@ -24,15 +30,17 @@ Vue.use(Col);
 Vue.use(Row);
 // import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
+import FlowController from "./pageAnalyze/FlowController.vue";
 import StaticForce from "./commonUse/StaticForce.vue";
 import TimeOrder from "./pageAnalyze/TimeOrder.vue";
-import DataFlow from "./pageAnalyze/DataFlow.vue";
+import DataFlow from "./pageAnalyze/DataFlow";
 
 import { backgroundColor, contrastColor } from "@/config/color";
 
 export default {
   name: "PageAnalyze",
   components: {
+    FlowController,
     TimeOrder,
     DataFlow,
     StaticForce,
@@ -41,6 +49,10 @@ export default {
     return {
       chart: {},
       isStaticForceShow: false,
+      option: {
+        isCompressRecord: false,
+      },
+      compressThreshold: 5 * 1000,
     };
   },
   computed: {
@@ -82,5 +94,11 @@ export default {
   top: 0;
   right: 0;
   /* border: 1px solid #305dff; */
+}
+
+.FlowController {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>

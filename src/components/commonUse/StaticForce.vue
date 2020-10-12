@@ -38,9 +38,10 @@
   </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+// import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import { layoutRange } from "@/utils/methods";
+import { backgroundColor, classificationPalette } from "@/config/color";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
 export default {
@@ -65,11 +66,10 @@ export default {
       mousePoint: [], // 相对于原始坐标系
     };
   },
-  computed: {
-    ...mapState({
-      backgroundColor: (state) => state.view.backgroundColor,
-      classificationPalette: (state) => state.view.classificationPalette,
-    }),
+  computed: {},
+  created() {
+    this.backgroundColor = backgroundColor;
+    this.classificationPalette = classificationPalette;
   },
   mounted() {
     const that = this;
