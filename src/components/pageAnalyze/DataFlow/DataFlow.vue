@@ -144,7 +144,7 @@ export default {
     },
     nodesNum() {
       // 因为nodes是通过this.sankey()计算而来
-      return Object.keys(this.tmpExistingViews).length;
+      return Object.keys(this.tmpExistingViews.nodes).length;
     },
     nodesDict() {
       const dict = {};

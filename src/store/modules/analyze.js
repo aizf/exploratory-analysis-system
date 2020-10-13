@@ -1,40 +1,43 @@
 import Vue from 'vue'
-import { RecordData } from '@/utils/classes'
+import data from './data.js'
+import view from './view.js'
+import { dataDeepClone } from "@/utils/methods";
+import { RecordNode, RecordLink } from '@/utils/classes'
 const analyze = {
     state: {
         currentOperations: [], // dataFlow中，存储source和target中间的操作，view切换后清空
-        uuids: new Set(),
 
         // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
         undoList: [], // index: 0,1,2,3,4
         redoList: [], // index: 5,6,7,...
 
         // PageAnalyze.DataFlow
-        pageAnalyzeTooltipData: {
-            "nodes": [],
-            "links": []
-        },
+        pageAnalyzeTooltipData: { "nodes": [], "links": [] },
 
         // interaction
         operations: [], // operation={action:,nodes:,time:}
         operations_: [], // 切换view的操作
 
-        // 已经存储的visualData
-        existingViews: {},
-
         // record
-        // recordset是存储recordData的列表
-        recordset: [],
+        // recordset是交互路径与交互视图状态
+        recordset: { nodes: {}, links: [] },
     },
     mutations: {
         addRecordData: (state, args) => {
-            const d = new RecordData(args);
-            state.recordset.push(d);
+            const { nodes, links } = state.recordset;
+            const uuid = args.source;
+            (uuid in nodes) || Vue.set(nodes, uuid, dataDeepClone(data.state.visualData));
+
+            links.push(new RecordLink({
+                ...args,
+                time: new Date()
+            }))
+
             if (args.operation === "undo") {
-                state.redoList.unshift(args.data);
+                state.redoList.unshift(nodes[uuid]);
             }
             else {
-                state.undoList.push(args.data);
+                state.undoList.push(nodes[uuid]);
                 if (args.operation !== "redo") {
                     // 若有其他操作，redo清空
                     state.redoList = [];
@@ -54,9 +57,6 @@ const analyze = {
             });
             // let data = { chart: "", time: "", action: "", nodes: {} };
         },
-        change_uuids: (state, fn) => {
-            fn(state.uuids);
-        },
         addCurrentOperations: (state, data) => {
             state.currentOperations.push(data);
         },
@@ -74,14 +74,8 @@ const analyze = {
             state.operations = [];
             state.operations_ = [];
         },
-        handleExistingViews: (state, fn) => {
-            fn(state.existingViews);
-        },
-        clearExistingViews: (state) => {
-            state.existingViews = {};
-        },
         resetRecordset: (state) => {
-            state.recordset = [];
+            state.recordset = { nodes: {}, links: [] };
         },
     },
     actions: {

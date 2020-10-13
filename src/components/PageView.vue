@@ -414,10 +414,10 @@ export default {
 
     marked: {
       get: function () {
-        return this.tmpExistingViews[this.currentUUID].marked;
+        return this.tmpExistingViews.nodes[this.currentUUID].marked;
       },
       set: function (val) {
-        this.tmpExistingViews[this.currentUUID].marked = val;
+        this.tmpExistingViews.nodes[this.currentUUID].marked = val;
       },
     },
     currentChart() {
@@ -608,11 +608,6 @@ export default {
     },
   },
   watch: {
-    currentUUID: function (val) {
-      store.commit("change_uuids", (uuids) => {
-        uuids.add(val);
-      });
-    },
   },
 };
 </script>

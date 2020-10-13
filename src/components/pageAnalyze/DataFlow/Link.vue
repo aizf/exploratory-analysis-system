@@ -77,12 +77,10 @@ export default {
         this.$set(node, "isShortestPath", false);
       });
 
-      // 计算最短路径
-      const matrix = new Array(this.nodesNum);
-      for (let i = 0; i < this.nodesNum; i++) {
-        matrix[i] = new Array(this.nodesNum).fill(Infinity);
-      }
       const uuidArr = this.nodes.map((node) => node.data.uuid);
+      const uuidDict = Object.fromEntries(
+        this.nodes.map((node, i) => [node.data.uuid, i])
+      );
 
       for (let i = 1; i < recordNodes.length; i++) {
         // links
@@ -109,12 +107,6 @@ export default {
         // nodes添加sourceLinks和targetLinks
         nodesDict[recordNodes[i - 1].data.uuid].sourceLinks.push(link);
         nodesDict[recordNodes[i].data.uuid].targetLinks.push(link);
-
-        // 设置路径
-        matrix[uuidArr.indexOf(recordNodes[i - 1].data.uuid)][
-          uuidArr.indexOf(recordNodes[i].data.uuid)
-        ] = 1;
-        // debugger;
       }
 
       // 设置link的y0和y1
@@ -138,15 +130,15 @@ export default {
         }
       });
 
-      const distances = dijkstra(matrix, uuidArr.indexOf("root"));
+      // 计算最短路径
+      const distances = this.getDistances(recordNodes, "root");
       // debugger
-      const currentNodeIndex = uuidArr.indexOf(this.currentNode.data.uuid);
+      const currentNodeIndex = uuidDict[this.currentNode.data.uuid];
       const pathIndex = [...distances[currentNodeIndex].path, currentNodeIndex];
       // pathUuid:最短路径上的节点
       const pathUuid = pathIndex.map((d) => uuidArr[d]);
-      console.log("matrix", matrix);
       console.log("pathIndex", pathIndex);
-      console.log(`${uuidArr.indexOf("root")} to ${currentNodeIndex}`);
+      console.log(`${uuidDict["root"]} to ${currentNodeIndex}`);
       // 将关键路径的isShortestPath设置为true
       for (let i = 0; i < pathUuid.length; i++) {
         this.nodesDict[pathUuid[i]].isShortestPath = true;
@@ -160,7 +152,7 @@ export default {
         objLink.isShortestPath = true;
       }
       // console.log(matrix);
-      // console.log(this.dijkstra(matrix, uuidArr.indexOf("root")));
+      // console.log(this.dijkstra(matrix, uuidDict["root"]));
       return links;
     },
   },
@@ -188,6 +180,24 @@ export default {
     },
     markedSymbol(...args) {
       return this.$parent.markedSymbol.apply(null, args);
+    },
+    getDistances(recordNodes, source) {
+      const matrix = new Array(this.nodesNum);
+      const uuidArr = this.nodes.map((node) => node.data.uuid);
+      const uuidDict = Object.fromEntries(
+        this.nodes.map((node, i) => [node.data.uuid, i])
+      );
+
+      for (let i = 0; i < this.nodesNum; i++) {
+        matrix[i] = new Array(this.nodesNum).fill(Infinity);
+      }
+      for (let i = 1; i < this.nodesNum; i++) {
+        matrix[uuidDict[recordNodes[i - 1].data.uuid]][
+          uuidDict[recordNodes[i].data.uuid]
+        ] = 1;
+      }
+      console.log("matrix", matrix);
+      dijkstra(matrix, uuidDict[source]);
     },
   },
 };

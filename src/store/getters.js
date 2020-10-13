@@ -11,14 +11,15 @@ const getters = {
 
   // view
   tmpExistingViews: (state) => {
-    const uuid = state.view.currentUUID; // 该record对应的view的uuid
-    if (Object.keys(state.analyze.existingViews).includes(uuid + "")) {
-      return state.analyze.existingViews;
+    // 带有当前视图状态，当前的状态是可改变的
+    const recordset = state.analyze.recordset;
+    const uuid = state.view.currentUUID; // 当前view的uuid
+    if (uuid in recordset.nodes) {
+      return recordset;
     } else {
-      state.data.visualData.uuid = uuid;
       return {
-        ...state.analyze.existingViews,
-        [uuid]: state.data.visualData
+        nodes: { ...recordset.nodes, [uuid]: state.data.visualData},
+        links: recordset.links
       };
     }
   },
@@ -96,22 +97,13 @@ const getters = {
   beforeEvent: (state, getters) => (operation, vueComponent, backData = {}) => {
     // vueComponent为调用此函数的组件实例
     const backOps = state.view.backOps;
-    const index = state.analyze.recordset.length;  // record的index
     const uuid = state.view.currentUUID; // 该record对应的view的uuid
-    const time = new Date(); //
-
-    if (!Object.keys(state.analyze.existingViews).includes(uuid + "")) {
-      vueComponent.$store.commit("handleExistingViews", (views) => {
-        Vue.set(views, uuid, dataDeepClone(state.data.visualData, uuid));
-      });
-    }
-    const data = state.analyze.existingViews[uuid];
+    const newUUID = generateUUID();
 
     const args = {
-      index,  // record的index
-      data, // 该record对应的view的uuid
+      source: uuid,
+      target:newUUID,
       operation, // view之后的操作
-      time, //
     };
     vueComponent.$store.commit("addRecordData", args);
     vueComponent.$store.commit("updateParentUUID", uuid);
@@ -121,7 +113,7 @@ const getters = {
       vueComponent.$store.commit("updateCurrentUUID", backData.uuid);
     } else {
       state.data.visualData.marked = false;
-      vueComponent.$store.commit("updateCurrentUUID", generateUUID());
+      vueComponent.$store.commit("updateCurrentUUID", newUUID);
     }
   },
   afterEvent: (state, getters) => (operation, subjects, vueComponent) => {

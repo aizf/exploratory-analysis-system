@@ -38,16 +38,11 @@ export default new Vuex.Store({
         redo.splice(0, redo.length);
       });
       commit("resetOperations");
-      commit("change_uuids", (uuids) => {
-        uuids.clear();
-        uuids.add("root");
-      });
       commit("resetRecordset");
       commit("updatePageAnalyzeTooltip", {
         "nodes": [],
         "links": []
       });
-      commit("clearExistingViews")
     }
   },
   getters

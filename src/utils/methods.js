@@ -78,7 +78,7 @@ const hierarchical2nodeLink = hData => {
     };
 }
 
-const dataDeepClone = (oldData, uuid = oldData.uuid) => {
+const dataDeepClone = (oldData) => {
     // 深拷贝数据集，格式data={nodes:[],links:[]}
     const oldNodes = oldData.nodes;
     const oldLinks = oldData.links;
@@ -98,7 +98,6 @@ const dataDeepClone = (oldData, uuid = oldData.uuid) => {
         newLinks.push(newLink);
     }
     return {
-        uuid: uuid,
         nodes: newNodes,
         links: newLinks,
         marked: oldData.marked
