@@ -119,6 +119,9 @@ export default {
       });
       return res;
     },
+    cmSourceData() {
+      return JSON.stringify(JSON.parse(this.sourceData), null, "\t");
+    },
   },
   methods: {
     loadData(event) {
@@ -142,9 +145,9 @@ export default {
         "node-link": (datasetPath) => {
           d3.json(datasetPath)
             .then((res) => {
-              store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
+              store.commit("updateSourceData", JSON.stringify(res));
               visualData = res;
-              this.codeContent["SourceData"] = this.sourceData;
+              this.codeContent["SourceData"] = this.cmSourceData;
               this.codeContent["VisualData"] = JSON.stringify(
                 visualData,
                 null,
@@ -159,9 +162,9 @@ export default {
         hierarchical: (datasetPath) => {
           d3.json(datasetPath)
             .then((res) => {
-              store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
+              store.commit("updateSourceData", JSON.stringify(res));
               visualData = hierarchical2nodeLink(res);
-              this.codeContent["SourceData"] = this.sourceData;
+              this.codeContent["SourceData"] = this.cmSourceData;
               this.codeContent["VisualData"] = JSON.stringify(
                 visualData,
                 null,
@@ -176,9 +179,9 @@ export default {
         node: (datasetPath) => {
           d3.json(datasetPath)
             .then((res) => {
-              store.commit("updateSourceData", JSON.stringify(res, null, "\t"));
+              store.commit("updateSourceData", JSON.stringify(res));
               visualData = { nodes: res, links: [] };
-              this.codeContent["SourceData"] = this.sourceData;
+              this.codeContent["SourceData"] = this.cmSourceData;
               this.codeContent["VisualData"] = JSON.stringify(
                 visualData,
                 null,

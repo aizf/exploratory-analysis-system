@@ -28,7 +28,6 @@ export default new Vuex.Store({
       const uuid = uuidv4();
       window.sessionStorage.setItem('user-uuid', uuid);
 
-      commit("updateNodesTotalNum", getters.nodes.length);
       commit("updateParentUUID", "none");
       commit("updateCurrentUUID", "root");
       generateUUID(1);

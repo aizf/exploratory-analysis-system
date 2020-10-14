@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import data from './data.js'
-import view from './view.js'
 import { dataDeepClone } from "@/utils/methods";
-import { RecordNode, RecordLink } from '@/utils/classes'
 const analyze = {
     state: {
         currentOperations: [], // dataFlow中，存储source和target中间的操作，view切换后清空
@@ -23,26 +21,28 @@ const analyze = {
         recordset: { nodes: {}, links: [] },
     },
     mutations: {
-        addRecordData: (state, args) => {
-            const { nodes, links } = state.recordset;
-            const uuid = args.source;
+        addRecordNode: (state, args) => {
+            const { nodes } = state.recordset;
+            const uuid = args.uuid;
             (uuid in nodes) || Vue.set(nodes, uuid, dataDeepClone(data.state.visualData));
 
-            links.push(new RecordLink({
-                ...args,
-                time: new Date()
-            }))
-
             if (args.operation === "undo") {
-                state.redoList.unshift(nodes[uuid]);
+                state.redoList.unshift(uuid);
             }
             else {
-                state.undoList.push(nodes[uuid]);
+                state.undoList.push(uuid);
                 if (args.operation !== "redo") {
                     // 若有其他操作，redo清空
                     state.redoList = [];
                 }
             }
+        },
+        addRecordLink: (state, args) => {
+            const { links } = state.recordset;
+            links.push({
+                ...args,
+                time: new Date()
+            })
         },
         addOperation: (state, data) => {
             state.operations.push(data);

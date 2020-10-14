@@ -108,7 +108,7 @@ const generateUUID = (() => {
     // 全局产生视图uid的function
     let uid = 1;
     return function (_) {
-        return arguments.length ? (uid = +_) : uid++;
+        return arguments.length ? (uid = +_) : (uid++) + '';
     };
 })()
 

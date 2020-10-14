@@ -25,7 +25,9 @@
           </a-menu-item>
         </a-menu>
       </a-layout-header>
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
       <!-- <keep-alive> -->
       <!-- <component :is="currentPage"></component> -->
       <!-- </keep-alive> -->
@@ -40,7 +42,7 @@ Vue.use(Layout);
 Vue.use(Menu);
 Vue.use(Tooltip);
 import { mapState } from "vuex";
-import "@/main.css"
+import "@/main.css";
 // import PageData from "@/components/PageData.vue";
 // import PageView from "@/components/PageView.vue";
 // import PageAnalyze from "@/components/PageAnalyze.vue";

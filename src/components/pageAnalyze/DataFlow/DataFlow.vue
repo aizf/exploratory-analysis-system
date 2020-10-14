@@ -10,12 +10,13 @@
         <NodePie
           :nodes="nodes"
           :markCircleR="markCircleR"
-          :currentNode="currentNode"
+          :currentUUID="currentUUID"
         />
         <Link
           :nodes="nodes"
+          :links="links"
           :markCircleR="markCircleR"
-          :currentNode="currentNode"
+          :currentUUID="currentUUID"
         />
         <g class="texts" style="font: 10px sans-serif">
           <text
@@ -25,9 +26,9 @@
             dx="-0.35em"
             :stroke="contrastColor"
             text-anchor="start"
-            :key="node.data.uuid"
+            :key="node.uuid"
           >
-            {{ node.data.uuid }}
+            {{ node.uuid }}
           </text>
         </g>
       </g>
@@ -53,8 +54,6 @@ import {
   classificationPalette2,
 } from "@/config/color";
 
-import { RecordData } from "@/utils/classes";
-
 export default {
   name: "DataFlow",
   components: {
@@ -78,50 +77,32 @@ export default {
       width: (state) => state.view.dpiX * 0.7,
       height: (state) => (state.view.dpiY - 64) * 0.45,
       operationTypes: (state) => state.view.operationTypes,
+      backOps: (state) => state.view.backOps,
       currentUUID: (state) => state.view.currentUUID,
 
       recordset: (state) => state.analyze.recordset,
     }),
     ...mapGetters(["tmpExistingViews"]),
 
-    recordFlow() {
-      // 返回格式化后的记录流，用于计算sankey
-      // 先增加尾节点
-      let rs = [...this.recordset];
-      rs.push(
-        new RecordData({
-          index: this.recordset.length,
-          data: this.tmpExistingViews[this.currentUUID],
-          operation: "current",
-          time: new Date(),
+    sankeyData() {
+      // 用于计算sankey的数据
+
+      // this.option.isCompressRecord && (rs = this.compressRecord(rs));
+      // 去除uuid相同的node
+
+      const nodes = Object.entries(this.tmpExistingViews.nodes).map(
+        ([key, val]) => ({
+          uuid: key,
+          data: val,
+          fixedValue: val.nodes.length,
+          isShortestPath: false,
         })
       );
-      this.option.isCompressRecord && (rs = this.compressRecord(rs));
-      // 去除uuid相同的node
-      const nodes = Object.values(this.tmpExistingViews).map((d) => ({
-        data: d,
-        // time: rs[i].time,
-        fixedValue: d.nodes.length,
-      }));
 
       // links
-      const links = [];
-      for (let i = 1; i < rs.length; i++) {
-        // 防止连通
-        switch (rs[i - 1].operation) {
-          case "undo":
-          case "redo":
-          case "rollback":
-            continue;
-          default:
-            break;
-        }
-        links.push({
-          operation: rs[i - 1].operation,
-          source: rs[i - 1].data.uuid,
-          target: rs[i].data.uuid,
-        });
-      }
+      const links = this.tmpExistingViews.links.filter(
+        (d) => !this.backOps.includes(d.operation)
+      ).map(d=>({...d}));
 
       return Vue.observable({ nodes: nodes, links: links });
     },
@@ -132,30 +113,26 @@ export default {
         [1, 5],
         [this.width * k - 1, this.height - 5],
       ]);
-      return this.sankey(this.recordFlow);
+      return this.sankey(this.sankeyData);
     },
     nodes() {
-      const nodes = this.graph.nodes;
-      nodes.forEach((node) => {
-        node.sourceLinks = [];
-        node.targetLinks = [];
-      });
-      return nodes;
+      return this.graph.nodes;
+    },
+    links() {
+      return this.tmpExistingViews.links;
     },
     nodesNum() {
-      // 因为nodes是通过this.sankey()计算而来
       return Object.keys(this.tmpExistingViews.nodes).length;
     },
     nodesDict() {
       const dict = {};
-      this.nodes.forEach((node) => {
-        dict[node.data.uuid] = node;
+      this.sankeyData.nodes.forEach((d) => {
+        dict[d.uuid] = d;
       });
       return dict;
     },
     currentNode() {
       return this.nodesDict[this.currentUUID];
-      // return this.nodes.find((node) => node.data.uuid === this.currentUUID);
     },
   },
   created() {
@@ -166,7 +143,7 @@ export default {
     this.sankey = d3
       .sankey()
       .nodeAlign(d3.sankeyLeft)
-      .nodeId((d) => d.data.uuid)
+      .nodeId((d) => d.uuid)
       .nodeWidth(this.nodeWidth)
       .nodePadding(60)
       .extent([

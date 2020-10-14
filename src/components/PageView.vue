@@ -305,7 +305,7 @@
       @close="markedsVisible = false"
       :visible="markedsVisible"
     >
-      <MarkedViews />
+      <MarkedViews :markedVisualData="markedVisualData" />
     </a-drawer>
   </a-layout>
 </template>
@@ -408,7 +408,6 @@ export default {
       "links",
       "viewSlice",
       "beforeEvent",
-      "markedVisualData",
       "tmpExistingViews",
     ]),
 
@@ -419,6 +418,9 @@ export default {
       set: function (val) {
         this.tmpExistingViews.nodes[this.currentUUID].marked = val;
       },
+    },
+    markedVisualData() {
+      return Object.values(this.tmpExistingViews.nodes).filter((d) => d.marked);
     },
     currentChart() {
       let chart;
@@ -607,8 +609,7 @@ export default {
       console.log(e.target);
     },
   },
-  watch: {
-  },
+  watch: {},
 };
 </script>
 <style scoped>

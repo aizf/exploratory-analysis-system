@@ -12,7 +12,7 @@
       v-for="node in nodes"
       @click.stop="updateTooltip(node.data)"
       :transform="`translate(${node.x0},${0})`"
-      :key="node.data.uuid"
+      :key="node.uuid"
     >
       <g
         v-if="node.data.marked"
@@ -68,7 +68,7 @@ export default {
   components: { ChartPie },
   props: {
     nodes: Array,
-    currentNode: Object,
+    currentUUID: String,
     markCircleR: Number,
   },
   // data() {
@@ -76,9 +76,14 @@ export default {
   // },
   computed: {
     ...mapState({
-      nodesTotalNum: (state) => state.data.nodesTotalNum,
+      sourceData: (state) => state.data.sourceData,
     }),
-    // ...mapGetters([]),
+    nodesTotalNum() {
+      return JSON.parse(this.sourceData).nodes.length;
+    },
+    currentNode() {
+      return this.$parent.nodesDict[this.currentUUID];
+    },
   },
   created() {},
   mounted() {},

@@ -2,7 +2,6 @@ const data = {
     state: {
         sourceData: "",
         visualData: {},
-        nodesTotalNum: 0,
         nodeFields: {}
     },
     mutations: {
@@ -11,9 +10,6 @@ const data = {
         },
         updateVisualData: (state, data) => {
             state.visualData = data;
-        },
-        updateNodesTotalNum: (state, data) => {
-            state.nodesTotalNum = data;
         },
         updateNodeFields: (state, data) => {
             state.nodeFields = data;

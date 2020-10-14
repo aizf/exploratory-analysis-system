@@ -4,16 +4,18 @@
       <a-card-grid v-for="d in markedVisualData" :key="d.uuid">
         <StaticForce
           :width="width"
-          :height="height-optionsHeight"
+          :height="height - optionsHeight"
           :nodes="d.nodes"
           :links="d.links"
         ></StaticForce>
         <a-row>
-          <a-col :span="3" style="vertical-align: middle;">
-            <p>uuid: {{d.uuid}}</p>
+          <a-col :span="3" style="vertical-align: middle">
+            <p>uuid: {{ d.uuid }}</p>
           </a-col>
           <a-col :span="6" :offset="5">
-            <a-button :disabled="d.uuid===currentUUID" @click="rollback(d)">rollback</a-button>
+            <a-button :disabled="d.uuid === currentUUID" @click="rollback(d)"
+              >rollback</a-button
+            >
           </a-col>
           <a-col :span="6" :offset="0">
             <a-button type="danger" @click="deleteMarked(d)">delete</a-button>
@@ -24,8 +26,8 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
-import {Button,Card,Col,Row} from 'ant-design-vue'
+import Vue from "vue";
+import { Button, Card, Col, Row } from "ant-design-vue";
 Vue.use(Button);
 Vue.use(Card);
 Vue.use(Col);
@@ -36,28 +38,27 @@ import StaticForce from "@/components/commonUse/StaticForce.vue";
 export default {
   name: "MarkedViews",
   components: {
-    StaticForce
+    StaticForce,
+  },
+  props: {
+    markedVisualData: Array,
   },
   data() {
     return {
       width: 634,
       height: 380,
-      optionsHeight: 30
+      optionsHeight: 30,
     };
   },
   computed: {
     ...mapState({
-      visualData: state => state.data.visualData,
+      visualData: (state) => state.data.visualData,
 
-      currentUUID: state => state.view.currentUUID,
+      currentUUID: (state) => state.view.currentUUID,
 
-      recordset: state => state.analyze.recordset,
+      recordset: (state) => state.analyze.recordset,
     }),
-    ...mapGetters([
-      "savedViewData",
-      "markedVisualData",
-      "beforeEvent"
-    ])
+    ...mapGetters(["savedViewData", "beforeEvent"]),
   },
   methods: {
     rollback(d) {
@@ -66,8 +67,8 @@ export default {
     },
     deleteMarked(d) {
       d.marked = false;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scope>

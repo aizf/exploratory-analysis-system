@@ -18,55 +18,12 @@ const getters = {
       return recordset;
     } else {
       return {
-        nodes: { ...recordset.nodes, [uuid]: state.data.visualData},
+        nodes: { ...recordset.nodes, [uuid]: state.data.visualData },
         links: recordset.links
       };
     }
   },
 
-  // analyze
-  recordFlow: (state, getters) => {
-    // 返回格式化后的记录流
-    // 先增加尾节点
-    const rs = [...state.analyze.recordset];
-    rs.push(new RecordData({
-      index: state.analyze.recordset.length,
-      data: getters.tmpExistingViews[state.view.currentUUID],
-      operation: "current",
-      time: new Date(),
-    }));
-    // debugger
-    // 去除uuid相同的node
-    const nodes = Object.values(getters.tmpExistingViews).map(d => ({
-      data: d,
-      // time: rs[i].time,
-      fixedValue: d.nodes.length,
-    }));
-
-    // links
-    const links = [];
-    for (let i = 1; i < rs.length; i++) {
-      // 防止连通
-      switch (rs[i - 1].operation) {
-        case "undo":
-        case "redo":
-        case "rollback":
-          continue;
-        default:
-          break;
-      }
-      links.push({
-        operation: rs[i - 1].operation,
-        source: rs[i - 1].data.uuid,
-        target: rs[i].data.uuid,
-      })
-    }
-
-    return Vue.observable({ "nodes": nodes, "links": links });
-  },
-  markedVisualData: (state, getters) => {
-    return Object.values(getters.tmpExistingViews).filter(d => d.marked);
-  },
   // function
   viewSlice: state => () => {
     // 返回slice后的nodes和links
@@ -94,26 +51,24 @@ const getters = {
     };
     // console.log("123", this);
   },
-  beforeEvent: (state, getters) => (operation, vueComponent, backData = {}) => {
+  beforeEvent: (state, getters) => (operation, vueComponent, backUUID = null) => {
     // vueComponent为调用此函数的组件实例
     const backOps = state.view.backOps;
     const uuid = state.view.currentUUID; // 该record对应的view的uuid
-    const newUUID = generateUUID();
 
-    const args = {
-      source: uuid,
-      target:newUUID,
-      operation, // view之后的操作
-    };
-    vueComponent.$store.commit("addRecordData", args);
+    vueComponent.$store.commit("addRecordNode", { uuid, operation });
     vueComponent.$store.commit("updateParentUUID", uuid);
 
+    const args = { operation, source: uuid }
     if (backOps.includes(operation)) {
-      vueComponent.$store.commit("updateVisualData", dataDeepClone(backData));
-      vueComponent.$store.commit("updateCurrentUUID", backData.uuid);
+      vueComponent.$store.commit("updateVisualData", state.analyze.recordset.nodes[backUUID]);
+      vueComponent.$store.commit("updateCurrentUUID", backUUID);
+      vueComponent.$store.commit("addRecordLink", { ...args, target: backUUID });
     } else {
+      const newUUID = generateUUID();
       state.data.visualData.marked = false;
       vueComponent.$store.commit("updateCurrentUUID", newUUID);
+      vueComponent.$store.commit("addRecordLink", { ...args, target: newUUID });
     }
   },
   afterEvent: (state, getters) => (operation, subjects, vueComponent) => {

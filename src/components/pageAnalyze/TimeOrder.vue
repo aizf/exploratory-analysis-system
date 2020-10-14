@@ -98,7 +98,7 @@ export default {
         {
           name: "index",
           type: "ordinal",
-          data: this.recordset.map((d) => d.index),
+          data: this.recordset.links.map((d, i) => i),
         },
         // 3
         {
@@ -128,9 +128,9 @@ export default {
         return arr.includes(op) ? "Yes" : "No";
       }
 
-      return this.recordset.map((d) => {
+      return this.recordset.links.map((d,i) => {
         const op = d.operation;
-        return [d.time, op, d.index, adjustView(op), switchView(op)];
+        return [d.time, op, i, adjustView(op), switchView(op)];
       });
     },
     chartEncode() {
