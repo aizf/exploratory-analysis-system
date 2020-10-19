@@ -31,7 +31,7 @@ import {
 Vue.prototype.$message = message;
 Vue.prototype.$axios = axios;
 Vue.prototype.$amark = new Amark({
-  url:"http://localhost:3000/interactive-data"
+  url:"http://localhost:3000/n/interactive-data"
 });
 
 import store from '@/store/'

@@ -153,7 +153,7 @@ export default {
                 null,
                 "\t"
               );
-              changeState();
+              this.changeState(visualData);
             })
             .catch((err) => {
               console.log(err);
@@ -170,7 +170,7 @@ export default {
                 null,
                 "\t"
               );
-              changeState();
+              this.changeState(visualData);
             })
             .catch((err) => {
               console.log(err);
@@ -187,7 +187,7 @@ export default {
                 null,
                 "\t"
               );
-              changeState();
+              this.changeState(visualData);
             })
             .catch((err) => {
               console.log(err);
@@ -196,38 +196,55 @@ export default {
       };
 
       // the last step
-      function changeState() {
-        that.$set(visualData, "marked", false);
-        const tmpDict = {};
-        visualData.nodes.forEach((d, i) => {
-          that.$set(d, "uid", i);
-          that.$set(d, "x", 0);
-          that.$set(d, "y", 0);
-          that.$set(d, "selected", false);
-          that.$set(d, "mouseover_show", true);
-          that.$set(d, "brushing", false);
-          that.$set(d, "invertBrushing", false);
-          tmpDict[d.id] = d;
-        });
-        visualData.links.forEach((d) => {
-          that.$set(d, "mouseover_show", true);
-          if (typeof d.source !== "object") {
-            d.source = tmpDict[d.source];
-            d.target = tmpDict[d.target];
-          }
-        });
+    },
+    changeState(visualData) {
+      this.$set(visualData, "marked", false);
+      const ids = visualData.nodes.map((d) => d.id);
+      const tmpMap = {};
+      visualData.nodes.forEach((d, i) => {
+        this.$set(d, "uid", i);
+        this.$set(d, "x", 0);
+        this.$set(d, "y", 0);
+        this.$set(d, "selected", false);
+        this.$set(d, "mouseover_show", true);
+        this.$set(d, "brushing", false);
+        this.$set(d, "invertBrushing", false);
+        tmpMap[d.id] = d;
+      });
 
-        // 源数据改变后更新store状态
-        store.commit("ChartsNeedUpdate", {
-          force: true,
-          scatter: true,
-          table: true,
-        });
-        store.commit("updateVisualData", visualData);
-        store.dispatch("resetAll");
+      visualData.links.forEach((d) => {
+        this.$set(d, "mouseover_show", true);
+        if (typeof d.source !== "object") {
+          d.source = tmpMap[d.source];
+          d.target = tmpMap[d.target];
+        }
+      });
+      const matrix = this.genMatrix(visualData);
 
-        that.$message.success("Data loaded.");
-      }
+      // 源数据改变后更新store状态
+      store.commit("updateIdNodeMap", tmpMap);
+      store.commit("updateLinkMatrix", matrix);
+      store.commit("ChartsNeedUpdate", {
+        force: true,
+        scatter: true,
+      });
+      store.commit("updateVisualData", visualData);
+      store.dispatch("resetAll");
+
+      this.$message.success("Data loaded.");
+    },
+    genMatrix({ nodes, links }) {
+      // 生成link关系矩阵
+      const nodesNum = nodes.length;
+      const matrix = Array.from(Array(nodesNum), () =>
+        Array(nodesNum).fill(false)
+      );
+      links.forEach((d) => {
+        const { source, target } = d;
+        matrix[source.uid][target.uid] = true;
+        matrix[target.uid][source.uid] = true;
+      });
+      return matrix;
     },
     test() {
       console.log("c");

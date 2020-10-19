@@ -1,53 +1,19 @@
 <template>
   <div class="ForceChart">
     <div style>
-      <svg
-        :width="chartWidth"
-        :height="chartHeight"
-        :style="{ border: '1px solid #305dff', background: backgroundColor }"
-      >
+      <svg :width="chartWidth" :height="chartHeight">
         <defs>
           <filter id="shadow">
             <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
           </filter>
         </defs>
-        <text
-          :x="0"
-          :y="0"
-          dx="0.5em"
-          dy="1.5em"
-          :fill="contrastColor"
-          text-anchor="start"
-          font-family="Avenir"
-          font-size="10"
-          style="user-select: none"
-        >
+        <text x="0" y="0" dx="0.5em" dy="1.5em" class="text info">
           UUID : {{ currentUUID }}
         </text>
-        <text
-          :x="0"
-          :y="0"
-          dx="0.5em"
-          dy="3.0em"
-          :fill="contrastColor"
-          text-anchor="start"
-          font-family="Avenir"
-          font-size="10"
-          style="user-select: none"
-        >
+        <text x="0" y="0" dx="0.5em" dy="3.0em" class="text info">
           Nodes : {{ nodesNumber }}
         </text>
-        <text
-          :x="0"
-          :y="0"
-          dx="0.5em"
-          dy="4.5em"
-          :fill="contrastColor"
-          text-anchor="start"
-          font-family="Avenir"
-          font-size="10"
-          style="user-select: none"
-        >
+        <text x="0" y="0" dx="0.5em" dy="4.5em" class="text info">
           Edges : {{ linksNumber }}
         </text>
         <g>
@@ -66,46 +32,9 @@
               :key="link.uid"
             />
           </g>
-          <g class="nodes">
-            <circle
-              v-for="node in nodes"
-              :class="{
-                node: true,
-                display: true,
-                selected: node.selected,
-                mouseover_opacity: !node.mouseover_show,
-                brushing: node.brushing,
-                invertBrushing: node.invertBrushing,
-              }"
-              filter="url(#shadow)"
-              @click="clickSelect(node)"
-              @mouseover="mouseover(node)"
-              @mouseout="mouseout"
-              :style="{
-                r: fixedNodeSize,
-                cx: node.x,
-                cy: node.y,
-                fill: fillColor(node.group),
-              }"
-              :key="node.uid"
-            />
-          </g>
-          <g class="texts" v-show="visShowIds">
-            <text
-              v-for="node in nodes"
-              :class="{ text: true, mouseover_opacity: !node.mouseover_show }"
-              :x="node.x"
-              :y="node.y"
-              dy="-0.8em"
-              @click="clickSelect(node)"
-              @mouseover="mouseover(node)"
-              @mouseout="mouseout"
-              :style="{ 'font-size': 10, fill: fillColor(node.group) }"
-              :key="node.uid"
-            >
-              {{ node.id }}
-            </text>
-          </g>
+          <!-- <Links :links="links" /> -->
+          <!-- <Nodes :nodes="nodes" /> -->
+          <Texts :nodes="nodes" :visShowIds="visShowIds" />
         </g>
       </svg>
     </div>
@@ -113,9 +42,9 @@
 </template>
 <script>
 import Vue from "vue";
-import { InputNumber, Slider } from "ant-design-vue";
-Vue.use(InputNumber);
-Vue.use(Slider);
+import Links from "./Links.vue";
+import Nodes from "./Nodes.vue";
+import Texts from "./Texts.vue";
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
@@ -130,6 +59,11 @@ import {
 // import * as _ from "lodash";
 export default {
   name: "ForceChart",
+  components: {
+    // Links,
+    // Nodes,
+    Texts,
+  },
   props: {
     visClick: Boolean,
     visBrush: Boolean,
@@ -641,19 +575,6 @@ export default {
     },
     mouseout() {
       if (!this.visMouseover || this.isDraging) return;
-      // this.opacityNodes
-      //   .transition()
-      //   .delay(200)
-      //   .style("fill-opacity", null)
-      //   .style("stroke-opacity", null);
-      // this.opacityLinks
-      //   .transition()
-      //   .delay(200)
-      //   .style("stroke-opacity", null);
-      // this.opacityTexts
-      //   .transition()
-      //   .delay(200)
-      //   .style("fill-opacity", null);
       this.links.forEach((d) => {
         d.mouseover_show = true;
       });
@@ -717,64 +638,34 @@ export default {
   },
 };
 </script>
-<style scope>
-.ForceChart svg{
+<style>
+.ForceChart .text {
+  user-select: none;
+  font-family: Avenir;
+  fill: var(--contrastColor);
+  transition: fill 0.6s ease, fill-opacity 0.3s ease;
+}
+</style>
+<style lang="scss" scope>
+.ForceChart svg {
   /* display: none; */
-}
-.node {
-  pointer-events: all;
-  stroke: transparent;
-
-  transition: fill 0.6s ease, fill-opacity 0.3s ease, stroke-opacity 0.3s ease;
-  /* cx 0.016s linear, cy 0.016s linear; */
-}
-.node.selected {
-  /* fill: red; */
-  stroke: red;
-  stroke-width: 0.8;
-}
-.node.brushing {
-  animation: stroke-blink 1s ease 0s infinite;
-}
-.node.invertBrushing {
-  animation: stroke-blink 1s ease 0s infinite;
-}
-.node.mouseover_opacity {
-  fill-opacity: 0.2;
-  stroke-opacity: 0.2;
-}
-
-@keyframes stroke-blink {
-  0% {
-    stroke: transparent;
-    stroke-width: 0;
-  }
-  50% {
-    stroke: red;
-    stroke-width: 1.8;
-  }
-  100% {
-    stroke: transparent;
-    stroke-width: 0;
-  }
+  border: 1px solid #305dff;
+  background: var(--backgroundColor);
 }
 
 .link {
   transition: stroke 0.6s ease, stroke-width 0.3s ease, stroke-opacity 0.3s ease;
   stroke-opacity: 0.8;
-}
-.link.mouseover_opacity {
-  stroke-opacity: 0;
+  &.mouseover_opacity {
+    stroke-opacity: 0;
+  }
 }
 
 .text {
-  user-select: none;
-  text-anchor: middle;
-  font-family: Avenir;
-  transition: fill 0.6s ease, fill-opacity 0.3s ease;
-}
-.text.mouseover_opacity {
-  fill-opacity: 0;
+  &.info {
+    text-anchor: start;
+    font-size: 10px;
+  }
 }
 
 /* .linksOverOut-enter,

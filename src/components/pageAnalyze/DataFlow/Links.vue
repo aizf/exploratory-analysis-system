@@ -32,8 +32,9 @@ import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import { classificationPalette2 } from "@/config/color";
 import { dijkstra } from "@/utils/methods";
+import { marks } from "@/utils/marks";
 export default {
-  name: "Link",
+  name: "Links",
   components: {},
   props: {
     currentUUID: String,
@@ -136,7 +137,7 @@ export default {
       return this.classificationPalette2[this.operationTypes.indexOf(op)];
     },
     markedSymbol(...args) {
-      return this.$parent.markedSymbol.apply(null, args);
+      return marks.apply(null, args);
     },
     getDistances(links, source) {
       const uuidArr = this.nodes.map((node) => node.uuid);

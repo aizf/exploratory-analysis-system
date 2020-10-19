@@ -63,8 +63,9 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import ChartPie from "@/components/commonUse/ChartPie.vue";
+import {marks} from "@/utils/marks";
 export default {
-  name: "NodePie",
+  name: "NodesPie",
   components: { ChartPie },
   props: {
     nodes: Array,
@@ -160,7 +161,7 @@ export default {
       return rects;
     },
     markedSymbol(...args) {
-      return this.$parent.markedSymbol.apply(null, args);
+      return marks.apply(null, args);
     },
     updateTooltip(data) {
       this.$store.commit("updatePageAnalyzeTooltip", data);

@@ -7,12 +7,12 @@
         </filter>
       </defs>
       <g>
-        <NodePie
+        <NodesPie
           :nodes="nodes"
           :markCircleR="markCircleR"
           :currentUUID="currentUUID"
         />
-        <Link
+        <Links
           :nodes="nodes"
           :links="links"
           :markCircleR="markCircleR"
@@ -39,8 +39,8 @@
 <script>
 import Vue from "vue";
 import { mapState, mapGetters } from "vuex";
-import NodePie from "./NodePie.vue";
-import Link from "./Link.vue";
+import NodesPie from "./NodesPie.vue";
+import Links from "./Links.vue";
 import * as d3 from "d3";
 import * as d3Sankey from "d3-sankey";
 if (process.env.NODE_ENV === "development") {
@@ -57,8 +57,8 @@ import {
 export default {
   name: "DataFlow",
   components: {
-    NodePie,
-    Link,
+    NodesPie,
+    Links,
   },
   props: {
     option: Object,
@@ -68,6 +68,7 @@ export default {
       nodeWidth: 45,
       markCircleR: 50,
       vis: d3.selectAll(),
+      frequentItem: [],
     };
   },
   computed: {
@@ -87,22 +88,23 @@ export default {
     sankeyData() {
       // 用于计算sankey的数据
 
-      // this.option.isCompressRecord && (rs = this.compressRecord(rs));
       // 去除uuid相同的node
+      const neededNodesUUID = new Set();
 
-      const nodes = Object.entries(this.tmpExistingViews.nodes).map(
-        ([key, val]) => ({
-          uuid: key,
-          data: val,
-          fixedValue: val.nodes.length,
-          isShortestPath: false,
-        })
-      );
+      // 初始化
+      let links = this.links;
+      // 去环
+      links = links.filter((d) => !this.backOps.includes(d.operation));
 
-      // links
-      const links = this.tmpExistingViews.links.filter(
-        (d) => !this.backOps.includes(d.operation)
-      ).map(d=>({...d}));
+      // 拷贝
+      links = links.map((d) => {
+        neededNodesUUID.add(d.source);
+        neededNodesUUID.add(d.target);
+        return { ...d };
+      });
+
+      if (neededNodesUUID.size === 0) neededNodesUUID.add(this.currentUUID);
+      const nodes = [...neededNodesUUID].map((d) => this.nodesDict[d]);
 
       return Vue.observable({ nodes: nodes, links: links });
     },
@@ -119,14 +121,24 @@ export default {
       return this.graph.nodes;
     },
     links() {
-      return this.tmpExistingViews.links;
+      let links = this.tmpExistingViews.links;
+      this.option.isCompressRecord && (links = this.compressRecord(links));
+      return links;
     },
     nodesNum() {
       return Object.keys(this.tmpExistingViews.nodes).length;
     },
     nodesDict() {
+      const nodes = Object.entries(this.tmpExistingViews.nodes).map(
+        ([key, val]) => ({
+          uuid: key,
+          data: val,
+          fixedValue: val.nodes.length,
+          isShortestPath: false,
+        })
+      );
       const dict = {};
-      this.sankeyData.nodes.forEach((d) => {
+      nodes.forEach((d) => {
         dict[d.uuid] = d;
       });
       return dict;
@@ -188,21 +200,9 @@ export default {
     visTransform() {
       return d3.zoomTransform(this.vis.node());
     },
-    markedSymbol(type, size) {
-      const types = {
-        circle: d3.symbols[0],
-        cross: d3.symbols[1],
-        diamond: d3.symbols[2],
-        square: d3.symbols[3],
-        star: d3.symbols[4],
-        triangle: d3.symbols[5],
-        wye: d3.symbols[6],
-      };
-      return d3.symbol().type(types[type]).size(size)();
-    },
-    compressRecord(rs) {
-      return rs.filter((d, i, arr) => {
-        if (i >= rs.length - 1) return true;
+    compressRecord(links) {
+      return links.filter((d, i, arr) => {
+        if (i >= links.length - 1) return true;
         return d.operation !== arr[i + 1].operation;
       });
     },

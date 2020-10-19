@@ -2,7 +2,9 @@ const data = {
     state: {
         sourceData: "",
         visualData: {},
-        nodeFields: {}
+        nodeFields: {},
+        idNodeMap: {},
+        linkMatrix: []
     },
     mutations: {
         updateSourceData: (state, data) => {
@@ -13,6 +15,12 @@ const data = {
         },
         updateNodeFields: (state, data) => {
             state.nodeFields = data;
+        },
+        updateIdNodeMap: (state, data) => {
+            state.idNodeMap = data;
+        },
+        updateLinkMatrix: (state, data) => {
+            state.linkMatrix = data;
         },
     },
     actions: {}

@@ -57,15 +57,9 @@ export default {
     // Test
   },
   data() {
-    return {
-      t: { a: 1, b: 2 },
-    };
+    return {};
   },
-  methods: {
-    testFn() {
-      alert("123");
-    },
-  },
+  methods: {},
   computed: {
     ...mapState({
       nodeFields: (state) => state.data.nodeFields,
@@ -87,8 +81,8 @@ export default {
     }
   },
   mounted() {
-    console.log(this);
-    console.log(this.$children);
+    // console.log(this);
+    // console.log(this.$children);
     console.log("state", this.$store.state);
     console.log("getters", this.$store.getters);
   },

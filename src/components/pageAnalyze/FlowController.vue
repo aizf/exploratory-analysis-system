@@ -6,6 +6,12 @@
       @change="changeOption($event, 'isCompressRecord')"
       >Compress
     </a-checkbox>
+    <a-checkbox
+      class="checkbox"
+      :checked="option.isFrequentItem"
+      @change="changeOption($event, 'isFrequentItem')"
+      >Frequent item
+    </a-checkbox>
   </div>
 </template>
 

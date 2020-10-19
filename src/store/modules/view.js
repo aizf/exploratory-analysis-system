@@ -11,7 +11,6 @@ const view = {
         chartsNeedUpdate: {
             "force": false,
             "scatter": false,
-            "table": false
         },
         // toolbox
     },
@@ -27,9 +26,6 @@ const view = {
         },
         ScatterUpdated: ({ chartsNeedUpdate }) => {
             chartsNeedUpdate.scatter = false;
-        },
-        TableUpdated: ({ chartsNeedUpdate }) => {
-            chartsNeedUpdate.table = false;
         },
         ChartsNeedUpdate: ({ chartsNeedUpdate }) => {
             for (const key in chartsNeedUpdate) {

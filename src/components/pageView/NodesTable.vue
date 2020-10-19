@@ -2,8 +2,8 @@
   <a-table :columns="columns" :dataSource="data" size="small"></a-table>
 </template>
 <script>
-import Vue from 'vue'
-import {Table} from 'ant-design-vue'
+import Vue from "vue";
+import { Table } from "ant-design-vue";
 Vue.use(Table);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
@@ -17,23 +17,22 @@ export default {
     visDrag: Boolean,
     visMouseover: Boolean,
     visZoom: Boolean,
-    visShowIds: Boolean
+    visShowIds: Boolean,
   },
   data() {
     return {
       chartWidth: "960",
-      chartHeight: "600"
+      chartHeight: "600",
     };
   },
   computed: {
     ...mapState({
-      sourceData: state => state.data.sourceData,
-      visualData: state => state.data.visualData,
-      nodeFields: state => state.data.nodeFields,
+      sourceData: (state) => state.data.sourceData,
+      visualData: (state) => state.data.visualData,
+      nodeFields: (state) => state.data.nodeFields,
 
-      classificationPalette: state => state.view.classificationPalette,
-      backgroundColor: state => state.view.backgroundColor,
-      needUpdate: state => state.view.chartsNeedUpdate.table
+      classificationPalette: (state) => state.view.classificationPalette,
+      backgroundColor: (state) => state.view.backgroundColor,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
 
@@ -55,7 +54,7 @@ export default {
     },
 
     columns() {
-      return Object.keys(this.nodeFields).map(d => ({
+      return Object.keys(this.nodeFields).map((d) => ({
         title: d,
         dataIndex: d,
         key: d,
@@ -68,7 +67,7 @@ export default {
               ? 1
               : -1
             : a[d] - b[d];
-        }
+        },
         // width: 150
       }));
     },
@@ -84,7 +83,7 @@ export default {
         // console.log(datum);
         return datum;
       });
-    }
+    },
   },
   mounted() {},
 
@@ -95,14 +94,7 @@ export default {
   deactivated() {},
 
   methods: {},
-  watch: {
-    needUpdate: function(val) {
-      if (val) {
-        //
-        store.commit("TableUpdated"); // TODO:
-      }
-    }
-  }
+  watch: {},
 };
 </script>
 <style>

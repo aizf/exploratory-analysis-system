@@ -1,8 +1,6 @@
 <template>
   <div class="pageAnalyze" :style="{ background: backgroundColor }">
-    <FlowController
-      :option.sync="option"
-    ></FlowController>
+    <FlowController :option.sync="option"></FlowController>
     <DataFlow
       :option="option"
       @staticForceShowChanged="changeStaticForceShow"
@@ -26,6 +24,7 @@
 <script>
 import Vue from "vue";
 import { Col, Row } from "ant-design-vue";
+import axios from "axios";
 Vue.use(Col);
 Vue.use(Row);
 // import store from "@/store/";
@@ -51,6 +50,7 @@ export default {
       isStaticForceShow: false,
       option: {
         isCompressRecord: false,
+        isFrequentItem: false,
       },
       compressThreshold: 5 * 1000,
     };
@@ -64,6 +64,7 @@ export default {
 
       tooltipNodes: (state) => state.analyze.pageAnalyzeTooltipData.nodes,
       tooltipLinks: (state) => state.analyze.pageAnalyzeTooltipData.links,
+      recordset: (state) => state.analyze.recordset,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
   },
@@ -76,6 +77,19 @@ export default {
   methods: {
     changeStaticForceShow(val) {
       this.isStaticForceShow = val;
+    },
+  },
+  watch: {
+    "option.isFrequentItem": function (newVal) {
+      if (!newVal) return;
+      axios({
+        method: "post",
+        url: "//127.0.0.1:3000/p/",
+        data: this.recordset.links,
+      }).then((res) => {
+        const data = res.data;
+        console.log("isFrequentItem", data);
+      });
     },
   },
 };

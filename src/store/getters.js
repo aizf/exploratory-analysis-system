@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import { dataDeepClone, generateUUID } from "@/utils/methods";
-import { RecordData } from '@/utils/classes'
+import {  generateUUID } from "@/utils/methods";
 
 const getters = {
   // data
@@ -44,8 +43,8 @@ const getters = {
     );
     // console.log("123", slicedLinks);
     return {
-      "nodes": slicedNodes,
-      "links": slicedLinks,
+      nodes: slicedNodes,
+      links: slicedLinks,
       uuid: state.view.currentUUID,
       marked: false
     };
