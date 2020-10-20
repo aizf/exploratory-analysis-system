@@ -17,14 +17,10 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
-import * as d3 from "d3";
 export default {
-  name: "Nodes",
+  name: "Links",
   props: {
-    nodes: Array,
     links: Array,
-    eventOption: Object,
     chartOption: Object,
   },
   data() {
@@ -34,11 +30,6 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      visualData: (state) => state.data.visualData,
-      idMaps: (state) => state.data.idMaps,
-    }),
-    ...mapGetters(["nodesNumber"]),
     fixedLinkWidth() {
       return this.chartOption.link.width / this.$parent.transform.k;
     },
@@ -46,18 +37,6 @@ export default {
   created() {},
   mounted() {
     console.log("ForceChart-Links", this);
-    this.$watch(
-      () => {
-        return this.nodes.map((d) => d.uid);
-      },
-      () => {
-        this.$nextTick(() => {
-          const node = d3.select(this.$el).selectAll("circle");
-          node.data(this.nodes).call(this.dragInstance);
-        });
-      },
-      { immediate: true }
-    );
   },
   activated() {},
   methods: {

@@ -94,7 +94,11 @@ export default {
     },
     mouseover(node) {
       if (!this.eventOption.visMouseover || this.isDraging) return;
-      [this.$el, this.$el.previousElementSibling].forEach((d) => {
+      [
+        this.$el,
+        this.$el.previousElementSibling,
+        this.$el.nextElementSibling,
+      ].forEach((d) => {
         d.classList.add("mouseover");
       });
       this.beforeEvent("mouseover", this);
@@ -122,7 +126,11 @@ export default {
     },
     mouseout(node) {
       if (!this.eventOption.visMouseover || this.isDraging) return;
-      [this.$el, this.$el.previousElementSibling].forEach((d) => {
+      [
+        this.$el,
+        this.$el.previousElementSibling,
+        this.$el.nextElementSibling,
+      ].forEach((d) => {
         d.classList.remove("mouseover");
       });
       const displayNodes = [...this.idMaps.idLinkedNodesMap[node.id], node];

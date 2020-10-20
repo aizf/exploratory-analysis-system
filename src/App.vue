@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- <Test @welcome="testFn" /> -->
     <a-layout id="app-layout" style="min-height: 100vh">
       <a-layout-header class="header" style="height: 50px">
         <div class="logo" />

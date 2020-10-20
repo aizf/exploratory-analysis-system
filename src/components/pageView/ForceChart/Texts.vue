@@ -2,7 +2,7 @@
   <g class="texts" v-show="visShowIds">
     <text
       v-for="node in nodes"
-      :class="{ text: true, mouseover_opacity: !node.mouseover_show }"
+      :class="{ text: true, mouseover_show: node.mouseover_show }"
       :x="node.x"
       :y="node.y"
       dy="-0.8em"
@@ -21,19 +21,24 @@ export default {
     visShowIds: Boolean,
     nodes: Array,
   },
-  methods:{
-    fillColor(...args){
-      return this.$parent.fillColor.apply(this.$parent,args)
-    }
-  }
+  methods: {
+    fillColor(...args) {
+      return this.$parent.fillColor.apply(this.$parent, args);
+    },
+  },
 };
 </script>
 <style lang="scss" scope>
+.texts {
+  &.mouseover {
+    fill-opacity: 0;
+  }
+}
 .text {
   font-size: 10px;
   text-anchor: middle;
-  &.mouseover_opacity {
-    fill-opacity: 0;
+  &.mouseover_show {
+    fill-opacity: 1;
   }
 }
 </style>
