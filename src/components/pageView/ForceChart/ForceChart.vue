@@ -17,23 +17,13 @@
           Edges : {{ linksNumber }}
         </text>
         <g>
-          <g class="links">
-            <line
-              v-for="link in links"
-              :class="{ link: true, mouseover_opacity: !link.mouseover_show }"
-              :x1="link.source.x"
-              :y1="link.source.y"
-              :x2="link.target.x"
-              :y2="link.target.y"
-              :style="{
-                stroke: chartOption.link.color,
-                'stroke-width': fixedLinkWidth,
-              }"
-              :key="link.uid"
-            />
-          </g>
-          <!-- <Links :links="links" /> -->
-          <!-- <Nodes :nodes="nodes" /> -->
+          <Links :links="links" :chartOption="chartOption" />
+          <Nodes
+            :nodes="nodes"
+            :links="links"
+            :eventOption="eventOption"
+            :chartOption="chartOption"
+          />
           <Texts :nodes="nodes" :visShowIds="visShowIds" />
         </g>
       </svg>
@@ -48,7 +38,6 @@ import Texts from "./Texts.vue";
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
-import throttle from "lodash/throttle";
 
 import {
   backgroundColor,
@@ -60,11 +49,12 @@ import {
 export default {
   name: "ForceChart",
   components: {
-    // Links,
-    // Nodes,
+    Links,
+    Nodes,
     Texts,
   },
   props: {
+    eventOption: Object,
     visClick: Boolean,
     visBrush: Boolean,
     brushKeep: Boolean,
@@ -77,12 +67,8 @@ export default {
   },
   data() {
     return {
-      linkG: d3.selectAll(),
-      nodeG: d3.selectAll(),
-      textG: d3.selectAll(),
       vis: d3.selectAll(),
       simulation__: {},
-      drag__: {},
       brush: {},
       brushedNodes: [],
       invertBrush: {},
@@ -91,8 +77,6 @@ export default {
       opacityNodes: d3.selectAll(),
       opacityLinks: d3.selectAll(),
       opacityTexts: d3.selectAll(),
-      isDraging: false, // 区分click和drag等
-      mousePoint: [], // 相对于原始坐标系
       transform: { k: 1, x: 0, y: 0 },
     };
   },
@@ -117,22 +101,6 @@ export default {
       "linksNumber",
       "beforeEvent",
     ]),
-
-    link() {
-      let link = this.linkG.selectAll("line");
-      link.data(this.links);
-      return link;
-    },
-    node() {
-      let node = this.nodeG.selectAll("circle");
-      node.data(this.nodes);
-      return node;
-    },
-    text() {
-      let text = this.textG.selectAll("text");
-      text.data(this.nodes);
-      return text;
-    },
     simulation() {
       let simulation = this.simulation__;
       simulation.nodes(this.nodes);
@@ -143,29 +111,6 @@ export default {
       simulation.force("charge").strength(this.chartOption.node.chargeForce);
       simulation.on("tick", this.ticked);
       return simulation;
-    },
-    fixedNodeSize() {
-      return this.chartOption.node.nodeSize / this.transform.k;
-    },
-    fixedLinkWidth() {
-      return this.chartOption.link.width / this.transform.k;
-    },
-
-    degreeArray() {
-      // 返回一个包含各个节点出入度的数组
-      let nodes = this.simulation.nodes(),
-        links = this.simulation.force("link").links();
-      let n = nodes.length,
-        m = links.length;
-      // console.log(n, m);
-      let degree = new Array(n);
-      // links包含source，target，nodes没有
-      for (let link of links) {
-        // console.log(link);
-        degree[link.source.uid] = (degree[link.source.uid] || 0) + 1;
-        degree[link.target.uid] = (degree[link.target.uid] || 0) + 1;
-      }
-      return degree;
     },
   },
   created() {
@@ -182,16 +127,10 @@ export default {
         "center",
         d3.forceCenter(this.chartWidth / 2, this.chartHeight / 2)
       );
-    this.drag__ = d3
-      .drag()
-      .on("start", this.dragstarted)
-      .on("drag", this.dragged())
-      .on("end", this.dragended);
   },
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
-    const that = this;
     console.log("ForceChart", this);
     // console.log(d3);
     const svg = d3
@@ -246,21 +185,21 @@ export default {
       ? this.invertBrushG.style("display", "inline")
       : this.invertBrushG.style("display", "none");
 
-    function zoomStart() {
-      that.beforeEvent("zoom", that);
-    }
-    function zoomed() {
-      if (!that.visZoom) return;
+    const zoomStart = () => {
+      this.beforeEvent("zoom", this);
+    };
+    const zoomed = () => {
+      if (!this.visZoom) return;
       let transform = d3.event.transform;
-      that.vis.attr("transform", transform);
-      that.transform.k = transform.k;
-    }
-    function zoomEnd() {
-      if (!that.visZoom) return;
+      this.vis.attr("transform", transform);
+      this.transform.k = transform.k;
+    };
+    const zoomEnd = () => {
+      if (!this.visZoom) return;
       let transform = d3.event.transform;
       let extentStart = transform.invert([0, 0]); // 视口的开始坐标
-      let extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
-      let t = that.node.filter((d) => {
+      let extentEnd = transform.invert([this.chartWidth, this.chartHeight]); // 视口的结束坐标
+      let t = this.node.filter((d) => {
         return (
           extentStart[0] <= d.x &&
           extentStart[1] <= d.y &&
@@ -275,24 +214,9 @@ export default {
         action: "zoom",
         nodes: t.data(),
       };
-      that.$store.dispatch("addOperation", operation);
+      this.$store.dispatch("addOperation", operation);
       console.log("zoom");
-    }
-
-    // mounted---nextTick
-    this.$nextTick(function () {
-      // 初始化<g>，防止update()产生多个<g>
-      this.linkG = this.vis.select("g.links");
-      this.nodeG = this.vis.select("g.nodes");
-      this.textG = this.vis.select("g.texts");
-
-      this.node.call(this.drag__);
-      this.text.call(this.drag__);
-    });
-  },
-  updated() {
-    this.node.call(this.drag__);
-    this.text.call(this.drag__);
+    };
   },
   activated() {
     if (this.needUpdate) {
@@ -320,35 +244,8 @@ export default {
       t.y = 0;
       t.k = 1;
       this.vis.attr("transform", t);
-      this.bindEvents(); // 给显示的dom绑定元素
       this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
       console.log("render");
-    },
-    bindEvents() {
-      this.node.call(
-        d3
-          .drag()
-          .on("start", this.dragstarted)
-          .on("drag", this.dragged())
-          .on("end", this.dragended)
-      );
-      let node = this.node;
-
-      this.text.call(
-        d3
-          .drag()
-          .on("start", this.dragstarted)
-          .on("drag", this.dragged())
-          .on("end", this.dragended)
-      );
-
-      function textEvent2Node(d) {
-        // 将text接受的事件分发给node
-        let theUid = d.uid;
-        let theNode = node.filter((d) => d.uid === theUid);
-        theNode.dispatch(d3.event.type);
-        // console.log(d3.event.type);
-      }
     },
     ticked() {
       console.log("ticked");
@@ -370,10 +267,6 @@ export default {
       //   .attr("x2", d => d.target.x)
       //   .attr("y2", d => d.target.y);
       // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
-
-      if (!this.visShowIds) {
-        this.text.attr("x", (d) => d.x).attr("y", (d) => d.y);
-      }
     },
     brushStart() {
       console.log("brushstart");
@@ -451,137 +344,6 @@ export default {
       this.$store.dispatch("addOperation", operation);
       console.log("invertBrush");
     },
-    // drag
-    dragstarted(d) {
-      if (!this.visDrag) return;
-      this.beforeEvent("drag", this);
-      // if (!d3.event.active) this.simulation.alphaTarget(0.1).restart();
-      if (this.chartOption.simulation.run) {
-        d.fx = d.x;
-        d.fy = d.y;
-      }
-      this.mousePoint = [d3.event.x, d3.event.y];
-    },
-    dragging(d) {
-      // dragging
-      if (!this.visDrag) return;
-      if (this.chartOption.simulation.run) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-      } else {
-        d.x = d3.event.x;
-        d.y = d3.event.y;
-      }
-      // console.log([d3.event.x, d3.event.y]);
-      if (
-        // 如果mousePoint没变过，则没有发生drag,当this.isDraging==false时判断
-        !this.isDraging &&
-        (this.mousePoint[0] !== d3.event.x || this.mousePoint[1] !== d3.event.y)
-      ) {
-        // console.log("computing !!");
-        this.isDraging = true;
-      }
-    },
-    dragged() {
-      // 节流，防止运算阻塞dom渲染
-      return throttle(this.dragging, 16, { leading: true, trailing: false });
-    },
-    dragended(d) {
-      if (!this.visDrag) return;
-      // if (!d3.event.active) this.simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-      if (this.isDraging) {
-        d.attentionTimes += 1;
-        // drag <text>时，通过以下返回node
-        let t = this.node.filter((dd) => dd.uid === d.uid);
-        let operation = {
-          action: "drag",
-          nodes: t.data(),
-        };
-        this.$store.dispatch("addOperation", operation);
-        this.isDraging = false;
-        console.log("drag");
-        t.dispatch("mouseout");
-      }
-    },
-    clickSelect(d) {
-      if (this.visClick) {
-        this.beforeEvent("click", this);
-        if (d.selected) {
-          d.selected = false;
-        } else {
-          d.selected = true;
-          d.attentionTimes += 1;
-          let operation = {
-            action: "click",
-            nodes: [d],
-          };
-          this.$store.dispatch("addOperation", operation);
-          console.log("click");
-        }
-      }
-    },
-    mouseover(d) {
-      if (!this.visMouseover || this.isDraging) return;
-      this.beforeEvent("mouseover", this);
-      let displayNodes = {};
-      let displayLinks = {};
-      if (!(d.id || d.name)) {
-        throw new Error(`object do not has "id" or "name"`);
-      }
-      let id = d.id ? "id" : "name";
-      let thisId = d[id];
-
-      this.nodes.forEach((d) => {
-        d.mouseover_show = false;
-      });
-      this.links.forEach((d) => {
-        d.mouseover_show = d.source[id] === thisId || d.target[id] === thisId;
-        if (d.mouseover_show) {
-          // 如果link显示，则它两头的node也会显示
-          d.source.mouseover_show = true;
-          d.target.mouseover_show = true;
-        }
-      });
-
-      // link
-      this.opacityLinks = this.link.filter((d) => !d.mouseover_show);
-      displayLinks = this.link.filter((d) => d.mouseover_show);
-      // node
-      this.opacityNodes = this.node.filter((d) => !d.mouseover_show);
-      displayNodes = this.node.filter((d) => d.mouseover_show);
-      // text
-      this.opacityTexts = this.text.filter((d) => !d.mouseover_show);
-
-      // this.opacityNodes
-      //   .transition()
-      //   .style("fill-opacity", 0.2)
-      //   .style("stroke-opacity", 0.2);
-      // this.opacityLinks.transition().style("stroke-opacity", 0);
-      // this.opacityTexts.transition().style("fill-opacity", 0);
-
-      if (!this.isDraging) {
-        displayNodes.each((d) => {
-          d.attentionTimes += 1;
-        });
-        let operation = {
-          action: "mouseover",
-          nodes: displayNodes.data(),
-        };
-        this.$store.dispatch("addOperation", operation);
-        console.log("mouseover");
-      }
-    },
-    mouseout() {
-      if (!this.visMouseover || this.isDraging) return;
-      this.links.forEach((d) => {
-        d.mouseover_show = true;
-      });
-      this.nodes.forEach((d) => {
-        d.mouseover_show = true;
-      });
-    },
     visTransform() {
       return d3.zoomTransform(this.vis.node());
     },
@@ -591,12 +353,12 @@ export default {
     test() {},
   },
   watch: {
-    visBrush: function (val) {
+    "eventOption.visBrush": function (val) {
       val
         ? this.brushG.style("display", "inline")
         : (this.brushG.style("display", "none"), this.brush.clear(this.brushG));
     },
-    visInvertBrush: function (val) {
+    "eventOption.visInvertBrush": function (val) {
       val
         ? this.invertBrushG.style("display", "inline")
         : (this.invertBrushG.style("display", "none"),
@@ -653,44 +415,10 @@ export default {
   background: var(--backgroundColor);
 }
 
-.link {
-  transition: stroke 0.6s ease, stroke-width 0.3s ease, stroke-opacity 0.3s ease;
-  stroke-opacity: 0.8;
-  &.mouseover_opacity {
-    stroke-opacity: 0;
-  }
-}
-
 .text {
   &.info {
     text-anchor: start;
     font-size: 10px;
   }
 }
-
-/* .linksOverOut-enter,
-.linksOverOut-leave {
-  opacity: 0;
-}
-.linksOverOut-enter-to,
-.linksOverOut-leave {
-  opacity: 1;
-}
-.linksOverOut-enter-active {
-  transition: all 1s ease;
-}
-
-.nodesOverOut-enter,
-.nodesOverOut-leave {
-  fill-opacity: 0.2;
-  stroke-opacity: 0.2;
-}
-.nodesOverOut-enter-to,
-.nodesOverOut-leave {
-  fill-opacity: 1;
-  stroke-opacity: 1;
-}
-.nodesOverOut-enter-active {
-  transition: all 1.5s ease;
-} */
 </style>

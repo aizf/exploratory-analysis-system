@@ -200,30 +200,36 @@ export default {
     changeState(visualData) {
       this.$set(visualData, "marked", false);
       const ids = visualData.nodes.map((d) => d.id);
-      const tmpMap = {};
+      const idNodeMap = {};
       visualData.nodes.forEach((d, i) => {
         this.$set(d, "uid", i);
         this.$set(d, "x", 0);
         this.$set(d, "y", 0);
         this.$set(d, "selected", false);
-        this.$set(d, "mouseover_show", true);
+        this.$set(d, "mouseover_show", false);
         this.$set(d, "brushing", false);
         this.$set(d, "invertBrushing", false);
-        tmpMap[d.id] = d;
+        this.$set(d, "attentionTimes", 0);
+        idNodeMap[d.id] = d;
       });
 
-      visualData.links.forEach((d) => {
-        this.$set(d, "mouseover_show", true);
+      visualData.links.forEach((d, i) => {
+        this.$set(d, "uid", i);
+        this.$set(d, "mouseover_show", false);
         if (typeof d.source !== "object") {
-          d.source = tmpMap[d.source];
-          d.target = tmpMap[d.target];
+          d.source = idNodeMap[d.source];
+          d.target = idNodeMap[d.target];
         }
       });
-      const matrix = this.genMatrix(visualData);
+      const idLinksMap = this.genIdLinksMap(visualData);
+      const idLinkedNodesMap = this.genIdLinkedNodesMap(visualData);
 
       // 源数据改变后更新store状态
-      store.commit("updateIdNodeMap", tmpMap);
-      store.commit("updateLinkMatrix", matrix);
+      store.commit("updateIdMaps", {
+        idNodeMap,
+        idLinksMap,
+        idLinkedNodesMap,
+      });
       store.commit("ChartsNeedUpdate", {
         force: true,
         scatter: true,
@@ -233,16 +239,43 @@ export default {
 
       this.$message.success("Data loaded.");
     },
+    genIdLinksMap({ nodes, links }) {
+      const dict = {};
+      nodes.forEach((d) => {
+        dict[d.id] = [];
+      });
+      links.forEach((d) => {
+        const { source, target } = d;
+        dict[source.id].push(d);
+        dict[target.id].push(d);
+      });
+      return dict;
+    },
+    genIdLinkedNodesMap({ nodes, links }) {
+      const dict = {};
+      nodes.forEach((d) => {
+        dict[d.id] = [];
+      });
+      links.forEach((d) => {
+        const { source, target } = d;
+        dict[source.id].push(target);
+        dict[target.id].push(source);
+      });
+      nodes.forEach((d) => {
+        dict[d.id] = [...new Set(dict[d.id])];
+      });
+      return dict;
+    },
     genMatrix({ nodes, links }) {
       // 生成link关系矩阵
       const nodesNum = nodes.length;
       const matrix = Array.from(Array(nodesNum), () =>
-        Array(nodesNum).fill(false)
+        Array(nodesNum).fill(null)
       );
       links.forEach((d) => {
         const { source, target } = d;
-        matrix[source.uid][target.uid] = true;
-        matrix[target.uid][source.uid] = true;
+        matrix[source.uid][target.uid] = d;
+        matrix[target.uid][source.uid] = d;
       });
       return matrix;
     },

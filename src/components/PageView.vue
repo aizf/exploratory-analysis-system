@@ -17,7 +17,10 @@
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
-            <a-switch v-model="visClick" :disabled="clickDisabled" />
+            <a-switch
+              v-model="eventOption.visClick"
+              :disabled="clickDisabled"
+            />
           </a-col>
         </a-row>
         <a-row>
@@ -31,7 +34,7 @@
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
-            <a-switch v-model="visDrag" :disabled="dragDisabled" />
+            <a-switch v-model="eventOption.visDrag" :disabled="dragDisabled" />
           </a-col>
         </a-row>
         <a-row>
@@ -45,7 +48,10 @@
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
-            <a-switch v-model="visMouseover" :disabled="mouseoverDisabled" />
+            <a-switch
+              v-model="eventOption.visMouseover"
+              :disabled="mouseoverDisabled"
+            />
           </a-col>
         </a-row>
         <a-row>
@@ -56,23 +62,16 @@
               :mouseEnterDelay="0.4"
             >
               <template slot="content">
-                <a-checkbox
-                  :checked="!brushKeep"
-                  @change="brushKeep = !brushKeep"
-                  >no</a-checkbox
-                >
-                <a-checkbox
-                  :checked="brushKeep"
-                  @change="brushKeep = !brushKeep"
-                  >yes</a-checkbox
-                >
+                no
+                <a-switch v-model="eventOption.brushKeep" />
+                yes
               </template>
               <span class="vSubMenu">brush</span>
             </a-popover>
           </a-col>
           <a-col :span="4" offset="2">
             <a-switch
-              v-model="visBrush"
+              v-model="eventOption.visBrush"
               @change="onVisBrush('switch')"
               :disabled="brushDisabled"
             />
@@ -90,7 +89,7 @@
           </a-col>
           <a-col :span="4" offset="2">
             <a-switch
-              v-model="visInvertBrush"
+              v-model="eventOption.visInvertBrush"
               @change="onVisInvertBrush('switch')"
               :disabled="invertBrushDisabled"
             />
@@ -107,7 +106,7 @@
             </a-tooltip>
           </a-col>
           <a-col :span="4" offset="2">
-            <a-switch v-model="visZoom" :disabled="zoomDisabled" />
+            <a-switch v-model="eventOption.visZoom" :disabled="zoomDisabled" />
           </a-col>
         </a-row>
       </a-card>
@@ -271,7 +270,10 @@
           <div class="view-tools-item">
             <a-icon type="tags" />
             <span>showIds</span>
-            <a-switch v-model="visShowIds" :disabled="showIdsDisabled" />
+            <a-switch
+              v-model="eventOption.visShowIds"
+              :disabled="showIdsDisabled"
+            />
           </div>
         </div>
 
@@ -281,14 +283,7 @@
             <component
               ref="theView"
               :is="currentChart"
-              :visClick="visClick"
-              :visBrush="visBrush"
-              :brushKeep="brushKeep"
-              :visInvertBrush="visInvertBrush"
-              :visDrag="visDrag"
-              :visMouseover="visMouseover"
-              :visZoom="visZoom"
-              :visShowIds="visShowIds"
+              :eventOption="eventOption"
               :chartOption="chartOption"
               @changeChartOption="handleChartOption"
             ></component>
@@ -364,14 +359,16 @@ export default {
       rootSubmenuKeys: ["sub1", "sub2", "sub3"],
       openKeys: ["sub1"],
       // view
-      visClick: false,
-      visDrag: true,
-      visMouseover: false,
-      visBrush: false,
-      brushKeep: false,
-      visInvertBrush: false,
-      visZoom: true,
-      visShowIds: false,
+      eventOption: {
+        visClick: false,
+        visDrag: true,
+        visMouseover: true,
+        visBrush: false,
+        brushKeep: false,
+        visInvertBrush: false,
+        visZoom: true,
+        visShowIds: false,
+      },
       markedsVisible: false,
       // option
       chartOption: {
@@ -392,6 +389,7 @@ export default {
       currentChartKey: "force",
     };
   },
+  provide: {},
   computed: {
     ...mapState({
       sourceData: (state) => state.data.sourceData,
@@ -469,50 +467,24 @@ export default {
     console.log("PageView", this);
   },
   methods: {
-    onVisClick() {
-      this.visClick = !this.visClick;
-    },
     onVisBrush(which) {
       if (which !== "switch") {
         // 判断点击的是<a-menu-item>还是<a-switch>
-        this.visBrush = !this.visBrush;
+        this.eventOption.visBrush = !this.eventOption.visBrush;
       }
 
-      if (this.visBrush) {
-        this.visInvertBrush = false;
+      if (this.eventOption.visBrush) {
+        this.eventOption.visInvertBrush = false;
       }
     },
     onVisInvertBrush(which) {
       if (which !== "switch") {
         // 判断点击的是<a-menu-item>还是<a-switch>
-        this.visInvertBrush = !this.visInvertBrush;
+        this.eventOption.visInvertBrush = !this.eventOption.visInvertBrush;
       }
 
-      if (this.visInvertBrush) {
-        this.visBrush = false;
-      }
-    },
-    onVisDrag() {
-      this.visDrag = !this.visDrag;
-    },
-    onVisMouseover() {
-      this.visMouseover = !this.visMouseover;
-    },
-    onVisZoom() {
-      this.visZoom = !this.visZoom;
-    },
-    onVisShowIds() {
-      this.visShowIds = !this.visShowIds;
-    },
-    onOpenChange(openKeys) {
-      // 点击菜单，收起其他展开的所有菜单，保持菜单聚焦简洁
-      const latestOpenKey = openKeys.find(
-        (key) => this.openKeys.indexOf(key) === -1
-      );
-      if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-        this.openKeys = openKeys;
-      } else {
-        this.openKeys = latestOpenKey ? [latestOpenKey] : [];
+      if (this.eventOption.visInvertBrush) {
+        this.eventOption.visBrush = false;
       }
     },
     changeChart(key) {
