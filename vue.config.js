@@ -108,7 +108,29 @@ module.exports = {
         deleteOriginalAssets: false, // 不删除源文件
         minRatio: 0.8 // 压缩比
       })
-    ]
+    ],
+    module: {
+      rules: [
+        {
+          test: /\.worker\.(c|m)?js$/i,
+          use: [
+            {
+              loader: 'worker-loader',
+              options: {
+                filename: '[name].[contenthash:8].js',
+                esModule: false,
+              },
+            },
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env'],
+              },
+            },
+          ]
+        }
+      ]
+    }
   },
   chainWebpack: (config) => {
     config.plugin('html').tap(args => {

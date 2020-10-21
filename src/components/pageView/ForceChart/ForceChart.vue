@@ -43,6 +43,8 @@ import {
   contrastColor,
   classificationPalette,
 } from "@/config/color";
+// import Worker from "worker-loader!./simulation.worker.js";
+import Worker from "./simulation.worker.js";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
 export default {
@@ -97,10 +99,7 @@ export default {
         d3.forceLink().id((d) => d.id || d.name)
       )
       .force("charge", d3.forceManyBody())
-      .force(
-        "center",
-        d3.forceCenter(this.width / 2, this.height / 2)
-      );
+      .force("center", d3.forceCenter(this.width / 2, this.height / 2));
   },
   mounted() {
     // console.log(d3.version);
@@ -117,6 +116,12 @@ export default {
 
     this.initZoom(svg);
     this.initBrush(svg);
+
+    const worker = new Worker();
+    worker.postMessage(2);
+    worker.addEventListener("message", (e) => {
+      console.log("worker-e", e);
+    });
   },
   activated() {
     if (this.needUpdate) {
