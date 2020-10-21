@@ -74,7 +74,6 @@ export default {
       { immediate: true }
     );
   },
-  activated() {},
   methods: {
     clickSelect(d) {
       if (!this.eventOption.visClick) return;
@@ -171,6 +170,7 @@ export default {
         // console.log("computing !!");
         this.isDraging = true;
       }
+      this.$emit("changeWorkerData");
     },
     // 节流dragging，防止运算阻塞dom渲染
     dragged() {
@@ -179,8 +179,8 @@ export default {
     dragended(d) {
       if (!this.eventOption.visDrag) return;
       // if (!d3.event.active) this.simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
+      delete d.fx;
+      delete d.fy;
       if (this.isDraging) {
         d.attentionTimes += 1;
         // drag <text>时，通过以下返回node

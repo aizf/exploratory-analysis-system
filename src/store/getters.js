@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import {  generateUUID } from "@/utils/methods";
+import { generateUUID } from "@/utils/methods";
 
 const getters = {
   // data

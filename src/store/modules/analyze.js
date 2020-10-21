@@ -3,8 +3,6 @@ import data from './data.js'
 import { dataDeepClone } from "@/utils/methods";
 const analyze = {
     state: {
-        currentOperations: [], // dataFlow中，存储source和target中间的操作，view切换后清空
-
         // 存储save的数据,{data(nodes+links):,dom(浅拷贝):} 
         undoList: [], // index: 0,1,2,3,4
         redoList: [], // index: 5,6,7,...
@@ -14,7 +12,6 @@ const analyze = {
 
         // interaction
         operations: [], // operation={action:,nodes:,time:}
-        operations_: [], // 切换view的操作
 
         // record
         // recordset是交互路径与交互视图状态
@@ -48,21 +45,6 @@ const analyze = {
             state.operations.push(data);
             // const data = { chart: "", time: "", action: "", nodes: {} };
         },
-        addOperation_: (state, data) => {
-            state.operations_.push({
-                ...data,
-                ...{
-                    max: "zoom"
-                }
-            });
-            // let data = { chart: "", time: "", action: "", nodes: {} };
-        },
-        addCurrentOperations: (state, data) => {
-            state.currentOperations.push(data);
-        },
-        resetCurrentOperations: (state) => {
-            state.currentOperations = [];
-        },
         changeUndoRedo: (state, fn) => {
             // fn为自定义函数
             fn(state.undoList, state.redoList);
@@ -72,7 +54,6 @@ const analyze = {
         },
         resetOperations: (state) => {
             state.operations = [];
-            state.operations_ = [];
         },
         resetRecordset: (state) => {
             state.recordset = { nodes: {}, links: [] };

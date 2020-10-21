@@ -1,7 +1,7 @@
 <template>
   <div class="MarkedViews">
     <a-card>
-      <a-card-grid v-for="d in markedVisualData" :key="d.uuid">
+      <a-card-grid v-for="(d, i) in markedVisualData" :key="d.uuid">
         <StaticForce
           :width="width"
           :height="height - optionsHeight"
@@ -10,10 +10,10 @@
         ></StaticForce>
         <a-row>
           <a-col :span="3" style="vertical-align: middle">
-            <p>uuid: {{ d.uuid }}</p>
+            <p>uuid: {{ i }}</p>
           </a-col>
           <a-col :span="6" :offset="5">
-            <a-button :disabled="d.uuid === currentUUID" @click="rollback(d)"
+            <a-button :disabled="i === currentUUID" @click="rollback(i)"
               >rollback</a-button
             >
           </a-col>
@@ -36,12 +36,12 @@ import { mapState, mapGetters } from "vuex";
 import StaticForce from "@/components/commonUse/StaticForce.vue";
 
 export default {
-  name: "MarkedViews",
+  name: "MarkedViewsDrawer",
   components: {
     StaticForce,
   },
   props: {
-    markedVisualData: Array,
+    markedVisualData: Object,
   },
   data() {
     return {
@@ -52,17 +52,13 @@ export default {
   },
   computed: {
     ...mapState({
-      visualData: (state) => state.data.visualData,
-
       currentUUID: (state) => state.view.currentUUID,
-
-      recordset: (state) => state.analyze.recordset,
     }),
-    ...mapGetters(["savedViewData", "beforeEvent"]),
+    ...mapGetters(["beforeEvent"]),
   },
   methods: {
-    rollback(d) {
-      this.beforeEvent("rollback", this, d);
+    rollback(i) {
+      this.beforeEvent("rollback", this, i);
       console.log("rollback");
     },
     deleteMarked(d) {

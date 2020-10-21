@@ -1,32 +1,26 @@
-<template>
-  <div>
-    <button v-on:click="$emit('welcome')">Click me to be welcomed</button>
-  </div>
-</template>
-<script>
-import store from "@/store/";
-import { mapState, mapGetters } from "vuex";
-import * as d3 from "d3";
+<template></template>
 
+<script>
+import { mapState, mapGetters } from "vuex";
 export default {
-  name: "Test",
+  name: "",
+  props: {},
   data() {
-    return {
-      testData: 1
-    };
+    return {};
   },
   computed: {
-    ...mapState({}),
-    ...mapGetters([])
+    ...mapState({
+      visualData: (state) => state.data.visualData,
+    }),
+    ...mapGetters(["nodesNumber", "beforeEvent"]),
   },
+  created() {},
   mounted() {
-    const pie = d3
-      .pie()
-      .sort(null)
-      .value(d => d.value);
+    console.log("", this);
   },
-  methods: {
-    testFn() {}
-  }
+  methods: {},
+  watch: {},
 };
 </script>
+<style lang="scss" scope>
+</style>

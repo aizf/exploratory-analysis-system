@@ -21,6 +21,7 @@
         :links="links"
         :eventOption="eventOption"
         :chartOption="chartOption"
+        @changeWorkerData="changeWorkerData"
       />
       <Texts :nodes="nodes" :visShowIds="eventOption.visShowIds" />
     </g>
@@ -43,8 +44,7 @@ import {
   contrastColor,
   classificationPalette,
 } from "@/config/color";
-// import Worker from "worker-loader!./simulation.worker.js";
-import Worker from "./simulation.worker.js";
+import Worker from "./simulation.worker.cjs";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
 export default {
@@ -65,7 +65,8 @@ export default {
   },
   computed: {
     ...mapState({
-      width: (state) => state.view.dpiX * 0.6,
+      idNodeMap: (state) => state.data.idMaps.idNodeMap,
+      width: (state) => state.view.dpiX * 0.4,
       height: (state) => state.view.dpiY * 0.7,
       currentUUID: (state) => state.view.currentUUID,
       needUpdate: (state) => state.view.chartsNeedUpdate.force,
@@ -77,17 +78,6 @@ export default {
       "linksNumber",
       "beforeEvent",
     ]),
-    simulation() {
-      let simulation = this.simulation__;
-      simulation.nodes(this.nodes);
-      simulation
-        .force("link")
-        .links(this.links)
-        .distance(this.chartOption.link.distance);
-      simulation.force("charge").strength(this.chartOption.node.chargeForce);
-      simulation.on("tick", this.ticked);
-      return simulation;
-    },
   },
   created() {
     this.contrastColor = contrastColor;
@@ -116,12 +106,7 @@ export default {
 
     this.initZoom(svg);
     this.initBrush(svg);
-
-    const worker = new Worker();
-    worker.postMessage(2);
-    worker.addEventListener("message", (e) => {
-      console.log("worker-e", e);
-    });
+    this.initWorker();
   },
   activated() {
     if (this.needUpdate) {
@@ -144,7 +129,8 @@ export default {
       t.y = 0;
       t.k = 1;
       this.vis.attr("transform", t);
-      this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
+      this.initWorker();
+      // this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
       console.log("reInit");
     },
     initZoom(svg) {
@@ -279,27 +265,61 @@ export default {
         .on("end", invertBrushEnd);
       svg.select("g.invert-brush").call(invertBrush);
     },
-
-    ticked() {
-      console.log("ticked");
-      // this.link
-      //   .attr("x1", d => d.source.x)
-      //   .attr("y1", d => d.source.y)
-      //   .attr("x2", d => d.target.x)
-      //   .attr("y2", d => d.target.y);
-      // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
-      // if (this.visShowIds) {
-      //   this.text.attr("x", d => d.x).attr("y", d => d.y);
-      // }
+    initWorker() {
+      if (!this.worker) {
+        this.worker = new Worker();
+        this.worker.addEventListener("message", (e) => {
+          // console.log("worker-message", e);
+          const { nodes } = e.data;
+          nodes.forEach((d) => {
+            this.idNodeMap[d.id].x = d.x;
+            this.idNodeMap[d.id].y = d.y;
+          });
+        });
+        this.$watch(
+          () => {
+            return this.nodes.map((d) => d.uid);
+          },
+          () => {
+            this.changeWorkerData();
+          }
+        );
+      }
+      this.worker.postMessage({
+        init: {
+          chartOption: this.chartOption,
+          width: this.width,
+          height: this.height,
+          nodes: this.calcNodes(),
+          links: this.calcLinks(),
+        },
+      });
     },
-    tickEnd() {
-      // 静态布局
-      // this.link
-      //   .attr("x1", d => d.source.x)
-      //   .attr("y1", d => d.source.y)
-      //   .attr("x2", d => d.target.x)
-      //   .attr("y2", d => d.target.y);
-      // this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+    calcNodes() {
+      return this.nodes.map((d) => {
+        const node = {
+          id: d.id,
+          x: d.x,
+          y: d.y,
+        };
+        if ("fx" in d) node.fx = d.fx;
+        if ("fy" in d) node.fy = d.fy;
+        return node;
+      });
+    },
+    calcLinks() {
+      return this.links.map((d) => ({
+        source: d.source.id,
+        target: d.target.id,
+      }));
+    },
+    changeWorkerData() {
+      this.worker.postMessage({
+        changeData: {
+          nodes: this.calcNodes(),
+          links: this.calcLinks(),
+        },
+      });
     },
     visTransform() {
       return d3.zoomTransform(this.vis.node());
@@ -310,6 +330,7 @@ export default {
     test() {},
   },
   watch: {
+    /* 
     "chartOption.link.distance": function () {
       if (this.chartOption.simulation.run) return;
       this.simulation.alphaTarget(0.5).restart();
@@ -342,12 +363,13 @@ export default {
           .alphaTarget(this.chartOption.simulation.alphaTarget)
           .restart();
       }
-    },
+    }, */
   },
 };
 </script>
 <style>
 .ForceChart .text {
+  pointer-events: none;
   user-select: none;
   font-family: Avenir;
   fill: var(--contrastColor);
