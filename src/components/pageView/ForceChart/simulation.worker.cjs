@@ -2,6 +2,7 @@ import * as d3 from "d3"
 
 self.nodes = [];
 self.links = [];
+self.nodesMap = {};
 self.chartOption = {}
 self.width = 0
 self.height = 0
@@ -31,11 +32,28 @@ const init = ({ width, height, chartOption, nodes, links }) => {
 const changeData = ({ nodes, links }) => {
     self.nodes = nodes
     self.links = links
+    const nodesMap = {};
+    self.nodes.forEach(d => {
+        nodesMap[d.uid] = d;
+    })
+    self.nodesMap = nodesMap;
+
     simulation.nodes(self.nodes);
     simulation
         .force("link")
         .links(self.links)
         .distance(self.chartOption.link.distance);
+}
+const alterData = ({ nodes, links }) => {
+    nodes.forEach(d => {
+        const localNode = self.nodesMap[d.uid];
+        Object.assign(localNode, d)
+        if (!("fx" in d)) {
+            delete localNode.fx
+            delete localNode.fy
+        }
+    })
+    // TODO self.links = links
 }
 const changeOption = (chartOption) => {
     self.chartOption = chartOption
@@ -68,4 +86,5 @@ self.addEventListener('message', (e) => {
     ("init" in payload) && init(payload.init);
     ("changeData" in payload) && changeData(payload.changeData);
     ("changeOption" in payload) && changeOption(payload.changeOption);
+    ("alterData" in payload) && alterData(payload.alterData);
 })

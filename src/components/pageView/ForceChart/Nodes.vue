@@ -19,6 +19,7 @@
         cy: node.y,
         fill: fillColor(node.group),
       }"
+      :ref="node.uid"
       :key="node.uid"
     />
   </g>
@@ -37,10 +38,7 @@ export default {
     chartOption: Object,
   },
   data() {
-    return {
-      isDraging: false, // 区分click和drag等
-      mousePoint: [], // 相对于原始坐标系
-    };
+    return {};
   },
   computed: {
     ...mapState({
@@ -52,26 +50,18 @@ export default {
       return this.chartOption.node.nodeSize / this.$parent.transform.k;
     },
   },
-  created() {
-    this.dragInstance = d3
-      .drag()
-      .on("start", this.dragstarted)
-      .on("drag", this.dragged())
-      .on("end", this.dragended);
-  },
+  created() {},
   mounted() {
     console.log("ForceChart-Nodes", this);
-    this.$watch(
-      () => {
-        return this.nodes.map((d) => d.uid);
+    this.initDrag();
+    this.dragged = throttle(
+      (d, event) => {
+        d.fx = event.x;
+        d.fy = event.y;
+        this.$emit("changeWorkerData");
       },
-      () => {
-        this.$nextTick(() => {
-          const node = d3.select(this.$el).selectAll("circle");
-          node.data(this.nodes).call(this.dragInstance);
-        });
-      },
-      { immediate: true }
+      60,
+      { leading: true, trailing: false }
     );
   },
   methods: {
@@ -141,57 +131,76 @@ export default {
         d.mouseover_show = false;
       });
     },
-    dragstarted(d) {
-      // console.log(this);
-      if (!this.eventOption.visDrag) return;
-      this.beforeEvent("drag", this);
-      if (this.chartOption.simulation.run) {
-        d.fx = d.x;
-        d.fy = d.y;
-      }
-      this.mousePoint = [d3.event.x, d3.event.y];
-    },
-    dragging(d) {
-      // dragging
-      if (!this.eventOption.visDrag) return;
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-      d.x = d3.event.x;
-      d.y = d3.event.y;
-      // console.log([d3.event.x, d3.event.y]);
-      if (
-        // 如果mousePoint没变过，则没有发生drag,当this.isDraging==false时判断
-        !this.isDraging &&
-        (this.mousePoint[0] !== d3.event.x || this.mousePoint[1] !== d3.event.y)
-      ) {
-        this.isDraging = true;
-      }
-      console.log("dragging");
-      this.$emit("changeWorkerData");
-    },
-    // 节流dragging，防止运算阻塞dom渲染
-    dragged() {
-      return throttle(this.dragging, 16, { leading: true, trailing: false });
-    },
-    dragended(d) {
-      if (!this.eventOption.visDrag) return;
-      // if (!d3.event.active) this.simulation.alphaTarget(0);
-      delete d.fx;
-      delete d.fy;
-      this.$emit("changeWorkerData");
-      if (this.isDraging) {
-        d.attentionTimes += 1;
-        // drag <text>时，通过以下返回node
-        let operation = {
-          action: "drag",
-          nodes: [d],
+    initDrag() {
+      let mousePoint = []; // 相对于原始坐标系
+      const dragstart = ({ subject: d, x, y }) => {
+        // console.log(this);
+        if (!this.eventOption.visDrag) return;
+        this.beforeEvent("drag", this);
+        if (this.chartOption.simulation.run) {
+          d.fx = d.x;
+          d.fy = d.y;
+        }
+        mousePoint = [x, y];
+      };
+      const dragging = () => {
+        const fn = ({ subject: d, x, y }) => {
+          // dragging
+          if (!this.eventOption.visDrag) return;
+          if (
+            // 如果mousePoint没变过，则没有发生drag,当this.isDraging==false时判断
+            !this.isDraging &&
+            (mousePoint[0] !== x || mousePoint[1] !== y)
+          ) {
+            this.isDraging = true;
+          }
+          d.x = x;
+          d.y = y;
+          d.fx = x;
+          d.fy = y;
+          this.$emit("alterWorkerData", [d]);
+          console.log("dragging");
         };
-        this.$store.dispatch("addOperation", operation);
-        this.isDraging = false;
-        console.log("drag");
-        // t.dispatch("mouseout");
-      }
+        return throttle(fn, 16.67, { leading: true, trailing: false });
+      };
+      const dragend = ({ subject: d }) => {
+        if (!this.eventOption.visDrag) return;
+        delete d.fx;
+        delete d.fy;
+        this.$emit("alterWorkerData", [d]);
+        if (this.isDraging) {
+          d.attentionTimes += 1;
+          // drag <text>时，通过以下返回node
+          let operation = {
+            action: "drag",
+            nodes: [d],
+          };
+          this.$store.dispatch("addOperation", operation);
+          this.isDraging = false;
+          console.log("drag");
+          // t.dispatch("mouseout");
+        }
+      };
+      this.isDraging = false; // 区分click和drag等
+      this.dragInstance = d3
+        .drag()
+        .on("start", dragstart)
+        .on("drag", dragging())
+        .on("end", dragend);
+      this.$watch(
+        () => {
+          return this.nodes.map((d) => d.uid);
+        },
+        () => {
+          this.$nextTick(() => {
+            const node = d3.select(this.$el).selectAll("circle");
+            node.data(this.nodes).call(this.dragInstance);
+          });
+        },
+        { immediate: true }
+      );
     },
+
     fillColor(...args) {
       return this.$parent.fillColor.apply(this.$parent, args);
     },

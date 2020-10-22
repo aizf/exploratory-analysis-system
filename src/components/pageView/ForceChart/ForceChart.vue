@@ -22,6 +22,7 @@
         :eventOption="eventOption"
         :chartOption="chartOption"
         @changeWorkerData="changeWorkerData"
+        @alterWorkerData="alterWorkerData"
       />
       <Texts :nodes="nodes" :visShowIds="eventOption.visShowIds" />
     </g>
@@ -94,7 +95,6 @@ export default {
     // console.log("svg", svg);
 
     this.vis = svg.select("g.vis");
-    // console.log("vis", this.vis);
 
     this.initZoom(svg);
     this.initBrush(svg);
@@ -129,15 +129,13 @@ export default {
         // console.log("zoomStart");
         this.beforeEvent("zoom", this);
       };
-      const zoomed = () => {
+      const zoomed = ({ transform }) => {
         if (!this.eventOption.visZoom) return;
-        let transform = d3.event.transform;
         this.vis.attr("transform", transform);
         this.transform.k = transform.k;
       };
-      const zoomEnd = () => {
+      const zoomEnd = ({ transform }) => {
         if (!this.eventOption.visZoom) return;
-        let transform = d3.event.transform;
         let extentStart = transform.invert([0, 0]); // 视口的开始坐标
         let extentEnd = transform.invert([this.width, this.height]); // 视口的结束坐标
         let t = this.nodes.filter((d) => {
@@ -166,10 +164,9 @@ export default {
         .on("dblclick.zoom", null);
     },
     initBrush(svg) {
-      const brushStart = () => {
+      const brushStart = ({ selection }) => {
         // console.log("brushstart");
-        // console.log(d3.event);
-        if (d3.event.selection === null) return;
+        if (selection === null) return;
         this.beforeEvent(
           this.eventOption.visBrush ? "brush" : "invertBrush",
           this
@@ -181,17 +178,12 @@ export default {
           });
         }
       };
-      const brushing = () => {
-        if (d3.event.selection === null) return;
+      const brushing = ({ selection: extent }) => {
+        if (extent === null) return;
         console.log("brushing");
-        let extent = d3.event.selection; // brush的一个事件
         let transform = this.visTransform();
         let extentStart = transform.invert(extent[0]); // brush的开始坐标
         let extentEnd = transform.invert(extent[1]); // brush的结束坐标
-        // console.log(transform);
-        // console.log(extent);
-        // console.log(this.vis.node());
-        // console.log(d3.zoomTransform(this.vis.node()));
 
         let type = this.eventOption.visBrush ? "brushing" : "invertBrushing";
         this.nodes.forEach((node) => {
@@ -207,8 +199,8 @@ export default {
         leading: true,
         trailing: false,
       });
-      const brushEnd = () => {
-        if (d3.event.selection === null) return;
+      const brushEnd = ({ selection }) => {
+        if (selection === null) return;
         console.log("brushed");
         let brushedNodes = this.nodes.filter((d) => d.brushing);
         brushedNodes.forEach((node) => {
@@ -224,8 +216,8 @@ export default {
         this.$store.dispatch("addOperation", operation);
         console.log("brush");
       };
-      const invertBrushEnd = () => {
-        if (d3.event.selection === null) return;
+      const invertBrushEnd = ({ selection }) => {
+        if (selection === null) return;
         let invertBrushedNodes = this.nodes.filter((d) => d.invertBrushing);
         invertBrushedNodes.forEach((node) => {
           node.invertBrushing = false;
@@ -310,11 +302,21 @@ export default {
         target: d.target.uid,
       }));
     },
+    // 替换所有数据
     changeWorkerData() {
       this.worker.postMessage({
         changeData: {
           nodes: this.calcNodes(),
           links: this.calcLinks(),
+        },
+      });
+    },
+    // 修改部分数据
+    alterWorkerData(nodes = [], links = []) {
+      this.worker.postMessage({
+        alterData: {
+          nodes: nodes,
+          links: links,
         },
       });
     },
@@ -338,17 +340,6 @@ export default {
       },
       deep: true,
     },
-    /* 
-    "chartOption.simulation.alphaTarget": function (val) {
-      if (this.chartOption.simulation.run) {
-        if (val < 0.01) {
-          this.chartOption.simulation.run = false;
-        }
-        this.simulation
-          .alphaTarget(this.chartOption.simulation.alphaTarget)
-          .restart();
-      }
-    }, */
   },
 };
 </script>

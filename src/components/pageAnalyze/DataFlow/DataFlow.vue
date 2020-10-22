@@ -189,8 +189,7 @@ export default {
             [0, 0],
             [this.width, this.height],
           ])
-          .on("zoom", () => {
-            const transform = d3.event.transform;
+          .on("zoom", ({ transform }) => {
             this.vis.attr("transform", transform);
           })
       )

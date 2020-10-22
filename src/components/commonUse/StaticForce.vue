@@ -84,9 +84,7 @@ export default {
     this.linkG = this.vis.select("g.links");
     this.nodeG = this.vis.select("g.nodes");
 
-    function zoomed() {
-      const transform = d3.event.transform;
-      // console.log(d3.event.transform === that.visTransform());
+    function zoomed({ transform }) {
       that.vis.attr("transform", transform);
     }
 

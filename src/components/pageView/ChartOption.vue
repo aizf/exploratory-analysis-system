@@ -79,9 +79,6 @@
       <a-tab-pane key="scatter">
         <span slot="tab"> <a-icon type="dot-chart" />scatter </span>
       </a-tab-pane>
-      <a-tab-pane key="table">
-        <span slot="tab"> <a-icon type="table" />table </span>
-      </a-tab-pane>
     </a-tabs>
   </a-card>
 </template>
@@ -118,18 +115,6 @@ export default {
         case "force":
           this.$parent.$emit("changeDisabledState", { save: false });
           chart = "ForceChart";
-          break;
-        case "table":
-          this.$parent.$emit("changeDisabledState", {
-            click: true,
-            drag: true,
-            mouseover: true,
-            brush: true,
-            invertBrush: true,
-            zoom: true,
-            showIds: true,
-          });
-          chart = "NodesTable";
           break;
         default:
           this.$parent.$emit("changeDisabledState");

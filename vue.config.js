@@ -34,7 +34,7 @@ const assetsCDN = {
     '//cdn.jsdelivr.net/npm/ant-design-vue@1/dist/antd.min.js',
 
     '//cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js',
-    '//cdn.jsdelivr.net/npm/d3@5/dist/d3.min.js',
+    '//cdn.jsdelivr.net/npm/d3@6/dist/d3.min.js',
     '//cdn.jsdelivr.net/npm/d3-sankey@0/dist/d3-sankey.min.js',
   ],
   css: [

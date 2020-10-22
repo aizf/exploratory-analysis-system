@@ -1,9 +1,9 @@
 <template>
-  <div class="StaticForce" style="float:left;">
+  <div class="StaticForce" style="float: left">
     <svg
       :width="width"
       :height="height"
-      :style="{border:'1px solid #305dff',background:backgroundColor}"
+      :style="{ border: '1px solid #305dff', background: backgroundColor }"
     >
       <defs>
         <filter id="shadow">
@@ -25,12 +25,12 @@ export default {
     links: {},
     width: {
       type: Number,
-      required: true
+      required: true,
     },
     height: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -42,7 +42,7 @@ export default {
       simulation: {},
       linkStrength: 1,
       linkLength: 0,
-      mousePoint: [] // 相对于原始坐标系
+      mousePoint: [], // 相对于原始坐标系
     };
   },
   computed: {
@@ -51,7 +51,7 @@ export default {
     },
     classificationPalette() {
       return this.$store.state.view.classificationPalette;
-    }
+    },
   },
   mounted() {
     // console.log(d3.version);
@@ -67,17 +67,15 @@ export default {
 
     this.vis = svg.append("g");
     svg
-      .call(
-        d3
-          .zoom()
-          .on("zoom", zoomed)
-          .on("end", zoomEnd)
-      )
+      .call(d3.zoom().on("zoom", zoomed).on("end", zoomEnd))
       .on("dblclick.zoom", null);
 
     this.simulation = d3
       .forceSimulation()
-      .force("link", d3.forceLink().id(d => d.id || d.name))
+      .force(
+        "link",
+        d3.forceLink().id((d) => d.id || d.name)
+      )
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(width / 2, height / 2));
     // console.log();
@@ -88,15 +86,13 @@ export default {
 
     this.update();
 
-    function zoomed() {
-      const transform = d3.event.transform;
+    function zoomed({ transform }) {
       that.vis.attr("transform", transform);
     }
-    function zoomEnd() {
-      const transform = d3.event.transform;
+    function zoomEnd({ transform }) {
       const extentStart = transform.invert([0, 0]); // 视口的开始坐标
       const extentEnd = transform.invert([that.chartWidth, that.chartHeight]); // 视口的结束坐标
-      const t = that.node.filter(d => {
+      const t = that.node.filter((d) => {
         return (
           extentStart[0] <= d.x &&
           extentStart[1] <= d.y &&
@@ -124,27 +120,26 @@ export default {
         return;
       }
       // 更新数据
-      const color = d => {
-        return d.group ? this.classificationPalette[d.group] : this.classificationPalette[0]; // FIXME 指定group
+      const color = (d) => {
+        return d.group
+          ? this.classificationPalette[d.group]
+          : this.classificationPalette[0]; // FIXME 指定group
       };
       // debugger;
-      this.link = this.linkG
-        .selectAll("line")
-        .data(this.links)
-        .join("line");
+      this.link = this.linkG.selectAll("line").data(this.links).join("line");
 
       this.node = this.nodeG
         .selectAll("circle")
         .data(this.nodes)
         .join("circle")
-        .attr("r", d => {
+        .attr("r", (d) => {
           const size = Math.sqrt(d.size) / 10;
           return size > 4.5 ? size : 4.5;
         })
         .attr("class", "display")
         .attr("fill", color)
         .attr("filter", "url(#shadow)")
-        .classed("selected", d => d.selected);
+        .classed("selected", (d) => d.selected);
 
       this.simulation
         .nodes(this.nodes)
@@ -156,14 +151,14 @@ export default {
     },
     ticked() {
       this.link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-      this.node.attr("cx", d => d.x).attr("cy", d => d.y);
+        .attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y);
+      this.node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 
       if (this.visShowIds) {
-        this.text.attr("x", d => d.x).attr("y", d => d.y);
+        this.text.attr("x", (d) => d.x).attr("y", (d) => d.y);
       }
     },
     tickEnd() {
@@ -178,13 +173,13 @@ export default {
 
     visTransform() {
       return d3.zoomTransform(this.vis.node());
-    }
+    },
   },
   watch: {
-    viewUpdate: function(val) {
+    viewUpdate: function (val) {
       this.update();
-    }
-  }
+    },
+  },
 };
 </script>
 <style>
