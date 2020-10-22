@@ -1,5 +1,5 @@
 <template>
-  <svg class="ForceChart" :width="width" :height="height">
+  <svg class="ForceChart container" :width="width" :height="height">
     <defs>
       <filter id="shadow">
         <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
@@ -14,6 +14,7 @@
     <text x="0" y="0" dx="0.5em" dy="4.5em" class="text info">
       Edges : {{ linksNumber }}
     </text>
+    <rect class="zoom" x="0" y="0" :width="width" :height="height" />
     <g class="vis">
       <Links :links="links" :chartOption="chartOption" />
       <Nodes
@@ -87,17 +88,17 @@ export default {
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
-    console.log("ForceChart", this);
     // console.log(d3);
+    console.log("ForceChart", this);
     const svg = d3
       .select(this.$el)
       .attr("viewBox", [0, 0, this.width, this.height]);
-    // console.log("svg", svg);
-
+    const zoomDom = svg.select("rect.zoom");
     this.vis = svg.select("g.vis");
+    // console.log(svg, zoomDom, this.vis);
 
-    this.initZoom(svg);
-    this.initBrush(svg);
+    this.initZoom(zoomDom);
+    this.initBrush(svg, zoomDom);
     this.initWorker();
   },
   activated() {
@@ -116,9 +117,9 @@ export default {
       this.initWorker();
       console.log("reInit");
     },
-    initZoom(svg) {
-      const zoomStart = () => {
-        console.log("zoom start");
+    initZoom(zoomDom) {
+      const zoomStart = (e) => {
+        console.log("zoom start", e);
         this.beforeEvent("zoom", this);
       };
       const zoomed = ({ transform }) => {
@@ -147,7 +148,7 @@ export default {
         console.log("zoom");
       };
       const zoomInstance = d3.zoom();
-      svg.call(zoomInstance).on("dblclick.zoom", null);
+      zoomDom.call(zoomInstance).on("dblclick.zoom", null);
 
       // d3 bug，禁用事件后，__zoom仍然变化
       // t用来记录禁用事件后的值，从而手动指定__zoom
@@ -156,7 +157,7 @@ export default {
         "eventOption.visZoom",
         (newVal) => {
           if (newVal) {
-            const __zoom = d3.zoomTransform(svg.node());
+            const __zoom = d3.zoomTransform(zoomDom.node());
             Object.assign(__zoom, t);
             zoomInstance
               .on("start", zoomStart)
@@ -164,14 +165,14 @@ export default {
               .on("end", zoomEnd);
           } else {
             zoomInstance.on("start", null).on("zoom", null).on("end", null);
-            const __zoom = d3.zoomTransform(svg.node());
+            const __zoom = d3.zoomTransform(zoomDom.node());
             Object.assign(t, __zoom);
           }
         },
         { immediate: true }
       );
     },
-    initBrush(svg) {
+    initBrush(svg, zoomDom) {
       const brushStart = ({ selection }) => {
         // console.log("brushstart");
         if (selection === null) return;
@@ -189,7 +190,7 @@ export default {
       const brushing = ({ selection: extent }) => {
         if (extent === null) return;
         console.log("brushing");
-        const transform = this.visTransform();
+        const transform = d3.zoomTransform(zoomDom.node());
         let extentStart = transform.invert(extent[0]); // brush的开始坐标
         let extentEnd = transform.invert(extent[1]); // brush的结束坐标
 
@@ -362,6 +363,10 @@ export default {
   /* display: none; */
   border: 1px solid #305dff;
   background: var(--backgroundColor);
+}
+rect.zoom {
+  pointer-events: all;
+  opacity: 0;
 }
 
 .text {
