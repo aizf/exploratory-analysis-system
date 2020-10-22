@@ -1,5 +1,5 @@
-const backgroundColor = "#333";
-const contrastColor = "#eee";
+const backgroundColor = "#333333";
+const contrastColor = "#eeeeee";
 const classificationPalette = [
     // 11类
     // 分组

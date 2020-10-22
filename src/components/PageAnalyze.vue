@@ -4,6 +4,7 @@
     <DataFlow
       :option="option"
       @staticForceShowChanged="changeStaticForceShow"
+      @change-tooltip-data="changeTooltipData"
     ></DataFlow>
     <div :style="{ width: '100%', borderTop: `1px dashed ${contrastColor}` }" />
     <TimeOrder></TimeOrder>
@@ -13,8 +14,8 @@
         v-show="isStaticForceShow"
         :width="450"
         :height="450"
-        :nodes="tooltipNodes"
-        :links="tooltipLinks"
+        :nodes="tooltipData.nodes"
+        :links="tooltipData.links"
         class="staticForce"
       ></StaticForce>
     </keep-alive>
@@ -48,6 +49,7 @@ export default {
     return {
       chart: {},
       isStaticForceShow: false,
+      tooltipData:{ "nodes": [], "links": [] },
       option: {
         isCompressRecord: false,
         isFrequentItem: false,
@@ -61,9 +63,6 @@ export default {
 
       width: (state) => state.view.dpiX * 0.7,
       height: (state) => state.view.dpiY - 64,
-
-      tooltipNodes: (state) => state.analyze.pageAnalyzeTooltipData.nodes,
-      tooltipLinks: (state) => state.analyze.pageAnalyzeTooltipData.links,
       recordset: (state) => state.analyze.recordset,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
@@ -77,6 +76,9 @@ export default {
   methods: {
     changeStaticForceShow(val) {
       this.isStaticForceShow = val;
+    },
+    changeTooltipData(val) {
+      this.tooltipData = val;
     },
   },
   watch: {

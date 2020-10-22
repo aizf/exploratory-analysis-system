@@ -10,7 +10,7 @@ const simulation = d3
     .forceSimulation()
     .force(
         "link",
-        d3.forceLink().id((d) => d.id || d.name)
+        d3.forceLink().id((d) => d.uid || d.id || d.name)
     )
     .force("charge", d3.forceManyBody())
     .stop()
@@ -22,7 +22,11 @@ const init = ({ width, height, chartOption, nodes, links }) => {
     simulation.force("center", d3.forceCenter(self.width / 2, self.height / 2));
     simulation.force("charge").strength(self.chartOption.node.chargeForce);
     changeData({ nodes, links });
-    simulation.on("tick", ticked).alpha(1).restart();
+    simulation
+        .on("tick", ticked)
+        .on("end", tickEnd)
+        .alpha(1)
+        .restart();
 }
 const changeData = ({ nodes, links }) => {
     self.nodes = nodes
@@ -38,15 +42,24 @@ const changeOption = (chartOption) => {
     simulation.force("charge").strength(self.chartOption.node.chargeForce);
     simulation
         .force("link")
-        .links(self.links)
         .distance(self.chartOption.link.distance);
+    const { run } = self.chartOption.simulation
+    if (run) {
+        simulation.alphaTarget(self.chartOption.simulation.alphaTarget).restart()
+    } else {
+        simulation.alphaTarget(0).stop();
+    }
 }
 
 const ticked = function () {
-    console.log("worker-tick");
+    // console.log("worker-tick");
     self.postMessage({
         nodes: self.nodes
     })
+}
+const tickEnd = function () {
+    // console.log("worker-tick");
+    self.postMessage("tickEnd")
 }
 
 self.addEventListener('message', (e) => {

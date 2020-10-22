@@ -199,10 +199,10 @@ export default {
     },
     changeState(visualData) {
       this.$set(visualData, "marked", false);
-      const ids = visualData.nodes.map((d) => d.id);
+      const uidNodeMap = new Array(visualData.nodes.length);
       const idNodeMap = {};
       visualData.nodes.forEach((d, i) => {
-        this.$set(d, "uid", i);
+        this.$set(d, "uid", i + "");
         this.$set(d, "x", 0);
         this.$set(d, "y", 0);
         this.$set(d, "selected", false);
@@ -210,6 +210,7 @@ export default {
         this.$set(d, "brushing", false);
         this.$set(d, "invertBrushing", false);
         this.$set(d, "attentionTimes", 0);
+        uidNodeMap[d.uid] = d;
         idNodeMap[d.id] = d;
       });
 
@@ -221,14 +222,15 @@ export default {
           d.target = idNodeMap[d.target];
         }
       });
-      const idLinksMap = this.genIdLinksMap(visualData);
-      const idLinkedNodesMap = this.genIdLinkedNodesMap(visualData);
+      const uidLinksMap = this.genUidLinksMap(visualData);
+      const uidLinkedNodesMap = this.genUidLinkedNodesMap(visualData);
 
       // 源数据改变后更新store状态
-      store.commit("updateIdMaps", {
+      store.commit("updateUidMaps", {
         idNodeMap,
-        idLinksMap,
-        idLinkedNodesMap,
+        uidNodeMap,
+        uidLinksMap,
+        uidLinkedNodesMap,
       });
       store.commit("ChartsNeedUpdate", {
         force: true,
@@ -239,30 +241,24 @@ export default {
 
       this.$message.success("Data loaded.");
     },
-    genIdLinksMap({ nodes, links }) {
-      const dict = {};
-      nodes.forEach((d) => {
-        dict[d.id] = [];
-      });
+    genUidLinksMap({ nodes, links }) {
+      const dict = Array.from(Array(nodes.length), () => []);
       links.forEach((d) => {
         const { source, target } = d;
-        dict[source.id].push(d);
-        dict[target.id].push(d);
+        dict[source.uid].push(d);
+        dict[target.uid].push(d);
       });
       return dict;
     },
-    genIdLinkedNodesMap({ nodes, links }) {
-      const dict = {};
-      nodes.forEach((d) => {
-        dict[d.id] = [];
-      });
+    genUidLinkedNodesMap({ nodes, links }) {
+      const dict = Array.from(Array(nodes.length), () => []);
       links.forEach((d) => {
         const { source, target } = d;
-        dict[source.id].push(target);
-        dict[target.id].push(source);
+        dict[source.uid].push(target);
+        dict[target.uid].push(source);
       });
       nodes.forEach((d) => {
-        dict[d.id] = [...new Set(dict[d.id])];
+        dict[d.uid] = [...new Set(dict[d.uid])];
       });
       return dict;
     },

@@ -164,7 +164,7 @@ export default {
       return marks.apply(null, args);
     },
     updateTooltip(data) {
-      this.$store.commit("updatePageAnalyzeTooltip", data);
+      this.$parent.$emit("change-tooltip-data", data);
       this.$parent.$emit("staticForceShowChanged", true);
     },
   },

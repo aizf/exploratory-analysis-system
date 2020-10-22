@@ -45,7 +45,7 @@ export default {
   computed: {
     ...mapState({
       visualData: (state) => state.data.visualData,
-      idMaps: (state) => state.data.idMaps,
+      uidMaps: (state) => state.data.uidMaps,
     }),
     ...mapGetters(["nodesNumber", "beforeEvent"]),
     fixedNodeSize() {
@@ -101,12 +101,12 @@ export default {
         d.classList.add("mouseover");
       });
       this.beforeEvent("mouseover", this);
-      const displayNodes = [...this.idMaps.idLinkedNodesMap[node.id], node];
+      const displayNodes = [...this.uidMaps.uidLinkedNodesMap[node.uid], node];
       displayNodes.forEach((d) => {
         d.mouseover_show = true;
         ``;
       });
-      const displayLinks = this.idMaps.idLinksMap[node.id];
+      const displayLinks = this.uidMaps.uidLinksMap[node.uid];
       displayLinks.forEach((d) => {
         d.mouseover_show = true;
       });
@@ -132,11 +132,11 @@ export default {
       ].forEach((d) => {
         d.classList.remove("mouseover");
       });
-      const displayNodes = [...this.idMaps.idLinkedNodesMap[node.id], node];
+      const displayNodes = [...this.uidMaps.uidLinkedNodesMap[node.uid], node];
       displayNodes.forEach((d) => {
         d.mouseover_show = false;
       });
-      const displayLinks = this.idMaps.idLinksMap[node.id];
+      const displayLinks = this.uidMaps.uidLinksMap[node.uid];
       displayLinks.forEach((d) => {
         d.mouseover_show = false;
       });
@@ -154,22 +154,19 @@ export default {
     dragging(d) {
       // dragging
       if (!this.eventOption.visDrag) return;
-      if (this.chartOption.simulation.run) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-      } else {
-        d.x = d3.event.x;
-        d.y = d3.event.y;
-      }
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+      d.x = d3.event.x;
+      d.y = d3.event.y;
       // console.log([d3.event.x, d3.event.y]);
       if (
         // 如果mousePoint没变过，则没有发生drag,当this.isDraging==false时判断
         !this.isDraging &&
         (this.mousePoint[0] !== d3.event.x || this.mousePoint[1] !== d3.event.y)
       ) {
-        // console.log("computing !!");
         this.isDraging = true;
       }
+      console.log("dragging");
       this.$emit("changeWorkerData");
     },
     // 节流dragging，防止运算阻塞dom渲染
@@ -181,6 +178,7 @@ export default {
       // if (!d3.event.active) this.simulation.alphaTarget(0);
       delete d.fx;
       delete d.fy;
+      this.$emit("changeWorkerData");
       if (this.isDraging) {
         d.attentionTimes += 1;
         // drag <text>时，通过以下返回node

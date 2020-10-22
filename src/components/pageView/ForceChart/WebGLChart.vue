@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     ...mapState({
-      idNodeMap: (state) => state.data.idMaps.idNodeMap,
+      uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
       width: (state) => state.view.dpiX * 0.4,
       height: (state) => state.view.dpiY * 0.7,
       currentUUID: (state) => state.view.currentUUID,
@@ -45,6 +45,7 @@ export default {
       height: this.height,
       antialias: true,
     });
+    this.app.renderer.backgroundColor = PIXI.utils.string2hex(backgroundColor);
     this.$el.appendChild(this.app.view);
 
     const vis = new PIXI.Container();
@@ -99,7 +100,7 @@ export default {
     circle(node) {
       const { x, y, group } = node;
       const circle = new PIXI.Graphics();
-      circle.beginFill(0x9966ff).drawCircle(x, y, 4.5).endFill();
+      circle.beginFill(this.fillColor(group)).drawCircle(x, y, 4.5).endFill();
       circle.__data__ = node;
       circle.interactive = true;
       circle.on("click", function (...e) {
@@ -109,7 +110,7 @@ export default {
       return circle;
     },
     fillColor(group) {
-      return classificationPalette[group || 0];
+      return PIXI.utils.string2hex(classificationPalette[group || 0]);
     },
   },
   watch: {},

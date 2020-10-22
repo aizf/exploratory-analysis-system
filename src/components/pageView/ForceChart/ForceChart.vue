@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     ...mapState({
-      idNodeMap: (state) => state.data.idMaps.idNodeMap,
+      uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
       width: (state) => state.view.dpiX * 0.4,
       height: (state) => state.view.dpiY * 0.7,
       currentUUID: (state) => state.view.currentUUID,
@@ -82,14 +82,6 @@ export default {
   created() {
     this.contrastColor = contrastColor;
     this.backgroundColor = backgroundColor;
-    this.simulation__ = d3
-      .forceSimulation()
-      .force(
-        "link",
-        d3.forceLink().id((d) => d.id || d.name)
-      )
-      .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(this.width / 2, this.height / 2));
   },
   mounted() {
     // console.log(d3.version);
@@ -130,7 +122,6 @@ export default {
       t.k = 1;
       this.vis.attr("transform", t);
       this.initWorker();
-      // this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
       console.log("reInit");
     },
     initZoom(svg) {
@@ -269,11 +260,17 @@ export default {
       if (!this.worker) {
         this.worker = new Worker();
         this.worker.addEventListener("message", (e) => {
+          if (e.data === "tickEnd") {
+            this.chartOption.simulation.run = false;
+            return;
+          }
           // console.log("worker-message", e);
           const { nodes } = e.data;
           nodes.forEach((d) => {
-            this.idNodeMap[d.id].x = d.x;
-            this.idNodeMap[d.id].y = d.y;
+            // if ("fx" in d) console.log(d);
+            if ("fx" in d) return;
+            this.uidNodeMap[d.uid].x = d.x;
+            this.uidNodeMap[d.uid].y = d.y;
           });
         });
         this.$watch(
@@ -298,7 +295,7 @@ export default {
     calcNodes() {
       return this.nodes.map((d) => {
         const node = {
-          id: d.id,
+          uid: d.uid,
           x: d.x,
           y: d.y,
         };
@@ -309,8 +306,8 @@ export default {
     },
     calcLinks() {
       return this.links.map((d) => ({
-        source: d.source.id,
-        target: d.target.id,
+        source: d.source.uid,
+        target: d.target.uid,
       }));
     },
     changeWorkerData() {
@@ -319,6 +316,11 @@ export default {
           nodes: this.calcNodes(),
           links: this.calcLinks(),
         },
+      });
+    },
+    changeWorkerOption() {
+      this.worker.postMessage({
+        changeOption: this.chartOption,
       });
     },
     visTransform() {
@@ -330,6 +332,9 @@ export default {
     test() {},
   },
   watch: {
+    "chartOption.simulation.run": function () {
+      this.changeWorkerOption();
+    },
     /* 
     "chartOption.link.distance": function () {
       if (this.chartOption.simulation.run) return;
@@ -346,13 +351,6 @@ export default {
         if (this.chartOption.simulation.run) return;
         this.simulation.alphaTarget(0).stop();
       }, 400);
-    },
-    "chartOption.simulation.run": function (val) {
-      val
-        ? this.simulation
-            .alphaTarget(this.chartOption.simulation.alphaTarget)
-            .restart()
-        : this.simulation.alphaTarget(0).stop();
     },
     "chartOption.simulation.alphaTarget": function (val) {
       if (this.chartOption.simulation.run) {

@@ -3,10 +3,11 @@ const data = {
         sourceData: "",
         visualData: {},
         nodeFields: {},
-        idMaps: {
+        uidMaps: {
             idNodeMap: {},  // id映射对应节点
-            idLinksMap: {}, // id映射对应边
-            idLinkedNodesMap: {},// id映射连接的所有节点
+            uidNodeMap: [],  // id映射对应节点
+            uidLinksMap: [], // id映射对应边
+            uidLinkedNodesMap: [],// id映射连接的所有节点
         }
     },
     mutations: {
@@ -19,8 +20,8 @@ const data = {
         updateNodeFields: (state, data) => {
             state.nodeFields = data;
         },
-        updateIdMaps: (state, data) => {
-            state.idMaps = data;
+        updateUidMaps: (state, data) => {
+            state.uidMaps = data;
         }
     },
     actions: {}

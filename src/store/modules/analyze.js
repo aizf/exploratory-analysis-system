@@ -7,9 +7,6 @@ const analyze = {
         undoList: [], // index: 0,1,2,3,4
         redoList: [], // index: 5,6,7,...
 
-        // PageAnalyze.DataFlow
-        pageAnalyzeTooltipData: { "nodes": [], "links": [] },
-
         // interaction
         operations: [], // operation={action:,nodes:,time:}
 
@@ -48,9 +45,6 @@ const analyze = {
         changeUndoRedo: (state, fn) => {
             // fn为自定义函数
             fn(state.undoList, state.redoList);
-        },
-        updatePageAnalyzeTooltip: (state, val) => {
-            state.pageAnalyzeTooltipData = val;
         },
         resetOperations: (state) => {
             state.operations = [];
