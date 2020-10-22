@@ -332,26 +332,13 @@ export default {
     test() {},
   },
   watch: {
-    "chartOption.simulation.run": function () {
-      this.changeWorkerOption();
+    chartOption: {
+      handler: function () {
+        this.changeWorkerOption();
+      },
+      deep: true,
     },
     /* 
-    "chartOption.link.distance": function () {
-      if (this.chartOption.simulation.run) return;
-      this.simulation.alphaTarget(0.5).restart();
-      setTimeout(() => {
-        if (this.chartOption.simulation.run) return;
-        this.simulation.alphaTarget(0).stop();
-      }, 400);
-    },
-    "chartOption.node.chargeForce": function () {
-      if (this.chartOption.simulation.run) return;
-      this.simulation.alphaTarget(0.5).restart();
-      setTimeout(() => {
-        if (this.chartOption.simulation.run) return;
-        this.simulation.alphaTarget(0).stop();
-      }, 400);
-    },
     "chartOption.simulation.alphaTarget": function (val) {
       if (this.chartOption.simulation.run) {
         if (val < 0.01) {

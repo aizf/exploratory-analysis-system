@@ -43,11 +43,12 @@ const changeOption = (chartOption) => {
     simulation
         .force("link")
         .distance(self.chartOption.link.distance);
+    simulation.alphaTarget(self.chartOption.simulation.alphaTarget)
     const { run } = self.chartOption.simulation
     if (run) {
-        simulation.alphaTarget(self.chartOption.simulation.alphaTarget).restart()
+        simulation.restart()
     } else {
-        simulation.alphaTarget(0).stop();
+        simulation.stop();
     }
 }
 

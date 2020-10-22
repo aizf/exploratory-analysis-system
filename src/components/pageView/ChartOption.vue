@@ -73,14 +73,6 @@
               :step="1"
               v-model="chartOption.link.distance"
             />
-            <span class="vSubMenu">opacity</span>
-            <a-input-number
-              class="optionInput"
-              :min="0"
-              :max="1"
-              :step="0.1"
-              v-model="chartOption.link.opacity"
-            />
           </div>
         </div>
       </a-tab-pane>
