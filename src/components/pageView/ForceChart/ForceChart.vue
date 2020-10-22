@@ -112,30 +112,20 @@ export default {
       if (this.nodes.length === 0) {
         return;
       }
-      // debugger;
-      this.transform.k = 1;
-      this.transform.x = 0;
-      this.transform.y = 0;
-      let t = this.visTransform();
-      t.x = 0;
-      t.y = 0;
-      t.k = 1;
-      this.vis.attr("transform", t);
+      this.vis.attr("transform", d3.zoomIdentity.translate(0, 0).scale(1));
       this.initWorker();
       console.log("reInit");
     },
     initZoom(svg) {
       const zoomStart = () => {
-        // console.log("zoomStart");
+        console.log("zoom start");
         this.beforeEvent("zoom", this);
       };
       const zoomed = ({ transform }) => {
-        if (!this.eventOption.visZoom) return;
+        console.log("zooming");
         this.vis.attr("transform", transform);
-        this.transform.k = transform.k;
       };
       const zoomEnd = ({ transform }) => {
-        if (!this.eventOption.visZoom) return;
         let extentStart = transform.invert([0, 0]); // 视口的开始坐标
         let extentEnd = transform.invert([this.width, this.height]); // 视口的结束坐标
         let t = this.nodes.filter((d) => {
@@ -156,12 +146,30 @@ export default {
         this.$store.dispatch("addOperation", operation);
         console.log("zoom");
       };
+      const zoomInstance = d3.zoom();
+      svg.call(zoomInstance).on("dblclick.zoom", null);
 
-      svg
-        .call(
-          d3.zoom().on("start", zoomStart).on("zoom", zoomed).on("end", zoomEnd)
-        )
-        .on("dblclick.zoom", null);
+      // d3 bug，禁用事件后，__zoom仍然变化
+      // t用来记录禁用事件后的值，从而手动指定__zoom
+      const t = { k: 1, x: 0, y: 0 };
+      this.$watch(
+        "eventOption.visZoom",
+        (newVal) => {
+          if (newVal) {
+            const __zoom = d3.zoomTransform(svg.node());
+            Object.assign(__zoom, t);
+            zoomInstance
+              .on("start", zoomStart)
+              .on("zoom", zoomed)
+              .on("end", zoomEnd);
+          } else {
+            zoomInstance.on("start", null).on("zoom", null).on("end", null);
+            const __zoom = d3.zoomTransform(svg.node());
+            Object.assign(t, __zoom);
+          }
+        },
+        { immediate: true }
+      );
     },
     initBrush(svg) {
       const brushStart = ({ selection }) => {
@@ -181,7 +189,7 @@ export default {
       const brushing = ({ selection: extent }) => {
         if (extent === null) return;
         console.log("brushing");
-        let transform = this.visTransform();
+        const transform = this.visTransform();
         let extentStart = transform.invert(extent[0]); // brush的开始坐标
         let extentEnd = transform.invert(extent[1]); // brush的结束坐标
 
@@ -324,9 +332,6 @@ export default {
       this.worker.postMessage({
         changeOption: this.chartOption,
       });
-    },
-    visTransform() {
-      return d3.zoomTransform(this.vis.node());
     },
     fillColor(group) {
       return classificationPalette[group || 0];
