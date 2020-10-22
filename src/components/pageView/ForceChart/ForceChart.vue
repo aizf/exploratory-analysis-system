@@ -14,7 +14,14 @@
     <text x="0" y="0" dx="0.5em" dy="4.5em" class="text info">
       Edges : {{ linksNumber }}
     </text>
-    <rect class="zoom" x="0" y="0" :width="width" :height="height" />
+    <rect
+      class="zoom"
+      x="0"
+      y="0"
+      :width="width"
+      :height="height"
+      ref="zoomDom"
+    />
     <g class="vis">
       <Links :links="links" :chartOption="chartOption" />
       <Nodes
@@ -113,7 +120,10 @@ export default {
       if (this.nodes.length === 0) {
         return;
       }
-      this.vis.attr("transform", d3.zoomIdentity.translate(0, 0).scale(1));
+      const t = d3.zoomIdentity.translate(0, 0).scale(1);
+      this.vis.attr("transform", t);
+      this.$refs.zoomDom.__zoom = t;
+
       this.initWorker();
       console.log("reInit");
     },
@@ -270,8 +280,14 @@ export default {
           nodes.forEach((d) => {
             // if ("fx" in d) console.log(d);
             if ("fx" in d) return;
-            this.uidNodeMap[d.uid].x = d.x;
-            this.uidNodeMap[d.uid].y = d.y;
+            try {
+              this.uidNodeMap[d.uid].x = d.x;
+              this.uidNodeMap[d.uid].y = d.y;
+            } catch (e) {
+              // 处理脏数据
+              if (e instanceof TypeError) return;
+              throw e;
+            }
           });
         });
         this.$watch(
@@ -292,6 +308,7 @@ export default {
           links: this.calcLinks(),
         },
       });
+      this.chartOption.simulation.run = true;
     },
     calcNodes() {
       return this.nodes.map((d) => {

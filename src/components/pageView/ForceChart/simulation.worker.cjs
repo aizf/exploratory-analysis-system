@@ -27,6 +27,7 @@ const init = ({ width, height, chartOption, nodes, links }) => {
         .on("tick", ticked)
         .on("end", tickEnd)
         .alpha(1)
+        .alphaTarget(0)
         .restart();
 }
 const changeData = ({ nodes, links }) => {
