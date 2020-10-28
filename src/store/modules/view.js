@@ -3,7 +3,6 @@ const view = {
         dpiX: 1920,
         dpiY: 1080,
         operationTypes: ["click", "drag", "mouseover", "brush", "classification", "invertBrush", "zoom", "filter", "undo", "redo", "rollback"],
-        operation_Types: ["rollback", "filter", "undo", "redo"],
         // 回溯种类的操作
         backOps: ["undo", "redo", "rollback"],
         parentUUID: "none", //当前view的父view的UUID

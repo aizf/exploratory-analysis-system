@@ -36,23 +36,6 @@ export default {
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
 
-    degreeArray() {
-      // 返回一个包含各个节点出入度的数组
-      const nodes = this.simulation.nodes(),
-        links = this.simulation.force("link").links();
-      const n = nodes.length,
-        m = links.length;
-      // console.log(n, m);
-      const degree = new Array(n);
-      // links包含source，target，nodes没有
-      for (const link of links) {
-        // console.log(link);
-        degree[link.source.index] = (degree[link.source.index] || 0) + 1;
-        degree[link.target.index] = (degree[link.target.index] || 0) + 1;
-      }
-      return degree;
-    },
-
     columns() {
       return Object.keys(this.nodeFields).map((d) => ({
         title: d,

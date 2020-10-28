@@ -42,6 +42,12 @@ Vue.use(Menu);
 Vue.use(Tooltip);
 import { mapState } from "vuex";
 import "@/main.css";
+import {
+  backgroundColor,
+  contrastColor,
+  classificationPalette,
+  classificationPalette2,
+} from "@/config/color";
 // import PageData from "@/components/PageData.vue";
 // import PageView from "@/components/PageView.vue";
 // import PageAnalyze from "@/components/PageAnalyze.vue";
@@ -54,6 +60,12 @@ export default {
     // PageView,
     // PageAnalyze,
     // Test
+  },
+  provide: {
+    backgroundColor,
+    contrastColor,
+    classificationPalette,
+    classificationPalette2,
   },
   data() {
     return {};

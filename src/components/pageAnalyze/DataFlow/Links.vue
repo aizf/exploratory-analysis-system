@@ -49,11 +49,7 @@ export default {
   },
   computed: {
     ...mapState({
-      visualData: (state) => state.data.visualData,
-
       operationTypes: (state) => state.view.operationTypes,
-
-      recordset: (state) => state.analyze.recordset,
     }),
     nodesNum() {
       // 用recordFlow，而非nodes，因为nodes是通过this.sankey()计算而来

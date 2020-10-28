@@ -1,4 +1,5 @@
-import * as d3 from "d3"
+self.importScripts("//cdn.jsdelivr.net/npm/d3@6/dist/d3.min.js");
+const d3 = self.d3;
 
 self.nodes = [];
 self.links = [];

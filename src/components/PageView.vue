@@ -77,6 +77,8 @@
               @changeChartOption="handleChartOption"
             ></component>
           </keep-alive>
+          <SelectedInfoBoard />
+          <NodesList />
           <!-- <WebGLChart :eventOption="eventOption" :chartOption="chartOption" /> -->
         </div>
       </a-layout-content>
@@ -121,7 +123,8 @@ import { mapState, mapGetters } from "vuex";
 import ForceChart from "./pageView/ForceChart";
 import WebGLChart from "./pageView/ForceChart/WebGLChart";
 import ScatterChart from "./pageView/ScatterChart.vue";
-import NodesTable from "./pageView/NodesTable.vue";
+import NodesList from "./pageView/NodesList.vue";
+import SelectedInfoBoard from "./pageView/SelectedInfoBoard.vue";
 import EventOption from "./pageView/EventOption.vue";
 import ChartOption from "./pageView/ChartOption.vue";
 import MarkedViews from "./pageView/MarkedViews";
@@ -132,7 +135,8 @@ export default {
     ForceChart,
     // WebGLChart,
     ScatterChart,
-    NodesTable,
+    NodesList,
+    SelectedInfoBoard,
     EventOption,
     ChartOption,
     MarkedViews,
@@ -298,6 +302,11 @@ export default {
 }
 .main-view {
   padding: 10px 0 0 0;
+  display: flex;
+  background: var(--backgroundColor);
+}
+.main-view > * {
+  flex: 0 0 auto;
 }
 </style>
 <style>

@@ -36,6 +36,7 @@ export default {
     links: Array,
     eventOption: Object,
     chartOption: Object,
+    transform: Object,
   },
   data() {
     return {};
@@ -47,22 +48,13 @@ export default {
     }),
     ...mapGetters(["nodesNumber", "beforeEvent"]),
     fixedNodeSize() {
-      return this.chartOption.node.nodeSize / this.$parent.transform.k;
+      return this.chartOption.node.nodeSize / this.transform.k;
     },
   },
   created() {},
   mounted() {
     console.log("ForceChart-Nodes", this);
     this.initDrag();
-    this.dragged = throttle(
-      (d, event) => {
-        d.fx = event.x;
-        d.fy = event.y;
-        this.$emit("changeWorkerData");
-      },
-      60,
-      { leading: true, trailing: false }
-    );
   },
   methods: {
     clickSelect(d) {

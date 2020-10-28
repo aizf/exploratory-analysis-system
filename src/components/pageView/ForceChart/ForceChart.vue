@@ -27,6 +27,7 @@
       <Nodes
         :nodes="nodes"
         :links="links"
+        :transform="transform"
         :eventOption="eventOption"
         :chartOption="chartOption"
         @changeWorkerData="changeWorkerData"
@@ -76,7 +77,7 @@ export default {
     ...mapState({
       uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
       width: (state) => state.view.dpiX * 0.4,
-      height: (state) => state.view.dpiY * 0.7,
+      height: (state) => state.view.dpiY * 0.78,
       currentUUID: (state) => state.view.currentUUID,
       needUpdate: (state) => state.view.chartsNeedUpdate.force,
     }),
@@ -117,15 +118,16 @@ export default {
   methods: {
     reInit() {
       // 重新渲染图标
+      console.log("reInit");
       if (this.nodes.length === 0) {
         return;
       }
       const t = d3.zoomIdentity.translate(0, 0).scale(1);
       this.vis.attr("transform", t);
+      this.transform = { ...t };
       this.$refs.zoomDom.__zoom = t;
 
       this.initWorker();
-      console.log("reInit");
     },
     initZoom(zoomDom) {
       const zoomStart = (e) => {
@@ -135,6 +137,7 @@ export default {
       const zoomed = ({ transform }) => {
         console.log("zooming");
         this.vis.attr("transform", transform);
+        this.transform = { ...transform };
       };
       const zoomEnd = ({ transform }) => {
         let extentStart = transform.invert([0, 0]); // 视口的开始坐标
@@ -378,7 +381,7 @@ export default {
 <style lang="scss" scope>
 .ForceChart {
   /* display: none; */
-  border: 1px solid #305dff;
+  // border: 1px solid #305dff;
   background: var(--backgroundColor);
 }
 rect.zoom {
