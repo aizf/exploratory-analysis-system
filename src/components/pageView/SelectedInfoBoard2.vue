@@ -25,42 +25,42 @@ export default {
       const mouseoverNodes = this.nodes.filter((d) => d.mouseover_show);
       return mouseoverNodes;
     },
-    xAxis() {
-      return {
-        type: "category",
-        data: this.items.map((d) => d.id),
-        axisTick: { alignWithLabel: true },
-        axisLabel: {
-          interval: 0,
-          rotate: 90,
-        },
-      };
+    seriesData() {
+      const data = [];
+      const dict = {};
+      this.items.forEach((d) => {
+        const group = d.group || 0;
+        if (group in dict) {
+          dict[group]++;
+        } else {
+          dict[group] = 1;
+        }
+      });
+      for (let [name, value] of Object.entries(dict)) {
+        data.push({
+          name,
+          value,
+          itemStyle: { color: this.classificationPalette[name] },
+        });
+      }
+      return data;
     },
     series() {
       return {
-        type: "bar",
-        label: {
-          show: true,
-          position: "top",
-        },
-        backgroundStyle: {
-          color: "rgba(220, 220, 220, 0.8)",
-        },
-        data: this.items.map((d) => this.uidLinksMap[d.uid].length),
+        type: "pie",
+        radius: "55%",
+        center: ["50%", "50%"],
+        data: this.seriesData,
       };
     },
     option() {
       return {
-        grid:{
-          top:20
+        grid: {
+          top: 20,
         },
         backgroundColor: this.backgroundColor,
         textStyle: {
           color: this.contrastColor,
-        },
-        xAxis: this.xAxis,
-        yAxis: {
-          type: "value",
         },
         series: this.series,
       };

@@ -60,7 +60,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .scroller {
-  width: 300px;
+  width: 230px;
   height: 800px;
 }
 
