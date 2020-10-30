@@ -124,7 +124,7 @@ import ForceChart from "./pageView/ForceChart";
 import WebGLChart from "./pageView/ForceChart/WebGLChart";
 import ScatterChart from "./pageView/ScatterChart.vue";
 import NodesList from "./pageView/NodesList.vue";
-import SelectedInfoBoard from "./pageView/SelectedInfoBoard.vue";
+import SelectedInfoBoard from "./pageView/SelectedInfoBoard";
 import EventOption from "./pageView/EventOption.vue";
 import ChartOption from "./pageView/ChartOption.vue";
 import MarkedViews from "./pageView/MarkedViews";

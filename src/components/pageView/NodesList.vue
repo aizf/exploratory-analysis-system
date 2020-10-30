@@ -14,6 +14,8 @@
         brushing: item.brushing,
       }"
       @click="clickSelect(item)"
+      @mouseover="item.current = true"
+      @mouseout="item.current = false"
       :style="{ color: classificationPalette[item.group || 0] }"
     >
       {{ item.id }}
@@ -70,6 +72,7 @@ export default {
   display: flex;
   align-items: center;
   cursor: pointer;
+  text-overflow: ellipsis;
 }
 div {
   .selected {

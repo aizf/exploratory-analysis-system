@@ -4,6 +4,7 @@
       v-for="node in nodes"
       :class="{
         node: true,
+        current: node.current,
         selected: node.selected,
         mouseover_show: node.mouseover_show,
         brushing: node.brushing,
@@ -26,6 +27,7 @@
 </template>
 
 <script>
+import eventBus from "./eventBus.js";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import throttle from "lodash/throttle";
@@ -55,6 +57,8 @@ export default {
   mounted() {
     console.log("ForceChart-Nodes", this);
     this.initDrag();
+    eventBus.$on("board1-mouseover", this.mouseover);
+    eventBus.$on("board1-mouseout", this.mouseout);
   },
   methods: {
     clickSelect(d) {
@@ -226,6 +230,14 @@ export default {
   &.mouseover_show {
     fill-opacity: 1;
     stroke-opacity: 1;
+  }
+  &.current {
+    stroke: var(--primary);
+    stroke-width: 15;
+    stroke-opacity: 0.5;
+  }
+  &.emphasis {
+    r: 30;
   }
 }
 

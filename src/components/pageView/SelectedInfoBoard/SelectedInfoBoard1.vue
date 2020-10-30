@@ -5,11 +5,14 @@
 // import Vue from "vue";
 import { mapState, mapGetters } from "vuex";
 import echarts from "echarts";
+import eventBus from "../ForceChart/eventBus.js";
 // import * as _ from "lodash";
 export default {
   name: "SelectedInfoBoard1",
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
-  props: {},
+  props: {
+    items: Array,
+  },
   data() {
     return {
       // option: {},
@@ -19,12 +22,9 @@ export default {
     ...mapState({
       nodeFields: (state) => state.data.nodeFields,
       uidLinksMap: (state) => state.data.uidMaps.uidLinksMap,
+      idNodeMap: (state) => state.data.uidMaps.idNodeMap,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
-    items() {
-      const mouseoverNodes = this.nodes.filter((d) => d.mouseover_show);
-      return mouseoverNodes;
-    },
     xAxis() {
       return {
         type: "category",
@@ -43,16 +43,18 @@ export default {
           show: true,
           position: "top",
         },
-        backgroundStyle: {
-          color: "rgba(220, 220, 220, 0.8)",
-        },
-        data: this.items.map((d) => this.uidLinksMap[d.uid].length),
+        data: this.items.map((d) => ({
+          value: this.uidLinksMap[d.uid].length,
+          itemStyle: {
+            color: this.classificationPalette[d.group || 0],
+          },
+        })),
       };
     },
     option() {
       return {
-        grid:{
-          top:20
+        grid: {
+          top: 20,
         },
         backgroundColor: this.backgroundColor,
         textStyle: {
@@ -80,6 +82,20 @@ export default {
         deep: true,
       }
     );
+    this.chart.on("click", (params) => {
+      const node = this.idNodeMap[params.name];
+      node.selected = !node.selected;
+    });
+    this.chart.on("mouseover", (params) => {
+      const node = this.idNodeMap[params.name];
+      node.current = true;
+      eventBus.$emit("board1-mouseover", node);
+    });
+    this.chart.on("mouseout", (params) => {
+      const node = this.idNodeMap[params.name];
+      node.current = false;
+      eventBus.$emit("board1-mouseout", node);
+    });
   },
   methods: {},
   watch: {},

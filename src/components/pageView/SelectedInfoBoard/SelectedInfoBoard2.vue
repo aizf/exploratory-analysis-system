@@ -9,7 +9,9 @@ import echarts from "echarts";
 export default {
   name: "SelectedInfoBoard2",
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
-  props: {},
+  props: {
+    items: Array,
+  },
   data() {
     return {
       // option: {},
@@ -21,10 +23,6 @@ export default {
       uidLinksMap: (state) => state.data.uidMaps.uidLinksMap,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
-    items() {
-      const mouseoverNodes = this.nodes.filter((d) => d.mouseover_show);
-      return mouseoverNodes;
-    },
     seriesData() {
       const data = [];
       const dict = {};
@@ -87,7 +85,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .SelectedInfoBoard2 {
-  width: 600px;
+  width: 300px;
   height: 400px;
 }
 </style>

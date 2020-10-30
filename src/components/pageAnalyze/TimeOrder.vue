@@ -55,14 +55,14 @@ Vue.use(Select);
 // import store from "@/store/";
 import { mapState } from "vuex";
 import echarts from "echarts";
-import {
-  backgroundColor,
-  contrastColor,
-  classificationPalette,
-  classificationPalette2,
-} from "@/config/color";
 export default {
   name: "TimeOrder",
+  inject: [
+    "backgroundColor",
+    "contrastColor",
+    "classificationPalette",
+    "classificationPalette2",
+  ],
   data() {
     return {
       chart: {},
@@ -128,7 +128,7 @@ export default {
         return arr.includes(op) ? "Yes" : "No";
       }
 
-      return this.recordset.links.map((d,i) => {
+      return this.recordset.links.map((d, i) => {
         const op = d.operation;
         return [d.time, op, i, adjustView(op), switchView(op)];
       });
@@ -140,12 +140,6 @@ export default {
         tooltip: this.dimensions.map((d) => d.name),
       };
     },
-  },
-  created() {
-    this.contrastColor = contrastColor;
-    this.backgroundColor = backgroundColor;
-    this.classificationPalette = classificationPalette;
-    this.classificationPalette2 = classificationPalette2;
   },
   mounted() {
     console.log("TimeOrder", this);

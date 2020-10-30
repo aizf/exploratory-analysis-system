@@ -205,6 +205,7 @@ export default {
         this.$set(d, "uid", i + "");
         this.$set(d, "x", 0);
         this.$set(d, "y", 0);
+        this.$set(d, "current", false);
         this.$set(d, "selected", false);
         this.$set(d, "mouseover_show", false);
         this.$set(d, "brushing", false);

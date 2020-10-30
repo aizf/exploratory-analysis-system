@@ -1,7 +1,8 @@
 <template>
   <div class="SelectedInfoBoard">
-    <SelectedInfoBoard1 />
-    <SelectedInfoBoard2 />
+    <SelectedInfoBoard1 :items="selectedNodes" />
+    <SelectedInfoBoard2 :items="selectedNodes" />
+    <MiniForce :nodes="selectedNodes" :width="300" :height="400" />
   </div>
 </template>
 <script>
@@ -9,6 +10,7 @@
 import { mapState, mapGetters } from "vuex";
 import SelectedInfoBoard1 from "./SelectedInfoBoard1";
 import SelectedInfoBoard2 from "./SelectedInfoBoard2";
+import MiniForce from "./MiniForce";
 import echarts from "echarts";
 // import * as _ from "lodash";
 export default {
@@ -16,7 +18,8 @@ export default {
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
   components: {
     SelectedInfoBoard1,
-    SelectedInfoBoard2
+    SelectedInfoBoard2,
+    MiniForce,
   },
   props: {},
   data() {
@@ -27,24 +30,29 @@ export default {
       nodeFields: (state) => state.data.nodeFields,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
-    items() {
-      const mouseoverNodes = this.nodes.filter((d) => d.mouseover_show);
-      return mouseoverNodes.length ? mouseoverNodes : this.nodes;
+    selectedNodes() {
+      const nodes = this.nodes.filter((d) => d.selected);
+      return nodes;
+    },
+    selectedLinks() {
+      const nodes = this.nodes.filter((d) => d.selected);
+      return nodes;
     },
   },
   mounted() {
     console.log("SelectedInfoBoard", this);
   },
-  methods: {
-    clickSelect(node) {
-      node.selected = !node.selected;
-    },
-  },
+  methods: {},
 };
 </script>
 <style lang="scss" scoped>
 .SelectedInfoBoard {
   width: 600px;
   height: 800px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.SelectedInfoBoard > * {
+  flex: 0 0 auto;
 }
 </style>
