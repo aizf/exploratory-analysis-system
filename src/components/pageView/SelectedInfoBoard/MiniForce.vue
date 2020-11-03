@@ -70,7 +70,7 @@ export default {
   mounted() {
     const svg = d3
       .select(this.$el)
-      .attr("viewBox", [0, 0, this.width, this.height]);
+      .attr("viewBox", [0, 0, this.width * 2, this.height * 2]);
 
     this.vis = svg.select("g");
 
@@ -82,11 +82,6 @@ export default {
     this.linkG = this.vis.select("g.links");
     this.nodeG = this.vis.select("g.nodes");
   },
-
-  activated() {},
-
-  deactivated() {},
-
   methods: {},
   watch: {},
 };

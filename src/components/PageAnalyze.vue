@@ -86,7 +86,7 @@ export default {
       if (!newVal) return;
       axios({
         method: "post",
-        url: "//127.0.0.1:3000/p/",
+        url: "//127.0.0.1:3000/p/frequent_item",
         data: this.recordset.links,
       }).then((res) => {
         const data = res.data;
