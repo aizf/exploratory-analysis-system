@@ -238,6 +238,7 @@ export default {
         scatter: true,
       });
       store.commit("updateVisualData", visualData);
+      store.commit("updateSourceNum", visualData.nodes.length);
       store.dispatch("resetAll");
 
       this.$message.success("Data loaded.");

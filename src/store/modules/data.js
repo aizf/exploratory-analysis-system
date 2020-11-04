@@ -1,18 +1,22 @@
 const data = {
     state: {
         sourceData: "",
+        sourceNum:0,
         visualData: {},
         nodeFields: {},
         uidMaps: {
             idNodeMap: {},  // id映射对应节点
-            uidNodeMap: [],  // id映射对应节点
-            uidLinksMap: [], // id映射对应边
-            uidLinkedNodesMap: [],// id映射连接的所有节点
+            uidNodeMap: [],  // uid映射对应节点
+            uidLinksMap: [], // uid映射对应边
+            uidLinkedNodesMap: [],// uid映射连接的所有节点
         }
     },
     mutations: {
         updateSourceData: (state, data) => {
             state.sourceData = data;
+        },
+        updateSourceNum: (state, data) => {
+            state.sourceNum = data;
         },
         updateVisualData: (state, data) => {
             state.visualData = data;

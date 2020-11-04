@@ -77,10 +77,10 @@ export default {
   // },
   computed: {
     ...mapState({
-      sourceData: (state) => state.data.sourceData,
+      sourceNum: (state) => state.data.sourceNum,
     }),
     nodesTotalNum() {
-      return JSON.parse(this.sourceData).nodes.length;
+      return this.sourceNum;
     },
     currentNode() {
       return this.$parent.nodesDict[this.currentUUID];

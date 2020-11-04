@@ -51,6 +51,9 @@
             >
           </div>
           <div class="view-tools-item">
+           <ClusterOption />
+          </div>
+          <div class="view-tools-item">
             <a-button
               type="primary"
               size="small"
@@ -127,6 +130,7 @@ import NodesList from "./pageView/NodesList.vue";
 import SelectedInfoBoard from "./pageView/SelectedInfoBoard";
 import EventOption from "./pageView/EventOption.vue";
 import ChartOption from "./pageView/ChartOption.vue";
+import ClusterOption from "./pageView/ClusterOption.vue";
 import MarkedViews from "./pageView/MarkedViews";
 import { classificationPalette } from "@/config/color";
 export default {
@@ -139,6 +143,7 @@ export default {
     SelectedInfoBoard,
     EventOption,
     ChartOption,
+    ClusterOption,
     MarkedViews,
   },
   data() {
