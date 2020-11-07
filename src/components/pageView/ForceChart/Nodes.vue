@@ -2,8 +2,8 @@
   <g class="nodes">
     <circle
       v-for="node in nodes"
+      class="node"
       :class="{
-        node: true,
         current: node.current,
         selected: node.selected,
         mouseover_show: node.mouseover_show,
@@ -11,15 +11,11 @@
         invertBrushing: node.invertBrushing,
       }"
       filter="url(#shadow)"
+      :r="fixedNodeSize"
+      :fill="fillColor(node.group)"
       @click="clickSelect(node)"
       @mouseover="mouseover(node)"
       @mouseout="mouseout(node)"
-      :style="{
-        r: fixedNodeSize,
-        cx: node.x,
-        cy: node.y,
-        fill: fillColor(node.group),
-      }"
       :ref="node.uid"
       :key="node.uid"
     />
@@ -47,10 +43,12 @@ export default {
     ...mapState({
       visualData: (state) => state.data.visualData,
       uidMaps: (state) => state.data.uidMaps,
+      uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
     }),
     ...mapGetters(["nodesNumber", "beforeEvent"]),
     fixedNodeSize() {
-      return this.chartOption.node.nodeSize / this.transform.k;
+      return this.chartOption.node.nodeSize;
+      // return this.chartOption.node.nodeSize / this.transform.k;
     },
   },
   created() {},
@@ -59,6 +57,7 @@ export default {
     this.initDrag();
     eventBus.$on("board1-mouseover", this.mouseover);
     eventBus.$on("board1-mouseout", this.mouseout);
+    this.$on("setPostion", this.setPostion);
   },
   methods: {
     clickSelect(d) {
@@ -79,11 +78,9 @@ export default {
     },
     mouseover(node) {
       if (!this.eventOption.visMouseover || this.isDraging) return;
-      [
-        this.$el,
-        this.$el.previousElementSibling,
-        this.$el.nextElementSibling,
-      ].forEach((d) => {
+
+      // nodesG和linksG
+      [this.$el, this.$el.previousElementSibling].forEach((d) => {
         d.classList.add("mouseover");
       });
       this.beforeEvent("mouseover", this);
@@ -111,11 +108,7 @@ export default {
     },
     mouseout(node) {
       if (!this.eventOption.visMouseover || this.isDraging) return;
-      [
-        this.$el,
-        this.$el.previousElementSibling,
-        this.$el.nextElementSibling,
-      ].forEach((d) => {
+      [this.$el, this.$el.previousElementSibling].forEach((d) => {
         d.classList.remove("mouseover");
       });
       const displayNodes = [...this.uidMaps.uidLinkedNodesMap[node.uid], node];
@@ -154,7 +147,11 @@ export default {
           d.y = y;
           d.fx = x;
           d.fy = y;
+          const dom = this.$refs[d.uid][0];
+          dom.setAttribute("cx", x);
+          dom.setAttribute("cy", y);
           this.$emit("alterWorkerData", [d]);
+          eventBus.$emit("dragging");
           console.log("dragging");
         };
         return throttle(fn, 16.67, { leading: true, trailing: false });
@@ -200,8 +197,24 @@ export default {
     fillColor(...args) {
       return this.$parent.fillColor.apply(this.$parent, args);
     },
+    setPostion() {
+      for (let node of this.nodes) {
+        if ("fx" in node) continue;
+        const { uid, x, y } = node;
+        const dom = this.$refs[uid][0];
+        dom.setAttribute("cx", x);
+        dom.setAttribute("cy", y);
+      }
+    },
   },
-  watch: {},
+  watch: {
+    nodes: {
+      handler() {
+        console.log("nodes change");
+      },
+      deep: true,
+    },
+  },
 };
 </script>
 <style lang="scss" scope>
@@ -212,9 +225,9 @@ export default {
 .node {
   pointer-events: all;
   stroke: transparent;
+  cursor: pointer;
 
   transition: fill 0.6s ease, fill-opacity 0.3s ease, stroke-opacity 0.3s ease;
-  /* cx 0.016s linear, cy 0.016s linear; */
 
   &.selected {
     /* fill: red; */

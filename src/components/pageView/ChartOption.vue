@@ -15,10 +15,10 @@
         <div class="chartOption">
           <span class="vSubTitle">simulation</span>
           <div class="vMenu">
-            <span class="vSubMenu">run</span>
+            <span class="vSubMenu">run(R)</span>
             <a-switch
               v-model="chartOption.simulation.run"
-              style="margin-left: 40%"
+              style="margin-left: 33%"
             />
             <span class="vSubMenu">alphaTarget</span>
             <a-input-number
@@ -98,6 +98,12 @@ export default {
   created() {},
   mounted() {
     console.log("", this);
+    document.addEventListener("keydown", (e) => {
+      if (e && e.keyCode == 82) {
+        // 按 R
+        this.chartOption.simulation.run = !this.chartOption.simulation.run;
+      }
+    });
   },
   methods: {
     changeChart(key) {

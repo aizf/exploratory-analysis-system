@@ -18,7 +18,7 @@
           <a-input
             v-for="(val, key) in params"
             :addon-before="key"
-            :default-value="val"
+            v-model="option[algorithm][key]"
             :key="algorithm + key"
           />
         </a-tab-pane>
@@ -36,6 +36,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import axios from "axios";
+import debounce from "lodash/debounce";
 export default {
   name: "ClusterOption",
   data() {
@@ -70,13 +71,19 @@ export default {
     },
     toCluster() {
       this.loading = true;
+      const params = this.option[this.tab];
+      for (let [key, val] of Object.entries(params)) {
+        if (!isNaN(val)) {
+          params[key] = +val;
+        }
+      }
       axios({
         method: "post",
         url: "//127.0.0.1:3000/p/cluster",
         data: {
           algorithm: this.tab,
           nodes: this.nodes,
-          params: this.option[this.tab],
+          params: params,
         },
       }).then((res) => {
         const { data } = res;

@@ -16,6 +16,7 @@
     </text>
     <rect
       class="zoom"
+      :class="{ active: eventOption.visZoom }"
       x="0"
       y="0"
       :width="width"
@@ -23,7 +24,7 @@
       ref="zoomDom"
     />
     <g class="vis">
-      <Links :links="links" :chartOption="chartOption" />
+      <Links :links="links" :chartOption="chartOption" ref="links" />
       <Nodes
         :nodes="nodes"
         :links="links"
@@ -32,15 +33,15 @@
         :chartOption="chartOption"
         @changeWorkerData="changeWorkerData"
         @alterWorkerData="alterWorkerData"
+        ref="nodes"
       />
-      <Texts :nodes="nodes" :visShowIds="eventOption.visShowIds" />
+      <Texts :nodes="nodes" :visShowIds="eventOption.visShowIds" ref="texts" />
     </g>
     <g class="base-brush brush" v-show="eventOption.visBrush" />
     <g class="base-brush invert-brush" v-show="eventOption.visInvertBrush" />
   </svg>
 </template>
 <script>
-import Vue from "vue";
 import Links from "./Links.vue";
 import Nodes from "./Nodes.vue";
 import Texts from "./Texts.vue";
@@ -49,11 +50,6 @@ import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import throttle from "lodash/throttle";
 
-import {
-  backgroundColor,
-  contrastColor,
-  classificationPalette,
-} from "@/config/color";
 import Worker from "./simulation.worker.cjs";
 // import { mapState } from "vuex";
 // import * as _ from "lodash";
@@ -64,6 +60,7 @@ export default {
     Nodes,
     Texts,
   },
+  inject: ["backgroundColor", "contrastColor", "classificationPalette"],
   props: {
     eventOption: Object,
     chartOption: Object,
@@ -89,10 +86,7 @@ export default {
       "beforeEvent",
     ]),
   },
-  created() {
-    this.contrastColor = contrastColor;
-    this.backgroundColor = backgroundColor;
-  },
+  created() {},
   mounted() {
     // console.log(d3.version);
     // console.log(_.VERSION);
@@ -271,37 +265,51 @@ export default {
       svg.select("g.invert-brush").call(invertBrush);
     },
     initWorker() {
+      const render = throttle((nodes) => {
+        for (let node of nodes) {
+          if ("fx" in node) continue;
+          const { uid, x, y } = node;
+          try {
+            this.uidNodeMap[uid].x = x;
+            this.uidNodeMap[uid].y = y;
+          } catch (e) {
+            // 处理脏数据
+            if (e instanceof TypeError) return;
+            throw e;
+          }
+        }
+        this.$refs.nodes.$emit("setPostion");
+        this.$refs.links.$emit("setPostion");
+        // this.$refs.texts.$emit("setPostion", nodes);
+      }, 16.67);
+
       if (!this.worker) {
         this.worker = new Worker();
+
         this.worker.addEventListener("message", (e) => {
+          // 立即暂停
+          if (!this.chartOption.simulation.run) return;
+
           if (e.data === "tickEnd") {
             this.chartOption.simulation.run = false;
             return;
           }
           // console.log("worker-message", e);
           const { nodes } = e.data;
-          nodes.forEach((d) => {
-            // if ("fx" in d) console.log(d);
-            if ("fx" in d) return;
-            try {
-              this.uidNodeMap[d.uid].x = d.x;
-              this.uidNodeMap[d.uid].y = d.y;
-            } catch (e) {
-              // 处理脏数据
-              if (e instanceof TypeError) return;
-              throw e;
-            }
-          });
+          render(nodes);
         });
+
         this.$watch(
           () => {
             return this.nodes.map((d) => d.uid);
           },
           () => {
+            console.log("watch");
             this.changeWorkerData();
           }
         );
       }
+
       this.worker.postMessage({
         init: {
           chartOption: this.chartOption,
@@ -311,6 +319,7 @@ export default {
           links: this.calcLinks(),
         },
       });
+
       this.chartOption.simulation.run = true;
     },
     calcNodes() {
@@ -355,13 +364,15 @@ export default {
       });
     },
     fillColor(group) {
-      return classificationPalette[group || 0];
+      return this.classificationPalette[group || 0];
     },
     test() {},
   },
   watch: {
     chartOption: {
       handler: function () {
+        // 同步视图和worker中内容的状态
+        if (this.chartOption.simulation.run) this.changeWorkerData();
         this.changeWorkerOption();
       },
       deep: true,
@@ -387,6 +398,9 @@ export default {
 rect.zoom {
   pointer-events: all;
   opacity: 0;
+  &.active {
+    cursor: grab;
+  }
 }
 
 .text {

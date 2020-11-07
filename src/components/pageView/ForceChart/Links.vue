@@ -3,20 +3,18 @@
     <line
       v-for="link in links"
       :class="{ link: true, mouseover_show: link.mouseover_show }"
-      :x1="link.source.x"
-      :y1="link.source.y"
-      :x2="link.target.x"
-      :y2="link.target.y"
       :style="{
         stroke: chartOption.link.color,
         'stroke-width': fixedLinkWidth,
       }"
       :key="link.uid"
+      :ref="link.uid"
     />
   </g>
 </template>
 
 <script>
+import eventBus from "./eventBus.js";
 export default {
   name: "Links",
   props: {
@@ -37,11 +35,25 @@ export default {
   created() {},
   mounted() {
     console.log("ForceChart-Links", this);
+    this.$on("setPostion", this.setPostion);
+    eventBus.$on("dragging", this.setPostion);
   },
   activated() {},
   methods: {
     fillColor(...args) {
       return this.$parent.fillColor.apply(this.$parent, args);
+    },
+    setPostion() {
+      // console.log("setPostion");
+      for (let link of this.links) {
+        const { x: x1, y: y1 } = link.source;
+        const { x: x2, y: y2 } = link.target;
+        const dom = this.$refs[link.uid][0];
+        dom.setAttribute("x1", x1);
+        dom.setAttribute("y1", y1);
+        dom.setAttribute("x2", x2);
+        dom.setAttribute("y2", y2);
+      }
     },
   },
   watch: {},

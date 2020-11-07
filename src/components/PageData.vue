@@ -203,8 +203,7 @@ export default {
       const idNodeMap = {};
       visualData.nodes.forEach((d, i) => {
         this.$set(d, "uid", i + "");
-        this.$set(d, "x", 0);
-        this.$set(d, "y", 0);
+        "group" in d || this.$set(d, "group", 0);
         this.$set(d, "current", false);
         this.$set(d, "selected", false);
         this.$set(d, "mouseover_show", false);

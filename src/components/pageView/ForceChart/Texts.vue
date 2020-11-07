@@ -1,5 +1,5 @@
 <template>
-  <g class="texts" v-show="visShowIds">
+  <g class="texts" v-if="visShowIds">
     <text
       v-for="node in nodes"
       :class="{ text: true, mouseover_show: node.mouseover_show }"
