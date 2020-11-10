@@ -1,5 +1,10 @@
 <template>
-  <svg class="ForceChart container" :width="width" :height="height">
+  <WebGLChart
+    :eventOption="eventOption"
+    :chartOption="chartOption"
+    ref="WebGLChart"
+  />
+  <!-- <svg class="ForceChart container" :width="width" :height="height">
     <defs>
       <filter id="shadow">
         <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
@@ -39,9 +44,10 @@
     </g>
     <g class="base-brush brush" v-show="eventOption.visBrush" />
     <g class="base-brush invert-brush" v-show="eventOption.visInvertBrush" />
-  </svg>
+  </svg> -->
 </template>
 <script>
+import WebGLChart from "./WebGLChart";
 import Links from "./Links.vue";
 import Nodes from "./Nodes.vue";
 import Texts from "./Texts.vue";
@@ -56,9 +62,10 @@ import Worker from "./simulation.worker.cjs";
 export default {
   name: "ForceChart",
   components: {
-    Links,
-    Nodes,
-    Texts,
+    WebGLChart,
+    // Links,
+    // Nodes,
+    // Texts,
   },
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
   props: {
@@ -92,16 +99,35 @@ export default {
     // console.log(_.VERSION);
     // console.log(d3);
     console.log("ForceChart", this);
-    const svg = d3
-      .select(this.$el)
-      .attr("viewBox", [0, 0, this.width, this.height]);
-    const zoomDom = svg.select("rect.zoom");
-    this.vis = svg.select("g.vis");
+    // const svg = d3
+    //   .select(this.$el)
+    //   .attr("viewBox", [0, 0, this.width, this.height]);
+    // const zoomDom = svg.select("rect.zoom");
+    // this.vis = svg.select("g.vis");
     // console.log(svg, zoomDom, this.vis);
 
-    this.initZoom(zoomDom);
-    this.initBrush(svg, zoomDom);
+    // this.initZoom(zoomDom);
+    // this.initBrush(svg, zoomDom);
     this.initWorker();
+
+    const render = () => {
+      console.log("render");
+
+      // TODO，不用emit，貌似使requestAnimationFrame生效?
+      this.$refs.WebGLChart.setPostion();
+      // this.$refs.nodes.$emit("setPostion");
+      // this.$refs.links.$emit("setPostion");
+      // this.$refs.texts.$emit("setPostion", nodes);
+
+      if (this.chartOption.simulation.run) requestAnimationFrame(render);
+    };
+    this.$watch(
+      "chartOption.simulation.run",
+      function (newVal) {
+        if (newVal) render();
+      },
+      { immediate: true }
+    );
   },
   activated() {
     if (this.needUpdate) {
@@ -117,9 +143,9 @@ export default {
         return;
       }
       const t = d3.zoomIdentity.translate(0, 0).scale(1);
-      this.vis.attr("transform", t);
+      // this.vis.attr("transform", t);
       this.transform = { ...t };
-      this.$refs.zoomDom.__zoom = t;
+      // this.$refs.zoomDom.__zoom = t;
 
       this.initWorker();
     },
@@ -265,7 +291,7 @@ export default {
       svg.select("g.invert-brush").call(invertBrush);
     },
     initWorker() {
-      const render = throttle((nodes) => {
+      const handleMessage = throttle((nodes) => {
         for (let node of nodes) {
           if ("fx" in node) continue;
           const { uid, x, y } = node;
@@ -278,15 +304,13 @@ export default {
             throw e;
           }
         }
-        this.$refs.nodes.$emit("setPostion");
-        this.$refs.links.$emit("setPostion");
-        // this.$refs.texts.$emit("setPostion", nodes);
       }, 16.67);
 
       if (!this.worker) {
         this.worker = new Worker();
 
         this.worker.addEventListener("message", (e) => {
+          // console.log("worker message");
           // 立即暂停
           if (!this.chartOption.simulation.run) return;
 
@@ -296,7 +320,7 @@ export default {
           }
           // console.log("worker-message", e);
           const { nodes } = e.data;
-          render(nodes);
+          handleMessage(nodes);
         });
 
         this.$watch(

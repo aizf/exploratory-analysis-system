@@ -146,17 +146,7 @@ export default {
   /* filter:drop-shadow(-25px 25px 25px rgba(0, 243, 53, 0.7)); */
 }
 
-.StaticForce circle.display {
-  /**/
-}
-
 .StaticForce circle.selected {
-  /* fill: red; */
-  stroke: red;
-  stroke-width: 0.8;
-}
-
-.StaticForce circle.brushing {
   /* fill: red; */
   stroke: red;
   stroke-width: 0.8;

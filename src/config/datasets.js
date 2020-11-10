@@ -37,6 +37,16 @@ const datasets = {
             "type": { alias: "type", type: "cat" }
         }
     },
+    // "epinions_test": {
+    //     name: "epinions_test",
+    //     fileName: "epinions.json",
+    //     dataType: "node-link",
+    //     nodeFields: {
+    //         "id": { alias: "id", type: "cat" },
+    //         "group": { alias: "group", type: "cat" },
+    //         "type": { alias: "type", type: "cat" }
+    //     }
+    // },
     // Hierarchical
     "readme": {
         name: "readme",

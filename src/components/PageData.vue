@@ -194,22 +194,20 @@ export default {
             });
         },
       };
-
-      // the last step
     },
     changeState(visualData) {
       this.$set(visualData, "marked", false);
       const uidNodeMap = new Array(visualData.nodes.length);
       const idNodeMap = {};
       visualData.nodes.forEach((d, i) => {
-        this.$set(d, "uid", i + "");
         "group" in d || this.$set(d, "group", 0);
         this.$set(d, "current", false);
         this.$set(d, "selected", false);
         this.$set(d, "mouseover_show", false);
         this.$set(d, "brushing", false);
         this.$set(d, "invertBrushing", false);
-        this.$set(d, "attentionTimes", 0);
+        d["uid"] = i + "";
+        d["attentionTimes"] = 0;
         uidNodeMap[d.uid] = d;
         idNodeMap[d.id] = d;
       });

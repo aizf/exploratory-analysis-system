@@ -7,14 +7,10 @@ import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as PIXI from "pixi.js";
 
-import {
-  backgroundColor,
-  contrastColor,
-  classificationPalette,
-} from "@/config/color";
 export default {
   name: "WebGLChart",
   components: {},
+  inject: ["contrastColor", "backgroundColor", "classificationPalette"],
   props: {
     eventOption: Object,
     chartOption: Object,
@@ -33,11 +29,11 @@ export default {
       needUpdate: (state) => state.view.chartsNeedUpdate.force,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber", "linksNumber"]),
+    lineColor() {
+      return PIXI.utils.string2hex("#aaaaaa");
+    },
   },
-  created() {
-    this.contrastColor = contrastColor;
-    this.backgroundColor = backgroundColor;
-  },
+  created() {},
   mounted() {
     console.log("WebGLChart", this);
     this.app = new PIXI.Application({
@@ -45,37 +41,36 @@ export default {
       height: this.height,
       antialias: true,
     });
-    this.app.renderer.backgroundColor = PIXI.utils.string2hex(backgroundColor);
+    this.app.renderer.backgroundColor = PIXI.utils.string2hex(
+      this.backgroundColor
+    );
     this.$el.appendChild(this.app.view);
 
     const vis = new PIXI.Container();
     this.nodesG = new PIXI.Container();
     this.linksG = new PIXI.Container();
     this.textsG = new PIXI.Container();
+    // this.nodesG.zIndex = 10;
+    // this.linksG.zIndex = 9;
+    // this.textsG.zIndex = 11;
     console.log(vis);
-    vis.addChild(this.nodesG, this.linksG, this.textsG);
+    vis.addChild(this.linksG, this.nodesG, this.textsG);
     this.app.stage.addChild(vis);
 
+    // nodes数量变化时
     this.$watch(
-      "nodes",
+      () => this.nodes.map((d) => d.uid),
       function () {
+        this.nodesG.removeChildren();
         this.nodes.forEach((node) => {
           this.nodesG.addChild(this.circle(node));
         });
-      },
-      { immediate: true }
-    );
-    this.$watch(
-      "nodes",
-      function () {
-        // console.log("watch node");
-        this.nodesG.children.forEach((circle) => {
-          const node = circle.__data__;
-          circle.x = node.x;
-          circle.y = node.y;
+        this.linksG.removeChildren();
+        this.links.forEach((link) => {
+          this.linksG.addChild(this.line(link));
         });
       },
-      { immediate: true, deep: true }
+      { immediate: true }
     );
   },
   activated() {},
@@ -100,8 +95,8 @@ export default {
     circle(node) {
       const { x, y, group } = node;
       const circle = new PIXI.Graphics();
-      circle.beginFill(this.fillColor(group)).drawCircle(x, y, 4.5).endFill();
       circle.__data__ = node;
+      circle.beginFill(this.fillColor(group)).drawCircle(x, y, 4.5).endFill();
       circle.interactive = true;
       circle.on("click", function (...e) {
         console.log(e);
@@ -109,8 +104,39 @@ export default {
       });
       return circle;
     },
+    line(link) {
+      const line = new PIXI.Graphics();
+      line.__data__ = link;
+      return line;
+    },
     fillColor(group) {
-      return PIXI.utils.string2hex(classificationPalette[group || 0]);
+      return PIXI.utils.string2hex(this.classificationPalette[group || 0]);
+    },
+    setPostion() {
+      this.nodesG.children.forEach((circle) => {
+        const node = circle.__data__;
+        circle.x = node.x;
+        circle.y = node.y;
+      });
+      this.linksG.children.forEach((line) => {
+        const link = line.__data__;
+        const {
+          source: { x: x1 },
+          source: { y: y1 },
+          target: { x: x2 },
+          target: { y: y2 },
+        } = link;
+        line.clear();
+        line.lineStyle({
+          width: this.chartOption.link.width,
+          color: this.lineColor,
+          alpha: 0.2,
+          native: true,
+        });
+        line.moveTo(x1, y1);
+        line.lineTo(x2, y2);
+        line.endFill();
+      });
     },
   },
   watch: {},

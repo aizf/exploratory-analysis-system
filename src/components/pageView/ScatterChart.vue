@@ -190,12 +190,6 @@ export default {
   stroke-width: 1.5;
 }
 
-.ScatterChart circle.brushing {
-  /* fill: red; */
-  stroke: red;
-  stroke-width: 1.5;
-}
-
 .ScatterChart circle.invertBrushing {
   stroke: none;
   stroke-width: 0px;

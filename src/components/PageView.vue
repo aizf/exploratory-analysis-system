@@ -51,7 +51,7 @@
             >
           </div>
           <div class="view-tools-item">
-           <ClusterOption />
+            <ClusterOption />
           </div>
           <div class="view-tools-item">
             <a-button
@@ -80,9 +80,8 @@
               @changeChartOption="handleChartOption"
             ></component>
           </keep-alive>
-          <SelectedInfoBoard />
-          <NodesList />
-          <!-- <WebGLChart :eventOption="eventOption" :chartOption="chartOption" /> -->
+          <!-- <SelectedInfoBoard /> -->
+          <!-- <NodesList /> -->
         </div>
       </a-layout-content>
     </a-layout>
@@ -124,7 +123,6 @@ import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 // import * as d3 from "d3";
 import ForceChart from "./pageView/ForceChart";
-import WebGLChart from "./pageView/ForceChart/WebGLChart";
 import ScatterChart from "./pageView/ScatterChart.vue";
 import NodesList from "./pageView/NodesList.vue";
 import SelectedInfoBoard from "./pageView/SelectedInfoBoard";
@@ -137,7 +135,6 @@ export default {
   name: "PageView",
   components: {
     ForceChart,
-    // WebGLChart,
     ScatterChart,
     NodesList,
     SelectedInfoBoard,

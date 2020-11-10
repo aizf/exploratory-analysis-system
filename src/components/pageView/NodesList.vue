@@ -11,7 +11,6 @@
         item: true,
         selected: item.selected,
         mouseover_show: item.mouseover_show,
-        brushing: item.brushing,
       }"
       @click="clickSelect(item)"
       @mouseover="item.current = true"
