@@ -1,50 +1,63 @@
 <template>
-  <WebGLChart
-    :eventOption="eventOption"
-    :chartOption="chartOption"
-    ref="WebGLChart"
-  />
-  <!-- <svg class="ForceChart container" :width="width" :height="height">
-    <defs>
-      <filter id="shadow">
-        <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
-      </filter>
-    </defs>
-    <text x="0" y="0" dx="0.5em" dy="1.5em" class="text info">
-      UUID : {{ currentUUID }}
-    </text>
-    <text x="0" y="0" dx="0.5em" dy="3.0em" class="text info">
-      Nodes : {{ nodesNumber }}
-    </text>
-    <text x="0" y="0" dx="0.5em" dy="4.5em" class="text info">
-      Edges : {{ linksNumber }}
-    </text>
-    <rect
-      class="zoom"
-      :class="{ active: eventOption.visZoom }"
-      x="0"
-      y="0"
+  <div
+    class="container"
+    :style="{ width: width + 'px', height: height + 'px' }"
+  >
+    <WebGLChart
+      class="WebGLChart"
+      :eventOption="eventOption"
+      :chartOption="chartOption"
       :width="width"
       :height="height"
-      ref="zoomDom"
+      ref="WebGLChart"
     />
-    <g class="vis">
-      <Links :links="links" :chartOption="chartOption" ref="links" />
-      <Nodes
-        :nodes="nodes"
-        :links="links"
-        :transform="transform"
-        :eventOption="eventOption"
-        :chartOption="chartOption"
-        @changeWorkerData="changeWorkerData"
-        @alterWorkerData="alterWorkerData"
-        ref="nodes"
+    <svg class="ForceChart" :width="width" :height="height" ref="svg">
+      <defs>
+        <filter id="shadow">
+          <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
+        </filter>
+      </defs>
+      <text x="0" y="0" dx="0.5em" dy="1.5em" class="text info">
+        UUID : {{ currentUUID }}
+      </text>
+      <text x="0" y="0" dx="0.5em" dy="3.0em" class="text info">
+        Nodes : {{ nodesNumber }}
+      </text>
+      <text x="0" y="0" dx="0.5em" dy="4.5em" class="text info">
+        Edges : {{ linksNumber }}
+      </text>
+      <rect
+        class="zoom"
+        :class="{ active: eventOption.visZoom }"
+        x="0"
+        y="0"
+        :width="width"
+        :height="height"
+        v-show="eventOption.visZoom"
+        ref="zoomDom"
       />
-      <Texts :nodes="nodes" :visShowIds="eventOption.visShowIds" ref="texts" />
-    </g>
-    <g class="base-brush brush" v-show="eventOption.visBrush" />
-    <g class="base-brush invert-brush" v-show="eventOption.visInvertBrush" />
-  </svg> -->
+      <g class="vis">
+        <!-- <Links :links="links" :chartOption="chartOption" ref="links" />
+        <Nodes
+          :nodes="nodes"
+          :links="links"
+          :transform="transform"
+          :eventOption="eventOption"
+          :chartOption="chartOption"
+          @changeWorkerData="changeWorkerData"
+          @alterWorkerData="alterWorkerData"
+          ref="nodes"
+        /> -->
+        <Texts
+          :nodes="nodes"
+          :visShowIds="eventOption.visShowIds"
+          ref="texts"
+        />
+      </g>
+      <g class="base-brush brush" v-show="eventOption.visBrush" />
+      <g class="base-brush invert-brush" v-show="eventOption.visInvertBrush" />
+    </svg>
+  </div>
 </template>
 <script>
 import WebGLChart from "./WebGLChart";
@@ -65,7 +78,7 @@ export default {
     WebGLChart,
     // Links,
     // Nodes,
-    // Texts,
+    Texts,
   },
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
   props: {
@@ -99,35 +112,16 @@ export default {
     // console.log(_.VERSION);
     // console.log(d3);
     console.log("ForceChart", this);
-    // const svg = d3
-    //   .select(this.$el)
-    //   .attr("viewBox", [0, 0, this.width, this.height]);
-    // const zoomDom = svg.select("rect.zoom");
-    // this.vis = svg.select("g.vis");
+    const svg = d3
+      .select(this.$refs.svg)
+      .attr("viewBox", [0, 0, this.width, this.height]);
+    const zoomDom = svg.select("rect.zoom");
+    this.vis = svg.select("g.vis");
     // console.log(svg, zoomDom, this.vis);
 
-    // this.initZoom(zoomDom);
-    // this.initBrush(svg, zoomDom);
+    this.initZoom(zoomDom);
+    this.initBrush(svg, zoomDom);
     this.initWorker();
-
-    const render = () => {
-      console.log("render");
-
-      // TODO，不用emit，貌似使requestAnimationFrame生效?
-      this.$refs.WebGLChart.setPostion();
-      // this.$refs.nodes.$emit("setPostion");
-      // this.$refs.links.$emit("setPostion");
-      // this.$refs.texts.$emit("setPostion", nodes);
-
-      if (this.chartOption.simulation.run) requestAnimationFrame(render);
-    };
-    this.$watch(
-      "chartOption.simulation.run",
-      function (newVal) {
-        if (newVal) render();
-      },
-      { immediate: true }
-    );
   },
   activated() {
     if (this.needUpdate) {
@@ -143,9 +137,9 @@ export default {
         return;
       }
       const t = d3.zoomIdentity.translate(0, 0).scale(1);
-      // this.vis.attr("transform", t);
+      this.vis.attr("transform", t);
       this.transform = { ...t };
-      // this.$refs.zoomDom.__zoom = t;
+      this.$refs.zoomDom.__zoom = t;
 
       this.initWorker();
     },
@@ -154,11 +148,12 @@ export default {
         console.log("zoom start", e);
         this.beforeEvent("zoom", this);
       };
-      const zoomed = ({ transform }) => {
+      const zoomed = throttle(({ transform }) => {
         console.log("zooming");
         this.vis.attr("transform", transform);
         this.transform = { ...transform };
-      };
+        this.$refs.WebGLChart.$emit("zoom", transform);
+      }, 16.67);
       const zoomEnd = ({ transform }) => {
         let extentStart = transform.invert([0, 0]); // 视口的开始坐标
         let extentEnd = transform.invert([this.width, this.height]); // 视口的结束坐标
@@ -236,6 +231,7 @@ export default {
             ? (node[type] = true)
             : (node[type] = false);
         });
+        this.$refs.WebGLChart.$emit("brush");
       };
       const brushed = throttle(brushing, 16, {
         leading: true,
@@ -250,6 +246,7 @@ export default {
           node.selected = true;
           node.attentionTimes += 1;
         });
+        this.$refs.WebGLChart.$emit("brush");
 
         let operation = {
           action: "brush",
@@ -265,6 +262,7 @@ export default {
           node.invertBrushing = false;
           node.selected = false;
         });
+        this.$refs.WebGLChart.$emit("brush");
         console.log("invertBrush");
       };
 
@@ -304,6 +302,7 @@ export default {
             throw e;
           }
         }
+        this.render();
       }, 16.67);
 
       if (!this.worker) {
@@ -390,6 +389,17 @@ export default {
     fillColor(group) {
       return this.classificationPalette[group || 0];
     },
+    render() {
+      // console.log("render");
+
+      // TODO，不用emit，貌似使requestAnimationFrame生效?
+      this.$refs.WebGLChart.$emit("setPostion");
+      // this.$refs.nodes.$emit("setPostion");
+      // this.$refs.links.$emit("setPostion");
+      // this.$refs.texts.$emit("setPostion", nodes);
+
+      // if (this.chartOption.simulation.run) requestAnimationFrame(render);
+    },
     test() {},
   },
   watch: {
@@ -414,10 +424,21 @@ export default {
 }
 </style>
 <style lang="scss" scope>
-.ForceChart {
-  /* display: none; */
-  // border: 1px solid #305dff;
+.container {
   background: var(--backgroundColor);
+  position: relative;
+  overflow: hidden;
+  > .WebGLChart {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  > .ForceChart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
 }
 rect.zoom {
   pointer-events: all;

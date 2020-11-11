@@ -203,9 +203,9 @@ export default {
         "group" in d || this.$set(d, "group", 0);
         this.$set(d, "current", false);
         this.$set(d, "selected", false);
-        this.$set(d, "mouseover_show", false);
-        this.$set(d, "brushing", false);
-        this.$set(d, "invertBrushing", false);
+        this.$set(d, "mouseover_show", true);
+        d["brushing"] = false;
+        d["invertBrushing"] = false;
         d["uid"] = i + "";
         d["attentionTimes"] = 0;
         uidNodeMap[d.uid] = d;
@@ -214,7 +214,7 @@ export default {
 
       visualData.links.forEach((d, i) => {
         this.$set(d, "uid", i);
-        this.$set(d, "mouseover_show", false);
+        this.$set(d, "mouseover_show", true);
         if (typeof d.source !== "object") {
           d.source = idNodeMap[d.source];
           d.target = idNodeMap[d.target];

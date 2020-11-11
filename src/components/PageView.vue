@@ -151,13 +151,13 @@ export default {
       openKeys: ["sub1"],
       // view
       eventOption: {
-        visClick: false,
+        visClick: true,
         visDrag: true,
         visMouseover: true,
         visBrush: false,
         brushKeep: false,
         visInvertBrush: false,
-        visZoom: true,
+        visZoom: false,
         visShowIds: false,
       },
       // option

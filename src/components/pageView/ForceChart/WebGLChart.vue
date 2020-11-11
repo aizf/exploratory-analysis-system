@@ -2,7 +2,7 @@
   <div class="WebGLChart" :style="{ width: width, height: height }"></div>
 </template>
 <script>
-import Vue from "vue";
+import * as d3 from "d3";
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as PIXI from "pixi.js";
@@ -14,6 +14,8 @@ export default {
   props: {
     eventOption: Object,
     chartOption: Object,
+    width: Number,
+    height: Number,
   },
   data() {
     return {
@@ -22,13 +24,18 @@ export default {
   },
   computed: {
     ...mapState({
+      uidMaps: (state) => state.data.uidMaps,
       uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
-      width: (state) => state.view.dpiX * 0.4,
-      height: (state) => state.view.dpiY * 0.7,
       currentUUID: (state) => state.view.currentUUID,
       needUpdate: (state) => state.view.chartsNeedUpdate.force,
     }),
-    ...mapGetters(["nodes", "links", "nodesNumber", "linksNumber"]),
+    ...mapGetters([
+      "nodes",
+      "links",
+      "nodesNumber",
+      "linksNumber",
+      "beforeEvent",
+    ]),
     lineColor() {
       return PIXI.utils.string2hex("#aaaaaa");
     },
@@ -36,6 +43,7 @@ export default {
   created() {},
   mounted() {
     console.log("WebGLChart", this);
+    console.log("WebGLChart", PIXI);
     this.app = new PIXI.Application({
       width: this.width,
       height: this.height,
@@ -46,16 +54,12 @@ export default {
     );
     this.$el.appendChild(this.app.view);
 
-    const vis = new PIXI.Container();
-    this.nodesG = new PIXI.Container();
+    this.vis = new PIXI.Container();
     this.linksG = new PIXI.Container();
-    this.textsG = new PIXI.Container();
-    // this.nodesG.zIndex = 10;
-    // this.linksG.zIndex = 9;
-    // this.textsG.zIndex = 11;
-    console.log(vis);
-    vis.addChild(this.linksG, this.nodesG, this.textsG);
-    this.app.stage.addChild(vis);
+    this.nodesG = new PIXI.Container();
+    // console.log(vis);
+    this.vis.addChild(this.linksG, this.nodesG);
+    this.app.stage.addChild(this.vis);
 
     // nodes数量变化时
     this.$watch(
@@ -63,7 +67,7 @@ export default {
       function () {
         this.nodesG.removeChildren();
         this.nodes.forEach((node) => {
-          this.nodesG.addChild(this.circle(node));
+          this.nodesG.addChild(this.nodeG(node));
         });
         this.linksG.removeChildren();
         this.links.forEach((link) => {
@@ -72,37 +76,110 @@ export default {
       },
       { immediate: true }
     );
+    this.$on("setPostion", this.setPostion);
+    this.$on("zoom", this.zoom);
+    this.$on("brush", this.brush);
   },
   activated() {},
   methods: {
-    reInit() {
-      // 重新渲染图标
-      if (this.nodes.length === 0) {
-        return;
-      }
-      // debugger;
-      this.transform.k = 1;
-      this.transform.x = 0;
-      this.transform.y = 0;
-      let t = this.visTransform();
-      t.x = 0;
-      t.y = 0;
-      t.k = 1;
-      this.vis.attr("transform", t);
-      // this.simulation.alpha(1).restart(); // 更新数据后重新开始仿真
-      console.log("reInit");
+    zoom(transform) {
+      const { k, x, y } = transform;
+      this.vis.scale.x = k;
+      this.vis.scale.y = k;
+      this.vis.x = x;
+      this.vis.y = y;
     },
-    circle(node) {
-      const { x, y, group } = node;
-      const circle = new PIXI.Graphics();
-      circle.__data__ = node;
-      circle.beginFill(this.fillColor(group)).drawCircle(x, y, 4.5).endFill();
-      circle.interactive = true;
-      circle.on("click", function (...e) {
-        console.log(e);
-        console.log(this);
+    brush() {
+      this.nodesG.children.forEach((nodeG) => {
+        const { selected, brushing } = nodeG.__data__;
+        const border = nodeG.children[0];
+        if (brushing || selected) border.alpha = 1;
+        else border.alpha = 0;
       });
-      return circle;
+    },
+    clickSelect(d) {
+      if (!this.eventOption.visClick) return;
+      this.beforeEvent("click", this);
+      if (d.selected) {
+        d.selected = false;
+      } else {
+        d.selected = true;
+        d.attentionTimes += 1;
+        let operation = {
+          action: "click",
+          nodes: [d],
+        };
+        this.$store.dispatch("addOperation", operation);
+        console.log("click");
+      }
+    },
+    mouseover(node) {
+      if (!this.eventOption.visMouseover || this.isDraging) return;
+
+      this.beforeEvent("mouseover", this);
+
+      this.nodes.forEach((node) => (node.mouseover_show = false));
+      this.links.forEach((link) => (link.mouseover_show = false));
+      const displayNodes = [...this.uidMaps.uidLinkedNodesMap[node.uid], node];
+      displayNodes.forEach((d) => (d.mouseover_show = true));
+      const displayLinks = this.uidMaps.uidLinksMap[node.uid];
+      displayLinks.forEach((d) => (d.mouseover_show = true));
+
+      this.setPostion();
+
+      if (!this.isDraging) {
+        displayNodes.forEach((d) => {
+          d.attentionTimes += 1;
+        });
+        let operation = {
+          action: "mouseover",
+          nodes: displayNodes,
+        };
+        this.$store.dispatch("addOperation", operation);
+        console.log("mouseover");
+      }
+    },
+    mouseout(node) {
+      if (!this.eventOption.visMouseover || this.isDraging) return;
+      this.nodes.forEach((node) => (node.mouseover_show = true));
+      this.links.forEach((link) => (link.mouseover_show = true));
+      this.setPostion();
+    },
+    nodeG(node) {
+      const that = this;
+      const nodeG = new PIXI.Container();
+      nodeG.__data__ = node;
+      const { x, y, group } = node;
+
+      const border = new PIXI.Graphics();
+      border
+        .beginFill(0xf03e3e)
+        .drawCircle(0, 0, 4.5 + 1.2)
+        .endFill();
+      border.alpha = 0;
+
+      const circle = new PIXI.Graphics();
+      circle.beginFill(this.fillColor(group)).drawCircle(0, 0, 4.5).endFill();
+      circle.interactive = true;
+      circle.buttonMode = true;
+      circle.on("click", function () {
+        const node = this.parent.__data__;
+        that.clickSelect(node);
+        this.parent.children[0].alpha = node.selected ? 1 : 0;
+      });
+      circle.on("mouseover", function () {
+        that.mouseover(this.parent.__data__);
+      });
+      circle.on("mouseout", function () {
+        that.mouseout(this.parent.__data__);
+      });
+
+      // this.text = new PIXI.Container();
+
+      nodeG.addChild(border, circle);
+      nodeG.x = x;
+      nodeG.y = y;
+      return nodeG;
     },
     line(link) {
       const line = new PIXI.Graphics();
@@ -113,10 +190,11 @@ export default {
       return PIXI.utils.string2hex(this.classificationPalette[group || 0]);
     },
     setPostion() {
-      this.nodesG.children.forEach((circle) => {
-        const node = circle.__data__;
-        circle.x = node.x;
-        circle.y = node.y;
+      this.nodesG.children.forEach((nodeG) => {
+        const { x, y, mouseover_show } = nodeG.__data__;
+        nodeG.x = x;
+        nodeG.y = y;
+        nodeG.alpha = mouseover_show ? 1 : 0.04;
       });
       this.linksG.children.forEach((line) => {
         const link = line.__data__;
@@ -125,12 +203,13 @@ export default {
           source: { y: y1 },
           target: { x: x2 },
           target: { y: y2 },
+          mouseover_show,
         } = link;
         line.clear();
         line.lineStyle({
           width: this.chartOption.link.width,
           color: this.lineColor,
-          alpha: 0.2,
+          alpha: mouseover_show ? 0.2 : 0.04,
           native: true,
         });
         line.moveTo(x1, y1);
