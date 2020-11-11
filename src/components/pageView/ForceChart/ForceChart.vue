@@ -9,6 +9,7 @@
       :chartOption="chartOption"
       :width="width"
       :height="height"
+      @alterWorkerData="alterWorkerData"
       ref="WebGLChart"
     />
     <svg class="ForceChart" :width="width" :height="height" ref="svg">

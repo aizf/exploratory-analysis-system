@@ -80,8 +80,8 @@
               @changeChartOption="handleChartOption"
             ></component>
           </keep-alive>
-          <!-- <SelectedInfoBoard /> -->
-          <!-- <NodesList /> -->
+          <SelectedInfoBoard />
+          <NodesList />
         </div>
       </a-layout-content>
     </a-layout>

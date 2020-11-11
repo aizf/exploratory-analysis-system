@@ -2,10 +2,9 @@
   <div class="WebGLChart" :style="{ width: width, height: height }"></div>
 </template>
 <script>
-import * as d3 from "d3";
-import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as PIXI from "pixi.js";
+import throttle from "lodash/throttle";
 
 export default {
   name: "WebGLChart",
@@ -18,9 +17,7 @@ export default {
     height: Number,
   },
   data() {
-    return {
-      transform: { k: 1, x: 0, y: 0 },
-    };
+    return {};
   },
   computed: {
     ...mapState({
@@ -76,12 +73,60 @@ export default {
       },
       { immediate: true }
     );
+    this.initDrag();
     this.$on("setPostion", this.setPostion);
     this.$on("zoom", this.zoom);
     this.$on("brush", this.brush);
+    setInterval(() => {
+      this.changeColor();
+    }, 600);
   },
-  activated() {},
   methods: {
+    initDrag() {
+      this.draggedObjs = new Set();
+      this.isDragged = false;
+      let from = [0, 0];
+      let mousedown = false;
+      this.app.view.addEventListener("mousedown", (e) => {
+        mousedown = true;
+        from = [e.clientX, e.clientY];
+      });
+      this.app.view.addEventListener(
+        "mousemove",
+        throttle((e) => {
+          if (!mousedown) return;
+          let x = e.clientX - from[0],
+            y = e.clientY - from[1];
+          from = [e.clientX, e.clientY];
+          this.draggedObjs.forEach((node) => {
+            node.x += x;
+            node.y += y;
+            node.fx = node.x;
+            node.fy = node.y;
+            this.isDragged = true;
+          });
+          this.$emit("alterWorkerData", [...this.draggedObjs]);
+          this.setPostion();
+        }, 16.67)
+      );
+      this.app.view.addEventListener("mouseup", () => {
+        this.draggedObjs.forEach((node) => {
+          delete node.fx;
+          delete node.fy;
+        });
+        this.$emit("alterWorkerData", [...this.draggedObjs]);
+        this.draggedObjs.clear();
+        this.isDragged = false;
+      });
+    },
+    changeColor() {
+      this.nodesG.children.forEach((nodeG) => {
+        const { group } = nodeG.__data__;
+        const circle = nodeG.children[1];
+        circle.clear();
+        circle.beginFill(this.fillColor(group)).drawCircle(0, 0, 4.5).endFill();
+      });
+    },
     zoom(transform) {
       const { k, x, y } = transform;
       this.vis.scale.x = k;
@@ -99,6 +144,7 @@ export default {
     },
     clickSelect(d) {
       if (!this.eventOption.visClick) return;
+      if (this.isDragged) return;
       this.beforeEvent("click", this);
       if (d.selected) {
         d.selected = false;
@@ -140,12 +186,13 @@ export default {
       }
     },
     mouseout(node) {
-      if (!this.eventOption.visMouseover || this.isDraging) return;
+      if (!this.eventOption.visMouseover || this.isDragged) return;
       this.nodes.forEach((node) => (node.mouseover_show = true));
       this.links.forEach((link) => (link.mouseover_show = true));
       this.setPostion();
     },
     nodeG(node) {
+      // 每个点的容器
       const that = this;
       const nodeG = new PIXI.Container();
       nodeG.__data__ = node;
@@ -173,6 +220,13 @@ export default {
       circle.on("mouseout", function () {
         that.mouseout(this.parent.__data__);
       });
+      // drag
+      circle.on("mousedown", function () {
+        const node = this.parent.__data__;
+        that.draggedObjs.add(node);
+        node.fx = node.x;
+        node.fy = node.y;
+      });
 
       // this.text = new PIXI.Container();
 
@@ -182,16 +236,23 @@ export default {
       return nodeG;
     },
     line(link) {
+      // 线
       const line = new PIXI.Graphics();
       line.__data__ = link;
       return line;
     },
     fillColor(group) {
-      return PIXI.utils.string2hex(this.classificationPalette[group || 0]);
+      if (!this.$_fillColor) {
+        this.$_fillColor = this.classificationPalette.map((d) =>
+          PIXI.utils.string2hex(d)
+        );
+      }
+      return this.$_fillColor[group || 0];
     },
     setPostion() {
+      // console.log(this);
       this.nodesG.children.forEach((nodeG) => {
-        const { x, y, mouseover_show } = nodeG.__data__;
+        const { x, y, mouseover_show, group } = nodeG.__data__;
         nodeG.x = x;
         nodeG.y = y;
         nodeG.alpha = mouseover_show ? 1 : 0.04;
@@ -225,8 +286,5 @@ export default {
 </style>
 <style lang="scss" scope>
 .WebGLChart {
-  /* display: none; */
-  border: 1px solid #305dff;
-  // background: var(--backgroundColor);
 }
 </style>
