@@ -5,7 +5,7 @@
     :bodyStyle="{ padding: '5px 20px 5px 15px' }"
   >
     <a-row>
-      <a-col :span="12" offset="4">
+      <a-col :span="12" offset="1">
         <span class="vSubMenu">click</span>
       </a-col>
       <a-col :span="4" offset="2">
@@ -13,7 +13,7 @@
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span="12" offset="4">
+      <a-col :span="12" offset="1">
         <span class="vSubMenu">drag</span>
       </a-col>
       <a-col :span="4" offset="2">
@@ -21,7 +21,7 @@
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span="12" offset="4">
+      <a-col :span="12" offset="1">
         <span class="vSubMenu">hover</span>
       </a-col>
       <a-col :span="4" offset="2">
@@ -32,7 +32,7 @@
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span="12" offset="4">
+      <a-col :span="12" offset="1">
         <a-popover
           placement="top"
           title="keep last selected nodes ?"
@@ -52,7 +52,7 @@
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span="12" offset="4">
+      <a-col :span="12" offset="1">
         <span class="vSubMenu">invert brush</span>
       </a-col>
       <a-col :span="4" offset="2">
@@ -64,7 +64,7 @@
       </a-col>
     </a-row>
     <a-row>
-      <a-col :span="12" offset="4">
+      <a-col :span="12" offset="1">
         <span class="vSubMenu">zoom</span>
       </a-col>
       <a-col :span="4" offset="2">

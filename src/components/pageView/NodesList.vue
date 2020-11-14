@@ -1,6 +1,6 @@
 <template>
   <RecycleScroller
-    class="scroller"
+    class="scroller test-border"
     :items="items"
     :item-size="32"
     keyField="uid"
@@ -62,7 +62,7 @@ export default {
 <style lang="scss" scoped>
 .scroller {
   width: 230px;
-  height: 800px;
+  height: 870px;
 }
 
 .item {

@@ -1,5 +1,5 @@
 <template>
-  <div class="SelectedInfoBoard1"></div>
+  <div class="SelectedInfoBoard1 test-border"></div>
 </template>
 <script>
 // import Vue from "vue";
@@ -104,6 +104,6 @@ export default {
 <style lang="scss" scoped>
 .SelectedInfoBoard1 {
   width: 600px;
-  height: 400px;
+  height: 380px;
 }
 </style>

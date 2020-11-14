@@ -1,6 +1,11 @@
 <template>
   <div>
-    <a-button type="primary" size="small" :loading="loading" @click="showDrawer"
+    <a-button
+      type="primary"
+      size="small"
+      :loading="loading"
+      @click="showDrawer"
+      ghost
       >cluster</a-button
     >
     <a-drawer
@@ -36,7 +41,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import axios from "axios";
-import debounce from "lodash/debounce";
+// import debounce from "lodash/debounce";
 export default {
   name: "ClusterOption",
   data() {
@@ -79,7 +84,8 @@ export default {
       }
       axios({
         method: "post",
-        url: "//127.0.0.1:3000/p/cluster",
+        // url: "//127.0.0.1:3000/p/cluster",
+        url: "//127.0.0.1:5000/cluster",
         data: {
           algorithm: this.tab,
           nodes: this.nodes,

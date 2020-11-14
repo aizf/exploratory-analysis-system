@@ -7,7 +7,7 @@
       @change-tooltip-data="changeTooltipData"
     ></DataFlow>
     <div :style="{ width: '100%', borderTop: `1px dashed ${contrastColor}` }" />
-    <TimeOrder></TimeOrder>
+    <ThemeRiver></ThemeRiver>
     <keep-alive>
       <!-- 可视化视图 -->
       <StaticForce
@@ -30,10 +30,11 @@ Vue.use(Col);
 Vue.use(Row);
 // import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
-import FlowController from "./pageAnalyze/FlowController.vue";
-import StaticForce from "./commonUse/StaticForce.vue";
-import TimeOrder from "./pageAnalyze/TimeOrder.vue";
-import DataFlow from "./pageAnalyze/DataFlow";
+import FlowController from "@c/pageAnalyze/FlowController.vue";
+import StaticForce from "@c/commonUse/StaticForce.vue";
+import TimeOrder from "@c/pageAnalyze/TimeOrder.vue";
+import ThemeRiver from "@c/pageAnalyze/ThemeRiver.vue";
+import DataFlow from "@c/pageAnalyze/DataFlow";
 
 import { backgroundColor, contrastColor } from "@/config/color";
 
@@ -41,7 +42,8 @@ export default {
   name: "PageAnalyze",
   components: {
     FlowController,
-    TimeOrder,
+    // TimeOrder,
+    ThemeRiver,
     DataFlow,
     StaticForce,
   },
@@ -86,7 +88,8 @@ export default {
       if (!newVal) return;
       axios({
         method: "post",
-        url: "//127.0.0.1:3000/p/frequent_item",
+        // url: "//127.0.0.1:3000/p/frequent_item",
+        url: "//127.0.0.1:5000/frequent_item",
         data: this.recordset.links,
       }).then((res) => {
         const data = res.data;

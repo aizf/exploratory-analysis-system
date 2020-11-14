@@ -36,10 +36,6 @@
 
 <script>
 import Vue from "vue";
-import { Layout, Menu, Tooltip } from "ant-design-vue";
-Vue.use(Layout);
-Vue.use(Menu);
-Vue.use(Tooltip);
 import { mapState } from "vuex";
 import "@/main.css";
 import {

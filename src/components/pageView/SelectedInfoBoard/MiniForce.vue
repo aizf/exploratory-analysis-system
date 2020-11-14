@@ -1,5 +1,5 @@
 <template>
-  <svg :width="width" :height="height" :style="{ background: backgroundColor }">
+  <svg class="test-border" :width="width" :height="height" :style="{ background: backgroundColor }">
     <defs>
       <filter id="shadow">
         <feDropShadow dx="0" dy="0" stdDeviation="0.3" />

@@ -79,6 +79,8 @@ export default {
     this.$on("brush", this.brush);
     setInterval(() => {
       this.changeColor();
+      this.brush();
+      this.setPostion();
     }, 600);
   },
   methods: {
@@ -145,12 +147,12 @@ export default {
     clickSelect(d) {
       if (!this.eventOption.visClick) return;
       if (this.isDragged) return;
+
       this.beforeEvent("click", this);
       if (d.selected) {
         d.selected = false;
       } else {
         d.selected = true;
-        d.attentionTimes += 1;
         let operation = {
           action: "click",
           nodes: [d],
@@ -174,9 +176,6 @@ export default {
       this.setPostion();
 
       if (!this.isDraging) {
-        displayNodes.forEach((d) => {
-          d.attentionTimes += 1;
-        });
         let operation = {
           action: "mouseover",
           nodes: displayNodes,
@@ -222,10 +221,18 @@ export default {
       });
       // drag
       circle.on("mousedown", function () {
+        if (!that.eventOption.visDrag) return;
         const node = this.parent.__data__;
         that.draggedObjs.add(node);
         node.fx = node.x;
         node.fy = node.y;
+
+        that.beforeEvent("drag", that);
+        let operation = {
+          action: "drag",
+          nodes: [node],
+        };
+        that.$store.dispatch("addOperation", operation);
       });
 
       // this.text = new PIXI.Container();
@@ -252,7 +259,7 @@ export default {
     setPostion() {
       // console.log(this);
       this.nodesG.children.forEach((nodeG) => {
-        const { x, y, mouseover_show, group } = nodeG.__data__;
+        const { x, y, mouseover_show } = nodeG.__data__;
         nodeG.x = x;
         nodeG.y = y;
         nodeG.alpha = mouseover_show ? 1 : 0.04;

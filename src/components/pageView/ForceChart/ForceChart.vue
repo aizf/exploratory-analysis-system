@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container"
+    class="container test-border"
     :style="{ width: width + 'px', height: height + 'px' }"
   >
     <WebGLChart
@@ -94,8 +94,8 @@ export default {
   computed: {
     ...mapState({
       uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
-      width: (state) => state.view.dpiX * 0.4,
-      height: (state) => state.view.dpiY * 0.78,
+      width: (state) => 750,
+      height: (state) => state.view.dpiY * 0.55,
       currentUUID: (state) => state.view.currentUUID,
       needUpdate: (state) => state.view.chartsNeedUpdate.force,
     }),
@@ -146,11 +146,11 @@ export default {
     },
     initZoom(zoomDom) {
       const zoomStart = (e) => {
-        console.log("zoom start", e);
+        // console.log("zoom start", e);
         this.beforeEvent("zoom", this);
       };
       const zoomed = throttle(({ transform }) => {
-        console.log("zooming");
+        // console.log("zooming");
         this.vis.attr("transform", transform);
         this.transform = { ...transform };
         this.$refs.WebGLChart.$emit("zoom", transform);
@@ -166,15 +166,12 @@ export default {
             d.y <= extentEnd[1]
           );
         });
-        t.forEach((d) => {
-          d.attentionTimes += 1;
-        });
         let operation = {
           action: "zoom",
           nodes: t,
         };
         this.$store.dispatch("addOperation", operation);
-        console.log("zoom");
+        // console.log("zoom");
       };
       const zoomInstance = d3.zoom();
       zoomDom.call(zoomInstance).on("dblclick.zoom", null);
@@ -393,7 +390,6 @@ export default {
     render() {
       // console.log("render");
 
-      // TODO，不用emit，貌似使requestAnimationFrame生效?
       this.$refs.WebGLChart.$emit("setPostion");
       // this.$refs.nodes.$emit("setPostion");
       // this.$refs.links.$emit("setPostion");

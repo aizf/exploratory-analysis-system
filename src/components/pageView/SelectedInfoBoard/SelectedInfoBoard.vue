@@ -1,8 +1,8 @@
 <template>
-  <div class="SelectedInfoBoard">
+  <div class="SelectedInfoBoard test-border" :style="{ height: height + 'px' }">
     <SelectedInfoBoard1 :items="selectedNodes" />
     <SelectedInfoBoard2 :items="selectedNodes" />
-    <MiniForce :nodes="selectedNodes" :width="300" :height="400" />
+    <MiniForce :nodes="selectedNodes" :width="300" :height="200" />
   </div>
 </template>
 <script>
@@ -28,6 +28,7 @@ export default {
   computed: {
     ...mapState({
       nodeFields: (state) => state.data.nodeFields,
+      height: (state) => state.view.dpiY * 0.55,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
     selectedNodes() {
@@ -48,7 +49,6 @@ export default {
 <style lang="scss" scoped>
 .SelectedInfoBoard {
   width: 600px;
-  height: 800px;
   display: flex;
   flex-wrap: wrap;
 }

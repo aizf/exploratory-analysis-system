@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-button @click="marked = !marked">
+    <a-button @click="marked = !marked" ghost>
       <a-icon type="book" :theme="marked ? 'filled' : 'outlined'" />
     </a-button>
     <a-badge
@@ -8,7 +8,7 @@
       showZero
       :numberStyle="{ backgroundColor: '#1890ff' }"
     >
-      <a-button @click="markedsVisible = true">
+      <a-button @click="markedsVisible = true" ghost>
         <a-icon type="database" />Marked Views
       </a-button>
     </a-badge>

@@ -67,7 +67,6 @@ export default {
         d.selected = false;
       } else {
         d.selected = true;
-        d.attentionTimes += 1;
         let operation = {
           action: "click",
           nodes: [d],
@@ -95,9 +94,6 @@ export default {
       });
 
       if (!this.isDraging) {
-        displayNodes.forEach((d) => {
-          d.attentionTimes += 1;
-        });
         let operation = {
           action: "mouseover",
           nodes: displayNodes,
@@ -162,7 +158,6 @@ export default {
         delete d.fy;
         this.$emit("alterWorkerData", [d]);
         if (this.isDraging) {
-          d.attentionTimes += 1;
           // drag <text>时，通过以下返回node
           let operation = {
             action: "drag",

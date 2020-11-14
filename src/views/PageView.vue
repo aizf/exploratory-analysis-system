@@ -1,6 +1,6 @@
 <template>
   <a-layout id="pageView">
-    <a-layout-sider width="250" theme="light" style="background: #fff">
+    <a-layout-sider width="150" theme="light" style="background: #fff">
       <a-card
         title="Data Fields"
         :headStyle="{ padding: '0 24px 0 24px' }"
@@ -22,14 +22,17 @@
       />
     </a-layout-sider>
 
-    <a-layout style="padding: 0 0 0 5px">
-      <a-layout-content
-        :style="{ background: '#fff', padding: '24px', margin: 0 }"
-      >
+    <a-layout class="view">
+      <a-layout-content :style="{ padding: '5px 0 0 0', margin: 0 }">
         <div class="view-tools-board">
           <MarkedViews class="view-tools-item" />
           <div class="view-tools-item">
-            <a-button @click="viewUndo" shape="circle" :disabled="undoDisabled">
+            <a-button
+              @click="viewUndo"
+              shape="circle"
+              :disabled="undoDisabled"
+              ghost
+            >
               <a-icon type="undo" />
             </a-button>
             <a-button
@@ -37,6 +40,7 @@
               shape="circle"
               :disabled="redoDisabled"
               style="margin: 0 0 0 5px"
+              ghost
             >
               <a-icon type="redo" />
             </a-button>
@@ -59,6 +63,7 @@
               size="small"
               @click="viewFilter"
               :style="{ marginLeft: '0', width: '70px' }"
+              ghost
               >filter</a-button
             >
           </div>
@@ -74,14 +79,16 @@
             <!-- 可视化视图 -->
             <component
               ref="theView"
+              class="view1"
               :is="currentChart"
               :eventOption="eventOption"
               :chartOption="chartOption"
               @changeChartOption="handleChartOption"
             ></component>
           </keep-alive>
-          <SelectedInfoBoard />
-          <NodesList />
+          <SelectedInfoBoard class="view2" />
+          <NodesList class="view3" />
+          <ParallelCoordinate class="view4" />
         </div>
       </a-layout-content>
     </a-layout>
@@ -89,47 +96,18 @@
 </template>
 <script>
 import Vue from "vue";
-import {
-  Badge,
-  Button,
-  Checkbox,
-  Col,
-  Drawer,
-  Icon,
-  Input,
-  InputNumber,
-  Popover,
-  Row,
-  Slider,
-  Switch,
-  Tabs,
-  Tag,
-} from "ant-design-vue";
-Vue.use(Badge);
-Vue.use(Button);
-Vue.use(Checkbox);
-Vue.use(Col);
-Vue.use(Drawer);
-Vue.use(Icon);
-Vue.use(Input);
-Vue.use(InputNumber);
-Vue.use(Popover);
-Vue.use(Row);
-Vue.use(Slider);
-Vue.use(Switch);
-Vue.use(Tabs);
-Vue.use(Tag);
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 // import * as d3 from "d3";
-import ForceChart from "./pageView/ForceChart";
-import ScatterChart from "./pageView/ScatterChart.vue";
-import NodesList from "./pageView/NodesList.vue";
-import SelectedInfoBoard from "./pageView/SelectedInfoBoard";
-import EventOption from "./pageView/EventOption.vue";
-import ChartOption from "./pageView/ChartOption.vue";
-import ClusterOption from "./pageView/ClusterOption.vue";
-import MarkedViews from "./pageView/MarkedViews";
+import ForceChart from "@c/pageView/ForceChart";
+import ScatterChart from "@c/pageView/ScatterChart.vue";
+import NodesList from "@c/pageView/NodesList.vue";
+import SelectedInfoBoard from "@c/pageView/SelectedInfoBoard";
+import ParallelCoordinate from "@c/pageView/ParallelCoordinate";
+import EventOption from "@c/pageView/EventOption.vue";
+import ChartOption from "@c/pageView/ChartOption.vue";
+import ClusterOption from "@c/pageView/ClusterOption.vue";
+import MarkedViews from "@c/pageView/MarkedViews";
 import { classificationPalette } from "@/config/color";
 export default {
   name: "PageView",
@@ -138,6 +116,7 @@ export default {
     ScatterChart,
     NodesList,
     SelectedInfoBoard,
+    ParallelCoordinate,
     EventOption,
     ChartOption,
     ClusterOption,
@@ -162,7 +141,7 @@ export default {
       },
       // option
       chartOption: {
-        simulation: { run: true, alphaTarget: 0.3 },
+        simulation: { run: true, alphaTarget: 0.3, centerStrength: 1 },
         node: { nodeSize: 4.5, borderColor: "red", chargeForce: -30 },
         link: { color: "#aaa", width: 0.3, distance: 30 },
       },
@@ -289,7 +268,7 @@ export default {
   watch: {},
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 /* .vMenu {
   display: -webkit-flex;
   display: flex;
@@ -301,14 +280,37 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+.view {
+  background: var(--backgroundColor);
+  margin-left: 5px;
+  padding-top: 10px;
 }
 .main-view {
-  padding: 10px 0 0 0;
-  display: flex;
+  position: relative;
   background: var(--backgroundColor);
-}
-.main-view > * {
-  flex: 0 0 auto;
+  > .view1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  > .view2 {
+    position: absolute;
+    top: 0;
+    left: 750px;
+  }
+  > .view3 {
+    position: absolute;
+    top: 0;
+    left: 1350px;
+  }
+  > .view4 {
+    position: absolute;
+    top: 595px;
+    left: 0;
+  }
 }
 </style>
 <style>
@@ -341,5 +343,8 @@ export default {
   height: 26px;
   width: 85%;
   margin: 0 8%;
+}
+.test-border {
+  border: 1px solid skyblue;
 }
 </style>>
