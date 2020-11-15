@@ -51,7 +51,7 @@
         @change="$emit('vis-brush','switch')" :disabled="brushDisabled" />
       </a-col>
     </a-row>
-    <a-row>
+    <!-- <a-row>
       <a-col :span="12" offset="1">
         <span class="vSubMenu">invert brush</span>
       </a-col>
@@ -62,7 +62,7 @@
           :disabled="invertBrushDisabled"
         />
       </a-col>
-    </a-row>
+    </a-row> -->
     <a-row>
       <a-col :span="12" offset="1">
         <span class="vSubMenu">zoom</span>

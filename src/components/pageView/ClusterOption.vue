@@ -6,7 +6,7 @@
       :loading="loading"
       @click="showDrawer"
       ghost
-      >cluster</a-button
+      >Cluster</a-button
     >
     <a-drawer
       title="Cluster"

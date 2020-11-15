@@ -1,5 +1,5 @@
 <template>
-  <div class="SelectedInfoBoard2 test-border"></div>
+  <div class="Pie test-border"></div>
 </template>
 <script>
 // import Vue from "vue";
@@ -7,7 +7,7 @@ import { mapState, mapGetters } from "vuex";
 import echarts from "echarts";
 // import * as _ from "lodash";
 export default {
-  name: "SelectedInfoBoard2",
+  name: "Pie",
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
   props: {
     items: Array,
@@ -65,8 +65,16 @@ export default {
     },
   },
   mounted() {
-    console.log("SelectedInfoBoard2", this);
+    console.log("Pie", this);
     this.chart = echarts.init(this.$el, null);
+    this.chart.on("click", (params) => {
+      // console.log(params);
+      const group = params.name;
+      this.nodes.forEach((node) => {
+        if (node.selected && node.group == group) return;
+        node.selected = false;
+      });
+    });
     // this.option = this.initOption();
     this.$watch(
       "nodes",
@@ -84,7 +92,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.SelectedInfoBoard2 {
+.Pie {
   width: 280px;
   height: 200px;
 }

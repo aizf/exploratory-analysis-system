@@ -1,5 +1,12 @@
 <template>
-  <div class="ParallelCoordinate test-border" ref="chart"></div>
+  <div class="ParallelCoordinate test-border">
+    <div class="chart" ref="chart"></div>
+    <div class="button test-border button-0" @click="applyInfo(0)"></div>
+    <div class="button test-border button-1" @click="applyInfo(1)"></div>
+    <div class="button test-border button-2" @click="applyInfo(2)"></div>
+    <div class="button test-border button-3" @click="applyInfo(3)"></div>
+    <div class="button test-border button-4" @click="applyInfo(4)"></div>
+  </div>
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
@@ -8,7 +15,7 @@ import axios from "axios";
 export default {
   name: "ParallelCoordinate",
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
-  props: {},
+  props: { chartOption: Object },
   data() {
     return {
       density: 0,
@@ -19,11 +26,15 @@ export default {
       idNodeMap: (state) => state.data.uidMaps.idNodeMap,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
+    defaultCircleSize() {
+      return +this.chartOption.node.nodeSize;
+    },
   },
   mounted() {
     console.log("ParallelCoordinate", this);
     this.requestCentrality();
     this.chart = echarts.init(this.$refs.chart, null);
+
     this.chart.on("brushselected", (params) => {
       // console.log(params);
       const index = params.batch[0].selected[0].dataIndex;
@@ -153,6 +164,14 @@ export default {
     fillColor(group) {
       return this.classificationPalette[group || 0];
     },
+    applyInfo(n) {
+      for (let i = 0; i < this.row.length; i++) {
+        const id = this.row[i],
+          value = this.data[i][n];
+        const node = this.idNodeMap[id];
+        node.size = this.defaultCircleSize * 2 * value;
+      }
+    },
   },
   watch: {},
 };
@@ -161,5 +180,36 @@ export default {
 .ParallelCoordinate {
   width: 1350px;
   height: 280px;
+  position: relative;
+}
+.chart {
+  width: 100%;
+  height: 100%;
+}
+.button {
+  width: 120px;
+  height: 30px;
+  position: absolute;
+  cursor: pointer;
+  &-0 {
+    top: 0;
+    left: 10px;
+  }
+  &-1 {
+    top: 0;
+    left: 290px;
+  }
+  &-2 {
+    top: 0;
+    left: 580px;
+  }
+  &-3 {
+    top: 0;
+    left: 870px;
+  }
+  &-4 {
+    top: 0;
+    left: 1150px;
+  }
 }
 </style>

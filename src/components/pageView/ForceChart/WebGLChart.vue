@@ -36,6 +36,9 @@ export default {
     lineColor() {
       return PIXI.utils.string2hex("#aaaaaa");
     },
+    defaultCircleSize() {
+      return +this.chartOption.node.nodeSize;
+    },
   },
   created() {},
   mounted() {
@@ -123,10 +126,13 @@ export default {
     },
     changeColor() {
       this.nodesG.children.forEach((nodeG) => {
-        const { group } = nodeG.__data__;
+        const node = nodeG.__data__;
         const circle = nodeG.children[1];
         circle.clear();
-        circle.beginFill(this.fillColor(group)).drawCircle(0, 0, 4.5).endFill();
+        circle
+          .beginFill(this.fillColor(node.group))
+          .drawCircle(0, 0, this.circleSize(node))
+          .endFill();
       });
     },
     zoom(transform) {
@@ -141,7 +147,7 @@ export default {
         const { selected, brushing } = nodeG.__data__;
         const border = nodeG.children[0];
         if (brushing || selected) border.alpha = 1;
-        else border.alpha = 0;
+        else border.alpha = 0.1;
       });
     },
     clickSelect(d) {
@@ -200,12 +206,15 @@ export default {
       const border = new PIXI.Graphics();
       border
         .beginFill(0xf03e3e)
-        .drawCircle(0, 0, 4.5 + 1.2)
+        .drawCircle(0, 0, this.circleSize(node) + 1.8)
         .endFill();
-      border.alpha = 0;
+      border.alpha = 0.1;
 
       const circle = new PIXI.Graphics();
-      circle.beginFill(this.fillColor(group)).drawCircle(0, 0, 4.5).endFill();
+      circle
+        .beginFill(this.fillColor(group))
+        .drawCircle(0, 0, this.circleSize(node))
+        .endFill();
       circle.interactive = true;
       circle.buttonMode = true;
       circle.on("click", function () {
@@ -284,6 +293,10 @@ export default {
         line.lineTo(x2, y2);
         line.endFill();
       });
+    },
+    circleSize(node) {
+      if ("size" in node) return Math.sqrt(+node["size"]) / 2;
+      return this.defaultCircleSize;
     },
   },
   watch: {},

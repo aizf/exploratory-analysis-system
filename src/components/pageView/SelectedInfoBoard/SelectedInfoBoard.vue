@@ -1,7 +1,7 @@
 <template>
   <div class="SelectedInfoBoard test-border" :style="{ height: height + 'px' }">
     <SelectedInfoBoard1 :items="selectedNodes" />
-    <SelectedInfoBoard2 :items="selectedNodes" />
+    <Pie :items="selectedNodes" />
     <MiniForce :nodes="selectedNodes" :width="300" :height="200" />
   </div>
 </template>
@@ -9,7 +9,7 @@
 // import Vue from "vue";
 import { mapState, mapGetters } from "vuex";
 import SelectedInfoBoard1 from "./SelectedInfoBoard1";
-import SelectedInfoBoard2 from "./SelectedInfoBoard2";
+import Pie from "./Pie";
 import MiniForce from "./MiniForce";
 import echarts from "echarts";
 // import * as _ from "lodash";
@@ -18,7 +18,7 @@ export default {
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
   components: {
     SelectedInfoBoard1,
-    SelectedInfoBoard2,
+    Pie,
     MiniForce,
   },
   props: {},

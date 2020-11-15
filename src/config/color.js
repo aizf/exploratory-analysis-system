@@ -3,7 +3,7 @@ const contrastColor = "#eeeeee";
 const classificationPalette = [
     // 11类
     // 分组
-    "#dd6b66",
+    "#f49f42",
     "#759aa0",
     "#e69d87",
     "#8dc1a9",
@@ -13,7 +13,7 @@ const classificationPalette = [
     "#73b9bc",
     "#7289ab",
     "#91ca8c",
-    "#f49f42"
+    "#dd6b66",
 ];
 const classificationPalette2 = [
     // 12类

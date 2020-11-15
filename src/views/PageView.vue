@@ -61,10 +61,20 @@
             <a-button
               type="primary"
               size="small"
+              @click="selectInvert"
+              :style="{ marginLeft: '0', width: '95px' }"
+              ghost
+              >Select Invert</a-button
+            >
+          </div>
+          <div class="view-tools-item">
+            <a-button
+              type="primary"
+              size="small"
               @click="viewFilter"
               :style="{ marginLeft: '0', width: '70px' }"
               ghost
-              >filter</a-button
+              >Filter</a-button
             >
           </div>
           <div class="view-tools-item">
@@ -88,7 +98,7 @@
           </keep-alive>
           <SelectedInfoBoard class="view2" />
           <NodesList class="view3" />
-          <ParallelCoordinate class="view4" />
+          <ParallelCoordinate class="view4" :chartOption="chartOption" />
         </div>
       </a-layout-content>
     </a-layout>
@@ -246,6 +256,9 @@ export default {
         time: new Date(),
       });
       console.log("filter");
+    },
+    selectInvert() {
+      this.nodes.forEach((node) => (node.selected = !node.selected));
     },
     groupTheSelectedNodes(group) {
       // console.log(group);
