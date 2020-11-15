@@ -199,6 +199,7 @@ export default {
       this.$set(visualData, "marked", false);
       const uidNodeMap = new Array(visualData.nodes.length);
       const idNodeMap = {};
+      let maxSize = -Infinity;
       visualData.nodes.forEach((d, i) => {
         "group" in d || this.$set(d, "group", 0);
         this.$set(d, "current", false);
@@ -210,7 +211,11 @@ export default {
         d["attentionTimes"] = 0;
         uidNodeMap[d.uid] = d;
         idNodeMap[d.id] = d;
+        if ("size" in d) maxSize = Math.max(maxSize, +d.size);
       });
+      if (maxSize > -Infinity) {
+        visualData.nodes.forEach((d) => (d.size /= maxSize));
+      }
 
       visualData.links.forEach((d, i) => {
         this.$set(d, "uid", i);

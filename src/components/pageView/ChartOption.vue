@@ -35,7 +35,7 @@
         <a-input-number
           class="optionInput"
           :min="0.1"
-          :max="70"
+          :max="5000"
           :step="0.2"
           v-model="chartOption.node.nodeSize"
         />

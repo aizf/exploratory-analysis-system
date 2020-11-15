@@ -32,7 +32,6 @@ export default {
   },
   mounted() {
     console.log("ParallelCoordinate", this);
-    this.requestCentrality();
     this.chart = echarts.init(this.$refs.chart, null);
 
     this.chart.on("brushselected", (params) => {
@@ -68,6 +67,7 @@ export default {
           source: link.source.id,
           target: link.target.id,
         }));
+      this.chart.showLoading();
 
       axios({
         method: "post",
@@ -79,6 +79,7 @@ export default {
           data: { data },
         } = res;
         this.rerender(data);
+        this.chart.hideLoading();
         // console.log("parallel", data);
       });
     },

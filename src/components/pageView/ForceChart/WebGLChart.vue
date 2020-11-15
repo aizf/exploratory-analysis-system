@@ -127,6 +127,12 @@ export default {
     changeColor() {
       this.nodesG.children.forEach((nodeG) => {
         const node = nodeG.__data__;
+        const border = nodeG.children[0];
+        border.clear();
+        border
+          .beginFill(0xf03e3e)
+          .drawCircle(0, 0, this.circleSize(node) + 1.8)
+          .endFill();
         const circle = nodeG.children[1];
         circle.clear();
         circle
@@ -210,6 +216,7 @@ export default {
         .endFill();
       border.alpha = 0.1;
 
+      // const circle = new PIXI.Graphics();
       const circle = new PIXI.Graphics();
       circle
         .beginFill(this.fillColor(group))
@@ -295,7 +302,7 @@ export default {
       });
     },
     circleSize(node) {
-      if ("size" in node) return Math.sqrt(+node["size"]) / 2;
+      if ("size" in node) return Math.min(this.defaultCircleSize * +node["size"],100);
       return this.defaultCircleSize;
     },
   },
