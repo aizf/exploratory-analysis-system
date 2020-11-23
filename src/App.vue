@@ -107,7 +107,7 @@ export default {
 #app-layout .logo {
   width: 120px;
   height: 31px;
-  background: rgba(255, 255, 255, 0.2);
+  /* background: rgba(255, 255, 255, 0.2); */
   margin: 10px 28px 10px 0;
   float: left;
 }

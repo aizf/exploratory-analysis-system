@@ -49,6 +49,9 @@
             <codemirror :value="content" :options="cmOptions"></codemirror>
           </a-tab-pane>
         </a-tabs>
+        <a-checkbox @change="isDirectedChange($event.target.checked)">
+          isDirected
+        </a-checkbox>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -215,8 +218,11 @@ export default {
       });
       if (maxSize > -Infinity) {
         visualData.nodes.forEach((d) => (d.size /= maxSize));
+      } else {
+        visualData.nodes.forEach((d) => (d.size = 1));
       }
 
+      let maxWeight = -Infinity;
       visualData.links.forEach((d, i) => {
         this.$set(d, "uid", i);
         this.$set(d, "mouseover_show", true);
@@ -224,11 +230,23 @@ export default {
           d.source = idNodeMap[d.source];
           d.target = idNodeMap[d.target];
         }
+        if ("value" in d) maxWeight = Math.max(maxWeight, +d.value);
+        if ("weight" in d) maxWeight = Math.max(maxWeight, +d.weight);
       });
+      if (maxWeight > -Infinity) {
+        visualData.links.forEach((d) => {
+          if ("value" in d) d.weight = d.value / maxWeight;
+          else if ("weight" in d) d.weight /= maxWeight;
+        });
+      } else {
+        visualData.links.forEach((d) => (d.weight = 1));
+      }
+
       const uidLinksMap = this.genUidLinksMap(visualData);
       const uidLinkedNodesMap = this.genUidLinkedNodesMap(visualData);
 
       // 源数据改变后更新store状态
+      this.isDirectedChange(!!visualData.isDirected);
       store.commit("updateUidMaps", {
         idNodeMap,
         uidNodeMap,
@@ -278,6 +296,9 @@ export default {
         matrix[target.uid][source.uid] = d;
       });
       return matrix;
+    },
+    isDirectedChange(value) {
+      store.commit("updateIsDirected", value);
     },
     test() {
       console.log("c");

@@ -17,6 +17,69 @@ const datasets = {
             "group": { alias: "group", type: "cat" }
         }
     },
+    "starwars-full-interactions": {
+        name: "starwars-full-interactions",
+        fileName: "starwars-full-interactions.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        }
+    },
+    "starwars-episode-7-interactions": {
+        name: "starwars-episode-7-interactions",
+        fileName: "starwars-episode-7-interactions.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        }
+    },
+    "PolBooks": {
+        name: "PolBooks",
+        fileName: "PolBooks.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        }
+    },
+    "1_PolBooks": {
+        name: "1_PolBooks",
+        fileName: "1_PolBooks.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        }
+    },
+    "2_PolBooks": {
+        name: "2_PolBooks",
+        fileName: "2_PolBooks.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        }
+    },
+    "3_PolBooks": {
+        name: "3_PolBooks",
+        fileName: "3_PolBooks.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        }
+    },
+    "123_PolBooks": {
+        name: "123_PolBooks",
+        fileName: "123_PolBooks.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        }
+    },
     "epinions_1_percent": {
         name: "epinions_1_percent",
         fileName: "epinions_1_percent.json",

@@ -3,13 +3,26 @@ const d3 = self.d3;
 
 self.nodes = [];
 self.links = [];
-self.uidMap = {};
+self.uidMap = new Map();
 self.chartOption = {}
-self.width = 0
-self.height = 0
-self.subSimulations = [];
-// "communities"
-self.simulationType = "globel";
+self.width = 100;
+self.height = 100;
+// "communities", "globel"
+self.simulations = [];  // 所有的仿真应用
+
+// 仿真对象类
+class Simu {
+    constructor(nodes, links) {
+        this.nodes
+        this.simulation = d3
+            .forceSimulation();
+    }
+    stop() {
+        this.simulation.stop();
+        return this;
+    }
+}
+
 let typeMax = 0;
 
 const simulation = d3
@@ -54,7 +67,7 @@ const genSubSimulation = (nodes, links, type) => {
             x: self.width / 2,
             y: self.height / 2,
             r: self.width / 2,
-            nodeNum: typeMax,   // +1 for others
+            nodeNum: typeMax + 1,
             nodeIndex: type
         }
     );

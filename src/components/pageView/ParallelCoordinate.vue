@@ -1,15 +1,17 @@
 <template>
   <div class="ParallelCoordinate test-border">
     <div class="chart" ref="chart"></div>
-    <div class="button test-border button-0" @click="applyInfo(0)"></div>
-    <div class="button test-border button-1" @click="applyInfo(1)"></div>
-    <div class="button test-border button-2" @click="applyInfo(2)"></div>
-    <div class="button test-border button-3" @click="applyInfo(3)"></div>
-    <div class="button test-border button-4" @click="applyInfo(4)"></div>
+    <div class="button button-0" @click="applyInfo(0)"></div>
+    <div class="button button-1" @click="applyInfo(1)"></div>
+    <div class="button button-2" @click="applyInfo(2)"></div>
+    <div class="button button-3" @click="applyInfo(3)"></div>
+    <div class="button button-4" @click="applyInfo(4)"></div>
+    <div class="button button-5" @click="applyInfo(5)"></div>
   </div>
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
+import eventBus from "./ForceChart/eventBus.js";
 import echarts from "echarts";
 import axios from "axios";
 export default {
@@ -17,13 +19,12 @@ export default {
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
   props: { chartOption: Object },
   data() {
-    return {
-      density: 0,
-    };
+    return {};
   },
   computed: {
     ...mapState({
       idNodeMap: (state) => state.data.uidMaps.idNodeMap,
+      isDirected: (state) => state.data.isDirected,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
     defaultCircleSize() {
@@ -73,18 +74,21 @@ export default {
         method: "post",
         // url: "//127.0.0.1:3000/p/network_centrality",
         url: "//127.0.0.1:5000/network_centrality",
-        data: { nodes, links },
+        data: { nodes, links, isDirected: this.isDirected },
       }).then((res) => {
         const {
           data: { data },
         } = res;
+        this.avgC(data);
         this.rerender(data);
         this.chart.hideLoading();
-        // console.log("parallel", data);
+        console.log("parallel", data);
       });
     },
-    rerender({ density, column, row, data }) {
-      this.density = density;
+    rerender({ density, average_degree, column, row, data }) {
+      eventBus.$emit("density", density);
+      eventBus.$emit("average_degree", average_degree);
+      eventBus.$emit("centrality", { column, row, data });
       this.row = row;
       this.data = data;
       const parallelAxis = () => {
@@ -173,6 +177,36 @@ export default {
         node.size = this.defaultCircleSize * 2 * value;
       }
     },
+    avgC({ column, row, data }) {
+      // 每个维度的平均值
+      const ss = [];
+      for (let j = 0; j < column.length; j++) {
+        const list = [];
+        for (let i = 0; i < row.length; i++) {
+          list.push(data[i][j]);
+        }
+        ss[j] = this.calcS(list);
+      }
+      const ssSum = ss.reduce((sum, d) => sum + d);
+      const weights = ss.map((d) => d / ssSum);
+      for (let i = 0; i < row.length; i++) {
+        let res = 0;
+        for (let j = 0; j < column.length; j++) {
+          res += data[i][j] * weights[j];
+        }
+        data[i].push(res);
+      }
+      column.push("avg");
+    },
+    // 计算方差
+    /**
+     * @param list Array
+     */
+    calcS(list) {
+      const n = list.length;
+      const avg = list.reduce((sum, d) => sum + d) / n;
+      return list.reduce((sum, d) => sum + Math.pow(d - avg, 2)) / n;
+    },
   },
   watch: {},
 };
@@ -198,17 +232,21 @@ export default {
   }
   &-1 {
     top: 0;
-    left: 290px;
+    left: 190px;
   }
   &-2 {
     top: 0;
-    left: 580px;
+    left: 480px;
   }
   &-3 {
     top: 0;
-    left: 870px;
+    left: 670px;
   }
   &-4 {
+    top: 0;
+    left: 900px;
+  }
+  &-5 {
     top: 0;
     left: 1150px;
   }

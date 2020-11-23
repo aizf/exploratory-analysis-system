@@ -1,25 +1,32 @@
 <template>
-  <RecycleScroller
-    class="scroller test-border"
-    :items="items"
-    :item-size="32"
-    keyField="uid"
-    v-slot="{ item }"
-  >
-    <div
-      :class="{
-        item: true,
-        selected: item.selected,
-        mouseover_show: item.mouseover_show,
-      }"
-      @click="clickSelect(item)"
-      @mouseover="item.current = true"
-      @mouseout="item.current = false"
-      :style="{ color: classificationPalette[item.group || 0] }"
+  <div class="container test-border">
+    <a-input
+      placeholder="input search text"
+      v-model="keyword"
+      style="width: 100%"
+    />
+    <RecycleScroller
+      class="scroller"
+      :items="items"
+      :item-size="32"
+      keyField="uid"
+      v-slot="{ item }"
     >
-      {{ item.id }}
-    </div>
-  </RecycleScroller>
+      <div
+        :class="{
+          item: true,
+          selected: item.selected,
+          mouseover_show: item.mouseover_show,
+        }"
+        @click="clickSelect(item)"
+        @mouseover="item.current = true"
+        @mouseout="item.current = false"
+        :style="{ color: classificationPalette[item.group || 0] }"
+      >
+        {{ item.id }}
+      </div>
+    </RecycleScroller>
+  </div>
 </template>
 <script>
 // import Vue from "vue";
@@ -35,7 +42,9 @@ export default {
   inject: ["classificationPalette"],
   props: {},
   data() {
-    return {};
+    return {
+      keyword: "",
+    };
   },
   computed: {
     ...mapState({
@@ -45,8 +54,15 @@ export default {
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
     items() {
+      let nodes = this.nodes;
       const mouseoverNodes = this.nodes.filter((d) => d.mouseover_show);
-      return mouseoverNodes.length ? mouseoverNodes : this.nodes;
+      nodes = mouseoverNodes.length ? mouseoverNodes : this.nodes;
+      const pattern = new RegExp(this.keyword, "i");
+      // console.log(this.keyword);
+      // console.log(pattern);
+      nodes = nodes.filter((d) => pattern.test(d.id));
+      // console.log(nodes);
+      return nodes;
     },
   },
   mounted() {
@@ -56,13 +72,21 @@ export default {
     clickSelect(node) {
       node.selected = !node.selected;
     },
+    onSearch() {},
   },
 };
 </script>
 <style lang="scss" scoped>
-.scroller {
+.container {
   width: 230px;
   height: 870px;
+}
+.scroller {
+  width: 100%;
+  height: 845px;
+  .selected {
+    border: 1px solid red;
+  }
 }
 
 .item {
@@ -72,10 +96,5 @@ export default {
   align-items: center;
   cursor: pointer;
   text-overflow: ellipsis;
-}
-div {
-  .selected {
-    border: 1px solid red;
-  }
 }
 </style>

@@ -27,6 +27,12 @@
       <text x="0" y="0" dx="0.5em" dy="4.5em" class="text info">
         Edges : {{ linksNumber }}
       </text>
+      <text x="0" y="0" dx="0.5em" dy="6.0em" class="text info">
+        Density : {{ density.toFixed(4) }}
+      </text>
+      <text x="0" y="0" dx="0.5em" dy="7.5em" class="text info">
+        Average Degree : {{ average_degree.toFixed(4) }}
+      </text>
       <rect
         class="zoom"
         :class="{ active: eventOption.visZoom }"
@@ -69,6 +75,7 @@ import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import * as d3 from "d3";
 import throttle from "lodash/throttle";
+import eventBus from "./eventBus.js";
 
 import Worker from "./simulation.worker.cjs";
 // import { mapState } from "vuex";
@@ -89,6 +96,8 @@ export default {
   data() {
     return {
       transform: { k: 1, x: 0, y: 0 },
+      density: 0,
+      average_degree: 0,
     };
   },
   computed: {
@@ -123,6 +132,12 @@ export default {
     this.initZoom(zoomDom);
     this.initBrush(svg, zoomDom);
     this.initWorker();
+    eventBus.$on("density", (density) => (this.density = density));
+    eventBus.$on(
+      "average_degree",
+      (average_degree) => (this.average_degree = average_degree)
+    );
+    this.$on("alterWorkerData", this.alterWorkerData);
   },
   activated() {
     if (this.needUpdate) {
@@ -158,17 +173,17 @@ export default {
       const zoomEnd = ({ transform }) => {
         let extentStart = transform.invert([0, 0]); // 视口的开始坐标
         let extentEnd = transform.invert([this.width, this.height]); // 视口的结束坐标
-        let t = this.nodes.filter((d) => {
-          return (
-            extentStart[0] <= d.x &&
-            extentStart[1] <= d.y &&
-            d.x <= extentEnd[0] &&
-            d.y <= extentEnd[1]
-          );
-        });
+        // let t = this.nodes.filter((d) => {
+        //   return (
+        //     extentStart[0] <= d.x &&
+        //     extentStart[1] <= d.y &&
+        //     d.x <= extentEnd[0] &&
+        //     d.y <= extentEnd[1]
+        //   );
+        // });
         let operation = {
           action: "zoom",
-          nodes: t,
+          nodes: [],
         };
         this.$store.dispatch("addOperation", operation);
         // console.log("zoom");
@@ -305,6 +320,7 @@ export default {
 
       if (!this.worker) {
         this.worker = new Worker();
+        this.tickCount = 0;
 
         this.worker.addEventListener("message", (e) => {
           // console.log("worker message");
@@ -318,6 +334,7 @@ export default {
           // console.log("worker-message", e);
           const { nodes } = e.data;
           handleMessage(nodes);
+          this.tickCount++;
         });
 
         this.$watch(
@@ -349,6 +366,7 @@ export default {
           uid: d.uid,
           x: d.x,
           y: d.y,
+          group: d.group,
         };
         if ("fx" in d) node.fx = d.fx;
         if ("fy" in d) node.fy = d.fy;
@@ -400,13 +418,35 @@ export default {
     test() {},
   },
   watch: {
-    chartOption: {
-      handler: function () {
-        // 同步视图和worker中内容的状态
-        if (this.chartOption.simulation.run) this.changeWorkerData();
+    "chartOption.simulation.run": {
+      handler(newVal) {
+        if (newVal) {
+          this.startTime = +new Date();
+        } else {
+          if (!this.startTime) return;
+          const endTime = +new Date();
+          console.log(`simulation run: ${(endTime - this.startTime) / 1000}s`);
+          console.log(`simulation ticks: ${this.tickCount}`);
+          this.tickCount = 0;
+        }
+      },
+      immediate: true,
+    },
+    "chartOption.simulation": {
+      handler() {
         this.changeWorkerOption();
       },
       deep: true,
+    },
+    "chartOption.node.chargeForce": {
+      handler() {
+        this.changeWorkerOption();
+      },
+    },
+    "chartOption.link.distance": {
+      handler() {
+        this.changeWorkerOption();
+      },
     },
   },
 };

@@ -1,0 +1,2505 @@
+{
+    "nodes": [
+        {
+            "id": "Bush vs. the Beltway",
+            "x": 439.4824085901362,
+            "y": 151.42019862870643,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Charlie Wilson's War",
+            "x": 389.83611463495964,
+            "y": 254.40660134070293,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Losing Bin Laden",
+            "x": 504.6043693775474,
+            "y": 116.51670959174895,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Sleeping With the Devil",
+            "x": 377.07691962721054,
+            "y": 294.15267169271846,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Man Who Warned America",
+            "x": 420.9409984237131,
+            "y": 217.5449464799397,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Why America Slept",
+            "x": 445.8803111162941,
+            "y": 181.61068205135606,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Ghost Wars",
+            "x": 393.6393958159005,
+            "y": 321.7968782115223,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "A National Party No More",
+            "x": 487.2837325113722,
+            "y": 108.99068883409595,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Bush Country",
+            "x": 520.3656207055792,
+            "y": 219.8228332309292,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Dereliction of Duty",
+            "x": 443.1174080834589,
+            "y": 63.96681496045666,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Legacy",
+            "x": 552.8684816844594,
+            "y": 134.5799470646966,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Off with Their Heads",
+            "x": 446.6686394342672,
+            "y": 101.89897738467546,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Persecution",
+            "x": 514.6665168135479,
+            "y": 90.94738062895522,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Rumsfeld's War",
+            "x": 493.9208956734277,
+            "y": 195.75495796694574,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Breakdown",
+            "x": 455.972082010765,
+            "y": 37.05682530511213,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Betrayal",
+            "x": 490.91043526883226,
+            "y": 41.03828139380122,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Shut Up and Sing",
+            "x": 532.5127769934624,
+            "y": 87.53658005883582,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Meant To Be",
+            "x": 464.6960560591845,
+            "y": 115.4868957042636,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Right Man",
+            "x": 429.24984919994563,
+            "y": 163.3945979890657,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Ten Minutes from Normal",
+            "x": 519.7225980090278,
+            "y": 199.42193571526792,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Hillary's Scheme",
+            "x": 518.527812864866,
+            "y": 66.98752948087073,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The French Betrayal of America",
+            "x": 531.9480777681329,
+            "y": 176.72237443359074,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Tales from the Left Coast",
+            "x": 481.03875903260064,
+            "y": 73.16157833563432,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Hating America",
+            "x": 500.31797711059727,
+            "y": 160.8952392871924,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Third Terrorist",
+            "x": 535.4707110494237,
+            "y": 138.16877897234446,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Endgame",
+            "x": 531.2104356782611,
+            "y": 147.57246499753145,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Spin Sisters",
+            "x": 522.4057797611191,
+            "y": 133.54676136797374,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "All the Shah's Men",
+            "x": 322.3680160559548,
+            "y": 400.8414701746277,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Dangerous Dimplomacy",
+            "x": 481.4258973079344,
+            "y": 180.6788748533861,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Price of Loyalty",
+            "x": 301.534046999942,
+            "y": 426.50679605996186,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "House of Bush, House of Saud",
+            "x": 326.1542319296893,
+            "y": 433.1924612623401,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Death of Right and Wrong",
+            "x": 464.4538347778855,
+            "y": 50.25242776011032,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Useful Idiots",
+            "x": 423.5125258972481,
+            "y": 58.212766956770935,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The O'Reilly Factor",
+            "x": 352.0802011307206,
+            "y": 72.80789415531541,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Let Freedom Ring",
+            "x": 416.29551563809457,
+            "y": 80.14969549258724,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Those Who Trespass",
+            "x": 406.7074114112593,
+            "y": 114.93606015811898,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Bias",
+            "x": 394.738886920434,
+            "y": 85.83553296578647,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Slander",
+            "x": 375.27670680039773,
+            "y": 50.09009041539519,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Savage Nation",
+            "x": 404.872616563151,
+            "y": 45.83603116468447,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Deliver Us from Evil",
+            "x": 496.61359585175717,
+            "y": 125.76882919263008,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Give Me a Break",
+            "x": 472.8062021995044,
+            "y": 154.26731266864633,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Enemy Within",
+            "x": 478.72994910132934,
+            "y": 57.944712992525844,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Real America",
+            "x": 493.51786912012676,
+            "y": 76.19017110807113,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Who's Looking Out for You?",
+            "x": 464.5530374390302,
+            "y": 74.80804608255879,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Official Handbook Vast Right Wing Conspiracy",
+            "x": 546.375947308558,
+            "y": 155.82547563515837,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Power Plays",
+            "x": 399.68643467760523,
+            "y": 157.97334265947146,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Arrogance",
+            "x": 475.2634154378066,
+            "y": 117.34785853954573,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Perfect Wife",
+            "x": 500.7368615710973,
+            "y": 267.49364919772967,
+            "group": 3,
+            "size": 1
+        },
+        {
+            "id": "The Bushes",
+            "x": 427.0231991254813,
+            "y": 328.2125315144297,
+            "group": 3,
+            "size": 1
+        },
+        {
+            "id": "Things Worth Fighting For",
+            "x": 523.5180082851791,
+            "y": 257.1931621489112,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "Surprise, Security, the American Experience",
+            "x": 502.8387227364097,
+            "y": 364.23176448095694,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "Allies",
+            "x": 503.9679688475566,
+            "y": 314.3182028730023,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "Why Courage Matters",
+            "x": 458.1467059644704,
+            "y": 226.76437213172338,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Hollywood Interrupted",
+            "x": 464.63390890832176,
+            "y": 131.050713525481,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "Fighting Back",
+            "x": 407.5817533966397,
+            "y": 70.45448438112183,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "We Will Prevail",
+            "x": 515.1953099998913,
+            "y": 159.19937701198913,
+            "group": 0,
+            "size": 1
+        },
+        {
+            "id": "The Faith of George W Bush",
+            "x": 497.5995514265561,
+            "y": 222.07917367827824,
+            "group": 3,
+            "size": 1
+        },
+        {
+            "id": "Rise of the Vulcans",
+            "x": 450.11573256489044,
+            "y": 366.2800655916912,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "Downsize This!",
+            "x": 99.59659894601586,
+            "y": 514.8926167333381,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Stupid White Men",
+            "x": 141.7702279215563,
+            "y": 500.89485730578025,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Rush Limbaugh Is a Big Fat Idiot",
+            "x": 114.53789230905483,
+            "y": 445.7337851689871,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Best Democracy Money Can Buy",
+            "x": 129.64870196513783,
+            "y": 488.6857163258667,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Culture of Fear",
+            "x": 103.15966996448297,
+            "y": 498.38590775336155,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "America Unbound",
+            "x": 435.7453449902758,
+            "y": 425.7316629411075,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "The Choice",
+            "x": 461.2710408429628,
+            "y": 431.50215411393253,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "The Great Unraveling",
+            "x": 279.3793706626333,
+            "y": 462.91829606979235,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Rogue Nation",
+            "x": 393.6928467734973,
+            "y": 473.4170961530587,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "Soft Power",
+            "x": 410.8781261954634,
+            "y": 428.3398885911226,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "Colossus",
+            "x": 494.1488800405215,
+            "y": 428.06770245076183,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "The Sorrows of Empire",
+            "x": 342.3594364505911,
+            "y": 484.09647851747434,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Against All Enemies",
+            "x": 321.60139140907756,
+            "y": 448.1688962227128,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "American Dynasty",
+            "x": 297.7588795127045,
+            "y": 468.91742268877175,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Big Lies",
+            "x": 222.6407386637304,
+            "y": 473.1349045506675,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Lies of George W. Bush",
+            "x": 272.55854590743195,
+            "y": 514.4332127567822,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Worse Than Watergate",
+            "x": 297.46978151457574,
+            "y": 486.9116165519822,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Plan of Attack",
+            "x": 306.99368377385696,
+            "y": 393.6950374550541,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Bush at War",
+            "x": 356.45551877807657,
+            "y": 379.09823916869476,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The New Pearl Harbor",
+            "x": 324.3682243078249,
+            "y": 504.66314205938545,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Bushwomen",
+            "x": 258.71397044016203,
+            "y": 485.17807240056493,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Bubble of American Supremacy",
+            "x": 324.31984474585664,
+            "y": 477.48119602660705,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Living History",
+            "x": 240.64130851779726,
+            "y": 434.8097021344876,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Politics of Truth",
+            "x": 272.307670149302,
+            "y": 446.7352833023396,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Fanatics and Fools",
+            "x": 254.6596492221225,
+            "y": 456.3842965830965,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Bushwhacked",
+            "x": 206.12669933042278,
+            "y": 469.64208467376574,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Disarming Iraq",
+            "x": 375.486196152629,
+            "y": 418.4742510529427,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "Lies and the Lying Liars Who Tell Them",
+            "x": 192.8105367365707,
+            "y": 444.1054360468737,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "MoveOn's 50 Ways to Love Your Country",
+            "x": 234.23531893245686,
+            "y": 511.60252395779503,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Buying of the President 2004",
+            "x": 244.66587646370076,
+            "y": 499.38818209895106,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Perfectly Legal",
+            "x": 238.26867915659471,
+            "y": 465.8893560270221,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Hegemony or Survival",
+            "x": 280.42623513126205,
+            "y": 524.5992125554696,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Exception to the Rulers",
+            "x": 255.63796981928488,
+            "y": 533.8405052304183,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Freethinkers",
+            "x": 263.4778833576213,
+            "y": 503.85501576620277,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Had Enough?",
+            "x": 223.984183479641,
+            "y": 417.3300868553324,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "It's Still the Economy, Stupid!",
+            "x": 181.0902083173961,
+            "y": 410.56554008576,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "We're Right They're Wrong",
+            "x": 161.14514218852128,
+            "y": 404.0793647133601,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "What Liberal Media?",
+            "x": 182.19649674515048,
+            "y": 461.73807974089675,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Clinton Wars",
+            "x": 208.4940901998049,
+            "y": 432.7360504946371,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Weapons of Mass Deception",
+            "x": 211.54780791865934,
+            "y": 538.3087408535305,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Dude, Where's My Country?",
+            "x": 186.9468062358774,
+            "y": 507.68932965971595,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Thieves in High Places",
+            "x": 182.75079824831408,
+            "y": 494.757517388108,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Shrub",
+            "x": 147.90573564235413,
+            "y": 450.6749640942667,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "Buck Up Suck Up",
+            "x": 232.1263506257728,
+            "y": 330.84084877220704,
+            "group": 1,
+            "size": 1
+        },
+        {
+            "id": "The Future of Freedom",
+            "x": 436.85747451437396,
+            "y": 511.4371591587755,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "Empire",
+            "x": 466.2638329268043,
+            "y": 486.7240410292252,
+            "group": 2,
+            "size": 1
+        },
+        {
+            "id": "1000 Years for Reveng",
+            "x": 413.28296391369315,
+            "y": 193.28755797569377,
+            "group": 0,
+            "size": 1
+        }
+    ],
+    "links": [
+        {
+            "source": "Bush vs. the Beltway",
+            "target": "1000 Years for Reveng"
+        },
+        {
+            "source": "Charlie Wilson's War",
+            "target": "1000 Years for Reveng"
+        },
+        {
+            "source": "Losing Bin Laden",
+            "target": "1000 Years for Reveng"
+        },
+        {
+            "source": "Losing Bin Laden",
+            "target": "Bush vs. the Beltway"
+        },
+        {
+            "source": "Sleeping With the Devil",
+            "target": "1000 Years for Reveng"
+        },
+        {
+            "source": "Sleeping With the Devil",
+            "target": "Charlie Wilson's War"
+        },
+        {
+            "source": "The Man Who Warned America",
+            "target": "1000 Years for Reveng"
+        },
+        {
+            "source": "The Man Who Warned America",
+            "target": "Bush vs. the Beltway"
+        },
+        {
+            "source": "The Man Who Warned America",
+            "target": "Charlie Wilson's War"
+        },
+        {
+            "source": "The Man Who Warned America",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "The Man Who Warned America",
+            "target": "Sleeping With the Devil"
+        },
+        {
+            "source": "Why America Slept",
+            "target": "1000 Years for Reveng"
+        },
+        {
+            "source": "Why America Slept",
+            "target": "Bush vs. the Beltway"
+        },
+        {
+            "source": "Why America Slept",
+            "target": "Sleeping With the Devil"
+        },
+        {
+            "source": "Why America Slept",
+            "target": "The Man Who Warned America"
+        },
+        {
+            "source": "Ghost Wars",
+            "target": "Charlie Wilson's War"
+        },
+        {
+            "source": "Ghost Wars",
+            "target": "The Man Who Warned America"
+        },
+        {
+            "source": "Ghost Wars",
+            "target": "Why America Slept"
+        },
+        {
+            "source": "A National Party No More",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Bush Country",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Bush Country",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Dereliction of Duty",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Dereliction of Duty",
+            "target": "Why America Slept"
+        },
+        {
+            "source": "Dereliction of Duty",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Legacy",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Legacy",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Legacy",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Legacy",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Off with Their Heads",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Off with Their Heads",
+            "target": "Why America Slept"
+        },
+        {
+            "source": "Off with Their Heads",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Off with Their Heads",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Off with Their Heads",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Off with Their Heads",
+            "target": "Legacy"
+        },
+        {
+            "source": "Persecution",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Persecution",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Persecution",
+            "target": "Legacy"
+        },
+        {
+            "source": "Persecution",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Rumsfeld's War",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Rumsfeld's War",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Rumsfeld's War",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Rumsfeld's War",
+            "target": "Legacy"
+        },
+        {
+            "source": "Rumsfeld's War",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Rumsfeld's War",
+            "target": "Ghost Wars"
+        },
+        {
+            "source": "Breakdown",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Breakdown",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Breakdown",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Betrayal",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Betrayal",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Betrayal",
+            "target": "Breakdown"
+        },
+        {
+            "source": "Shut Up and Sing",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Shut Up and Sing",
+            "target": "Legacy"
+        },
+        {
+            "source": "Shut Up and Sing",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Shut Up and Sing",
+            "target": "Persecution"
+        },
+        {
+            "source": "Meant To Be",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Meant To Be",
+            "target": "Why America Slept"
+        },
+        {
+            "source": "Meant To Be",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "The Right Man",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "The Right Man",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Ten Minutes from Normal",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Ten Minutes from Normal",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Ten Minutes from Normal",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Ten Minutes from Normal",
+            "target": "Legacy"
+        },
+        {
+            "source": "Hillary's Scheme",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Hillary's Scheme",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Hillary's Scheme",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Hillary's Scheme",
+            "target": "Legacy"
+        },
+        {
+            "source": "The French Betrayal of America",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "The French Betrayal of America",
+            "target": "Why America Slept"
+        },
+        {
+            "source": "The French Betrayal of America",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "The French Betrayal of America",
+            "target": "Legacy"
+        },
+        {
+            "source": "Tales from the Left Coast",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Tales from the Left Coast",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Tales from the Left Coast",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Tales from the Left Coast",
+            "target": "Hillary's Scheme"
+        },
+        {
+            "source": "Hating America",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Hating America",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Hating America",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Hating America",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Hating America",
+            "target": "Ten Minutes from Normal"
+        },
+        {
+            "source": "The Third Terrorist",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "The Third Terrorist",
+            "target": "Why America Slept"
+        },
+        {
+            "source": "The Third Terrorist",
+            "target": "Rumsfeld's War"
+        },
+        {
+            "source": "The Third Terrorist",
+            "target": "The French Betrayal of America"
+        },
+        {
+            "source": "Endgame",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Endgame",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Endgame",
+            "target": "Legacy"
+        },
+        {
+            "source": "Endgame",
+            "target": "Rumsfeld's War"
+        },
+        {
+            "source": "Endgame",
+            "target": "Hating America"
+        },
+        {
+            "source": "Spin Sisters",
+            "target": "Losing Bin Laden"
+        },
+        {
+            "source": "Spin Sisters",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Spin Sisters",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Spin Sisters",
+            "target": "Legacy"
+        },
+        {
+            "source": "Spin Sisters",
+            "target": "Tales from the Left Coast"
+        },
+        {
+            "source": "All the Shah's Men",
+            "target": "Sleeping With the Devil"
+        },
+        {
+            "source": "Dangerous Dimplomacy",
+            "target": "Sleeping With the Devil"
+        },
+        {
+            "source": "Dangerous Dimplomacy",
+            "target": "Why America Slept"
+        },
+        {
+            "source": "Dangerous Dimplomacy",
+            "target": "Legacy"
+        },
+        {
+            "source": "Dangerous Dimplomacy",
+            "target": "Persecution"
+        },
+        {
+            "source": "The Price of Loyalty",
+            "target": "Sleeping With the Devil"
+        },
+        {
+            "source": "The Price of Loyalty",
+            "target": "Ghost Wars"
+        },
+        {
+            "source": "House of Bush, House of Saud",
+            "target": "Sleeping With the Devil"
+        },
+        {
+            "source": "House of Bush, House of Saud",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "The Death of Right and Wrong",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "The Death of Right and Wrong",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "The Death of Right and Wrong",
+            "target": "Persecution"
+        },
+        {
+            "source": "The Death of Right and Wrong",
+            "target": "Tales from the Left Coast"
+        },
+        {
+            "source": "Useful Idiots",
+            "target": "The Death of Right and Wrong"
+        },
+        {
+            "source": "Useful Idiots",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Useful Idiots",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Useful Idiots",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Useful Idiots",
+            "target": "Tales from the Left Coast"
+        },
+        {
+            "source": "Let Freedom Ring",
+            "target": "The O'Reilly Factor"
+        },
+        {
+            "source": "Let Freedom Ring",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Let Freedom Ring",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Those Who Trespass",
+            "target": "The O'Reilly Factor"
+        },
+        {
+            "source": "Those Who Trespass",
+            "target": "Let Freedom Ring"
+        },
+        {
+            "source": "Those Who Trespass",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Bias",
+            "target": "The O'Reilly Factor"
+        },
+        {
+            "source": "Bias",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Bias",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Bias",
+            "target": "Let Freedom Ring"
+        },
+        {
+            "source": "Bias",
+            "target": "Useful Idiots"
+        },
+        {
+            "source": "Slander",
+            "target": "The O'Reilly Factor"
+        },
+        {
+            "source": "Slander",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Slander",
+            "target": "Let Freedom Ring"
+        },
+        {
+            "source": "Slander",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Slander",
+            "target": "Bias"
+        },
+        {
+            "source": "Slander",
+            "target": "Useful Idiots"
+        },
+        {
+            "source": "The Savage Nation",
+            "target": "The O'Reilly Factor"
+        },
+        {
+            "source": "The Savage Nation",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "The Savage Nation",
+            "target": "Let Freedom Ring"
+        },
+        {
+            "source": "The Savage Nation",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "The Savage Nation",
+            "target": "Slander"
+        },
+        {
+            "source": "The Savage Nation",
+            "target": "Useful Idiots"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "Let Freedom Ring"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "Persecution"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "Ten Minutes from Normal"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "The French Betrayal of America"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "The Savage Nation"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "Hating America"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "The Third Terrorist"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "Endgame"
+        },
+        {
+            "source": "Deliver Us from Evil",
+            "target": "Spin Sisters"
+        },
+        {
+            "source": "Give Me a Break",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Give Me a Break",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Give Me a Break",
+            "target": "Deliver Us from Evil"
+        },
+        {
+            "source": "Give Me a Break",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Give Me a Break",
+            "target": "Those Who Trespass"
+        },
+        {
+            "source": "Give Me a Break",
+            "target": "Spin Sisters"
+        },
+        {
+            "source": "The Enemy Within",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "The Enemy Within",
+            "target": "Deliver Us from Evil"
+        },
+        {
+            "source": "The Enemy Within",
+            "target": "Persecution"
+        },
+        {
+            "source": "The Enemy Within",
+            "target": "The Savage Nation"
+        },
+        {
+            "source": "The Real America",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "The Real America",
+            "target": "Let Freedom Ring"
+        },
+        {
+            "source": "The Real America",
+            "target": "Persecution"
+        },
+        {
+            "source": "The Real America",
+            "target": "The Enemy Within"
+        },
+        {
+            "source": "Who's Looking Out for You?",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Who's Looking Out for You?",
+            "target": "Deliver Us from Evil"
+        },
+        {
+            "source": "Who's Looking Out for You?",
+            "target": "Let Freedom Ring"
+        },
+        {
+            "source": "Who's Looking Out for You?",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Who's Looking Out for You?",
+            "target": "Persecution"
+        },
+        {
+            "source": "The Official Handbook Vast Right Wing Conspiracy",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "The Official Handbook Vast Right Wing Conspiracy",
+            "target": "Bush Country"
+        },
+        {
+            "source": "The Official Handbook Vast Right Wing Conspiracy",
+            "target": "Deliver Us from Evil"
+        },
+        {
+            "source": "The Official Handbook Vast Right Wing Conspiracy",
+            "target": "Legacy"
+        },
+        {
+            "source": "The Official Handbook Vast Right Wing Conspiracy",
+            "target": "Endgame"
+        },
+        {
+            "source": "Power Plays",
+            "target": "A National Party No More"
+        },
+        {
+            "source": "Power Plays",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Deliver Us from Evil"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Give Me a Break"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Legacy"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Persecution"
+        },
+        {
+            "source": "Arrogance",
+            "target": "The Enemy Within"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Those Who Trespass"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Bias"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Shut Up and Sing"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Useful Idiots"
+        },
+        {
+            "source": "Arrogance",
+            "target": "The Official Handbook Vast Right Wing Conspiracy"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Power Plays"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Tales from the Left Coast"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Hating America"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Endgame"
+        },
+        {
+            "source": "Arrogance",
+            "target": "Spin Sisters"
+        },
+        {
+            "source": "group_3",
+            "target": "Bush Country"
+        },
+        {
+            "source": "group_3",
+            "target": "Ten Minutes from Normal"
+        },
+        {
+            "source": "group_3",
+            "target": "Bush Country"
+        },
+        {
+            "source": "group_3",
+            "target": "Ten Minutes from Normal"
+        },
+        {
+            "source": "group_3",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "The Bushes",
+            "target": "The Perfect Wife"
+        },
+        {
+            "source": "Things Worth Fighting For",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Things Worth Fighting For",
+            "target": "Legacy"
+        },
+        {
+            "source": "Surprise, Security, the American Experience",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Allies",
+            "target": "Bush Country"
+        },
+        {
+            "source": "Allies",
+            "target": "The French Betrayal of America"
+        },
+        {
+            "source": "Allies",
+            "target": "Surprise, Security, the American Experience"
+        },
+        {
+            "source": "Why Courage Matters",
+            "target": "Deliver Us from Evil"
+        },
+        {
+            "source": "Why Courage Matters",
+            "target": "Ten Minutes from Normal"
+        },
+        {
+            "source": "Why Courage Matters",
+            "target": "Hating America"
+        },
+        {
+            "source": "Why Courage Matters",
+            "target": "Endgame"
+        },
+        {
+            "source": "Hollywood Interrupted",
+            "target": "Deliver Us from Evil"
+        },
+        {
+            "source": "Hollywood Interrupted",
+            "target": "Give Me a Break"
+        },
+        {
+            "source": "Hollywood Interrupted",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Hollywood Interrupted",
+            "target": "Arrogance"
+        },
+        {
+            "source": "Hollywood Interrupted",
+            "target": "Tales from the Left Coast"
+        },
+        {
+            "source": "Hollywood Interrupted",
+            "target": "Spin Sisters"
+        },
+        {
+            "source": "Fighting Back",
+            "target": "Dereliction of Duty"
+        },
+        {
+            "source": "Fighting Back",
+            "target": "Off with Their Heads"
+        },
+        {
+            "source": "Fighting Back",
+            "target": "Breakdown"
+        },
+        {
+            "source": "Fighting Back",
+            "target": "The Right Man"
+        },
+        {
+            "source": "We Will Prevail",
+            "target": "Legacy"
+        },
+        {
+            "source": "We Will Prevail",
+            "target": "The Right Man"
+        },
+        {
+            "source": "We Will Prevail",
+            "target": "The Real America"
+        },
+        {
+            "source": "group_3",
+            "target": "Persecution"
+        },
+        {
+            "source": "group_3",
+            "target": "We Will Prevail"
+        },
+        {
+            "source": "group_3",
+            "target": "Ten Minutes from Normal"
+        },
+        {
+            "source": "The Faith of George W Bush",
+            "target": "The Perfect Wife"
+        },
+        {
+            "source": "The Faith of George W Bush",
+            "target": "The Bushes"
+        },
+        {
+            "source": "Rise of the Vulcans",
+            "target": "Rumsfeld's War"
+        },
+        {
+            "source": "Rise of the Vulcans",
+            "target": "Ghost Wars"
+        },
+        {
+            "source": "Rise of the Vulcans",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Rise of the Vulcans",
+            "target": "group_3"
+        },
+        {
+            "source": "Rise of the Vulcans",
+            "target": "Things Worth Fighting For"
+        },
+        {
+            "source": "Rise of the Vulcans",
+            "target": "Surprise, Security, the American Experience"
+        },
+        {
+            "source": "Rise of the Vulcans",
+            "target": "Allies"
+        },
+        {
+            "source": "Stupid White Men",
+            "target": "Downsize This!"
+        },
+        {
+            "source": "Rush Limbaugh Is a Big Fat Idiot",
+            "target": "Downsize This!"
+        },
+        {
+            "source": "The Best Democracy Money Can Buy",
+            "target": "Downsize This!"
+        },
+        {
+            "source": "The Best Democracy Money Can Buy",
+            "target": "Stupid White Men"
+        },
+        {
+            "source": "The Culture of Fear",
+            "target": "Downsize This!"
+        },
+        {
+            "source": "The Culture of Fear",
+            "target": "Stupid White Men"
+        },
+        {
+            "source": "The Culture of Fear",
+            "target": "The Best Democracy Money Can Buy"
+        },
+        {
+            "source": "America Unbound",
+            "target": "Rise of the Vulcans"
+        },
+        {
+            "source": "America Unbound",
+            "target": "Surprise, Security, the American Experience"
+        },
+        {
+            "source": "America Unbound",
+            "target": "Allies"
+        },
+        {
+            "source": "The Choice",
+            "target": "America Unbound"
+        },
+        {
+            "source": "The Choice",
+            "target": "Rise of the Vulcans"
+        },
+        {
+            "source": "The Choice",
+            "target": "Surprise, Security, the American Experience"
+        },
+        {
+            "source": "The Great Unraveling",
+            "target": "America Unbound"
+        },
+        {
+            "source": "The Great Unraveling",
+            "target": "All the Shah's Men"
+        },
+        {
+            "source": "The Great Unraveling",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Rogue Nation",
+            "target": "America Unbound"
+        },
+        {
+            "source": "Rogue Nation",
+            "target": "The Choice"
+        },
+        {
+            "source": "Rogue Nation",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Rogue Nation",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Soft Power",
+            "target": "America Unbound"
+        },
+        {
+            "source": "Soft Power",
+            "target": "Rise of the Vulcans"
+        },
+        {
+            "source": "Soft Power",
+            "target": "The Choice"
+        },
+        {
+            "source": "Colossus",
+            "target": "America Unbound"
+        },
+        {
+            "source": "Colossus",
+            "target": "Rise of the Vulcans"
+        },
+        {
+            "source": "Colossus",
+            "target": "The Choice"
+        },
+        {
+            "source": "Colossus",
+            "target": "Surprise, Security, the American Experience"
+        },
+        {
+            "source": "The Sorrows of Empire",
+            "target": "America Unbound"
+        },
+        {
+            "source": "The Sorrows of Empire",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "The Sorrows of Empire",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Against All Enemies",
+            "target": "Ghost Wars"
+        },
+        {
+            "source": "Against All Enemies",
+            "target": "Soft Power"
+        },
+        {
+            "source": "Against All Enemies",
+            "target": "The Sorrows of Empire"
+        },
+        {
+            "source": "American Dynasty",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "American Dynasty",
+            "target": "All the Shah's Men"
+        },
+        {
+            "source": "American Dynasty",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "American Dynasty",
+            "target": "group_3"
+        },
+        {
+            "source": "American Dynasty",
+            "target": "The Sorrows of Empire"
+        },
+        {
+            "source": "Big Lies",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "Big Lies",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Big Lies",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Big Lies",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Big Lies",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "The Lies of George W. Bush",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "The Lies of George W. Bush",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "The Lies of George W. Bush",
+            "target": "Big Lies"
+        },
+        {
+            "source": "The Lies of George W. Bush",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "The Lies of George W. Bush",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "The Lies of George W. Bush",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "Worse Than Watergate",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "Worse Than Watergate",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Worse Than Watergate",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Worse Than Watergate",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "Worse Than Watergate",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Worse Than Watergate",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "Worse Than Watergate",
+            "target": "The Sorrows of Empire"
+        },
+        {
+            "source": "Plan of Attack",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "Plan of Attack",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Plan of Attack",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "Plan of Attack",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Plan of Attack",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Plan of Attack",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "Plan of Attack",
+            "target": "group_3"
+        },
+        {
+            "source": "Plan of Attack",
+            "target": "Why Courage Matters"
+        },
+        {
+            "source": "Bush at War",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "Bush at War",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "Bush at War",
+            "target": "Rise of the Vulcans"
+        },
+        {
+            "source": "Bush at War",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Bush at War",
+            "target": "The Right Man"
+        },
+        {
+            "source": "Bush at War",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "Bush at War",
+            "target": "Plan of Attack"
+        },
+        {
+            "source": "The New Pearl Harbor",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "The New Pearl Harbor",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "The New Pearl Harbor",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "The New Pearl Harbor",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "The New Pearl Harbor",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "Bushwomen",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "Bushwomen",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Bushwomen",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "Bushwomen",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "Bushwomen",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "The Bubble of American Supremacy",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "The Bubble of American Supremacy",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "The Bubble of American Supremacy",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "The Bubble of American Supremacy",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Living History",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "The Politics of Truth",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "The Politics of Truth",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "The Politics of Truth",
+            "target": "Big Lies"
+        },
+        {
+            "source": "The Politics of Truth",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "The Politics of Truth",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "The Politics of Truth",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "The Politics of Truth",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "The Politics of Truth",
+            "target": "Plan of Attack"
+        },
+        {
+            "source": "Fanatics and Fools",
+            "target": "Against All Enemies"
+        },
+        {
+            "source": "Fanatics and Fools",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Fanatics and Fools",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "Fanatics and Fools",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Fanatics and Fools",
+            "target": "Plan of Attack"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "Stupid White Men"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "The Best Democracy Money Can Buy"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "Plan of Attack"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "Bushwomen"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "Living History"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "The Politics of Truth"
+        },
+        {
+            "source": "Bushwhacked",
+            "target": "Fanatics and Fools"
+        },
+        {
+            "source": "Disarming Iraq",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Disarming Iraq",
+            "target": "Ghost Wars"
+        },
+        {
+            "source": "Disarming Iraq",
+            "target": "Rise of the Vulcans"
+        },
+        {
+            "source": "Disarming Iraq",
+            "target": "The Choice"
+        },
+        {
+            "source": "Disarming Iraq",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "Stupid White Men"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "Rush Limbaugh Is a Big Fat Idiot"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "Plan of Attack"
+        },
+        {
+            "source": "Lies and the Lying Liars Who Tell Them",
+            "target": "Living History"
+        },
+        {
+            "source": "MoveOn's 50 Ways to Love Your Country",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "MoveOn's 50 Ways to Love Your Country",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "MoveOn's 50 Ways to Love Your Country",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "MoveOn's 50 Ways to Love Your Country",
+            "target": "Fanatics and Fools"
+        },
+        {
+            "source": "The Buying of the President 2004",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "The Buying of the President 2004",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "The Buying of the President 2004",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "The Buying of the President 2004",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "Perfectly Legal",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Perfectly Legal",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Perfectly Legal",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Perfectly Legal",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "Perfectly Legal",
+            "target": "Lies and the Lying Liars Who Tell Them"
+        },
+        {
+            "source": "Perfectly Legal",
+            "target": "The Buying of the President 2004"
+        },
+        {
+            "source": "Hegemony or Survival",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Hegemony or Survival",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Hegemony or Survival",
+            "target": "The Sorrows of Empire"
+        },
+        {
+            "source": "The Exception to the Rulers",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "The Exception to the Rulers",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "The Exception to the Rulers",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "The Exception to the Rulers",
+            "target": "House of Bush, House of Saud"
+        },
+        {
+            "source": "The Exception to the Rulers",
+            "target": "Hegemony or Survival"
+        },
+        {
+            "source": "The Exception to the Rulers",
+            "target": "Bushwomen"
+        },
+        {
+            "source": "Freethinkers",
+            "target": "American Dynasty"
+        },
+        {
+            "source": "Freethinkers",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Freethinkers",
+            "target": "Worse Than Watergate"
+        },
+        {
+            "source": "Had Enough?",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Had Enough?",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Had Enough?",
+            "target": "Lies and the Lying Liars Who Tell Them"
+        },
+        {
+            "source": "Had Enough?",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "It's Still the Economy, Stupid!",
+            "target": "Big Lies"
+        },
+        {
+            "source": "It's Still the Economy, Stupid!",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "It's Still the Economy, Stupid!",
+            "target": "Had Enough?"
+        },
+        {
+            "source": "We're Right They're Wrong",
+            "target": "Big Lies"
+        },
+        {
+            "source": "We're Right They're Wrong",
+            "target": "It's Still the Economy, Stupid!"
+        },
+        {
+            "source": "We're Right They're Wrong",
+            "target": "Rush Limbaugh Is a Big Fat Idiot"
+        },
+        {
+            "source": "What Liberal Media?",
+            "target": "Big Lies"
+        },
+        {
+            "source": "What Liberal Media?",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "What Liberal Media?",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "What Liberal Media?",
+            "target": "It's Still the Economy, Stupid!"
+        },
+        {
+            "source": "The Clinton Wars",
+            "target": "Big Lies"
+        },
+        {
+            "source": "The Clinton Wars",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "The Clinton Wars",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "The Clinton Wars",
+            "target": "Lies and the Lying Liars Who Tell Them"
+        },
+        {
+            "source": "The Clinton Wars",
+            "target": "What Liberal Media?"
+        },
+        {
+            "source": "The Clinton Wars",
+            "target": "Living History"
+        },
+        {
+            "source": "Weapons of Mass Deception",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Weapons of Mass Deception",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "Weapons of Mass Deception",
+            "target": "MoveOn's 50 Ways to Love Your Country"
+        },
+        {
+            "source": "Weapons of Mass Deception",
+            "target": "The Exception to the Rulers"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "The Lies of George W. Bush"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "Had Enough?"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "Stupid White Men"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "Downsize This!"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "The Price of Loyalty"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "The Best Democracy Money Can Buy"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "The Culture of Fear"
+        },
+        {
+            "source": "Dude, Where's My Country?",
+            "target": "Hegemony or Survival"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "Big Lies"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "The Great Unraveling"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "Lies and the Lying Liars Who Tell Them"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "What Liberal Media?"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "Weapons of Mass Deception"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "Dude, Where's My Country?"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "The Best Democracy Money Can Buy"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "Bushwomen"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "The Exception to the Rulers"
+        },
+        {
+            "source": "Thieves in High Places",
+            "target": "Fanatics and Fools"
+        },
+        {
+            "source": "Shrub",
+            "target": "Bushwhacked"
+        },
+        {
+            "source": "Shrub",
+            "target": "Lies and the Lying Liars Who Tell Them"
+        },
+        {
+            "source": "Shrub",
+            "target": "It's Still the Economy, Stupid!"
+        },
+        {
+            "source": "Shrub",
+            "target": "Thieves in High Places"
+        },
+        {
+            "source": "Shrub",
+            "target": "Rush Limbaugh Is a Big Fat Idiot"
+        },
+        {
+            "source": "Buck Up Suck Up",
+            "target": "Had Enough?"
+        },
+        {
+            "source": "Buck Up Suck Up",
+            "target": "It's Still the Economy, Stupid!"
+        },
+        {
+            "source": "Buck Up Suck Up",
+            "target": "We're Right They're Wrong"
+        },
+        {
+            "source": "Buck Up Suck Up",
+            "target": "Power Plays"
+        },
+        {
+            "source": "The Future of Freedom",
+            "target": "Rogue Nation"
+        },
+        {
+            "source": "Empire",
+            "target": "Rogue Nation"
+        },
+        {
+            "source": "Empire",
+            "target": "Colossus"
+        },
+        {
+            "source": "Empire",
+            "target": "The Future of Freedom"
+        }
+    ]
+}

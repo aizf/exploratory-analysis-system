@@ -1,7 +1,7 @@
 const data = {
     state: {
         sourceData: "",
-        sourceNum:0,
+        sourceNum: 0,
         visualData: {},
         nodeFields: {},
         uidMaps: {
@@ -9,7 +9,8 @@ const data = {
             uidNodeMap: [],  // uid映射对应节点
             uidLinksMap: [], // uid映射对应边
             uidLinkedNodesMap: [],// uid映射连接的所有节点
-        }
+        },
+        isDirected: false
     },
     mutations: {
         updateSourceData: (state, data) => {
@@ -26,6 +27,9 @@ const data = {
         },
         updateUidMaps: (state, data) => {
             state.uidMaps = data;
+        },
+        updateIsDirected: (state, data) => {
+            state.isDirected = data;
         }
     },
     actions: {}

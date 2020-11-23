@@ -1,0 +1,178 @@
+{
+    "nodes": [
+        {
+            "id": "group_0",
+            "x": 439.4824085901362,
+            "y": 151.42019862870643,
+            "group": 0,
+            "size": 49
+        },
+        {
+            "id": "group_1",
+            "x": 439.4824085901362,
+            "y": 151.42019862870643,
+            "group": 1,
+            "size": 41
+        },
+        {
+            "id": "group_2",
+            "x": 439.4824085901362,
+            "y": 151.42019862870643,
+            "group": 2,
+            "size": 12
+        },
+        {
+            "id": "group_3",
+            "x": 439.4824085901362,
+            "y": 151.42019862870643,
+            "group": 3,
+            "size": 3
+        }
+    ],
+    "links": [
+        {
+            "source": "group_1",
+            "target": "group_0"
+        },
+        {
+            "source": "group_1",
+            "target": "group_0"
+        },
+        {
+            "source": "group_1",
+            "target": "group_0"
+        },
+        {
+            "source": "group_1",
+            "target": "group_0"
+        },
+        {
+            "source": "group_3",
+            "target": "group_0"
+        },
+        {
+            "source": "group_3",
+            "target": "group_0"
+        },
+        {
+            "source": "group_3",
+            "target": "group_0"
+        },
+        {
+            "source": "group_3",
+            "target": "group_0"
+        },
+        {
+            "source": "group_3",
+            "target": "group_1"
+        },
+        {
+            "source": "group_2",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_0"
+        },
+        {
+            "source": "group_3",
+            "target": "group_0"
+        },
+        {
+            "source": "group_3",
+            "target": "group_0"
+        },
+        {
+            "source": "group_3",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_1"
+        },
+        {
+            "source": "group_2",
+            "target": "group_3"
+        },
+        {
+            "source": "group_1",
+            "target": "group_2"
+        },
+        {
+            "source": "group_2",
+            "target": "group_1"
+        },
+        {
+            "source": "group_2",
+            "target": "group_1"
+        },
+        {
+            "source": "group_1",
+            "target": "group_2"
+        },
+        {
+            "source": "group_1",
+            "target": "group_0"
+        },
+        {
+            "source": "group_1",
+            "target": "group_2"
+        },
+        {
+            "source": "group_1",
+            "target": "group_3"
+        },
+        {
+            "source": "group_1",
+            "target": "group_3"
+        },
+        {
+            "source": "group_1",
+            "target": "group_0"
+        },
+        {
+            "source": "group_1",
+            "target": "group_2"
+        },
+        {
+            "source": "group_1",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_1"
+        },
+        {
+            "source": "group_2",
+            "target": "group_0"
+        },
+        {
+            "source": "group_2",
+            "target": "group_1"
+        },
+        {
+            "source": "group_1",
+            "target": "group_0"
+        }
+    ]
+}

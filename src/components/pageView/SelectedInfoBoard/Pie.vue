@@ -77,7 +77,7 @@ export default {
     });
     // this.option = this.initOption();
     this.$watch(
-      "nodes",
+      "items",
       function () {
         this.chart.setOption(this.option, true);
       },

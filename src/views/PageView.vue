@@ -11,6 +11,18 @@
           <a-col :span="4" offset="2"></a-col>
         </a-row>
       </a-card>
+      <a-button
+        @click="communities"
+        style="margin: 0 0 0 5px"
+      >
+        communities
+      </a-button>
+      <a-button
+        @click="updateWorker"
+        style="margin: 0 0 0 5px"
+      >
+        updateWorker
+      </a-button>
       <EventOption
         :eventOption="eventOption"
         @vis-brush="onVisBrush"
@@ -71,10 +83,38 @@
             <a-button
               type="primary"
               size="small"
+              @click="pin"
+              :style="{ marginLeft: '0', width: '40px' }"
+              ghost
+              >Pin</a-button
+            >
+            <a-button
+              type="primary"
+              size="small"
+              @click="cancelPin"
+              :style="{ marginLeft: '0', width: '95px' }"
+              ghost
+              >Cancel Pin</a-button
+            >
+          </div>
+          <div class="view-tools-item">
+            <a-button
+              type="primary"
+              size="small"
               @click="viewFilter"
               :style="{ marginLeft: '0', width: '70px' }"
               ghost
               >Filter</a-button
+            >
+          </div>
+          <div class="view-tools-item">
+            <a-button
+              type="primary"
+              size="small"
+              @click="merge"
+              :style="{ marginLeft: '0', width: '70px' }"
+              ghost
+              >Merge</a-button
             >
           </div>
           <div class="view-tools-item">
@@ -108,6 +148,7 @@
 import Vue from "vue";
 import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
+import axios from "axios";
 // import * as d3 from "d3";
 import ForceChart from "@c/pageView/ForceChart";
 import ScatterChart from "@c/pageView/ScatterChart.vue";
@@ -163,6 +204,7 @@ export default {
   computed: {
     ...mapState({
       visualData: (state) => state.data.visualData,
+      idNodeMap: (state) => state.data.uidMaps.idNodeMap,
       // datasets: state => state.data.datasets,
 
       parentUUID: (state) => state.view.parentUUID,
@@ -260,6 +302,24 @@ export default {
     selectInvert() {
       this.nodes.forEach((node) => (node.selected = !node.selected));
     },
+    pin() {
+      const nodes = this.nodes.filter((d) => d.selected);
+      nodes.forEach((node) => {
+        node.fx = node.x;
+        node.fy = node.y;
+        node.pin = true;
+      });
+      this.$refs.theView.$emit("alterWorkerData", nodes);
+    },
+    cancelPin() {
+      const nodes = this.nodes.filter((d) => d.selected);
+      nodes.forEach((node) => {
+        delete node.fx;
+        delete node.fy;
+        node.pin = false;
+      });
+      this.$refs.theView.$emit("alterWorkerData", nodes);
+    },
     groupTheSelectedNodes(group) {
       // console.log(group);
       this.beforeEvent("classification", this);
@@ -276,6 +336,56 @@ export default {
           this.chartOption[d][dd] = val[d][dd];
         });
       });
+    },
+    communities() {
+      const nodes = this.nodes.map((node) => ({
+          id: node.id,
+        })),
+        links = this.links.map((link) => ({
+          source: link.source.id,
+          target: link.target.id,
+        }));
+      axios({
+        method: "post",
+        // url: "//127.0.0.1:3000/p/network_centrality",
+        url: "//127.0.0.1:5000/communities",
+        data: { nodes, links },
+      }).then((res) => {
+        const {
+          data: { data },
+        } = res;
+        console.log("communities", data);
+        for (let i = 0; i < data.length; i++) {
+          const g = data[i];
+          for (let id of g) {
+            this.idNodeMap[id].group = i;
+          }
+        }
+      });
+    },
+    merge() {
+      // save
+      const nodes = this.nodes.map((node) => ({
+          id: node.id,
+          x: node.x,
+          y: node.y,
+          group: node.group,
+          size: node.size,
+        })),
+        links = this.links.map((link) => ({
+          source: link.source.id,
+          target: link.target.id,
+        }));
+      axios({
+        method: "post",
+        // url: "//127.0.0.1:3000/p/network_centrality",
+        url: "//127.0.0.1:5000/save",
+        data: { nodes, links },
+      }).then((res) => {});
+    },
+    updateWorker() {
+      console.log("force change");
+      this.$refs.theView.changeWorkerData();
     },
   },
   watch: {},

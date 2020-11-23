@@ -84,7 +84,7 @@ export default {
       this.changeColor();
       this.brush();
       this.setPostion();
-    }, 600);
+    }, 1000);
   },
   methods: {
     initDrag() {
@@ -116,8 +116,10 @@ export default {
       );
       this.app.view.addEventListener("mouseup", () => {
         this.draggedObjs.forEach((node) => {
-          delete node.fx;
-          delete node.fy;
+          if (!node.pin) {
+            delete node.fx;
+            delete node.fy;
+          }
         });
         this.$emit("alterWorkerData", [...this.draggedObjs]);
         this.draggedObjs.clear();
@@ -288,21 +290,26 @@ export default {
           target: { x: x2 },
           target: { y: y2 },
           mouseover_show,
+          weight,
         } = link;
-        line.clear();
-        line.lineStyle({
-          width: this.chartOption.link.width,
-          color: this.lineColor,
-          alpha: mouseover_show ? 0.2 : 0.04,
-          native: true,
-        });
-        line.moveTo(x1, y1);
-        line.lineTo(x2, y2);
-        line.endFill();
+        line
+          .clear()
+          .beginFill()
+          .moveTo(x1, y1)
+          .lineStyle({
+            width: 100,
+            color: this.lineColor,
+            alpha: mouseover_show ? 0.2 : 0.04,
+            // alpha: mouseover_show ? 1 : 0.04,
+            native: true,
+          })
+          .lineTo(x2, y2)
+          .endFill();
       });
     },
     circleSize(node) {
-      if ("size" in node) return Math.min(this.defaultCircleSize * +node["size"],100);
+      if ("size" in node)
+        return Math.min(this.defaultCircleSize * +node["size"], 100);
       return this.defaultCircleSize;
     },
   },

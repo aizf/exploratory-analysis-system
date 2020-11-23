@@ -1,0 +1,4543 @@
+{
+    "nodes": [
+        {
+            "id": "NUTE GUNRAY",
+            "size": 29
+        },
+        {
+            "id": "QUI-GON",
+            "size": 87
+        },
+        {
+            "id": "TC-14",
+            "size": 5
+        },
+        {
+            "id": "PK-4",
+            "size": 3
+        },
+        {
+            "id": "OBI-WAN",
+            "size": 288
+        },
+        {
+            "id": "YODA",
+            "size": 69
+        },
+        {
+            "id": "DOFINE",
+            "size": 3
+        },
+        {
+            "id": "RUNE",
+            "size": 20
+        },
+        {
+            "id": "TEY HOW",
+            "size": 4
+        },
+        {
+            "id": "VALORUM",
+            "size": 6
+        },
+        {
+            "id": "RABE",
+            "size": 15
+        },
+        {
+            "id": "EMPEROR",
+            "size": 116
+        },
+        {
+            "id": "CAPTAIN PANAKA",
+            "size": 34
+        },
+        {
+            "id": "SIO BIBBLE",
+            "size": 13
+        },
+        {
+            "id": "JAR JAR",
+            "size": 72
+        },
+        {
+            "id": "TARPALS",
+            "size": 3
+        },
+        {
+            "id": "BOSS NASS",
+            "size": 6
+        },
+        {
+            "id": "PADME",
+            "size": 141
+        },
+        {
+            "id": "RIC OLIE",
+            "size": 14
+        },
+        {
+            "id": "R2-D2",
+            "size": 224
+        },
+        {
+            "id": "ANAKIN",
+            "size": 232
+        },
+        {
+            "id": "WATTO",
+            "size": 17
+        },
+        {
+            "id": "SEBULBA",
+            "size": 11
+        },
+        {
+            "id": "JIRA",
+            "size": 3
+        },
+        {
+            "id": "C-3PO",
+            "size": 197
+        },
+        {
+            "id": "SHMI",
+            "size": 19
+        },
+        {
+            "id": "DARTH MAUL",
+            "size": 18
+        },
+        {
+            "id": "KITSTER",
+            "size": 11
+        },
+        {
+            "id": "WALD",
+            "size": 3
+        },
+        {
+            "id": "GREEDO",
+            "size": 5
+        },
+        {
+            "id": "FODE/BEED",
+            "size": 11
+        },
+        {
+            "id": "JABBA",
+            "size": 30
+        },
+        {
+            "id": "MACE WINDU",
+            "size": 27
+        },
+        {
+            "id": "KI-ADI-MUNDI",
+            "size": 15
+        },
+        {
+            "id": "BAIL ORGANA",
+            "size": 33
+        },
+        {
+            "id": "GENERAL CEEL",
+            "size": 5
+        },
+        {
+            "id": "BRAVO TWO",
+            "size": 5
+        },
+        {
+            "id": "BRAVO THREE",
+            "size": 3
+        },
+        {
+            "id": "COUNT DOOKU",
+            "size": 33
+        },
+        {
+            "id": "CAPTAIN TYPHO",
+            "size": 12
+        },
+        {
+            "id": "SENATOR ASK AAK",
+            "size": 3
+        },
+        {
+            "id": "ORN FREE TAA",
+            "size": 4
+        },
+        {
+            "id": "RUWEE",
+            "size": 4
+        },
+        {
+            "id": "JOBAL",
+            "size": 3
+        },
+        {
+            "id": "SOLA",
+            "size": 3
+        },
+        {
+            "id": "TAUN WE",
+            "size": 10
+        },
+        {
+            "id": "LAMA SU",
+            "size": 8
+        },
+        {
+            "id": "JANGO FETT",
+            "size": 16
+        },
+        {
+            "id": "BOBA FETT",
+            "size": 23
+        },
+        {
+            "id": "SNAP",
+            "size": 14
+        },
+        {
+            "id": "BERU",
+            "size": 13
+        },
+        {
+            "id": "OWEN",
+            "size": 17
+        },
+        {
+            "id": "CLIEGG",
+            "size": 5
+        },
+        {
+            "id": "POGGLE",
+            "size": 5
+        },
+        {
+            "id": "SUN RIT",
+            "size": 3
+        },
+        {
+            "id": "PLO KOON",
+            "size": 7
+        },
+        {
+            "id": "GENERAL GRIEVOUS",
+            "size": 35
+        },
+        {
+            "id": "RED LEADER",
+            "size": 51
+        },
+        {
+            "id": "ODD BALL",
+            "size": 4
+        },
+        {
+            "id": "MON MOTHMA",
+            "size": 4
+        },
+        {
+            "id": "FANG ZAR",
+            "size": 4
+        },
+        {
+            "id": "GIDDEAN DANU",
+            "size": 3
+        },
+        {
+            "id": "CLONE COMMANDER GREE",
+            "size": 4
+        },
+        {
+            "id": "CLONE COMMANDER CODY",
+            "size": 4
+        },
+        {
+            "id": "TION MEDON",
+            "size": 3
+        },
+        {
+            "id": "DARTH VADER",
+            "size": 147
+        },
+        {
+            "id": "CHEWBACCA",
+            "size": 197
+        },
+        {
+            "id": "CAPTAIN ANTILLES",
+            "size": 4
+        },
+        {
+            "id": "LUKE",
+            "size": 338
+        },
+        {
+            "id": "LEIA",
+            "size": 182
+        },
+        {
+            "id": "TARKIN",
+            "size": 17
+        },
+        {
+            "id": "YOUNG GIRL",
+            "size": 4
+        },
+        {
+            "id": "BIGGS",
+            "size": 34
+        },
+        {
+            "id": "CAMIE",
+            "size": 3
+        },
+        {
+            "id": "MOTTI",
+            "size": 3
+        },
+        {
+            "id": "HAN",
+            "size": 231
+        },
+        {
+            "id": "WEDGE",
+            "size": 43
+        },
+        {
+            "id": "GOLD LEADER",
+            "size": 25
+        },
+        {
+            "id": "DODONNA",
+            "size": 10
+        },
+        {
+            "id": "RED TEN",
+            "size": 12
+        },
+        {
+            "id": "GOLD FIVE",
+            "size": 12
+        },
+        {
+            "id": "RIEEKAN",
+            "size": 8
+        },
+        {
+            "id": "DERLIN",
+            "size": 3
+        },
+        {
+            "id": "ZEV",
+            "size": 8
+        },
+        {
+            "id": "PIETT",
+            "size": 13
+        },
+        {
+            "id": "OZZEL",
+            "size": 3
+        },
+        {
+            "id": "DACK",
+            "size": 5
+        },
+        {
+            "id": "JANSON",
+            "size": 5
+        },
+        {
+            "id": "NEEDA",
+            "size": 5
+        },
+        {
+            "id": "LANDO",
+            "size": 69
+        },
+        {
+            "id": "JERJERROD",
+            "size": 4
+        },
+        {
+            "id": "BIB FORTUNA",
+            "size": 7
+        },
+        {
+            "id": "BOUSHH",
+            "size": 3
+        },
+        {
+            "id": "ADMIRAL ACKBAR",
+            "size": 15
+        },
+        {
+            "id": "BB-8",
+            "size": 59
+        },
+        {
+            "id": "POE",
+            "size": 46
+        },
+        {
+            "id": "LOR SAN TEKKA",
+            "size": 6
+        },
+        {
+            "id": "KYLO REN",
+            "size": 32
+        },
+        {
+            "id": "CAPTAIN PHASMA",
+            "size": 6
+        },
+        {
+            "id": "FINN",
+            "size": 91
+        },
+        {
+            "id": "REY",
+            "size": 103
+        },
+        {
+            "id": "UNKAR PLUTT",
+            "size": 9
+        },
+        {
+            "id": "GENERAL HUX",
+            "size": 16
+        },
+        {
+            "id": "LIEUTENANT MITAKA",
+            "size": 3
+        },
+        {
+            "id": "SNOKE",
+            "size": 10
+        },
+        {
+            "id": "BALA-TIK",
+            "size": 4
+        },
+        {
+            "id": "MAZ",
+            "size": 9
+        },
+        {
+            "id": "JESS",
+            "size": 6
+        },
+        {
+            "id": "ADMIRAL STATURA",
+            "size": 3
+        },
+        {
+            "id": "YOLO ZIFF",
+            "size": 3
+        },
+        {
+            "id": "COLONEL DATOO",
+            "size": 3
+        },
+        {
+            "id": "ELLO ASTY",
+            "size": 4
+        },
+        {
+            "id": "NIV LEK",
+            "size": 3
+        }
+    ],
+    "links": [
+        {
+            "source": "NUTE GUNRAY",
+            "target": "QUI-GON",
+            "weight": 3
+        },
+        {
+            "source": "PK-4",
+            "target": "TC-14",
+            "weight": 1
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "QUI-GON",
+            "weight": 49
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "YODA",
+            "weight": 40
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "TC-14",
+            "weight": 1
+        },
+        {
+            "source": "QUI-GON",
+            "target": "YODA",
+            "weight": 8
+        },
+        {
+            "source": "QUI-GON",
+            "target": "TC-14",
+            "weight": 1
+        },
+        {
+            "source": "TC-14",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "TC-14",
+            "weight": 2
+        },
+        {
+            "source": "DOFINE",
+            "target": "NUTE GUNRAY",
+            "weight": 1
+        },
+        {
+            "source": "DOFINE",
+            "target": "TC-14",
+            "weight": 1
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "RUNE",
+            "weight": 19
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "OBI-WAN",
+            "weight": 4
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "RUNE",
+            "weight": 3
+        },
+        {
+            "source": "QUI-GON",
+            "target": "RUNE",
+            "weight": 2
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "TEY HOW",
+            "weight": 2
+        },
+        {
+            "source": "RUNE",
+            "target": "TEY HOW",
+            "weight": 2
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "VALORUM",
+            "weight": 2
+        },
+        {
+            "source": "QUI-GON",
+            "target": "VALORUM",
+            "weight": 2
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "RABE",
+            "weight": 2
+        },
+        {
+            "source": "RABE",
+            "target": "RUNE",
+            "weight": 2
+        },
+        {
+            "source": "RABE",
+            "target": "TEY HOW",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "EMPEROR",
+            "weight": 10
+        },
+        {
+            "source": "EMPEROR",
+            "target": "SIO BIBBLE",
+            "weight": 4
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "SIO BIBBLE",
+            "weight": 6
+        },
+        {
+            "source": "JAR JAR",
+            "target": "OBI-WAN",
+            "weight": 30
+        },
+        {
+            "source": "JAR JAR",
+            "target": "QUI-GON",
+            "weight": 43
+        },
+        {
+            "source": "JAR JAR",
+            "target": "TARPALS",
+            "weight": 2
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "OBI-WAN",
+            "weight": 5
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "QUI-GON",
+            "weight": 4
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "JAR JAR",
+            "weight": 5
+        },
+        {
+            "source": "EMPEROR",
+            "target": "NUTE GUNRAY",
+            "weight": 8
+        },
+        {
+            "source": "EMPEROR",
+            "target": "RUNE",
+            "weight": 7
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "NUTE GUNRAY",
+            "weight": 3
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "SIO BIBBLE",
+            "weight": 3
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "PADME",
+            "weight": 6
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "PADME",
+            "weight": 22
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "RUNE",
+            "weight": 3
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "RABE",
+            "weight": 11
+        },
+        {
+            "source": "PADME",
+            "target": "SIO BIBBLE",
+            "weight": 7
+        },
+        {
+            "source": "RUNE",
+            "target": "SIO BIBBLE",
+            "weight": 2
+        },
+        {
+            "source": "RABE",
+            "target": "SIO BIBBLE",
+            "weight": 4
+        },
+        {
+            "source": "PADME",
+            "target": "RUNE",
+            "weight": 3
+        },
+        {
+            "source": "PADME",
+            "target": "RABE",
+            "weight": 10
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "OBI-WAN",
+            "weight": 19
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "QUI-GON",
+            "weight": 20
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "JAR JAR",
+            "weight": 14
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "SIO BIBBLE",
+            "weight": 6
+        },
+        {
+            "source": "QUI-GON",
+            "target": "SIO BIBBLE",
+            "weight": 4
+        },
+        {
+            "source": "JAR JAR",
+            "target": "SIO BIBBLE",
+            "weight": 6
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "PADME",
+            "weight": 50
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "RABE",
+            "weight": 9
+        },
+        {
+            "source": "PADME",
+            "target": "QUI-GON",
+            "weight": 38
+        },
+        {
+            "source": "JAR JAR",
+            "target": "PADME",
+            "weight": 38
+        },
+        {
+            "source": "QUI-GON",
+            "target": "RABE",
+            "weight": 8
+        },
+        {
+            "source": "JAR JAR",
+            "target": "RABE",
+            "weight": 6
+        },
+        {
+            "source": "EMPEROR",
+            "target": "OBI-WAN",
+            "weight": 49
+        },
+        {
+            "source": "EMPEROR",
+            "target": "PADME",
+            "weight": 19
+        },
+        {
+            "source": "EMPEROR",
+            "target": "QUI-GON",
+            "weight": 7
+        },
+        {
+            "source": "EMPEROR",
+            "target": "JAR JAR",
+            "weight": 16
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "RIC OLIE",
+            "weight": 6
+        },
+        {
+            "source": "RIC OLIE",
+            "target": "SIO BIBBLE",
+            "weight": 1
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "RIC OLIE",
+            "weight": 6
+        },
+        {
+            "source": "PADME",
+            "target": "RIC OLIE",
+            "weight": 2
+        },
+        {
+            "source": "QUI-GON",
+            "target": "RIC OLIE",
+            "weight": 6
+        },
+        {
+            "source": "JAR JAR",
+            "target": "RIC OLIE",
+            "weight": 2
+        },
+        {
+            "source": "RABE",
+            "target": "RIC OLIE",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "R2-D2",
+            "weight": 7
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "R2-D2",
+            "weight": 60
+        },
+        {
+            "source": "PADME",
+            "target": "R2-D2",
+            "weight": 54
+        },
+        {
+            "source": "QUI-GON",
+            "target": "R2-D2",
+            "weight": 27
+        },
+        {
+            "source": "R2-D2",
+            "target": "RABE",
+            "weight": 4
+        },
+        {
+            "source": "JAR JAR",
+            "target": "R2-D2",
+            "weight": 27
+        },
+        {
+            "source": "ANAKIN",
+            "target": "R2-D2",
+            "weight": 63
+        },
+        {
+            "source": "R2-D2",
+            "target": "WATTO",
+            "weight": 7
+        },
+        {
+            "source": "ANAKIN",
+            "target": "PADME",
+            "weight": 97
+        },
+        {
+            "source": "ANAKIN",
+            "target": "QUI-GON",
+            "weight": 42
+        },
+        {
+            "source": "ANAKIN",
+            "target": "JAR JAR",
+            "weight": 29
+        },
+        {
+            "source": "ANAKIN",
+            "target": "WATTO",
+            "weight": 13
+        },
+        {
+            "source": "PADME",
+            "target": "WATTO",
+            "weight": 9
+        },
+        {
+            "source": "QUI-GON",
+            "target": "WATTO",
+            "weight": 14
+        },
+        {
+            "source": "JAR JAR",
+            "target": "WATTO",
+            "weight": 8
+        },
+        {
+            "source": "R2-D2",
+            "target": "SEBULBA",
+            "weight": 5
+        },
+        {
+            "source": "ANAKIN",
+            "target": "SEBULBA",
+            "weight": 9
+        },
+        {
+            "source": "PADME",
+            "target": "SEBULBA",
+            "weight": 5
+        },
+        {
+            "source": "QUI-GON",
+            "target": "SEBULBA",
+            "weight": 6
+        },
+        {
+            "source": "JAR JAR",
+            "target": "SEBULBA",
+            "weight": 5
+        },
+        {
+            "source": "ANAKIN",
+            "target": "JIRA",
+            "weight": 2
+        },
+        {
+            "source": "JIRA",
+            "target": "PADME",
+            "weight": 1
+        },
+        {
+            "source": "JIRA",
+            "target": "QUI-GON",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "R2-D2",
+            "weight": 106
+        },
+        {
+            "source": "ANAKIN",
+            "target": "C-3PO",
+            "weight": 19
+        },
+        {
+            "source": "C-3PO",
+            "target": "PADME",
+            "weight": 29
+        },
+        {
+            "source": "C-3PO",
+            "target": "QUI-GON",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "JAR JAR",
+            "weight": 3
+        },
+        {
+            "source": "C-3PO",
+            "target": "SHMI",
+            "weight": 3
+        },
+        {
+            "source": "R2-D2",
+            "target": "SHMI",
+            "weight": 8
+        },
+        {
+            "source": "ANAKIN",
+            "target": "SHMI",
+            "weight": 15
+        },
+        {
+            "source": "PADME",
+            "target": "SHMI",
+            "weight": 13
+        },
+        {
+            "source": "QUI-GON",
+            "target": "SHMI",
+            "weight": 14
+        },
+        {
+            "source": "JAR JAR",
+            "target": "SHMI",
+            "weight": 11
+        },
+        {
+            "source": "ANAKIN",
+            "target": "EMPEROR",
+            "weight": 54
+        },
+        {
+            "source": "EMPEROR",
+            "target": "WATTO",
+            "weight": 1
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "EMPEROR",
+            "weight": 4
+        },
+        {
+            "source": "ANAKIN",
+            "target": "DARTH MAUL",
+            "weight": 4
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "WATTO",
+            "weight": 1
+        },
+        {
+            "source": "SHMI",
+            "target": "WATTO",
+            "weight": 6
+        },
+        {
+            "source": "SEBULBA",
+            "target": "WATTO",
+            "weight": 4
+        },
+        {
+            "source": "KITSTER",
+            "target": "R2-D2",
+            "weight": 8
+        },
+        {
+            "source": "R2-D2",
+            "target": "WALD",
+            "weight": 1
+        },
+        {
+            "source": "GREEDO",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "KITSTER",
+            "weight": 8
+        },
+        {
+            "source": "ANAKIN",
+            "target": "WALD",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "GREEDO",
+            "weight": 2
+        },
+        {
+            "source": "KITSTER",
+            "target": "PADME",
+            "weight": 7
+        },
+        {
+            "source": "PADME",
+            "target": "WALD",
+            "weight": 1
+        },
+        {
+            "source": "GREEDO",
+            "target": "PADME",
+            "weight": 1
+        },
+        {
+            "source": "KITSTER",
+            "target": "QUI-GON",
+            "weight": 9
+        },
+        {
+            "source": "QUI-GON",
+            "target": "WALD",
+            "weight": 2
+        },
+        {
+            "source": "GREEDO",
+            "target": "QUI-GON",
+            "weight": 2
+        },
+        {
+            "source": "JAR JAR",
+            "target": "KITSTER",
+            "weight": 7
+        },
+        {
+            "source": "JAR JAR",
+            "target": "WALD",
+            "weight": 1
+        },
+        {
+            "source": "GREEDO",
+            "target": "JAR JAR",
+            "weight": 1
+        },
+        {
+            "source": "KITSTER",
+            "target": "WALD",
+            "weight": 2
+        },
+        {
+            "source": "GREEDO",
+            "target": "KITSTER",
+            "weight": 2
+        },
+        {
+            "source": "GREEDO",
+            "target": "WALD",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "OBI-WAN",
+            "weight": 107
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "SHMI",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "YODA",
+            "weight": 20
+        },
+        {
+            "source": "SHMI",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "KITSTER",
+            "target": "WATTO",
+            "weight": 4
+        },
+        {
+            "source": "C-3PO",
+            "target": "WATTO",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "KITSTER",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "SEBULBA",
+            "weight": 1
+        },
+        {
+            "source": "KITSTER",
+            "target": "SHMI",
+            "weight": 6
+        },
+        {
+            "source": "SEBULBA",
+            "target": "SHMI",
+            "weight": 4
+        },
+        {
+            "source": "KITSTER",
+            "target": "SEBULBA",
+            "weight": 4
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "OBI-WAN",
+            "weight": 6
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "OBI-WAN",
+            "weight": 2
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "SEBULBA",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "FODE/BEED",
+            "weight": 5
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "SEBULBA",
+            "weight": 5
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "JABBA",
+            "weight": 1
+        },
+        {
+            "source": "JABBA",
+            "target": "SEBULBA",
+            "weight": 2
+        },
+        {
+            "source": "JABBA",
+            "target": "R2-D2",
+            "weight": 10
+        },
+        {
+            "source": "ANAKIN",
+            "target": "JABBA",
+            "weight": 1
+        },
+        {
+            "source": "JABBA",
+            "target": "PADME",
+            "weight": 2
+        },
+        {
+            "source": "JABBA",
+            "target": "QUI-GON",
+            "weight": 2
+        },
+        {
+            "source": "JABBA",
+            "target": "JAR JAR",
+            "weight": 2
+        },
+        {
+            "source": "JABBA",
+            "target": "SHMI",
+            "weight": 2
+        },
+        {
+            "source": "JABBA",
+            "target": "KITSTER",
+            "weight": 2
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "JAR JAR",
+            "weight": 4
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "PADME",
+            "weight": 3
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "QUI-GON",
+            "weight": 3
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "SHMI",
+            "weight": 3
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "WATTO",
+            "weight": 2
+        },
+        {
+            "source": "KITSTER",
+            "target": "OBI-WAN",
+            "weight": 1
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "R2-D2",
+            "weight": 2
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "WATTO",
+            "weight": 2
+        },
+        {
+            "source": "FODE/BEED",
+            "target": "KITSTER",
+            "weight": 2
+        },
+        {
+            "source": "JIRA",
+            "target": "WATTO",
+            "weight": 1
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "QUI-GON",
+            "weight": 8
+        },
+        {
+            "source": "ANAKIN",
+            "target": "CAPTAIN PANAKA",
+            "weight": 12
+        },
+        {
+            "source": "ANAKIN",
+            "target": "RIC OLIE",
+            "weight": 6
+        },
+        {
+            "source": "RIC OLIE",
+            "target": "WATTO",
+            "weight": 1
+        },
+        {
+            "source": "R2-D2",
+            "target": "SIO BIBBLE",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "SIO BIBBLE",
+            "weight": 4
+        },
+        {
+            "source": "EMPEROR",
+            "target": "VALORUM",
+            "weight": 4
+        },
+        {
+            "source": "EMPEROR",
+            "target": "RABE",
+            "weight": 5
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "VALORUM",
+            "weight": 4
+        },
+        {
+            "source": "ANAKIN",
+            "target": "VALORUM",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "RABE",
+            "weight": 6
+        },
+        {
+            "source": "PADME",
+            "target": "VALORUM",
+            "weight": 1
+        },
+        {
+            "source": "JAR JAR",
+            "target": "VALORUM",
+            "weight": 2
+        },
+        {
+            "source": "RABE",
+            "target": "VALORUM",
+            "weight": 3
+        },
+        {
+            "source": "EMPEROR",
+            "target": "MACE WINDU",
+            "weight": 9
+        },
+        {
+            "source": "EMPEROR",
+            "target": "KI-ADI-MUNDI",
+            "weight": 6
+        },
+        {
+            "source": "EMPEROR",
+            "target": "YODA",
+            "weight": 17
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "MACE WINDU",
+            "weight": 10
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "OBI-WAN",
+            "weight": 20
+        },
+        {
+            "source": "ANAKIN",
+            "target": "MACE WINDU",
+            "weight": 18
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "PADME",
+            "weight": 8
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "QUI-GON",
+            "weight": 3
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "YODA",
+            "weight": 18
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "RABE",
+            "weight": 1
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "OBI-WAN",
+            "weight": 8
+        },
+        {
+            "source": "ANAKIN",
+            "target": "KI-ADI-MUNDI",
+            "weight": 7
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "PADME",
+            "weight": 2
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "QUI-GON",
+            "weight": 2
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "YODA",
+            "weight": 10
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "RABE",
+            "weight": 1
+        },
+        {
+            "source": "PADME",
+            "target": "YODA",
+            "weight": 7
+        },
+        {
+            "source": "RABE",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "EMPEROR",
+            "weight": 11
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "CAPTAIN PANAKA",
+            "weight": 2
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "VALORUM",
+            "weight": 2
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "RABE",
+            "weight": 1
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "JAR JAR",
+            "weight": 6
+        },
+        {
+            "source": "EMPEROR",
+            "target": "R2-D2",
+            "weight": 14
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "NUTE GUNRAY",
+            "weight": 4
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "RUNE",
+            "weight": 4
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "R2-D2",
+            "weight": 3
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "CAPTAIN PANAKA",
+            "weight": 3
+        },
+        {
+            "source": "ANAKIN",
+            "target": "BOSS NASS",
+            "weight": 4
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "PADME",
+            "weight": 2
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "RABE",
+            "weight": 1
+        },
+        {
+            "source": "EMPEROR",
+            "target": "GENERAL CEEL",
+            "weight": 2
+        },
+        {
+            "source": "JAR JAR",
+            "target": "NUTE GUNRAY",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL CEEL",
+            "target": "NUTE GUNRAY",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL CEEL",
+            "target": "QUI-GON",
+            "weight": 1
+        },
+        {
+            "source": "JAR JAR",
+            "target": "RUNE",
+            "weight": 1
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "JAR JAR",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL CEEL",
+            "target": "JAR JAR",
+            "weight": 4
+        },
+        {
+            "source": "GENERAL CEEL",
+            "target": "RUNE",
+            "weight": 1
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "GENERAL CEEL",
+            "weight": 1
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "DARTH MAUL",
+            "weight": 1
+        },
+        {
+            "source": "DARTH MAUL",
+            "target": "PADME",
+            "weight": 1
+        },
+        {
+            "source": "BRAVO TWO",
+            "target": "RIC OLIE",
+            "weight": 4
+        },
+        {
+            "source": "R2-D2",
+            "target": "RIC OLIE",
+            "weight": 2
+        },
+        {
+            "source": "BRAVO TWO",
+            "target": "R2-D2",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "BRAVO TWO",
+            "weight": 2
+        },
+        {
+            "source": "DOFINE",
+            "target": "TEY HOW",
+            "weight": 1
+        },
+        {
+            "source": "BRAVO THREE",
+            "target": "RIC OLIE",
+            "weight": 2
+        },
+        {
+            "source": "BRAVO THREE",
+            "target": "BRAVO TWO",
+            "weight": 2
+        },
+        {
+            "source": "BRAVO THREE",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "BRAVO THREE",
+            "weight": 1
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "YODA",
+            "weight": 2
+        },
+        {
+            "source": "RUNE",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "EMPEROR",
+            "weight": 2
+        },
+        {
+            "source": "CAPTAIN PANAKA",
+            "target": "MACE WINDU",
+            "weight": 1
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "SIO BIBBLE",
+            "weight": 1
+        },
+        {
+            "source": "JAR JAR",
+            "target": "MACE WINDU",
+            "weight": 5
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "MACE WINDU",
+            "weight": 1
+        },
+        {
+            "source": "SIO BIBBLE",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "SIO BIBBLE",
+            "weight": 2
+        },
+        {
+            "source": "JAR JAR",
+            "target": "YODA",
+            "weight": 4
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL CEEL",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL CEEL",
+            "target": "SIO BIBBLE",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL CEEL",
+            "target": "OBI-WAN",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "GENERAL CEEL",
+            "weight": 1
+        },
+        {
+            "source": "BOSS NASS",
+            "target": "GENERAL CEEL",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "R2-D2",
+            "weight": 4
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "PADME",
+            "weight": 10
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "JAR JAR",
+            "weight": 5
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "EMPEROR",
+            "weight": 3
+        },
+        {
+            "source": "EMPEROR",
+            "target": "SENATOR ASK AAK",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "ORN FREE TAA",
+            "weight": 3
+        },
+        {
+            "source": "PADME",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "ORN FREE TAA",
+            "target": "PADME",
+            "weight": 1
+        },
+        {
+            "source": "JAR JAR",
+            "target": "SENATOR ASK AAK",
+            "weight": 2
+        },
+        {
+            "source": "JAR JAR",
+            "target": "ORN FREE TAA",
+            "weight": 3
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "ORN FREE TAA",
+            "weight": 2
+        },
+        {
+            "source": "ORN FREE TAA",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "EMPEROR",
+            "weight": 13
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "MACE WINDU",
+            "weight": 3
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "COUNT DOOKU",
+            "weight": 4
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "KI-ADI-MUNDI",
+            "weight": 2
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "OBI-WAN",
+            "weight": 13
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "YODA",
+            "weight": 14
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "CAPTAIN TYPHO",
+            "weight": 2
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "ORN FREE TAA",
+            "weight": 1
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "MACE WINDU",
+            "weight": 7
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "MACE WINDU",
+            "weight": 2
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "ORN FREE TAA",
+            "weight": 1
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "KI-ADI-MUNDI",
+            "weight": 3
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "OBI-WAN",
+            "weight": 20
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "YODA",
+            "weight": 5
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "JAR JAR",
+            "weight": 3
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "COUNT DOOKU",
+            "weight": 1
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "ORN FREE TAA",
+            "weight": 1
+        },
+        {
+            "source": "JAR JAR",
+            "target": "KI-ADI-MUNDI",
+            "weight": 2
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "KI-ADI-MUNDI",
+            "weight": 1
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "ORN FREE TAA",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "OBI-WAN",
+            "weight": 7
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "ORN FREE TAA",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN TYPHO",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "ORN FREE TAA",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "CAPTAIN TYPHO",
+            "weight": 6
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "PK-4",
+            "weight": 1
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "NUTE GUNRAY",
+            "weight": 4
+        },
+        {
+            "source": "ANAKIN",
+            "target": "NUTE GUNRAY",
+            "weight": 7
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "SIO BIBBLE",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "COUNT DOOKU",
+            "weight": 20
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "PADME",
+            "weight": 13
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "QUI-GON",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "RUWEE",
+            "weight": 3
+        },
+        {
+            "source": "ANAKIN",
+            "target": "JOBAL",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "SOLA",
+            "weight": 2
+        },
+        {
+            "source": "PADME",
+            "target": "RUWEE",
+            "weight": 2
+        },
+        {
+            "source": "JOBAL",
+            "target": "PADME",
+            "weight": 2
+        },
+        {
+            "source": "PADME",
+            "target": "SOLA",
+            "weight": 2
+        },
+        {
+            "source": "JOBAL",
+            "target": "RUWEE",
+            "weight": 1
+        },
+        {
+            "source": "RUWEE",
+            "target": "SOLA",
+            "weight": 1
+        },
+        {
+            "source": "JOBAL",
+            "target": "SOLA",
+            "weight": 2
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "TAUN WE",
+            "weight": 9
+        },
+        {
+            "source": "LAMA SU",
+            "target": "OBI-WAN",
+            "weight": 7
+        },
+        {
+            "source": "LAMA SU",
+            "target": "TAUN WE",
+            "weight": 5
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "OBI-WAN",
+            "weight": 13
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "LAMA SU",
+            "weight": 2
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "TAUN WE",
+            "weight": 5
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "LAMA SU",
+            "weight": 1
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "JANGO FETT",
+            "weight": 8
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "OBI-WAN",
+            "weight": 9
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "TAUN WE",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "PADME",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "SHMI",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "SNAP",
+            "target": "WATTO",
+            "weight": 1
+        },
+        {
+            "source": "BERU",
+            "target": "C-3PO",
+            "weight": 5
+        },
+        {
+            "source": "C-3PO",
+            "target": "OWEN",
+            "weight": 7
+        },
+        {
+            "source": "C-3PO",
+            "target": "CLIEGG",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "BERU",
+            "weight": 3
+        },
+        {
+            "source": "BERU",
+            "target": "PADME",
+            "weight": 4
+        },
+        {
+            "source": "BERU",
+            "target": "SHMI",
+            "weight": 1
+        },
+        {
+            "source": "BERU",
+            "target": "OWEN",
+            "weight": 9
+        },
+        {
+            "source": "BERU",
+            "target": "CLIEGG",
+            "weight": 4
+        },
+        {
+            "source": "ANAKIN",
+            "target": "OWEN",
+            "weight": 5
+        },
+        {
+            "source": "ANAKIN",
+            "target": "CLIEGG",
+            "weight": 3
+        },
+        {
+            "source": "OWEN",
+            "target": "PADME",
+            "weight": 5
+        },
+        {
+            "source": "CLIEGG",
+            "target": "PADME",
+            "weight": 3
+        },
+        {
+            "source": "OWEN",
+            "target": "SHMI",
+            "weight": 1
+        },
+        {
+            "source": "CLIEGG",
+            "target": "SHMI",
+            "weight": 1
+        },
+        {
+            "source": "CLIEGG",
+            "target": "OWEN",
+            "weight": 3
+        },
+        {
+            "source": "EMPEROR",
+            "target": "JANGO FETT",
+            "weight": 2
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "JANGO FETT",
+            "weight": 1
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "MACE WINDU",
+            "weight": 3
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "JANGO FETT",
+            "weight": 4
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "KI-ADI-MUNDI",
+            "weight": 1
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "JAR JAR",
+            "weight": 1
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "SENATOR ASK AAK",
+            "weight": 1
+        },
+        {
+            "source": "SENATOR ASK AAK",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "COUNT DOOKU",
+            "weight": 5
+        },
+        {
+            "source": "C-3PO",
+            "target": "OBI-WAN",
+            "weight": 29
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "R2-D2",
+            "weight": 7
+        },
+        {
+            "source": "BERU",
+            "target": "R2-D2",
+            "weight": 3
+        },
+        {
+            "source": "OWEN",
+            "target": "R2-D2",
+            "weight": 4
+        },
+        {
+            "source": "CLIEGG",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "MACE WINDU",
+            "weight": 3
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "R2-D2",
+            "weight": 3
+        },
+        {
+            "source": "ANAKIN",
+            "target": "JANGO FETT",
+            "weight": 4
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "PADME",
+            "weight": 4
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "POGGLE",
+            "weight": 4
+        },
+        {
+            "source": "NUTE GUNRAY",
+            "target": "SUN RIT",
+            "weight": 2
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "POGGLE",
+            "weight": 3
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "SUN RIT",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "POGGLE",
+            "weight": 3
+        },
+        {
+            "source": "ANAKIN",
+            "target": "SUN RIT",
+            "weight": 2
+        },
+        {
+            "source": "PADME",
+            "target": "POGGLE",
+            "weight": 2
+        },
+        {
+            "source": "PADME",
+            "target": "SUN RIT",
+            "weight": 2
+        },
+        {
+            "source": "POGGLE",
+            "target": "SUN RIT",
+            "weight": 2
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "NUTE GUNRAY",
+            "weight": 1
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "NUTE GUNRAY",
+            "weight": 1
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "COUNT DOOKU",
+            "weight": 3
+        },
+        {
+            "source": "ANAKIN",
+            "target": "BOBA FETT",
+            "weight": 3
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "PADME",
+            "weight": 3
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "POGGLE",
+            "weight": 1
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "SUN RIT",
+            "weight": 1
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "POGGLE",
+            "weight": 1
+        },
+        {
+            "source": "JANGO FETT",
+            "target": "SUN RIT",
+            "weight": 1
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "POGGLE",
+            "weight": 2
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "SUN RIT",
+            "weight": 1
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "MACE WINDU",
+            "weight": 2
+        },
+        {
+            "source": "KI-ADI-MUNDI",
+            "target": "PLO KOON",
+            "weight": 4
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "KI-ADI-MUNDI",
+            "weight": 1
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "MACE WINDU",
+            "target": "PLO KOON",
+            "weight": 3
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "PLO KOON",
+            "weight": 3
+        },
+        {
+            "source": "PLO KOON",
+            "target": "YODA",
+            "weight": 3
+        },
+        {
+            "source": "EMPEROR",
+            "target": "GENERAL GRIEVOUS",
+            "weight": 14
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "GENERAL GRIEVOUS",
+            "weight": 8
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "OBI-WAN",
+            "weight": 20
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "R2-D2",
+            "weight": 6
+        },
+        {
+            "source": "ANAKIN",
+            "target": "GENERAL GRIEVOUS",
+            "weight": 14
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "RED LEADER",
+            "weight": 3
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "ODD BALL",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "RED LEADER",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "ODD BALL",
+            "weight": 2
+        },
+        {
+            "source": "ODD BALL",
+            "target": "RED LEADER",
+            "weight": 2
+        },
+        {
+            "source": "R2-D2",
+            "target": "RED LEADER",
+            "weight": 2
+        },
+        {
+            "source": "ODD BALL",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "EMPEROR",
+            "weight": 5
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "C-3PO",
+            "weight": 7
+        },
+        {
+            "source": "C-3PO",
+            "target": "GENERAL GRIEVOUS",
+            "weight": 2
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "R2-D2",
+            "weight": 6
+        },
+        {
+            "source": "ANAKIN",
+            "target": "BAIL ORGANA",
+            "weight": 3
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "GENERAL GRIEVOUS",
+            "weight": 2
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "MACE WINDU",
+            "weight": 6
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "JAR JAR",
+            "weight": 1
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "PADME",
+            "weight": 8
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "PADME",
+            "weight": 3
+        },
+        {
+            "source": "EMPEROR",
+            "target": "MON MOTHMA",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "FANG ZAR",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "GIDDEAN DANU",
+            "weight": 1
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "MON MOTHMA",
+            "weight": 2
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "FANG ZAR",
+            "weight": 2
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "GIDDEAN DANU",
+            "weight": 2
+        },
+        {
+            "source": "MON MOTHMA",
+            "target": "PADME",
+            "weight": 2
+        },
+        {
+            "source": "FANG ZAR",
+            "target": "PADME",
+            "weight": 3
+        },
+        {
+            "source": "GIDDEAN DANU",
+            "target": "PADME",
+            "weight": 2
+        },
+        {
+            "source": "FANG ZAR",
+            "target": "MON MOTHMA",
+            "weight": 2
+        },
+        {
+            "source": "GIDDEAN DANU",
+            "target": "MON MOTHMA",
+            "weight": 2
+        },
+        {
+            "source": "FANG ZAR",
+            "target": "GIDDEAN DANU",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "PLO KOON",
+            "weight": 2
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "KI-ADI-MUNDI",
+            "weight": 3
+        },
+        {
+            "source": "ANAKIN",
+            "target": "PLO KOON",
+            "weight": 2
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "YODA",
+            "weight": 3
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "PLO KOON",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "CAPTAIN TYPHO",
+            "weight": 3
+        },
+        {
+            "source": "CLONE COMMANDER GREE",
+            "target": "YODA",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "MON MOTHMA",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "FANG ZAR",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "GIDDEAN DANU",
+            "weight": 1
+        },
+        {
+            "source": "CLONE COMMANDER CODY",
+            "target": "OBI-WAN",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "CLONE COMMANDER CODY",
+            "weight": 2
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "TION MEDON",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "TION MEDON",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "POGGLE",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "NUTE GUNRAY",
+            "weight": 1
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "RUNE",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "RUNE",
+            "weight": 1
+        },
+        {
+            "source": "GENERAL GRIEVOUS",
+            "target": "POGGLE",
+            "weight": 1
+        },
+        {
+            "source": "POGGLE",
+            "target": "RUNE",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "FANG ZAR",
+            "weight": 1
+        },
+        {
+            "source": "CLONE COMMANDER CODY",
+            "target": "MACE WINDU",
+            "weight": 1
+        },
+        {
+            "source": "CLONE COMMANDER CODY",
+            "target": "KI-ADI-MUNDI",
+            "weight": 1
+        },
+        {
+            "source": "CLONE COMMANDER CODY",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "CLONE COMMANDER CODY",
+            "target": "GENERAL GRIEVOUS",
+            "weight": 1
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "EMPEROR",
+            "weight": 34
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "MACE WINDU",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "DARTH VADER",
+            "weight": 11
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "PADME",
+            "weight": 4
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "GENERAL GRIEVOUS",
+            "weight": 1
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "OBI-WAN",
+            "weight": 19
+        },
+        {
+            "source": "CLONE COMMANDER CODY",
+            "target": "EMPEROR",
+            "weight": 1
+        },
+        {
+            "source": "CLONE COMMANDER GREE",
+            "target": "EMPEROR",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "YODA",
+            "weight": 4
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "CLONE COMMANDER GREE",
+            "weight": 1
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "CAPTAIN ANTILLES",
+            "weight": 2
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "NUTE GUNRAY",
+            "weight": 2
+        },
+        {
+            "source": "ANAKIN",
+            "target": "RUNE",
+            "weight": 2
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "YODA",
+            "weight": 7
+        },
+        {
+            "source": "COUNT DOOKU",
+            "target": "DARTH VADER",
+            "weight": 1
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "QUI-GON",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "YODA",
+            "weight": 3
+        },
+        {
+            "source": "R2-D2",
+            "target": "YODA",
+            "weight": 11
+        },
+        {
+            "source": "C-3PO",
+            "target": "LUKE",
+            "weight": 71
+        },
+        {
+            "source": "C-3PO",
+            "target": "LEIA",
+            "weight": 92
+        },
+        {
+            "source": "LUKE",
+            "target": "R2-D2",
+            "weight": 74
+        },
+        {
+            "source": "LEIA",
+            "target": "R2-D2",
+            "weight": 45
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "LUKE",
+            "weight": 1
+        },
+        {
+            "source": "BAIL ORGANA",
+            "target": "LEIA",
+            "weight": 1
+        },
+        {
+            "source": "LUKE",
+            "target": "OBI-WAN",
+            "weight": 53
+        },
+        {
+            "source": "LEIA",
+            "target": "OBI-WAN",
+            "weight": 12
+        },
+        {
+            "source": "LEIA",
+            "target": "LUKE",
+            "weight": 75
+        },
+        {
+            "source": "LUKE",
+            "target": "PADME",
+            "weight": 1
+        },
+        {
+            "source": "LUKE",
+            "target": "YODA",
+            "weight": 11
+        },
+        {
+            "source": "LEIA",
+            "target": "PADME",
+            "weight": 1
+        },
+        {
+            "source": "LEIA",
+            "target": "YODA",
+            "weight": 4
+        },
+        {
+            "source": "C-3PO",
+            "target": "CAPTAIN ANTILLES",
+            "weight": 2
+        },
+        {
+            "source": "CAPTAIN ANTILLES",
+            "target": "R2-D2",
+            "weight": 2
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "TARKIN",
+            "weight": 11
+        },
+        {
+            "source": "EMPEROR",
+            "target": "TARKIN",
+            "weight": 3
+        },
+        {
+            "source": "BERU",
+            "target": "OBI-WAN",
+            "weight": 3
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "OWEN",
+            "weight": 5
+        },
+        {
+            "source": "C-3PO",
+            "target": "YOUNG GIRL",
+            "weight": 1
+        },
+        {
+            "source": "R2-D2",
+            "target": "YOUNG GIRL",
+            "weight": 1
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "YOUNG GIRL",
+            "weight": 1
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "LEIA",
+            "weight": 18
+        },
+        {
+            "source": "LEIA",
+            "target": "YOUNG GIRL",
+            "weight": 2
+        },
+        {
+            "source": "BIGGS",
+            "target": "LUKE",
+            "weight": 19
+        },
+        {
+            "source": "CAMIE",
+            "target": "LUKE",
+            "weight": 2
+        },
+        {
+            "source": "BIGGS",
+            "target": "CAMIE",
+            "weight": 2
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "SNAP",
+            "weight": 3
+        },
+        {
+            "source": "LEIA",
+            "target": "SNAP",
+            "weight": 3
+        },
+        {
+            "source": "LUKE",
+            "target": "OWEN",
+            "weight": 10
+        },
+        {
+            "source": "BIGGS",
+            "target": "OWEN",
+            "weight": 2
+        },
+        {
+            "source": "BERU",
+            "target": "LUKE",
+            "weight": 5
+        },
+        {
+            "source": "BIGGS",
+            "target": "OBI-WAN",
+            "weight": 3
+        },
+        {
+            "source": "CAPTAIN ANTILLES",
+            "target": "OBI-WAN",
+            "weight": 1
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "SNAP",
+            "weight": 2
+        },
+        {
+            "source": "BIGGS",
+            "target": "C-3PO",
+            "weight": 5
+        },
+        {
+            "source": "C-3PO",
+            "target": "SNAP",
+            "weight": 2
+        },
+        {
+            "source": "BIGGS",
+            "target": "R2-D2",
+            "weight": 2
+        },
+        {
+            "source": "R2-D2",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "BERU",
+            "target": "LEIA",
+            "weight": 1
+        },
+        {
+            "source": "BERU",
+            "target": "BIGGS",
+            "weight": 2
+        },
+        {
+            "source": "BERU",
+            "target": "CAPTAIN ANTILLES",
+            "weight": 1
+        },
+        {
+            "source": "BERU",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN ANTILLES",
+            "target": "LUKE",
+            "weight": 1
+        },
+        {
+            "source": "LUKE",
+            "target": "SNAP",
+            "weight": 2
+        },
+        {
+            "source": "BIGGS",
+            "target": "LEIA",
+            "weight": 5
+        },
+        {
+            "source": "CAPTAIN ANTILLES",
+            "target": "LEIA",
+            "weight": 1
+        },
+        {
+            "source": "BIGGS",
+            "target": "CAPTAIN ANTILLES",
+            "weight": 1
+        },
+        {
+            "source": "BIGGS",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN ANTILLES",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "DARTH VADER",
+            "weight": 4
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "R2-D2",
+            "weight": 6
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "LUKE",
+            "weight": 43
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "MOTTI",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "MOTTI",
+            "weight": 2
+        },
+        {
+            "source": "MOTTI",
+            "target": "TARKIN",
+            "weight": 2
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "OBI-WAN",
+            "weight": 14
+        },
+        {
+            "source": "C-3PO",
+            "target": "CHEWBACCA",
+            "weight": 75
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "LUKE",
+            "weight": 71
+        },
+        {
+            "source": "HAN",
+            "target": "OBI-WAN",
+            "weight": 16
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "HAN",
+            "weight": 148
+        },
+        {
+            "source": "HAN",
+            "target": "LUKE",
+            "weight": 85
+        },
+        {
+            "source": "HAN",
+            "target": "JABBA",
+            "weight": 11
+        },
+        {
+            "source": "GREEDO",
+            "target": "HAN",
+            "weight": 2
+        },
+        {
+            "source": "GREEDO",
+            "target": "JABBA",
+            "weight": 2
+        },
+        {
+            "source": "LEIA",
+            "target": "TARKIN",
+            "weight": 2
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "JABBA",
+            "weight": 7
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "GREEDO",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "HAN",
+            "weight": 74
+        },
+        {
+            "source": "HAN",
+            "target": "R2-D2",
+            "weight": 36
+        },
+        {
+            "source": "EMPEROR",
+            "target": "LEIA",
+            "weight": 5
+        },
+        {
+            "source": "LEIA",
+            "target": "MOTTI",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "R2-D2",
+            "weight": 37
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "LEIA",
+            "weight": 92
+        },
+        {
+            "source": "HAN",
+            "target": "LEIA",
+            "weight": 104
+        },
+        {
+            "source": "OBI-WAN",
+            "target": "TARKIN",
+            "weight": 2
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "YOUNG GIRL",
+            "weight": 1
+        },
+        {
+            "source": "LUKE",
+            "target": "YOUNG GIRL",
+            "weight": 1
+        },
+        {
+            "source": "HAN",
+            "target": "YOUNG GIRL",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "DARTH VADER",
+            "weight": 7
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "HAN",
+            "weight": 14
+        },
+        {
+            "source": "R2-D2",
+            "target": "WEDGE",
+            "weight": 3
+        },
+        {
+            "source": "GOLD LEADER",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "DODONNA",
+            "target": "R2-D2",
+            "weight": 3
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "WEDGE",
+            "weight": 2
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "GOLD LEADER",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "DODONNA",
+            "weight": 2
+        },
+        {
+            "source": "LUKE",
+            "target": "WEDGE",
+            "weight": 14
+        },
+        {
+            "source": "GOLD LEADER",
+            "target": "LUKE",
+            "weight": 1
+        },
+        {
+            "source": "DODONNA",
+            "target": "LUKE",
+            "weight": 5
+        },
+        {
+            "source": "HAN",
+            "target": "WEDGE",
+            "weight": 3
+        },
+        {
+            "source": "GOLD LEADER",
+            "target": "HAN",
+            "weight": 2
+        },
+        {
+            "source": "DODONNA",
+            "target": "HAN",
+            "weight": 3
+        },
+        {
+            "source": "LEIA",
+            "target": "WEDGE",
+            "weight": 7
+        },
+        {
+            "source": "GOLD LEADER",
+            "target": "LEIA",
+            "weight": 3
+        },
+        {
+            "source": "DODONNA",
+            "target": "LEIA",
+            "weight": 7
+        },
+        {
+            "source": "GOLD LEADER",
+            "target": "WEDGE",
+            "weight": 6
+        },
+        {
+            "source": "DODONNA",
+            "target": "WEDGE",
+            "weight": 5
+        },
+        {
+            "source": "DODONNA",
+            "target": "GOLD LEADER",
+            "weight": 2
+        },
+        {
+            "source": "DODONNA",
+            "target": "OBI-WAN",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "RED LEADER",
+            "weight": 4
+        },
+        {
+            "source": "C-3PO",
+            "target": "DODONNA",
+            "weight": 5
+        },
+        {
+            "source": "LUKE",
+            "target": "RED LEADER",
+            "weight": 11
+        },
+        {
+            "source": "HAN",
+            "target": "RED LEADER",
+            "weight": 1
+        },
+        {
+            "source": "BIGGS",
+            "target": "HAN",
+            "weight": 1
+        },
+        {
+            "source": "LEIA",
+            "target": "RED LEADER",
+            "weight": 7
+        },
+        {
+            "source": "BIGGS",
+            "target": "RED LEADER",
+            "weight": 5
+        },
+        {
+            "source": "DODONNA",
+            "target": "RED LEADER",
+            "weight": 5
+        },
+        {
+            "source": "BIGGS",
+            "target": "DODONNA",
+            "weight": 5
+        },
+        {
+            "source": "RED LEADER",
+            "target": "WEDGE",
+            "weight": 6
+        },
+        {
+            "source": "GOLD LEADER",
+            "target": "RED LEADER",
+            "weight": 3
+        },
+        {
+            "source": "C-3PO",
+            "target": "WEDGE",
+            "weight": 5
+        },
+        {
+            "source": "BIGGS",
+            "target": "WEDGE",
+            "weight": 5
+        },
+        {
+            "source": "LUKE",
+            "target": "RED TEN",
+            "weight": 2
+        },
+        {
+            "source": "LEIA",
+            "target": "RED TEN",
+            "weight": 1
+        },
+        {
+            "source": "RED LEADER",
+            "target": "RED TEN",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "GOLD LEADER",
+            "weight": 1
+        },
+        {
+            "source": "BIGGS",
+            "target": "GOLD LEADER",
+            "weight": 1
+        },
+        {
+            "source": "GOLD FIVE",
+            "target": "GOLD LEADER",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "GOLD FIVE",
+            "weight": 1
+        },
+        {
+            "source": "GOLD FIVE",
+            "target": "LEIA",
+            "weight": 1
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "GOLD LEADER",
+            "weight": 1
+        },
+        {
+            "source": "GOLD FIVE",
+            "target": "RED LEADER",
+            "weight": 2
+        },
+        {
+            "source": "GOLD FIVE",
+            "target": "LUKE",
+            "weight": 1
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "RED TEN",
+            "weight": 3
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "RED LEADER",
+            "weight": 2
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "WEDGE",
+            "weight": 1
+        },
+        {
+            "source": "BIGGS",
+            "target": "DARTH VADER",
+            "weight": 1
+        },
+        {
+            "source": "HAN",
+            "target": "SNAP",
+            "weight": 3
+        },
+        {
+            "source": "HAN",
+            "target": "RIEEKAN",
+            "weight": 4
+        },
+        {
+            "source": "JABBA",
+            "target": "LEIA",
+            "weight": 10
+        },
+        {
+            "source": "LEIA",
+            "target": "RIEEKAN",
+            "weight": 6
+        },
+        {
+            "source": "JABBA",
+            "target": "RIEEKAN",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "DERLIN",
+            "weight": 1
+        },
+        {
+            "source": "DERLIN",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "DERLIN",
+            "weight": 1
+        },
+        {
+            "source": "DERLIN",
+            "target": "LUKE",
+            "weight": 1
+        },
+        {
+            "source": "DERLIN",
+            "target": "LEIA",
+            "weight": 2
+        },
+        {
+            "source": "HAN",
+            "target": "YODA",
+            "weight": 4
+        },
+        {
+            "source": "HAN",
+            "target": "ZEV",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "RIEEKAN",
+            "weight": 2
+        },
+        {
+            "source": "R2-D2",
+            "target": "RIEEKAN",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "RIEEKAN",
+            "weight": 2
+        },
+        {
+            "source": "LUKE",
+            "target": "RIEEKAN",
+            "weight": 2
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "PIETT",
+            "weight": 9
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "OZZEL",
+            "weight": 2
+        },
+        {
+            "source": "OZZEL",
+            "target": "PIETT",
+            "weight": 2
+        },
+        {
+            "source": "DACK",
+            "target": "LUKE",
+            "weight": 4
+        },
+        {
+            "source": "JANSON",
+            "target": "WEDGE",
+            "weight": 3
+        },
+        {
+            "source": "LUKE",
+            "target": "ZEV",
+            "weight": 2
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "NEEDA",
+            "weight": 4
+        },
+        {
+            "source": "EMPEROR",
+            "target": "PIETT",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "NEEDA",
+            "weight": 1
+        },
+        {
+            "source": "NEEDA",
+            "target": "PIETT",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "LUKE",
+            "weight": 16
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "DARTH VADER",
+            "weight": 5
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "PIETT",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "LANDO",
+            "weight": 24
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "LANDO",
+            "weight": 38
+        },
+        {
+            "source": "HAN",
+            "target": "LANDO",
+            "weight": 35
+        },
+        {
+            "source": "LANDO",
+            "target": "LEIA",
+            "weight": 34
+        },
+        {
+            "source": "EMPEROR",
+            "target": "HAN",
+            "weight": 3
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "HAN",
+            "weight": 9
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "LANDO",
+            "weight": 9
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "LANDO",
+            "weight": 7
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "LEIA",
+            "weight": 5
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "JABBA",
+            "weight": 3
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "JABBA",
+            "weight": 1
+        },
+        {
+            "source": "JABBA",
+            "target": "LANDO",
+            "weight": 9
+        },
+        {
+            "source": "LANDO",
+            "target": "LUKE",
+            "weight": 21
+        },
+        {
+            "source": "EMPEROR",
+            "target": "LANDO",
+            "weight": 2
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "C-3PO",
+            "weight": 5
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "CHEWBACCA",
+            "weight": 6
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "R2-D2",
+            "weight": 2
+        },
+        {
+            "source": "LANDO",
+            "target": "R2-D2",
+            "weight": 10
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "LUKE",
+            "weight": 3
+        },
+        {
+            "source": "JABBA",
+            "target": "LUKE",
+            "weight": 14
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "JERJERROD",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "JERJERROD",
+            "weight": 2
+        },
+        {
+            "source": "EMPEROR",
+            "target": "SNAP",
+            "weight": 2
+        },
+        {
+            "source": "JERJERROD",
+            "target": "SNAP",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "JABBA",
+            "weight": 13
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "C-3PO",
+            "weight": 5
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "R2-D2",
+            "weight": 2
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "LUKE",
+            "weight": 4
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "JABBA",
+            "weight": 6
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "HAN",
+            "weight": 3
+        },
+        {
+            "source": "BOUSHH",
+            "target": "C-3PO",
+            "weight": 2
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "BOBA FETT",
+            "weight": 1
+        },
+        {
+            "source": "BOBA FETT",
+            "target": "BOUSHH",
+            "weight": 1
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "CHEWBACCA",
+            "weight": 1
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "LANDO",
+            "weight": 3
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "BOUSHH",
+            "weight": 2
+        },
+        {
+            "source": "BOUSHH",
+            "target": "CHEWBACCA",
+            "weight": 1
+        },
+        {
+            "source": "BOUSHH",
+            "target": "HAN",
+            "weight": 2
+        },
+        {
+            "source": "BOUSHH",
+            "target": "LANDO",
+            "weight": 2
+        },
+        {
+            "source": "BOUSHH",
+            "target": "JABBA",
+            "weight": 2
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "LEIA",
+            "weight": 2
+        },
+        {
+            "source": "BOUSHH",
+            "target": "LEIA",
+            "weight": 1
+        },
+        {
+            "source": "BIB FORTUNA",
+            "target": "OBI-WAN",
+            "weight": 1
+        },
+        {
+            "source": "JABBA",
+            "target": "OBI-WAN",
+            "weight": 1
+        },
+        {
+            "source": "JERJERROD",
+            "target": "OBI-WAN",
+            "weight": 1
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "OWEN",
+            "weight": 1
+        },
+        {
+            "source": "EMPEROR",
+            "target": "OWEN",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "LUKE",
+            "weight": 5
+        },
+        {
+            "source": "ANAKIN",
+            "target": "LEIA",
+            "weight": 1
+        },
+        {
+            "source": "LEIA",
+            "target": "OWEN",
+            "weight": 1
+        },
+        {
+            "source": "OWEN",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "C-3PO",
+            "weight": 2
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "MON MOTHMA",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "CHEWBACCA",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "EMPEROR",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "MON MOTHMA",
+            "weight": 1
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "EMPEROR",
+            "weight": 1
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "LUKE",
+            "weight": 1
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "HAN",
+            "weight": 4
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "LEIA",
+            "weight": 4
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "LANDO",
+            "weight": 6
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "WEDGE",
+            "weight": 2
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "MON MOTHMA",
+            "weight": 1
+        },
+        {
+            "source": "EMPEROR",
+            "target": "WEDGE",
+            "weight": 1
+        },
+        {
+            "source": "LUKE",
+            "target": "MON MOTHMA",
+            "weight": 1
+        },
+        {
+            "source": "HAN",
+            "target": "MON MOTHMA",
+            "weight": 1
+        },
+        {
+            "source": "LEIA",
+            "target": "MON MOTHMA",
+            "weight": 1
+        },
+        {
+            "source": "LANDO",
+            "target": "WEDGE",
+            "weight": 7
+        },
+        {
+            "source": "LANDO",
+            "target": "MON MOTHMA",
+            "weight": 1
+        },
+        {
+            "source": "MON MOTHMA",
+            "target": "WEDGE",
+            "weight": 1
+        },
+        {
+            "source": "LUKE",
+            "target": "PIETT",
+            "weight": 1
+        },
+        {
+            "source": "HAN",
+            "target": "PIETT",
+            "weight": 1
+        },
+        {
+            "source": "LANDO",
+            "target": "RED LEADER",
+            "weight": 2
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "GOLD LEADER",
+            "weight": 1
+        },
+        {
+            "source": "GOLD LEADER",
+            "target": "LANDO",
+            "weight": 5
+        },
+        {
+            "source": "LANDO",
+            "target": "OBI-WAN",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "CHEWBACCA",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "HAN",
+            "weight": 1
+        },
+        {
+            "source": "ANAKIN",
+            "target": "LANDO",
+            "weight": 1
+        },
+        {
+            "source": "LANDO",
+            "target": "YODA",
+            "weight": 1
+        },
+        {
+            "source": "LOR SAN TEKKA",
+            "target": "POE",
+            "weight": 4
+        },
+        {
+            "source": "BB-8",
+            "target": "POE",
+            "weight": 13
+        },
+        {
+            "source": "BB-8",
+            "target": "LOR SAN TEKKA",
+            "weight": 3
+        },
+        {
+            "source": "KYLO REN",
+            "target": "POE",
+            "weight": 2
+        },
+        {
+            "source": "CAPTAIN PHASMA",
+            "target": "KYLO REN",
+            "weight": 1
+        },
+        {
+            "source": "KYLO REN",
+            "target": "LOR SAN TEKKA",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PHASMA",
+            "target": "POE",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PHASMA",
+            "target": "LOR SAN TEKKA",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PHASMA",
+            "target": "FINN",
+            "weight": 4
+        },
+        {
+            "source": "REY",
+            "target": "UNKAR PLUTT",
+            "weight": 7
+        },
+        {
+            "source": "BB-8",
+            "target": "REY",
+            "weight": 37
+        },
+        {
+            "source": "GENERAL HUX",
+            "target": "KYLO REN",
+            "weight": 6
+        },
+        {
+            "source": "BB-8",
+            "target": "UNKAR PLUTT",
+            "weight": 5
+        },
+        {
+            "source": "FINN",
+            "target": "POE",
+            "weight": 16
+        },
+        {
+            "source": "KYLO REN",
+            "target": "LIEUTENANT MITAKA",
+            "weight": 2
+        },
+        {
+            "source": "GENERAL HUX",
+            "target": "LIEUTENANT MITAKA",
+            "weight": 1
+        },
+        {
+            "source": "FINN",
+            "target": "LUKE",
+            "weight": 5
+        },
+        {
+            "source": "LUKE",
+            "target": "POE",
+            "weight": 3
+        },
+        {
+            "source": "FINN",
+            "target": "GENERAL HUX",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PHASMA",
+            "target": "GENERAL HUX",
+            "weight": 1
+        },
+        {
+            "source": "KYLO REN",
+            "target": "SNOKE",
+            "weight": 7
+        },
+        {
+            "source": "GENERAL HUX",
+            "target": "SNOKE",
+            "weight": 4
+        },
+        {
+            "source": "FINN",
+            "target": "UNKAR PLUTT",
+            "weight": 3
+        },
+        {
+            "source": "LUKE",
+            "target": "UNKAR PLUTT",
+            "weight": 3
+        },
+        {
+            "source": "POE",
+            "target": "UNKAR PLUTT",
+            "weight": 1
+        },
+        {
+            "source": "FINN",
+            "target": "REY",
+            "weight": 54
+        },
+        {
+            "source": "BB-8",
+            "target": "FINN",
+            "weight": 26
+        },
+        {
+            "source": "LUKE",
+            "target": "REY",
+            "weight": 9
+        },
+        {
+            "source": "POE",
+            "target": "REY",
+            "weight": 4
+        },
+        {
+            "source": "BB-8",
+            "target": "LUKE",
+            "weight": 9
+        },
+        {
+            "source": "FINN",
+            "target": "KYLO REN",
+            "weight": 7
+        },
+        {
+            "source": "FINN",
+            "target": "LIEUTENANT MITAKA",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "UNKAR PLUTT",
+            "weight": 3
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "FINN",
+            "weight": 35
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "REY",
+            "weight": 32
+        },
+        {
+            "source": "BB-8",
+            "target": "CHEWBACCA",
+            "weight": 16
+        },
+        {
+            "source": "HAN",
+            "target": "UNKAR PLUTT",
+            "weight": 3
+        },
+        {
+            "source": "FINN",
+            "target": "HAN",
+            "weight": 35
+        },
+        {
+            "source": "HAN",
+            "target": "REY",
+            "weight": 31
+        },
+        {
+            "source": "BB-8",
+            "target": "HAN",
+            "weight": 18
+        },
+        {
+            "source": "BALA-TIK",
+            "target": "CHEWBACCA",
+            "weight": 2
+        },
+        {
+            "source": "BALA-TIK",
+            "target": "HAN",
+            "weight": 3
+        },
+        {
+            "source": "BALA-TIK",
+            "target": "BB-8",
+            "weight": 2
+        },
+        {
+            "source": "BALA-TIK",
+            "target": "FINN",
+            "weight": 1
+        },
+        {
+            "source": "BALA-TIK",
+            "target": "REY",
+            "weight": 1
+        },
+        {
+            "source": "HAN",
+            "target": "KYLO REN",
+            "weight": 8
+        },
+        {
+            "source": "GENERAL HUX",
+            "target": "HAN",
+            "weight": 1
+        },
+        {
+            "source": "HAN",
+            "target": "SNOKE",
+            "weight": 5
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "MAZ",
+            "weight": 5
+        },
+        {
+            "source": "FINN",
+            "target": "MAZ",
+            "weight": 5
+        },
+        {
+            "source": "MAZ",
+            "target": "REY",
+            "weight": 6
+        },
+        {
+            "source": "HAN",
+            "target": "MAZ",
+            "weight": 7
+        },
+        {
+            "source": "BB-8",
+            "target": "MAZ",
+            "weight": 7
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "KYLO REN",
+            "weight": 2
+        },
+        {
+            "source": "FINN",
+            "target": "LEIA",
+            "weight": 6
+        },
+        {
+            "source": "LEIA",
+            "target": "REY",
+            "weight": 5
+        },
+        {
+            "source": "LEIA",
+            "target": "MAZ",
+            "weight": 2
+        },
+        {
+            "source": "BB-8",
+            "target": "LEIA",
+            "weight": 6
+        },
+        {
+            "source": "R2-D2",
+            "target": "UNKAR PLUTT",
+            "weight": 1
+        },
+        {
+            "source": "KYLO REN",
+            "target": "UNKAR PLUTT",
+            "weight": 1
+        },
+        {
+            "source": "R2-D2",
+            "target": "REY",
+            "weight": 3
+        },
+        {
+            "source": "KYLO REN",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "BB-8",
+            "target": "R2-D2",
+            "weight": 4
+        },
+        {
+            "source": "KYLO REN",
+            "target": "REY",
+            "weight": 13
+        },
+        {
+            "source": "KYLO REN",
+            "target": "LUKE",
+            "weight": 4
+        },
+        {
+            "source": "BB-8",
+            "target": "KYLO REN",
+            "weight": 1
+        },
+        {
+            "source": "LUKE",
+            "target": "MAZ",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "POE",
+            "weight": 3
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "JESS",
+            "weight": 1
+        },
+        {
+            "source": "FINN",
+            "target": "SNAP",
+            "weight": 3
+        },
+        {
+            "source": "FINN",
+            "target": "JESS",
+            "weight": 1
+        },
+        {
+            "source": "HAN",
+            "target": "POE",
+            "weight": 4
+        },
+        {
+            "source": "HAN",
+            "target": "JESS",
+            "weight": 1
+        },
+        {
+            "source": "POE",
+            "target": "SNAP",
+            "weight": 5
+        },
+        {
+            "source": "JESS",
+            "target": "POE",
+            "weight": 5
+        },
+        {
+            "source": "JESS",
+            "target": "SNAP",
+            "weight": 2
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "KYLO REN",
+            "weight": 5
+        },
+        {
+            "source": "C-3PO",
+            "target": "MAZ",
+            "weight": 1
+        },
+        {
+            "source": "BB-8",
+            "target": "C-3PO",
+            "weight": 7
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "FINN",
+            "weight": 2
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "POE",
+            "weight": 2
+        },
+        {
+            "source": "LEIA",
+            "target": "POE",
+            "weight": 6
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "SNOKE",
+            "weight": 2
+        },
+        {
+            "source": "LUKE",
+            "target": "SNOKE",
+            "weight": 2
+        },
+        {
+            "source": "LEIA",
+            "target": "SNOKE",
+            "weight": 2
+        },
+        {
+            "source": "DARTH VADER",
+            "target": "REY",
+            "weight": 1
+        },
+        {
+            "source": "REY",
+            "target": "SNOKE",
+            "weight": 3
+        },
+        {
+            "source": "GENERAL HUX",
+            "target": "LUKE",
+            "weight": 1
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "ADMIRAL ACKBAR",
+            "target": "ADMIRAL STATURA",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "FINN",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "POE",
+            "weight": 5
+        },
+        {
+            "source": "ADMIRAL STATURA",
+            "target": "C-3PO",
+            "weight": 2
+        },
+        {
+            "source": "ADMIRAL STATURA",
+            "target": "FINN",
+            "weight": 1
+        },
+        {
+            "source": "ADMIRAL STATURA",
+            "target": "HAN",
+            "weight": 2
+        },
+        {
+            "source": "ADMIRAL STATURA",
+            "target": "LEIA",
+            "weight": 2
+        },
+        {
+            "source": "ADMIRAL STATURA",
+            "target": "POE",
+            "weight": 2
+        },
+        {
+            "source": "ADMIRAL STATURA",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "BB-8",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "CAPTAIN PHASMA",
+            "target": "CHEWBACCA",
+            "weight": 2
+        },
+        {
+            "source": "CAPTAIN PHASMA",
+            "target": "HAN",
+            "weight": 2
+        },
+        {
+            "source": "CAPTAIN PHASMA",
+            "target": "REY",
+            "weight": 1
+        },
+        {
+            "source": "COLONEL DATOO",
+            "target": "GENERAL HUX",
+            "weight": 2
+        },
+        {
+            "source": "ELLO ASTY",
+            "target": "POE",
+            "weight": 3
+        },
+        {
+            "source": "ELLO ASTY",
+            "target": "JESS",
+            "weight": 3
+        },
+        {
+            "source": "KYLO REN",
+            "target": "SNAP",
+            "weight": 1
+        },
+        {
+            "source": "KYLO REN",
+            "target": "LEIA",
+            "weight": 1
+        },
+        {
+            "source": "CHEWBACCA",
+            "target": "SNOKE",
+            "weight": 2
+        },
+        {
+            "source": "FINN",
+            "target": "SNOKE",
+            "weight": 2
+        },
+        {
+            "source": "NIV LEK",
+            "target": "POE",
+            "weight": 2
+        },
+        {
+            "source": "POE",
+            "target": "YOLO ZIFF",
+            "weight": 1
+        },
+        {
+            "source": "JESS",
+            "target": "NIV LEK",
+            "weight": 2
+        },
+        {
+            "source": "JESS",
+            "target": "YOLO ZIFF",
+            "weight": 1
+        },
+        {
+            "source": "ELLO ASTY",
+            "target": "NIV LEK",
+            "weight": 2
+        },
+        {
+            "source": "ELLO ASTY",
+            "target": "YOLO ZIFF",
+            "weight": 1
+        },
+        {
+            "source": "NIV LEK",
+            "target": "YOLO ZIFF",
+            "weight": 1
+        },
+        {
+            "source": "C-3PO",
+            "target": "REY",
+            "weight": 2
+        },
+        {
+            "source": "C-3PO",
+            "target": "LOR SAN TEKKA",
+            "weight": 1
+        },
+        {
+            "source": "POE",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "LOR SAN TEKKA",
+            "target": "R2-D2",
+            "weight": 1
+        },
+        {
+            "source": "LOR SAN TEKKA",
+            "target": "REY",
+            "weight": 1
+        },
+        {
+            "source": "LOR SAN TEKKA",
+            "target": "LUKE",
+            "weight": 1
+        },
+        {
+            "source": "LEIA",
+            "target": "LOR SAN TEKKA",
+            "weight": 1
+        }
+    ]
+}

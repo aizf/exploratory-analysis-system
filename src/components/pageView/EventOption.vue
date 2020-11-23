@@ -47,8 +47,11 @@
         </a-popover>
       </a-col>
       <a-col :span="4" offset="2">
-        <a-switch v-model="eventOption.visBrush"
-        @change="$emit('vis-brush','switch')" :disabled="brushDisabled" />
+        <a-switch
+          v-model="eventOption.visBrush"
+          @change="$emit('vis-brush', 'switch')"
+          :disabled="brushDisabled"
+        />
       </a-col>
     </a-row>
     <!-- <a-row>
@@ -104,6 +107,22 @@ export default {
     console.log("", this);
     // ChartOption触发
     this.$parent.$on("changeDisabledState", this.changeDisabledState);
+    document.addEventListener("keydown", (e) => {
+      if (e && e.ctrlKey === true) {
+        // 按 ctrl
+        // console.log(e);
+        // e.preventDefault();
+        // e.stopPropagation();
+        this.eventOption.visZoom = !this.eventOption.visZoom;
+      }
+    });
+    // document.addEventListener("keyup", (e) => {
+    //   if (e && e.keyCode === 17) {
+    //     // 松 ctrl
+    //     e.stopPropagation();
+    //     this.eventOption.visZoom = false;
+    //   }
+    // });
   },
   methods: {
     // 改变开关的禁用状态
