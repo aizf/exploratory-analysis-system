@@ -12,14 +12,20 @@ self.simulations = [];  // 所有的仿真应用
 
 // 仿真对象类
 class Simu {
-    constructor(nodes, links) {
-        this.nodes
+    constructor(nodes = [], links = []) {
+        this.nodes = nodes;
+        this.links = links;
         this.simulation = d3
-            .forceSimulation();
+            .forceSimulation(this.nodes);
+    }
+    changeGraph() {
     }
     stop() {
         this.simulation.stop();
         return this;
+    }
+    destroy() {
+
     }
 }
 
