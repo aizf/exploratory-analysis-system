@@ -197,7 +197,12 @@ export default {
       },
       // option
       chartOption: {
-        simulation: { run: true, alphaTarget: 0.3, centerStrength: 1 },
+        simulation: {
+          run: true,
+          static: false,
+          alphaTarget: 0.3,
+          centerStrength: 1,
+        },
         node: { nodeSize: 4.5, borderColor: "red", chargeForce: -30 },
         link: { color: "#aaa", width: 0.3, distance: 30 },
       },

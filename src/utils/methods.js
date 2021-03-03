@@ -88,19 +88,18 @@ const dataDeepClone = (oldData) => {
     for (const oldNode of oldNodes) {
         const newNode = Object.assign({}, oldNode);
         newNodes.push(newNode);
-        tempDict[newNode.id] = newNode;
+        tempDict[newNode.strucID] = newNode;
     }
     for (const oldLink of oldLinks) {
         const newLink = Object.assign({}, oldLink);
         // 更改 source 和 target 指向的 node
-        newLink.source = tempDict[newLink.source.id];
-        newLink.target = tempDict[newLink.target.id];
+        newLink.source = tempDict[newLink.source.strucID];
+        newLink.target = tempDict[newLink.target.strucID];
         newLinks.push(newLink);
     }
     return {
         nodes: newNodes,
         links: newLinks,
-        marked: oldData.marked
     }
 }
 

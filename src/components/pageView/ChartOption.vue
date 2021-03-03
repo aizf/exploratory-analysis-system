@@ -20,6 +20,11 @@
           v-model="chartOption.simulation.run"
           style="margin-left: 15%"
         />
+        <span class="vSubMenu">static</span>
+        <a-switch
+          v-model="chartOption.simulation.static"
+          style="margin-left: 25px"
+        />
         <span class="vSubMenu">alphaTarget</span>
         <a-input-number
           class="optionInput"

@@ -89,11 +89,11 @@ const init = ({ width, height, chartOption, nodes, links }) => {
         .alpha(1)
         .alphaTarget(0)
         .restart();
-    self.subSimulations.forEach(s => {
-        s.alpha(1)
-            .alphaTarget(0)
-            .restart();
-    })
+    // self.subSimulations.forEach(s => {
+    //     s.alpha(1)
+    //         .alphaTarget(0)
+    //         .restart();
+    // })
 }
 const changeData = ({ nodes, links }) => {
     nodes.forEach((node, i) => typeMax = Math.max(typeMax, node.group + 1))
@@ -169,7 +169,7 @@ const changeOption = (chartOption) => {
 const ticked = function () {
     // console.log("worker-tick");
     // console.log(self.nodes);
-
+    if (self.chartOption.static) return;
     self.postMessage({
         nodes: self.nodes
     })
@@ -177,10 +177,11 @@ const ticked = function () {
 const tickEnd = function () {
     // console.log("worker-tick");
 
-    // 静态布局
-    // self.postMessage({
-    //     nodes: self.nodes
-    // })
+    if (self.chartOption.static) {
+        self.postMessage({
+            nodes: self.nodes
+        })
+    }
 
     self.postMessage("tickEnd")
 }

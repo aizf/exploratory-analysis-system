@@ -43,7 +43,7 @@ export default {
   created() {},
   mounted() {
     console.log("WebGLChart", this);
-    console.log("WebGLChart", PIXI);
+    // console.log("WebGLChart", PIXI);
     this.app = new PIXI.Application({
       width: this.width,
       height: this.height,

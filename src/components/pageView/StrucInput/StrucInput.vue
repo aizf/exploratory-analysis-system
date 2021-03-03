@@ -1,7 +1,7 @@
 <template>
   <div class="container test-border">
     <div class="draw">
-      <SubForce :nodes="nodes" :links="links" />
+      <Main ref="Main" />
     </div>
     <div class="select">
       <!-- <SubForce
@@ -30,17 +30,18 @@
 import { RecycleScroller } from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { mapState, mapGetters } from "vuex";
-import SubForce from "./SubForce";
+import SubForce from "../SubForce";
 import sub0 from "@/assets/0.json";
 import sub1 from "@/assets/1.json";
 import sub2 from "@/assets/2.json";
 import sub3 from "@/assets/3.json";
 import sub4 from "@/assets/4.json";
 import sub5 from "@/assets/5.json";
+import Main from "./Main";
 // import * as _ from "lodash";
 export default {
   name: "StrucInput",
-  components: { SubForce },
+  components: { SubForce, Main },
   inject: ["classificationPalette"],
   props: {},
   data() {
@@ -57,8 +58,7 @@ export default {
   },
   methods: {
     clickSubForce(nodes, links) {
-      this.nodes = nodes;
-      this.links = links;
+      this.$refs.Main.$emit("add", nodes, links);
       console.log(1, this.nodes);
     },
   },
