@@ -35,6 +35,15 @@ const datasets = {
             "group": { alias: "group", type: "cat" }
         }
     },
+    "facebook": {
+        name: "facebook",
+        fileName: "facebook.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        }
+    },
     "PolBooks": {
         name: "PolBooks",
         fileName: "PolBooks.json",

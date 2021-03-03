@@ -1,28 +1,6 @@
 <template>
   <a-layout id="pageView">
     <a-layout-sider width="150" theme="light" style="background: #fff">
-      <a-card
-        title="Data Fields"
-        :headStyle="{ padding: '0 24px 0 24px' }"
-        :bodyStyle="{ padding: '5px 10px 5px 10px' }"
-      >
-        <a-row>
-          <a-col :span="12" offset="4"></a-col>
-          <a-col :span="4" offset="2"></a-col>
-        </a-row>
-      </a-card>
-      <a-button
-        @click="communities"
-        style="margin: 0 0 0 5px"
-      >
-        communities
-      </a-button>
-      <a-button
-        @click="updateWorker"
-        style="margin: 0 0 0 5px"
-      >
-        updateWorker
-      </a-button>
       <EventOption
         :eventOption="eventOption"
         @vis-brush="onVisBrush"
@@ -32,6 +10,20 @@
         :chartOption="chartOption"
         @changeCurrentChart="changeCurrentChart"
       />
+      <a-card
+        title="Others Views"
+        :headStyle="{ padding: '0 24px 0 24px' }"
+        :bodyStyle="{ padding: '5px 10px 5px 10px' }"
+      >
+        <a-row>
+          <a-col :span="12" offset="4"></a-col>
+          <a-col :span="4" offset="2"></a-col>
+        </a-row>
+      </a-card>
+      <a-button @click="communities" style="margin: 0 0 0 5px"> Tree </a-button>
+      <a-button @click="updateWorker" style="margin: 0 0 0 5px">
+        Heat Map
+      </a-button>
     </a-layout-sider>
 
     <a-layout class="view">
@@ -136,9 +128,18 @@
               @changeChartOption="handleChartOption"
             ></component>
           </keep-alive>
-          <SelectedInfoBoard class="view2" />
-          <NodesList class="view3" />
-          <ParallelCoordinate class="view4" :chartOption="chartOption" />
+          <Record ref="Record" />
+          <TextInput ref="TextInput" />
+          <StrucInput ref="StrucInput" />
+          <!-- <SelectedInfoBoard class="view2" /> -->
+          <NodesList class="view3" :refs="$refs" ref="NodesList" />
+          <!-- <ParallelCoordinate class="view4" :chartOption="chartOption" /> -->
+          <div class="temp">
+            <a-tag>id: 14659</a-tag>
+            <a-tag>facebook_id: 159444347067</a-tag>
+            <a-tag>page_name: XVIII Airborne Corps</a-tag>
+            <a-tag>page_type: government</a-tag>
+          </div>
         </div>
       </a-layout-content>
     </a-layout>
@@ -150,11 +151,13 @@ import store from "@/store/";
 import { mapState, mapGetters } from "vuex";
 import axios from "axios";
 // import * as d3 from "d3";
+import Record from "@c/pageView/Record";
+import TextInput from "@c/pageView/TextInput";
+import StrucInput from "@c/pageView/StrucInput";
 import ForceChart from "@c/pageView/ForceChart";
 import ScatterChart from "@c/pageView/ScatterChart.vue";
 import NodesList from "@c/pageView/NodesList.vue";
 import SelectedInfoBoard from "@c/pageView/SelectedInfoBoard";
-import ParallelCoordinate from "@c/pageView/ParallelCoordinate";
 import EventOption from "@c/pageView/EventOption.vue";
 import ChartOption from "@c/pageView/ChartOption.vue";
 import ClusterOption from "@c/pageView/ClusterOption.vue";
@@ -163,11 +166,13 @@ import { classificationPalette } from "@/config/color";
 export default {
   name: "PageView",
   components: {
+    Record,
+    TextInput,
+    StrucInput,
     ForceChart,
     ScatterChart,
     NodesList,
     SelectedInfoBoard,
-    ParallelCoordinate,
     EventOption,
     ChartOption,
     ClusterOption,
@@ -447,6 +452,16 @@ export default {
 }
 </style>
 <style>
+.temp {
+  /* background: #fff; */
+  text-align: right;
+  width: 280px;
+  height: 100px;
+  position: absolute;
+  left: 220px;
+  top: 0;
+  /* display: none; */
+}
 .vSubMenu {
   font-size: 14px;
   font-weight: 400;

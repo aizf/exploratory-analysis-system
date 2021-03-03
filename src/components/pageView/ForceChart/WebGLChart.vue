@@ -80,11 +80,11 @@ export default {
     this.$on("setPostion", this.setPostion);
     this.$on("zoom", this.zoom);
     this.$on("brush", this.brush);
-    setInterval(() => {
-      this.changeColor();
-      this.brush();
-      this.setPostion();
-    }, 1000);
+    // setInterval(() => {
+    //   this.changeColor();
+    //   this.brush();
+    //   this.setPostion();
+    // }, 1000);
   },
   methods: {
     initDrag() {
@@ -272,7 +272,8 @@ export default {
           PIXI.utils.string2hex(d)
         );
       }
-      return this.$_fillColor[group || 0];
+      return this.$_fillColor[0];
+      // return this.$_fillColor[group || 0];
     },
     setPostion() {
       // console.log(this);

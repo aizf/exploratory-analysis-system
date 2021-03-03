@@ -3,6 +3,7 @@
     class="container test-border"
     :style="{ width: width + 'px', height: height + 'px' }"
   >
+    <!-- <DataLoader /> -->
     <WebGLChart
       class="WebGLChart"
       :eventOption="eventOption"
@@ -18,7 +19,7 @@
           <feDropShadow dx="0" dy="0" stdDeviation="0.3" />
         </filter>
       </defs>
-      <text x="0" y="0" dx="0.5em" dy="1.5em" class="text info">
+      <!-- <text x="0" y="0" dx="0.5em" dy="1.5em" class="text info">
         UUID : {{ currentUUID }}
       </text>
       <text x="0" y="0" dx="0.5em" dy="3.0em" class="text info">
@@ -32,7 +33,7 @@
       </text>
       <text x="0" y="0" dx="0.5em" dy="7.5em" class="text info">
         Average Degree : {{ average_degree.toFixed(4) }}
-      </text>
+      </text> -->
       <rect
         class="zoom"
         :class="{ active: eventOption.visZoom }"
@@ -68,6 +69,7 @@
 </template>
 <script>
 import WebGLChart from "./WebGLChart";
+import DataLoader from "../DataLoader";
 import Links from "./Links.vue";
 import Nodes from "./Nodes.vue";
 import Texts from "./Texts.vue";
@@ -84,6 +86,7 @@ export default {
   name: "ForceChart",
   components: {
     WebGLChart,
+    // DataLoader,
     // Links,
     // Nodes,
     Texts,

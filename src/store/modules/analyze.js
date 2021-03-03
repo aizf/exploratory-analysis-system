@@ -55,16 +55,16 @@ const analyze = {
     },
     actions: {
         addOperation(context, data) {
-            data.nodes.forEach(d => d.attentionTimes++)
-            context.commit('addOperation', data)
-            const payload = {
-                "user-uuid": window.sessionStorage.getItem("user-uuid"),
-                time: +new Date(),
-                ...data
-            }
-            const amark = Vue.prototype.$amark;
-            amark && amark.add(payload)
-            console.log(payload);
+            // data.nodes.forEach(d => d.attentionTimes++)
+            // context.commit('addOperation', data)
+            // const payload = {
+            //     "user-uuid": window.sessionStorage.getItem("user-uuid"),
+            //     time: +new Date(),
+            //     ...data
+            // }
+            // const amark = Vue.prototype.$amark;
+            // amark && amark.add(payload)
+            // console.log(payload);
         }
     }
 }

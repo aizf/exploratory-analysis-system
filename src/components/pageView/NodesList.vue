@@ -1,9 +1,12 @@
 <template>
   <div class="container test-border">
+    <a-button type="primary" style="width: 30%" @click="infoInput">
+      Input
+    </a-button>
     <a-input
       placeholder="input search text"
       v-model="keyword"
-      style="width: 100%"
+      style="width: 70%"
     />
     <RecycleScroller
       class="scroller"
@@ -21,9 +24,9 @@
         @click="clickSelect(item)"
         @mouseover="item.current = true"
         @mouseout="item.current = false"
-        :style="{ color: classificationPalette[item.group || 0] }"
+        :style="{ color: classificationPalette[0] }"
       >
-        {{ item.id }}
+        {{ item.uid }}
       </div>
     </RecycleScroller>
   </div>
@@ -40,7 +43,9 @@ export default {
     RecycleScroller,
   },
   inject: ["classificationPalette"],
-  props: {},
+  props: {
+    refs: Object,
+  },
   data() {
     return {
       keyword: "",
@@ -71,6 +76,18 @@ export default {
   methods: {
     clickSelect(node) {
       node.selected = !node.selected;
+    },
+    infoInput() {
+      // console.log(1, this.$parent.$refs);
+      const words = this.refs.TextInput.words.filter((d) => d.selected);
+      const nodes = this.refs.StrucInput.nodes;
+      const links = this.refs.StrucInput.links;
+      this.refs.Record.records.unshift({
+        words,
+        nodes,
+        links,
+      });
+      // console.log(1, words, nodes, links);
     },
     onSearch() {},
   },

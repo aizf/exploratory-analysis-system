@@ -221,6 +221,10 @@ export default {
       } else {
         visualData.nodes.forEach((d) => (d.size = 1));
       }
+      visualData.nodes.sort(function () {
+        return 0.5 - Math.random();
+      });
+      // console.log(arr);
 
       let maxWeight = -Infinity;
       visualData.links.forEach((d, i) => {

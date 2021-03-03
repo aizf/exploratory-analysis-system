@@ -81,7 +81,7 @@ const init = ({ width, height, chartOption, nodes, links }) => {
     self.height = height
     self.chartOption = chartOption
     simulation.force("center", d3.forceCenter(self.width / 2, self.height / 2));
-    // simulation.force("charge").strength(self.chartOption.node.chargeForce);
+    simulation.force("charge").strength(self.chartOption.node.chargeForce);
     changeData({ nodes, links });
     simulation
         .on("tick", ticked)
@@ -106,14 +106,14 @@ const changeData = ({ nodes, links }) => {
     self.subSimulations = [];
 
     simulation.nodes(self.nodes);
-    // simulation
-    //     .force("link")
-    //     .links(self.links)
-    //     .distance(self.chartOption.link.distance);
+    simulation
+        .force("link")
+        .links(self.links)
+        .distance(self.chartOption.link.distance);
 
-    console.log(nodes);
+    // console.log(nodes);
 
-    const args = [];
+    /* const args = [];
     for (let type = 0; type < typeMax; type++) {
         const nodes = self.nodes
             .filter((node) => {
@@ -133,8 +133,8 @@ const changeData = ({ nodes, links }) => {
     const othersLinks = self.links.filter((link) => {
         return uidMap[link.source].group >= typeMax && uidMap[link.target].group >= typeMax;
     })
-    args.push([othersNodes, othersLinks, typeMax])
-    args.forEach(arg => self.subSimulations.push(genSubSimulation(...arg)))
+    args.push([othersNodes, othersLinks, typeMax]) */
+    // args.forEach(arg => self.subSimulations.push(genSubSimulation(...arg)))
 }
 const alterData = ({ nodes, links }) => {
     nodes.forEach(d => {
@@ -169,12 +169,19 @@ const changeOption = (chartOption) => {
 const ticked = function () {
     // console.log("worker-tick");
     // console.log(self.nodes);
+
     self.postMessage({
         nodes: self.nodes
     })
 }
 const tickEnd = function () {
     // console.log("worker-tick");
+
+    // 静态布局
+    // self.postMessage({
+    //     nodes: self.nodes
+    // })
+
     self.postMessage("tickEnd")
 }
 
