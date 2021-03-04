@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 import data from './modules/data'
 import view from './modules/view'
 import analyze from './modules/analyze'
+import strucInput from './modules/strucInput'
 
 import getters from './getters'
 import { generateUUID } from "@/utils/methods";
@@ -15,7 +16,8 @@ export default new Vuex.Store({
   modules: {
     data,
     view,
-    analyze
+    analyze,
+    strucInput
   },
   state: {
 

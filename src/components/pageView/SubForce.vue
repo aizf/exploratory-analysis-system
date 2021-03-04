@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <svg class="con">
+  <div class="con">
+    <svg class="con1">
       <g>
         <g class="links" stroke="#999"></g>
         <g class="nodes" fill="#1c7ed6"></g>
@@ -118,6 +118,11 @@ export default {
 </style>
 <style lang="scss" scoped>
 .con {
+  width: 100%;
+  height: 100%;
+  pointer-events: all;
+}
+.con1 {
   width: 100%;
   height: 100%;
   pointer-events: all;

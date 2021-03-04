@@ -88,8 +88,8 @@ const dataDeepClone = (oldData, from = "id", to = "id") => {
     for (const oldNode of oldNodes) {
         const newNode = Object.assign({}, oldNode);
         const temp = newNode[from]
-        delete temp[from]
-        temp[to] = temp;
+        delete newNode[from]
+        newNode[to] = temp;
         newNodes.push(newNode);
         tempDict[temp] = newNode;
     }

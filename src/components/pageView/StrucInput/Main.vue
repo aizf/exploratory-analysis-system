@@ -28,7 +28,7 @@
 </template>
 <script>
 import Vue from "vue";
-// import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
 // import sub0 from "@/assets/0.json";
 // import sub1 from "@/assets/1.json";
 // import sub2 from "@/assets/2.json";
@@ -36,6 +36,7 @@ import Vue from "vue";
 // import sub4 from "@/assets/4.json";
 // import sub5 from "@/assets/5.json";
 // import * as _ from "lodash";
+import store from "@/store/";
 import * as d3 from "d3";
 import { dataDeepClone } from "@/utils/methods.js";
 export default {
@@ -45,12 +46,18 @@ export default {
   props: {},
   data() {
     return {
-      nodes: [],
-      links: [],
+      // nodes: [],
+      // links: [],
       nodesData: new WeakMap(),
     };
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      nodes: (state) => state.strucInput.nodes,
+      links: (state) => state.strucInput.links,
+      isUpdate: (state) => state.strucInput.isUpdate,
+    }),
+  },
   mounted() {
     console.log("StrucInputMain", this);
     const svg = d3.select(this.$refs.svg);
@@ -76,9 +83,15 @@ export default {
     update() {
       // this.nodeG.selectAll("circle").data(this.nodes);
       // this.linkG.selectAll("line").data(this.links);
+      // if (this.nodes.length === 0) return;
+      console.log("do update");
       const simulation = this.simulation;
       simulation.alphaTarget(0);
       simulation.nodes(this.nodes);
+      simulation.force(
+        "link",
+        d3.forceLink(this.links).id((d) => d.strucID)
+      );
       simulation.alphaTarget(0.3).restart();
       setTimeout(() => {
         simulation.alphaTarget(0);
@@ -111,9 +124,13 @@ export default {
           // simulation.nodes(this.nodes);
           // console.log(this, source, newNodes);
 
-          that.nodes.push(newNodes);
           link = { source: source, target: newNodes };
-          that.links.push(link);
+          // console.log([...this.nodes, newNodes]);
+          // console.log([...this.links, link]);
+          store.commit("updateG", {
+            nodes: [...that.nodes, newNodes],
+            links: [...that.links, link],
+          });
         }
 
         function dragged(event) {
@@ -138,7 +155,11 @@ export default {
           if (res) {
             const link = this.links[this.links.length - 1];
             link.target = res;
-            this.nodes = this.nodes.filter((d) => d != newNodes);
+            const nodes = this.nodes.filter((d) => d != newNodes);
+            store.commit("updateG", {
+              nodes,
+              links: this.links,
+            });
           } else {
             that.$nextTick(() => {
               // console.log("nextTick", that.$refs);
@@ -180,7 +201,13 @@ export default {
           .on("drag", dragged)
           .on("end", dragended);
       };
+      store.commit("updateGDone");
       Vue.nextTick(() => {
+        for (let i = 0; i < this.nodes.length; i++) {
+          // console.log(this.$refs["node" + i], nodes[i - count]);
+          const nodes = [...this.nodes].sort((a, b) => a.strucID - b.strucID);
+          this.nodesData.set(this.$refs["node" + i][0], nodes[i]);
+        }
         let node = this.nodeG.selectAll("circle");
         node.call(drag(simulation));
         node.on("click", function (event) {
@@ -210,7 +237,7 @@ export default {
     },
     add(_nodes, _links) {
       const count = this.nodes.length;
-      console.log(_nodes, _links);
+      // console.log(1,_nodes, _links);
       const { nodes, links } = dataDeepClone(
         { nodes: _nodes, links: _links },
         "id",
@@ -223,15 +250,13 @@ export default {
         this.$set(d, "x", d.x);
         this.$set(d, "y", d.y);
       });
-      console.log(nodes, links);
-      this.nodes.push(...nodes);
-      this.links.push(...links);
-      this.update();
-      Vue.nextTick(() => {
-        for (let i = count; i < this.nodes.length; i++) {
-          // console.log(this.$refs["node" + i], nodes[i - count]);
-          this.nodesData.set(this.$refs["node" + i][0], nodes[i - count]);
-        }
+      // console.log(2,nodes, links);
+
+      // this.nodes.push(...nodes);
+      // this.links.push(...links);
+      store.commit("updateG", {
+        nodes: [...this.nodes, ...nodes],
+        links: [...this.links, ...links],
       });
     },
     clickSelect(e) {
@@ -248,6 +273,16 @@ export default {
       };
     },
     init() {},
+  },
+  watch: {
+    isUpdate: {
+      handler(newVal) {
+        if (newVal) {
+          console.log("update");
+          this.update();
+        }
+      },
+    },
   },
 };
 </script>

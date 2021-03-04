@@ -90,6 +90,7 @@ export default {
   mounted() {
     // console.log(this);
     // console.log(this.$children);
+    window.store = this.$store; // TODO
     console.log("state", this.$store.state);
     console.log("getters", this.$store.getters);
   },

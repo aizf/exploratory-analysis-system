@@ -23,29 +23,7 @@ export default {
   props: {},
   data() {
     return {
-      records: [
-        // {
-        //   words: [
-        //     {
-        //       topic: 0,
-        //       text: "communication;communications;community ",
-        //       prob: 1,
-        //     },
-        //     {
-        //       topic: 1,
-        //       text: "counties;county",
-        //       prob: 1,
-        //     },
-        //     {
-        //       topic: 4,
-        //       text: "city;citi;cities",
-        //       prob: 1,
-        //     },
-        //   ],
-        //   nodes: g.nodes,
-        //   links: g.links,
-        // },
-      ],
+      records: [],
     };
   },
   computed: {},

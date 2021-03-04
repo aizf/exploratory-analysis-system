@@ -57,6 +57,8 @@ export default {
       sourceData: (state) => state.data.sourceData,
       visualData: (state) => state.data.visualData,
       nodeFields: (state) => state.data.nodeFields,
+      strucInputNodes: (state) => state.strucInput.nodes,
+      strucInputLinks: (state) => state.strucInput.links,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
     items() {
@@ -82,12 +84,13 @@ export default {
       // console.log(1, this.$parent.$refs);
       // console.log(this.refs.StrucInput.$refs.Main);
       const words = this.refs.TextInput.words.filter((d) => d.selected);
-      const _nodes = this.refs.StrucInput.$refs.Main.nodes;
-      const _links = this.refs.StrucInput.$refs.Main.links;
+      const _nodes = this.strucInputNodes;
+      const _links = this.strucInputLinks;
       const { nodes, links } = dataDeepClone(
         { nodes: _nodes, links: _links },
         "strucID"
       );
+      // console.log({ nodes, links });
       const index = this.refs.Record.records.length;
       this.refs.Record.records.unshift({
         words,

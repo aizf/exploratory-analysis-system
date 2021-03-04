@@ -47,19 +47,18 @@ export default {
   data() {
     return {
       subs: [sub0, sub1, sub2, sub3, sub4, sub5],
-      nodes: [],
-      links: [],
       value: -1,
     };
   },
-  computed: {},
+  computed: {
+  },
   mounted() {
     console.log(this.subs);
   },
   methods: {
     clickSubForce(nodes, links) {
       this.$refs.Main.$emit("add", nodes, links);
-      console.log(1, this.nodes);
+      // console.log(1, this.nodes);
     },
   },
 };
