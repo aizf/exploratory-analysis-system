@@ -5,8 +5,9 @@
       :class="{ tagSelected: word.selected }"
       v-for="word in words"
       :color="classificationPalette[word.topic]"
-      :key="word.text"
+      :key="word.topic + word.text"
       @click="word.selected = !word.selected"
+      :style="{ opacity: prob2opacity(word) }"
     >
       {{ word.text }}
     </a-tag>
@@ -36,10 +37,11 @@ export default {
     for (let i = 0; i < texts.length; i++) {
       for (let j = 0; j < texts[i].length; j++) {
         // console.log(i,j,texts[i][j]);
+        const [text, prob] = texts[i][j];
         words.push({
           topic: i,
-          text: textdict[texts[i][j]].join(";"),
-          prob: 1,
+          text: textdict[text].join(";"),
+          prob: prob,
           selected: false,
         });
       }
@@ -47,7 +49,15 @@ export default {
     this.words = words;
     // console.log(this.words);
   },
-  methods: {},
+  methods: {
+    prob2opacity(word) {
+      const { prob } = word;
+      const c = 0.2;
+      const a = -27;
+      const b = 1 - c - a;
+      return (a * prob + b) * prob + c;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -67,6 +77,7 @@ export default {
 }
 .text {
   margin-bottom: 20px;
+  cursor: pointer;
 }
 .tagSelected {
   border: 4px solid red;

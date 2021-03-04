@@ -37,6 +37,7 @@ import { RecycleScroller } from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { mapState, mapGetters } from "vuex";
 // import * as _ from "lodash";
+import { dataDeepClone } from "@/utils/methods.js";
 export default {
   name: "NodesList",
   components: {
@@ -79,15 +80,25 @@ export default {
     },
     infoInput() {
       // console.log(1, this.$parent.$refs);
+      // console.log(this.refs.StrucInput.$refs.Main);
       const words = this.refs.TextInput.words.filter((d) => d.selected);
-      const nodes = this.refs.StrucInput.nodes;
-      const links = this.refs.StrucInput.links;
+      const _nodes = this.refs.StrucInput.$refs.Main.nodes;
+      const _links = this.refs.StrucInput.$refs.Main.links;
+      const { nodes, links } = dataDeepClone(
+        { nodes: _nodes, links: _links },
+        "strucID"
+      );
+      const index = this.refs.Record.records.length;
       this.refs.Record.records.unshift({
         words,
         nodes,
         links,
+        index,
       });
-      // console.log(1, words, nodes, links);
+      // console.log(1);
+      // console.log(words);
+      // console.log(nodes);
+      // console.log(links);
     },
     onSearch() {},
   },

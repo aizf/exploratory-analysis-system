@@ -106,7 +106,7 @@ export default {
   computed: {
     ...mapState({
       uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
-      width: (state) => 750,
+      width: (state) => 500,
       height: (state) => state.view.dpiY * 0.55,
       currentUUID: (state) => state.view.currentUUID,
       needUpdate: (state) => state.view.chartsNeedUpdate.force,

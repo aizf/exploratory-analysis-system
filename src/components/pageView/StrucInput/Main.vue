@@ -52,7 +52,7 @@ export default {
   },
   computed: {},
   mounted() {
-    // console.log("StrucInputMain", this);
+    console.log("StrucInputMain", this);
     const svg = d3.select(this.$refs.svg);
     const width = this.$el.clientWidth;
     const height = this.$el.clientHeight;
@@ -77,6 +77,8 @@ export default {
       // this.nodeG.selectAll("circle").data(this.nodes);
       // this.linkG.selectAll("line").data(this.links);
       const simulation = this.simulation;
+      simulation.alphaTarget(0);
+      simulation.nodes(this.nodes);
       simulation.alphaTarget(0.3).restart();
       setTimeout(() => {
         simulation.alphaTarget(0);
@@ -88,15 +90,12 @@ export default {
 
       function ticked() {}
 
-      simulation.nodes(this.nodes);
-
       const drag = (simulation) => {
         // let mousedowning = false;
         let link;
         let newNodes;
         const that = this;
         function dragstarted(event) {
-          // TODO BUG source 节点没有跟随拖动，从而直接drag end
           if (!event.active) simulation.stop();
           // event.subject.fx = event.subject.x;
           // event.subject.fy = event.subject.y;
@@ -211,15 +210,20 @@ export default {
     },
     add(_nodes, _links) {
       const count = this.nodes.length;
-      _nodes.forEach((d, i) => {
+      console.log(_nodes, _links);
+      const { nodes, links } = dataDeepClone(
+        { nodes: _nodes, links: _links },
+        "id",
+        "strucID"
+      );
+      nodes.forEach((d, i) => {
         d.strucID = count + i;
       });
-      const { nodes, links } = dataDeepClone({ nodes: _nodes, links: _links });
-      // console.log(nodes, links);
-      nodes.forEach((d, i) => {
+      nodes.forEach((d) => {
         this.$set(d, "x", d.x);
         this.$set(d, "y", d.y);
       });
+      console.log(nodes, links);
       this.nodes.push(...nodes);
       this.links.push(...links);
       this.update();
@@ -231,11 +235,17 @@ export default {
       });
     },
     clickSelect(e) {
-      console.log(e);
+      // console.log(e);
       const classList = e.currentTarget.classList;
       classList.contains("selected")
         ? classList.remove("selected")
         : classList.add("selected");
+    },
+    getG() {
+      return {
+        nodes: [...this.nodes],
+        links: [...this.links],
+      };
     },
     init() {},
   },

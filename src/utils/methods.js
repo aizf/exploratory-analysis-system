@@ -78,7 +78,7 @@ const hierarchical2nodeLink = hData => {
     };
 }
 
-const dataDeepClone = (oldData) => {
+const dataDeepClone = (oldData, from = "id", to = "id") => {
     // 深拷贝数据集，格式data={nodes:[],links:[]}
     const oldNodes = oldData.nodes;
     const oldLinks = oldData.links;
@@ -87,14 +87,17 @@ const dataDeepClone = (oldData) => {
     const tempDict = {};  // 查找字典
     for (const oldNode of oldNodes) {
         const newNode = Object.assign({}, oldNode);
+        const temp = newNode[from]
+        delete temp[from]
+        temp[to] = temp;
         newNodes.push(newNode);
-        tempDict[newNode.strucID] = newNode;
+        tempDict[temp] = newNode;
     }
     for (const oldLink of oldLinks) {
-        const newLink = Object.assign({}, oldLink);
+        const newLink = {};
         // 更改 source 和 target 指向的 node
-        newLink.source = tempDict[newLink.source.strucID];
-        newLink.target = tempDict[newLink.target.strucID];
+        newLink.source = tempDict[oldLink.source[from]];
+        newLink.target = tempDict[oldLink.target[from]];
         newLinks.push(newLink);
     }
     return {

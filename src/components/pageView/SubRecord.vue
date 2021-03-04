@@ -5,7 +5,8 @@
         class="text"
         v-for="word in words"
         :color="classificationPalette[word.topic]"
-        :key="word.text"
+        :style="{ opacity: prob2opacity(word) }"
+        :key="word.topic + word.text"
       >
         {{ word.text }}
       </a-tag>
@@ -21,6 +22,7 @@ import { RecycleScroller } from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { mapState, mapGetters } from "vuex";
 import SubForce from "./SubForce";
+import TextInput from "./TextInput";
 // import * as _ from "lodash";
 export default {
   name: "SubRecord",
@@ -38,7 +40,12 @@ export default {
   },
   computed: {},
   mounted() {},
-  methods: {},
+  methods: {
+    prob2opacity(word) {
+      // console.log(TextInput);
+      return TextInput.methods.prob2opacity.call(this, word);
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

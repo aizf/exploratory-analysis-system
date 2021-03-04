@@ -28,20 +28,21 @@ export default {
   },
   computed: {},
   mounted() {
-    this.$watch(
-      "nodes",
-      (newVal) => {
-        this.update();
-      },
-      { immediate: true }
-    );
-    this.$watch(
-      "links",
-      (newVal) => {
-        this.update();
-      },
-      { immediate: true }
-    );
+    this.update();
+    // this.$watch(
+    //   "nodes",
+    //   (newVal) => {
+    //     this.update();
+    //   },
+    //   { immediate: true }
+    // );
+    // this.$watch(
+    //   "links",
+    //   (newVal) => {
+    //     this.update();
+    //   },
+    //   { immediate: true }
+    // );
   },
   methods: {
     update() {

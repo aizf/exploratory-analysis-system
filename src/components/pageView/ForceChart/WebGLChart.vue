@@ -195,7 +195,7 @@ export default {
           nodes: displayNodes,
         };
         this.$store.dispatch("addOperation", operation);
-        console.log("mouseover");
+        // console.log("mouseover");
       }
     },
     mouseout(node) {
