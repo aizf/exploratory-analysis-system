@@ -13,12 +13,13 @@
     </div>
     <div class="g">
       <a-button
-        class="sub-select-radio"
+        class="sub-select-button"
         shape="circle"
         icon="plus"
         size="small"
         @click="clickSub()"
       />
+      <span class="sub-select-index">{{ index }}</span>
       <SubForce :nodes="nodes" :links="links" />
     </div>
   </div>
@@ -36,9 +37,11 @@ export default {
   components: { SubForce },
   inject: ["classificationPalette"],
   props: {
+    record: Object,
     words: Array,
     nodes: Array,
     links: Array,
+    index: [Number, String],
   },
   data() {
     return {
@@ -54,6 +57,7 @@ export default {
     },
     clickSub() {
       // console.log(1, { nodes: this.nodes, links: this.links });
+      this.$emit("updateFather", this.record);
       const { nodes, links } = dataDeepClone(
         { nodes: this.nodes, links: this.links },
         "id",
@@ -99,9 +103,15 @@ export default {
   position: relative;
   height: calc(100% - 3em);
 }
-.sub-select-radio {
+.sub-select-button {
   position: absolute;
   left: 5px;
   top: 5px;
+}
+.sub-select-index {
+  position: absolute;
+  right: 8px;
+  top: 5px;
+  color: var(--contrastColor);
 }
 </style>

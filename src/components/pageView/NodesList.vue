@@ -92,7 +92,7 @@ export default {
       );
       // console.log({ nodes, links });
       const index = this.refs.Record.records.length;
-      this.refs.Record.records.unshift({
+      this.refs.Record.$emit("addRecord", {
         words,
         nodes,
         links,

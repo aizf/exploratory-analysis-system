@@ -2,10 +2,13 @@
   <div class="container test-border">
     <SubRecord
       v-for="record in records"
+      :record="record"
       :words="record.words"
       :nodes="record.nodes"
       :links="record.links"
+      :index="record.index"
       :key="record.index"
+      @updateFather="updateFather"
     />
   </div>
 </template>
@@ -24,13 +27,26 @@ export default {
   data() {
     return {
       records: [],
+      root: { index: "root", words: [], nodes: [], links: [], children: [] },
+      father: {},
     };
   },
   computed: {},
   mounted() {
-    console.log("Record", this);
+    // console.log("Record", this);
+    window.Record = this;
+    this.father = this.root;
+    this.$on("addRecord", (record) => {
+      "children" in this.father ? null : (this.father.children = []);
+      this.father.children.push(record);
+      this.records.unshift(record);
+    });
   },
-  methods: {},
+  methods: {
+    updateFather(newVal) {
+      this.father = newVal;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

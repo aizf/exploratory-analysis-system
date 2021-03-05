@@ -10,7 +10,7 @@
         :chartOption="chartOption"
         @changeCurrentChart="changeCurrentChart"
       />
-      <OthersViews />
+      <OthersViews :refs="$refs" />
     </a-layout-sider>
 
     <a-layout class="view">

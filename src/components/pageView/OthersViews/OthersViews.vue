@@ -22,16 +22,28 @@
     >
       Scatter Chart
     </a-button>
-    <a-button style="margin: 0 0 0 5px"> Tree </a-button>
+    <a-button
+      @click="
+        updateSelectedNodes();
+        onTree();
+      "
+      style="margin: 0 0 0 5px"
+    >
+      Tree
+    </a-button>
     <a-button style="margin: 0 0 0 5px"> Heat Map </a-button>
     <a-button @click="downJson" style="margin: 0 0 0 5px">
       Download .json
     </a-button>
     <!-- <div class="mask"> -->
-    <div class="view" v-show="currentChart != ''" @click.self="currentChart = ''">
+    <div
+      class="view"
+      v-show="currentChart != ''"
+      @click.self="currentChart = ''"
+    >
       <component
         ref="theView"
-        class="view1"
+        class="theView"
         :is="currentChart"
         :items="selectedNodes"
       ></component>
@@ -46,13 +58,16 @@ import { mapState, mapGetters } from "vuex";
 import * as FileSaver from "file-saver";
 import ParallelCoordinate from "./ParallelCoordinate";
 import Scatter from "./Scatter";
+import Tree from "./Tree";
 import eventBus from "./eventBus.js";
 
 export default {
   name: "OthersViews",
-  components: { ParallelCoordinate, Scatter },
+  components: { ParallelCoordinate, Scatter, Tree },
   inject: ["classificationPalette"],
-  props: {},
+  props: {
+    refs: {},
+  },
   data() {
     return {
       selectedNodes: [],
@@ -104,6 +119,11 @@ export default {
       if (this.currentChart === name) this.currentChart = "";
       else this.currentChart = "Scatter";
     },
+    onTree() {
+      const name = "Tree";
+      if (this.currentChart === name) this.currentChart = "";
+      else this.currentChart = "Tree";
+    },
   },
 };
 </script>
@@ -118,6 +138,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  // mask
+  background-color: rgba(0, 0, 0, 0.45);
+  filter: alpha(opacity=45);
+  transition: opacity 0.3s linear, height 0s ease 0.3s;
+}
+.theView {
+  background: var(--backgroundColor);
 }
 .mask {
   position: fixed;
