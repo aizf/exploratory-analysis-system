@@ -40,7 +40,6 @@ export default {
   position: absolute;
   top: 594px;
   left: 0;
-  z-index: 999999;
   overflow-x: scroll;
   display: flex;
 }

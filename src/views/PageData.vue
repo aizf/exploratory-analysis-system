@@ -130,11 +130,13 @@ export default {
     loadData(event) {
       const that = this;
       const dataset = datasets[event.key];
+
       const datasetPath = "./static/" + dataset.fileName;
       if (event.key === this.selectedDataset) return;
       this.selectedDataset = event.key;
       const nodeFields = dataset.nodeFields;
       store.commit("updateNodeFields", nodeFields);
+      if (dataset.static) store.commit("updateStatic");
 
       let visualData;
       this.tabContents = []; // 清空数据
@@ -151,11 +153,11 @@ export default {
               store.commit("updateSourceData", JSON.stringify(res));
               visualData = res;
               this.codeContent["SourceData"] = this.cmSourceData;
-              this.codeContent["VisualData"] = JSON.stringify(
-                visualData,
-                null,
-                "\t"
-              );
+              // this.codeContent["VisualData"] = JSON.stringify(
+              //   visualData,
+              //   null,
+              //   "\t"
+              // );
               this.changeState(visualData);
             })
             .catch((err) => {
@@ -234,17 +236,17 @@ export default {
           d.source = idNodeMap[d.source];
           d.target = idNodeMap[d.target];
         }
-        if ("value" in d) maxWeight = Math.max(maxWeight, +d.value);
-        if ("weight" in d) maxWeight = Math.max(maxWeight, +d.weight);
+        // if ("value" in d) maxWeight = Math.max(maxWeight, +d.value);
+        // if ("weight" in d) maxWeight = Math.max(maxWeight, +d.weight);
       });
-      if (maxWeight > -Infinity) {
-        visualData.links.forEach((d) => {
-          if ("value" in d) d.weight = d.value / maxWeight;
-          else if ("weight" in d) d.weight /= maxWeight;
-        });
-      } else {
-        visualData.links.forEach((d) => (d.weight = 1));
-      }
+      // if (maxWeight > -Infinity) {
+      //   visualData.links.forEach((d) => {
+      //     if ("value" in d) d.weight = d.value / maxWeight;
+      //     else if ("weight" in d) d.weight /= maxWeight;
+      //   });
+      // } else {
+      //   visualData.links.forEach((d) => (d.weight = 1));
+      // }
 
       const uidLinksMap = this.genUidLinksMap(visualData);
       const uidLinkedNodesMap = this.genUidLinkedNodesMap(visualData);
@@ -261,6 +263,7 @@ export default {
         force: true,
         scatter: true,
       });
+      // console.log("visualData", visualData);
       store.commit("updateVisualData", visualData);
       store.commit("updateSourceNum", visualData.nodes.length);
       store.dispatch("resetAll");

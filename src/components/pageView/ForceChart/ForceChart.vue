@@ -106,6 +106,7 @@ export default {
   computed: {
     ...mapState({
       uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
+      isStatic: (state) => state.data.static,
       width: (state) => 500,
       height: (state) => state.view.dpiY * 0.55,
       currentUUID: (state) => state.view.currentUUID,
@@ -134,13 +135,17 @@ export default {
 
     this.initZoom(zoomDom);
     this.initBrush(svg, zoomDom);
-    this.initWorker();
+
     eventBus.$on("density", (density) => (this.density = density));
     eventBus.$on(
       "average_degree",
       (average_degree) => (this.average_degree = average_degree)
     );
-    this.$on("alterWorkerData", this.alterWorkerData);
+    if (!this.isStatic) {
+      console.log("isStatic", this.isStatic);
+      this.initWorker();
+      this.$on("alterWorkerData", this.alterWorkerData);
+    }
   },
   activated() {
     if (this.needUpdate) {
@@ -160,22 +165,29 @@ export default {
       this.transform = { ...t };
       this.$refs.zoomDom.__zoom = t;
 
-      this.initWorker();
+      if (!this.isStatic) this.initWorker();
     },
     initZoom(zoomDom) {
       const zoomStart = (e) => {
         // console.log("zoom start", e);
-        this.beforeEvent("zoom", this);
+        // this.beforeEvent("zoom", this);
       };
-      const zoomed = throttle(({ transform }) => {
-        // console.log("zooming");
-        this.vis.attr("transform", transform);
-        this.transform = { ...transform };
-        this.$refs.WebGLChart.$emit("zoom", transform);
-      }, 16.67);
+      const zoomed = throttle(
+        ({ transform }) => {
+          // console.log("zooming");
+          this.vis.attr("transform", transform);
+          this.transform = { ...transform };
+          this.$refs.WebGLChart.$emit("zoom", transform);
+        },
+        16.67,
+        {
+          leading: true,
+          trailing: true,
+        }
+      );
       const zoomEnd = ({ transform }) => {
-        let extentStart = transform.invert([0, 0]); // 视口的开始坐标
-        let extentEnd = transform.invert([this.width, this.height]); // 视口的结束坐标
+        // let extentStart = transform.invert([0, 0]); // 视口的开始坐标
+        // let extentEnd = transform.invert([this.width, this.height]); // 视口的结束坐标
         // let t = this.nodes.filter((d) => {
         //   return (
         //     extentStart[0] <= d.x &&
@@ -184,11 +196,11 @@ export default {
         //     d.y <= extentEnd[1]
         //   );
         // });
-        let operation = {
-          action: "zoom",
-          nodes: [],
-        };
-        this.$store.dispatch("addOperation", operation);
+        // let operation = {
+        //   action: "zoom",
+        //   nodes: [],
+        // };
+        // this.$store.dispatch("addOperation", operation);
         // console.log("zoom");
       };
       const zoomInstance = d3.zoom();
@@ -220,10 +232,10 @@ export default {
       const brushStart = ({ selection }) => {
         // console.log("brushstart");
         if (selection === null) return;
-        this.beforeEvent(
-          this.eventOption.visBrush ? "brush" : "invertBrush",
-          this
-        );
+        // this.beforeEvent(
+        //   this.eventOption.visBrush ? "brush" : "invertBrush",
+        //   this
+        // );
 
         if (!this.eventOption.brushKeep && this.eventOption.visBrush) {
           this.nodes.forEach((d) => {
@@ -249,9 +261,9 @@ export default {
         });
         this.$refs.WebGLChart.$emit("brush");
       };
-      const brushed = throttle(brushing, 16, {
+      const brushed = throttle(brushing, 300, {
         leading: true,
-        trailing: false,
+        trailing: true,
       });
       const brushEnd = ({ selection }) => {
         if (selection === null) return;
@@ -264,11 +276,11 @@ export default {
         });
         this.$refs.WebGLChart.$emit("brush");
 
-        let operation = {
-          action: "brush",
-          nodes: brushedNodes,
-        };
-        this.$store.dispatch("addOperation", operation);
+        // let operation = {
+        //   action: "brush",
+        //   nodes: brushedNodes,
+        // };
+        // this.$store.dispatch("addOperation", operation);
         console.log("brush");
       };
       const invertBrushEnd = ({ selection }) => {
@@ -305,21 +317,28 @@ export default {
       svg.select("g.invert-brush").call(invertBrush);
     },
     initWorker() {
-      const handleMessage = throttle((nodes) => {
-        for (let node of nodes) {
-          if ("fx" in node) continue;
-          const { uid, x, y } = node;
-          try {
-            this.uidNodeMap[uid].x = x;
-            this.uidNodeMap[uid].y = y;
-          } catch (e) {
-            // 处理脏数据
-            if (e instanceof TypeError) return;
-            throw e;
+      const handleMessage = throttle(
+        (nodes) => {
+          for (let node of nodes) {
+            if ("fx" in node) continue;
+            const { uid, x, y } = node;
+            try {
+              this.uidNodeMap[uid].x = x;
+              this.uidNodeMap[uid].y = y;
+            } catch (e) {
+              // 处理脏数据
+              if (e instanceof TypeError) return;
+              throw e;
+            }
           }
+          this.render();
+        },
+        16.67,
+        {
+          leading: true,
+          trailing: true,
         }
-        this.render();
-      }, 16.67);
+      );
 
       if (!this.worker) {
         this.worker = new Worker();
@@ -340,15 +359,15 @@ export default {
           this.tickCount++;
         });
 
-        this.$watch(
-          () => {
-            return this.nodes.map((d) => d.uid);
-          },
-          () => {
-            console.log("watch");
-            this.changeWorkerData();
-          }
-        );
+        // this.$watch(
+        //   () => {
+        //     return this.nodes.map((d) => d.uid);
+        //   },
+        //   () => {
+        //     console.log("watch");
+        //     this.changeWorkerData();
+        //   }
+        // );
       }
 
       this.worker.postMessage({

@@ -1,16 +1,27 @@
 <template>
   <div class="container test-border">
-    <a-tag
+    <!-- <span class="text"> -->
+    <a-popover
       class="text"
-      :class="{ tagSelected: word.selected }"
       v-for="word in words"
-      :color="classificationPalette[word.topic]"
+      :mouseEnterDelay="0.3"
       :key="word.topic + word.text"
-      @click="word.selected = !word.selected"
-      :style="{ opacity: prob2opacity(word) }"
     >
-      {{ word.text }}
-    </a-tag>
+      <template slot="content">
+        <p>topic: {{ word.topic }}</p>
+        <p>prob: {{ word.prob }}</p>
+      </template>
+      <a-tag
+        class="tag"
+        :class="{ tagSelected: word.selected }"
+        :color="classificationPalette[word.topic]"
+        @click="word.selected = !word.selected"
+        :style="{ opacity: prob2opacity(word) }"
+      >
+        {{ word.text }}
+      </a-tag>
+    </a-popover>
+    <!-- </span> -->
   </div>
 </template>
 <script>
@@ -18,8 +29,9 @@
 import { RecycleScroller } from "vue-virtual-scroller";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { mapState, mapGetters } from "vuex";
-import texts from "@/assets/text.json";
 import textdict from "@/assets/textdict.json";
+import axios from "axios";
+
 // import * as _ from "lodash";
 export default {
   name: "TextInput",
@@ -33,21 +45,8 @@ export default {
   },
   computed: {},
   mounted() {
-    const words = [];
-    for (let i = 0; i < texts.length; i++) {
-      for (let j = 0; j < texts[i].length; j++) {
-        // console.log(i,j,texts[i][j]);
-        const [text, prob] = texts[i][j];
-        words.push({
-          topic: i,
-          text: textdict[text].join(";"),
-          prob: prob,
-          selected: false,
-        });
-      }
-    }
-    this.words = words;
     // console.log(this.words);
+    this.change(10, 10);
   },
   methods: {
     prob2opacity(word) {
@@ -56,6 +55,37 @@ export default {
       const a = -27;
       const b = 1 - c - a;
       return (a * prob + b) * prob + c;
+    },
+    formmatWords(texts) {
+      const words = [];
+      for (let i = 0; i < texts.length; i++) {
+        for (let j = 0; j < texts[i].length; j++) {
+          // console.log(i,j,texts[i][j]);
+          const [text, prob] = texts[i][j];
+          words.push({
+            topic: i,
+            text: textdict[text].join(";"),
+            prob: prob,
+            selected: false,
+          });
+        }
+      }
+      return words;
+    },
+    change(n_topics, n_top_words) {
+      axios({
+        method: "post",
+        // url: "//127.0.0.1:3000/p/cluster",
+        url: "//127.0.0.1:5000/topics",
+        data: {
+          n_topics: n_topics,
+          n_top_words: n_top_words,
+        },
+      }).then((res) => {
+        const { data } = res;
+        const texts = JSON.parse(data.data);
+        this.words = this.formmatWords(texts);
+      });
     },
   },
 };
@@ -67,7 +97,6 @@ export default {
   position: absolute;
   top: 0;
   left: 500px;
-  z-index: 999999;
   padding: 5px;
   overflow-y: scroll;
 
@@ -76,8 +105,9 @@ export default {
   // align-items: baseline;
 }
 .text {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   cursor: pointer;
+  // display: inline;
 }
 .tagSelected {
   border: 4px solid red;

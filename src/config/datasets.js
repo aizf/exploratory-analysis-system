@@ -44,6 +44,36 @@ const datasets = {
             "group": { alias: "group", type: "cat" }
         }
     },
+    "facebook_static": {
+        name: "facebook_static",
+        fileName: "facebook_static.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        },
+        static: true
+    },
+    "facebook_static1": {
+        name: "facebook_static1",
+        fileName: "facebook_static1.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        },
+        static: true
+    },
+    "facebook_static2": {
+        name: "facebook_static2",
+        fileName: "facebook_static2.json",
+        dataType: "node-link",
+        nodeFields: {
+            "id": { alias: "id", type: "cat" },
+            "group": { alias: "group", type: "cat" }
+        },
+        static: true
+    },
     "PolBooks": {
         name: "PolBooks",
         fileName: "PolBooks.json",

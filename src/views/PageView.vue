@@ -10,20 +10,7 @@
         :chartOption="chartOption"
         @changeCurrentChart="changeCurrentChart"
       />
-      <a-card
-        title="Others Views"
-        :headStyle="{ padding: '0 24px 0 24px' }"
-        :bodyStyle="{ padding: '5px 10px 5px 10px' }"
-      >
-        <a-row>
-          <a-col :span="12" offset="4"></a-col>
-          <a-col :span="4" offset="2"></a-col>
-        </a-row>
-      </a-card>
-      <a-button @click="communities" style="margin: 0 0 0 5px"> Tree </a-button>
-      <a-button @click="updateWorker" style="margin: 0 0 0 5px">
-        Heat Map
-      </a-button>
+      <OthersViews />
     </a-layout-sider>
 
     <a-layout class="view">
@@ -62,13 +49,16 @@
             <ClusterOption />
           </div>
           <div class="view-tools-item">
+            <ClassificationOption />
+          </div>
+          <div class="view-tools-item">
             <a-button
               type="primary"
               size="small"
-              @click="selectInvert"
+              @click="updateGL"
               :style="{ marginLeft: '0', width: '95px' }"
               ghost
-              >Select Invert</a-button
+              >Update</a-button
             >
           </div>
           <div class="view-tools-item">
@@ -155,12 +145,14 @@ import Record from "@c/pageView/Record";
 import TextInput from "@c/pageView/TextInput";
 import StrucInput from "@c/pageView/StrucInput";
 import ForceChart from "@c/pageView/ForceChart";
-import ScatterChart from "@c/pageView/ScatterChart.vue";
+// import ScatterChart from "@c/pageView/ScatterChart.vue";
 import NodesList from "@c/pageView/NodesList.vue";
 import SelectedInfoBoard from "@c/pageView/SelectedInfoBoard";
 import EventOption from "@c/pageView/EventOption.vue";
-import ChartOption from "@c/pageView/ChartOption.vue";
+import ChartOption from "@c/pageView/ChartOption";
+import OthersViews from "@c/pageView/OthersViews";
 import ClusterOption from "@c/pageView/ClusterOption.vue";
+import ClassificationOption from "@c/pageView/ClassificationOption.vue";
 import MarkedViews from "@c/pageView/MarkedViews";
 import { classificationPalette } from "@/config/color";
 export default {
@@ -170,12 +162,14 @@ export default {
     TextInput,
     StrucInput,
     ForceChart,
-    ScatterChart,
+    // ScatterChart,
     NodesList,
     SelectedInfoBoard,
     EventOption,
     ChartOption,
+    OthersViews,
     ClusterOption,
+    ClassificationOption,
     MarkedViews,
   },
   data() {
@@ -199,7 +193,6 @@ export default {
       chartOption: {
         simulation: {
           run: true,
-          static: false,
           alphaTarget: 0.3,
           centerStrength: 1,
         },
@@ -397,6 +390,11 @@ export default {
       console.log("force change");
       this.$refs.theView.changeWorkerData();
     },
+    updateGL() {
+      const vnode = this.$refs.theView.$refs.WebGLChart;
+      vnode.setPostion();
+      vnode.changeColor();
+    },
   },
   watch: {},
 };
@@ -409,7 +407,7 @@ export default {
 } */
 .view-tools-board {
   height: 26px;
-  width: 1152px;
+  width: 1252px;
   display: flex;
   align-items: center;
   justify-content: space-between;

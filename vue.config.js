@@ -67,7 +67,7 @@ module.exports = {
   //     }
   // },
   devServer: {
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     hot: true
   },
   // parallel: require('os').cpus().length > 1, // 构建时开启多进程处理babel编译

@@ -10,7 +10,8 @@ const data = {
             uidLinksMap: [], // uid映射对应边
             uidLinkedNodesMap: [],// uid映射连接的所有节点
         },
-        isDirected: false
+        isDirected: false,
+        static: false
     },
     mutations: {
         updateSourceData: (state, data) => {
@@ -30,6 +31,9 @@ const data = {
         },
         updateIsDirected: (state, data) => {
             state.isDirected = data;
+        },
+        updateStatic: (state) => {
+            state.static = true;
         }
     },
     actions: {}

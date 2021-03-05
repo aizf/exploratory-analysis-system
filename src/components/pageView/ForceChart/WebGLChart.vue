@@ -21,6 +21,7 @@ export default {
   },
   computed: {
     ...mapState({
+      isStatic: (state) => state.data.static,
       uidMaps: (state) => state.data.uidMaps,
       uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
       currentUUID: (state) => state.view.currentUUID,
@@ -47,7 +48,7 @@ export default {
     this.app = new PIXI.Application({
       width: this.width,
       height: this.height,
-      antialias: true,
+      antialias: !this.isStatic,
     });
     this.app.renderer.backgroundColor = PIXI.utils.string2hex(
       this.backgroundColor
@@ -61,22 +62,32 @@ export default {
     this.vis.addChild(this.linksG, this.nodesG);
     this.app.stage.addChild(this.vis);
 
+    this.nodesG.removeChildren();
+    this.nodes.forEach((node) => {
+      this.nodesG.addChild(this.nodeG(node));
+    });
+    this.linksG.removeChildren();
+    this.links.forEach((link) => {
+      this.linksG.addChild(this.line(link));
+    });
+    this.setPostion();
+
     // nodes数量变化时
-    this.$watch(
-      () => this.nodes.map((d) => d.uid),
-      function () {
-        this.nodesG.removeChildren();
-        this.nodes.forEach((node) => {
-          this.nodesG.addChild(this.nodeG(node));
-        });
-        this.linksG.removeChildren();
-        this.links.forEach((link) => {
-          this.linksG.addChild(this.line(link));
-        });
-      },
-      { immediate: true }
-    );
-    this.initDrag();
+    // this.$watch(
+    //   () => this.nodes.map((d) => d.uid),
+    //   function () {
+    //     this.nodesG.removeChildren();
+    //     this.nodes.forEach((node) => {
+    //       this.nodesG.addChild(this.nodeG(node));
+    //     });
+    //     this.linksG.removeChildren();
+    //     this.links.forEach((link) => {
+    //       this.linksG.addChild(this.line(link));
+    //     });
+    //   },
+    //   { immediate: true }
+    // );
+    if (!this.isStatic) this.initDrag();
     this.$on("setPostion", this.setPostion);
     this.$on("zoom", this.zoom);
     this.$on("brush", this.brush);
@@ -98,21 +109,29 @@ export default {
       });
       this.app.view.addEventListener(
         "mousemove",
-        throttle((e) => {
-          if (!mousedown) return;
-          let x = e.clientX - from[0],
-            y = e.clientY - from[1];
-          from = [e.clientX, e.clientY];
-          this.draggedObjs.forEach((node) => {
-            node.x += x;
-            node.y += y;
-            node.fx = node.x;
-            node.fy = node.y;
-            this.isDragged = true;
-          });
-          this.$emit("alterWorkerData", [...this.draggedObjs]);
-          this.setPostion();
-        }, 16.67)
+        throttle(
+          (e) => {
+            if (!mousedown) return;
+            let x = e.clientX - from[0],
+              y = e.clientY - from[1];
+            from = [e.clientX, e.clientY];
+            this.draggedObjs.forEach((node) => {
+              node.x += x;
+              node.y += y;
+              node.fx = node.x;
+              node.fy = node.y;
+              this.isDragged = true;
+            });
+            if (!this.isStatic)
+              this.$emit("alterWorkerData", [...this.draggedObjs]);
+            this.setPostion();
+          },
+          16.67,
+          {
+            leading: true,
+            trailing: true,
+          }
+        )
       );
       this.app.view.addEventListener("mouseup", () => {
         this.draggedObjs.forEach((node) => {
@@ -121,7 +140,8 @@ export default {
             delete node.fy;
           }
         });
-        this.$emit("alterWorkerData", [...this.draggedObjs]);
+        if (!this.isStatic)
+          this.$emit("alterWorkerData", [...this.draggedObjs]);
         this.draggedObjs.clear();
         this.isDragged = false;
       });
@@ -162,23 +182,23 @@ export default {
       if (!this.eventOption.visClick) return;
       if (this.isDragged) return;
 
-      this.beforeEvent("click", this);
+      // this.beforeEvent("click", this);
       if (d.selected) {
         d.selected = false;
       } else {
         d.selected = true;
-        let operation = {
-          action: "click",
-          nodes: [d],
-        };
-        this.$store.dispatch("addOperation", operation);
+        // let operation = {
+        //   action: "click",
+        //   nodes: [d],
+        // };
+        // this.$store.dispatch("addOperation", operation);
         console.log("click");
       }
     },
     mouseover(node) {
       if (!this.eventOption.visMouseover || this.isDraging) return;
 
-      this.beforeEvent("mouseover", this);
+      // this.beforeEvent("mouseover", this);
 
       this.nodes.forEach((node) => (node.mouseover_show = false));
       this.links.forEach((link) => (link.mouseover_show = false));
@@ -189,14 +209,14 @@ export default {
 
       this.setPostion();
 
-      if (!this.isDraging) {
-        let operation = {
-          action: "mouseover",
-          nodes: displayNodes,
-        };
-        this.$store.dispatch("addOperation", operation);
-        // console.log("mouseover");
-      }
+      // if (!this.isDraging) {
+      //   let operation = {
+      //     action: "mouseover",
+      //     nodes: displayNodes,
+      //   };
+      //   this.$store.dispatch("addOperation", operation);
+      //   // console.log("mouseover");
+      // }
     },
     mouseout(node) {
       if (!this.eventOption.visMouseover || this.isDragged) return;
@@ -238,20 +258,22 @@ export default {
         that.mouseout(this.parent.__data__);
       });
       // drag
-      circle.on("mousedown", function () {
-        if (!that.eventOption.visDrag) return;
-        const node = this.parent.__data__;
-        that.draggedObjs.add(node);
-        node.fx = node.x;
-        node.fy = node.y;
+      if (!this.isStatic) {
+        circle.on("mousedown", function () {
+          if (!that.eventOption.visDrag) return;
+          const node = this.parent.__data__;
+          that.draggedObjs.add(node);
+          node.fx = node.x;
+          node.fy = node.y;
 
-        that.beforeEvent("drag", that);
-        let operation = {
-          action: "drag",
-          nodes: [node],
-        };
-        that.$store.dispatch("addOperation", operation);
-      });
+          // that.beforeEvent("drag", that);
+          // let operation = {
+          //   action: "drag",
+          //   nodes: [node],
+          // };
+          // that.$store.dispatch("addOperation", operation);
+        });
+      }
 
       // this.text = new PIXI.Container();
 
@@ -272,8 +294,8 @@ export default {
           PIXI.utils.string2hex(d)
         );
       }
-      return this.$_fillColor[0];
-      // return this.$_fillColor[group || 0];
+      // return this.$_fillColor[0];
+      return this.$_fillColor[group || 0];
     },
     setPostion() {
       // console.log(this);

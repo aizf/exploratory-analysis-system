@@ -53,7 +53,7 @@ export default {
   computed: {
   },
   mounted() {
-    console.log(this.subs);
+    // console.log(this.subs);
   },
   methods: {
     clickSubForce(nodes, links) {
@@ -71,7 +71,6 @@ export default {
   position: absolute;
   top: 0;
   left: 900px;
-  z-index: 999999;
 }
 .draw {
   height: 50%;

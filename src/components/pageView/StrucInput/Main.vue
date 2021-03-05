@@ -84,7 +84,7 @@ export default {
       // this.nodeG.selectAll("circle").data(this.nodes);
       // this.linkG.selectAll("line").data(this.links);
       // if (this.nodes.length === 0) return;
-      console.log("do update");
+      // console.log("do update");
       const simulation = this.simulation;
       simulation.alphaTarget(0);
       simulation.nodes(this.nodes);
@@ -278,7 +278,7 @@ export default {
     isUpdate: {
       handler(newVal) {
         if (newVal) {
-          console.log("update");
+          // console.log("update");
           this.update();
         }
       },

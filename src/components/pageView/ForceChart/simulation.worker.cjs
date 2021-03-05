@@ -88,6 +88,7 @@ const init = ({ width, height, chartOption, nodes, links }) => {
         .on("end", tickEnd)
         .alpha(1)
         .alphaTarget(0)
+        // .alphaTarget(0.3)
         .restart();
     // self.subSimulations.forEach(s => {
     //     s.alpha(1)
@@ -166,18 +167,24 @@ const changeOption = (chartOption) => {
     }
 }
 
+const isStatic = true;
+// const isStatic = false;
+let tickCount = 0;
 const ticked = function () {
-    // console.log("worker-tick");
+    tickCount++;
+    console.log("worker-tick");
     // console.log(self.nodes);
-    if (self.chartOption.static) return;
-    self.postMessage({
-        nodes: self.nodes
-    })
+    if (!isStatic) {
+        self.postMessage({
+            nodes: self.nodes
+        })
+    }
+    // if (tickCount > 2000) simulation.stop();
 }
 const tickEnd = function () {
     // console.log("worker-tick");
 
-    if (self.chartOption.static) {
+    if (isStatic) {
         self.postMessage({
             nodes: self.nodes
         })
