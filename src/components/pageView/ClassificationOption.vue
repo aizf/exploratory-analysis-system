@@ -1,13 +1,34 @@
 <template>
   <div>
-    <a-button
+    <a-dropdown-button type="primary" size="small" :disabled="loading" ghost>
+      Group
+      <a-menu slot="overlay">
+        <a-menu-item key="0" @click="classification(0)">
+          <a-icon type="desktop" />None
+        </a-menu-item>
+        <a-menu-item key="1" @click="classification(1)">
+          <a-icon type="desktop" />Communities
+        </a-menu-item>
+        <a-menu-item key="2" @click="classification(2)">
+          <a-icon type="desktop" />Target
+        </a-menu-item>
+        <a-menu-item
+          v-for="func in onlineFunc"
+          :key="func"
+          @click="cluster(func)"
+        >
+          <a-icon type="cloud-download" />{{ func }}
+        </a-menu-item>
+      </a-menu>
+    </a-dropdown-button>
+    <!-- <a-button
       type="primary"
       size="small"
       :loading="loading1 || loading2"
       @click="classification"
       ghost
       >Classification</a-button
-    >
+    > -->
   </div>
 </template>
 <script>
@@ -18,10 +39,14 @@ export default {
   name: "ClassificationOption",
   data() {
     return {
-      lists: [],
-      index: 0,
-      loading1: true,
-      loading2: true,
+      loading: false,
+      onlineFunc: [
+        "KMeans",
+        "MeanShift",
+        "DBSCAN",
+        "AgglomerativeClustering",
+        "AffinityPropagation",
+      ],
     };
   },
   computed: {
@@ -32,39 +57,55 @@ export default {
   },
   mounted() {
     // console.log("ClassificationOption", this);
-
-    const defaultList = Array(22470).fill(0);
-    this.lists.push(defaultList);
-    axios({
-      method: "get",
-      // url: "//127.0.0.1:3000/p/cluster",
-      url: "/static/communities_list.json",
-    }).then((res) => {
-      const { data } = res;
-      this.lists.push(data);
-      this.loading1 = false;
-      // console.log("list", data);
-    });
-    axios({
-      method: "get",
-      // url: "//127.0.0.1:3000/p/cluster",
-      url: "/static/target_list.json",
-    }).then((res) => {
-      const { data } = res;
-      this.lists.push(data);
-      this.loading2 = false;
-      // console.log("list", data);
-    });
   },
   methods: {
-    classification() {
-      this.index = (this.index + 1) % this.lists.length;
-      const list = this.lists[this.index];
-      // console.log(list);
-      this.nodes.forEach((node) => {
-        node.group = list[node.uid];
+    classification(index) {
+      if (index === 0) {
+        this.nodes.forEach((node) => {
+          node.group = 0;
+        });
+        return;
+      }
+      this.loading = true;
+      const data = {
+        0: "pos_force.json",
+        1: "communities_list.json",
+        2: "target_list.json",
+        // 3: "pos_umap.json",
+        // 4: "pos_isomap.json",
+      };
+      axios({
+        method: "get",
+        url: `/static/${data[index]}`,
+      }).then((res) => {
+        const { data } = res;
+        this.nodes.forEach((node, i) => {
+          node.group = data[i];
+        });
+        this.loading = false;
       });
-      //
+    },
+    cluster(algorithm) {
+      this.loading = true;
+      const pos = this.nodes.map((d) => [d.x, d.y]);
+      axios({
+        method: "post",
+        url: `//127.0.0.1:5000/cluster`,
+        data: { pos, algorithm },
+      })
+        .then((res) => {
+          const { data } = res;
+          const group = data.data;
+          // console.log(group);
+          this.nodes.forEach((node, i) => {
+            node.group = group[i];
+          });
+          this.loading = false;
+        })
+        .catch((err) => {
+          this.loading = false;
+          throw err;
+        });
     },
   },
 };

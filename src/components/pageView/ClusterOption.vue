@@ -1,41 +1,25 @@
 <template>
   <div>
-    <a-button
-      type="primary"
-      size="small"
-      :loading="loading"
-      @click="showDrawer"
-      ghost
-      >Cluster</a-button
-    >
-    <a-drawer
-      title="Cluster"
-      placement="top"
-      :visible="visible"
-      @close="onClose"
-    >
-      <a-tabs v-model="tab">
-        <a-tab-pane
-          v-for="(params, algorithm) in option"
-          :key="algorithm"
-          :tab="algorithm"
-        >
-          <a-input
-            v-for="(val, key) in params"
-            :addon-before="key"
-            v-model="option[algorithm][key]"
-            :key="algorithm + key"
-          />
-        </a-tab-pane>
-      </a-tabs>
-      <a-button
-        type="primary"
-        size="small"
-        :loading="loading"
-        @click="toCluster"
-        >cluster</a-button
-      >
-    </a-drawer>
+    <a-dropdown-button type="primary" size="small" :disabled="disabled">
+      Layout
+      <a-menu slot="overlay">
+        <a-menu-item key="0" @click="toCluster(0)">
+          <a-icon type="desktop" />Force
+        </a-menu-item>
+        <a-menu-item key="1" @click="toCluster(1)">
+          <a-icon type="desktop" />T-SNE
+        </a-menu-item>
+        <a-menu-item key="2" @click="toCluster(2)">
+          <a-icon type="desktop" />PCA
+        </a-menu-item>
+        <a-menu-item key="3" @click="toCluster(3)">
+          <a-icon type="desktop" />UMAP
+        </a-menu-item>
+        <a-menu-item key="4" @click="toCluster(4)">
+          <a-icon type="desktop" />Isomap
+        </a-menu-item>
+      </a-menu>
+    </a-dropdown-button>
   </div>
 </template>
 <script>
@@ -46,60 +30,38 @@ export default {
   name: "ClusterOption",
   data() {
     return {
-      visible: false,
-      tab: "KMeans",
-      option: {
-        KMeans: { n_clusters: 5 },
-        MeanShift: { quantile: 0.2 },
-        DBSCAN: { eps: 180, min_samples: 6 },
-        AgglomerativeClustering: { linkage: "ward", n_clusters: 5 },
-        AffinityPropagation: {},
-      },
-      loading: false,
+      disabled: false,
     };
   },
   computed: {
-    ...mapState({
-      uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
-    }),
-    ...mapGetters(["nodes", "links", "nodesNumber"]),
+    ...mapGetters(["nodes"]),
   },
   mounted() {
-    console.log("NodesList", this);
+    console.log("ClusterOption", this);
   },
   methods: {
-    showDrawer() {
-      this.visible = true;
-    },
-    onClose() {
-      this.visible = false;
-    },
-    toCluster() {
-      this.loading = true;
-      const params = this.option[this.tab];
-      for (let [key, val] of Object.entries(params)) {
-        if (!isNaN(val)) {
-          params[key] = +val;
-        }
-      }
+    toCluster(index) {
+      const data = {
+        0: "pos_force.json",
+        1: "pos_tsne.json",
+        2: "pos_pca.json",
+        3: "pos_umap.json",
+        4: "pos_isomap.json",
+      };
+      this.disabled = true;
       axios({
-        method: "post",
+        method: "get",
         // url: "//127.0.0.1:3000/p/cluster",
-        url: "//127.0.0.1:5000/cluster",
-        data: {
-          algorithm: this.tab,
-          nodes: this.nodes,
-          params: params,
-        },
+        url: `/static/${data[index]}`,
       }).then((res) => {
         const { data } = res;
-        data.data.forEach(({ uid, group }) => {
-          this.uidNodeMap[uid].group = group;
+        // console.log(data);
+        this.nodes.forEach((d, i) => {
+          const [x, y] = data[i];
+          d.x = x;
+          d.y = y;
         });
-        // console.log("cluster", data);
-        setTimeout(() => {
-          this.loading = false;
-        }, 500);
+        this.disabled = false;
       });
     },
   },

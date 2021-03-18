@@ -2,21 +2,15 @@
   <div class="con test-border">
     <svg class="svg" ref="svg">
       <g ref="g" font-family="Avenir" font-size="8px">
-        <g
-          class="links"
-          fill="none"
-          stroke-opacity="0.4"
-          stroke-width="1.5"
-          :stroke="contrastColor"
-        >
-          <path v-for="(link, i) in links" :d="genPath(link)" :key="i" />
+        <g class="links" fill="none" stroke-opacity="0.4" stroke-width="1.5">
+          <path
+            v-for="(link, i) in links"
+            :d="genPath(link)"
+            :stroke="pathColor(link)"
+            :key="i"
+          />
         </g>
-        <g
-          class="nodes"
-          stroke-linejoin="round"
-          stroke-width="3"
-          fill="#1c7ed6"
-        >
+        <g class="nodes" stroke-linejoin="round" stroke-width="3">
           <g
             v-for="(node, i) in nodes"
             :transform="`translate(${node.y - nodeSize[0] / 2},${
@@ -88,9 +82,9 @@ export default {
       const root = d3.hierarchy(data);
       root.dx = 10;
       root.dy = width / (root.height + 1);
-      return d3.tree().nodeSize([this.nodeSize[0] * 1.5, this.nodeSize[1] * 1.5])(
-        root
-      );
+      return d3
+        .tree()
+        .nodeSize([this.nodeSize[0] * 1.5, this.nodeSize[1] * 1.5])(root);
     };
 
     // console.log(this.$parent);
@@ -120,6 +114,14 @@ export default {
         .x((d) => d.y)
         .y((d) => d.x)
         .call(null, d);
+    },
+    pathColor(link) {
+      const { source, target } = link;
+      const n1 = source.data.nodes.length;
+      const n2 = target.data.nodes.length;
+      if (n1 === n2) return this.contrastColor;
+      else if (n1 > n2) return "#37b24d";
+      else return "#f03e3e";
     },
   },
 };

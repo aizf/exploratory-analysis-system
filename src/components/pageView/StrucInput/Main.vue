@@ -30,11 +30,6 @@
 import Vue from "vue";
 import { mapState, mapGetters } from "vuex";
 // import sub0 from "@/assets/0.json";
-// import sub1 from "@/assets/1.json";
-// import sub2 from "@/assets/2.json";
-// import sub3 from "@/assets/3.json";
-// import sub4 from "@/assets/4.json";
-// import sub5 from "@/assets/5.json";
 // import * as _ from "lodash";
 import store from "@/store/";
 import * as d3 from "d3";
@@ -48,6 +43,7 @@ export default {
     return {
       // nodes: [],
       // links: [],
+      dragging: false,
       nodesData: new WeakMap(),
     };
   },
@@ -92,10 +88,13 @@ export default {
         "link",
         d3.forceLink(this.links).id((d) => d.strucID)
       );
-      simulation.alphaTarget(0.3).restart();
-      setTimeout(() => {
-        simulation.alphaTarget(0);
-      }, 300);
+
+      if (!this.dragging) {
+        simulation.alphaTarget(0.3).restart();
+        setTimeout(() => {
+          simulation.alphaTarget(0);
+        }, 800);
+      }
       // console.log(svg);
 
       // let link = this.linkG.selectAll("line");
@@ -110,6 +109,7 @@ export default {
         const that = this;
         function dragstarted(event) {
           if (!event.active) simulation.stop();
+          that.dragging = true;
           // event.subject.fx = event.subject.x;
           // event.subject.fy = event.subject.y;
           const source = that.nodesData.get(this);
@@ -145,6 +145,7 @@ export default {
         const dragended = (event) => {
           // console.log("dragend", event);
           // if (!event.active) simulation.alphaTarget(0);
+          this.dragging = false;
           delete newNodes.fx;
           delete newNodes.fy;
           mouseup(event.x, event.y);
@@ -278,7 +279,7 @@ export default {
     isUpdate: {
       handler(newVal) {
         if (newVal) {
-          // console.log("update");
+          console.log("update");
           this.update();
         }
       },

@@ -44,8 +44,8 @@
         v-show="eventOption.visZoom"
         ref="zoomDom"
       />
-      <g class="vis">
-        <!-- <Links :links="links" :chartOption="chartOption" ref="links" />
+      <!-- <g class="vis"> -->
+      <!-- <Links :links="links" :chartOption="chartOption" ref="links" />
         <Nodes
           :nodes="nodes"
           :links="links"
@@ -56,12 +56,12 @@
           @alterWorkerData="alterWorkerData"
           ref="nodes"
         /> -->
-        <Texts
+      <!-- <Texts
           :nodes="nodes"
           :visShowIds="eventOption.visShowIds"
           ref="texts"
-        />
-      </g>
+        /> -->
+      <!-- </g> -->
       <g class="base-brush brush" v-show="eventOption.visBrush" />
       <g class="base-brush invert-brush" v-show="eventOption.visInvertBrush" />
     </svg>
@@ -89,7 +89,7 @@ export default {
     // DataLoader,
     // Links,
     // Nodes,
-    Texts,
+    // Texts,
   },
   inject: ["backgroundColor", "contrastColor", "classificationPalette"],
   props: {
@@ -101,6 +101,7 @@ export default {
       transform: { k: 1, x: 0, y: 0 },
       density: 0,
       average_degree: 0,
+      calcLayout: false,
     };
   },
   computed: {
@@ -136,22 +137,24 @@ export default {
     this.initZoom(zoomDom);
     this.initBrush(svg, zoomDom);
 
-    eventBus.$on("density", (density) => (this.density = density));
-    eventBus.$on(
-      "average_degree",
-      (average_degree) => (this.average_degree = average_degree)
-    );
+    // eventBus.$on("density", (density) => (this.density = density));
+    // eventBus.$on(
+    //   "average_degree",
+    //   (average_degree) => (this.average_degree = average_degree)
+    // );
     if (!this.isStatic) {
       console.log("isStatic", this.isStatic);
-      this.initWorker();
-      this.$on("alterWorkerData", this.alterWorkerData);
+      if (this.calcLayout) {
+        this.initWorker();
+        this.$on("alterWorkerData", this.alterWorkerData);
+      }
     }
   },
   activated() {
-    if (this.needUpdate) {
-      this.reInit();
-      store.commit("ForceUpdated");
-    }
+    // if (this.needUpdate) {
+    //   this.reInit();
+    //   store.commit("ForceUpdated");
+    // }
   },
   methods: {
     reInit() {
@@ -272,7 +275,7 @@ export default {
         brushedNodes.forEach((node) => {
           node.brushing = false;
           node.selected = true;
-          node.attentionTimes += 1;
+          // node.attentionTimes += 1;
         });
         this.$refs.WebGLChart.$emit("brush");
 

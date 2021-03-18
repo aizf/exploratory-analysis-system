@@ -38,6 +38,8 @@ import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { mapState, mapGetters } from "vuex";
 // import * as _ from "lodash";
 import { dataDeepClone } from "@/utils/methods.js";
+import axios from "axios";
+
 export default {
   name: "NodesList",
   components: {
@@ -98,10 +100,32 @@ export default {
         links,
         index,
       });
+      this.recommendNodes(words, nodes, links);
+
       // console.log(1);
       // console.log(words);
       // console.log(nodes);
       // console.log(links);
+    },
+    recommendNodes(_words, _nodes, _links) {
+      const words = _words.map((d) => d.text);
+      const nodes = _nodes.map((d) => ({ id: d.id }));
+      const links = _links.map((d) => ({
+        source: d.source.id,
+        target: d.target.id,
+      }));
+      axios({
+        method: "post",
+        url: "//127.0.0.1:5000/recommendNodes",
+        data: {
+          words,
+          nodes,
+          links,
+        },
+      }).then((res) => {
+        const { data } = res;
+        console.log("list", data);
+      });
     },
     onSearch() {},
   },

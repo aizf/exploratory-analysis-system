@@ -58,6 +58,7 @@
               @click="updateGL"
               :style="{ marginLeft: '0', width: '95px' }"
               ghost
+              :loading="loadingUpdate"
               >Update</a-button
             >
           </div>
@@ -181,12 +182,12 @@ export default {
       // view
       eventOption: {
         visClick: true,
-        visDrag: true,
+        visDrag: false,
         visMouseover: true,
         visBrush: false,
         brushKeep: false,
         visInvertBrush: false,
-        visZoom: false,
+        visZoom: true,
         visShowIds: false,
       },
       // option
@@ -201,6 +202,7 @@ export default {
       },
 
       currentChart: "ForceChart",
+      loadingUpdate: false,
     };
   },
   provide: {},
@@ -325,7 +327,7 @@ export default {
     },
     groupTheSelectedNodes(group) {
       // console.log(group);
-      this.beforeEvent("classification", this);
+      // this.beforeEvent("classification", this);
       store.state.data.visualData.nodes.forEach((d) => {
         if (d.selected) {
           this.$set(d, "group", group);
@@ -391,9 +393,11 @@ export default {
       this.$refs.theView.changeWorkerData();
     },
     updateGL() {
+      this.loadingUpdate = true;
       const vnode = this.$refs.theView.$refs.WebGLChart;
       vnode.setPostion();
       vnode.changeColor();
+      this.loadingUpdate = false;
     },
   },
   watch: {},
@@ -407,7 +411,7 @@ export default {
 } */
 .view-tools-board {
   height: 26px;
-  width: 1252px;
+  width: 1400px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -463,7 +467,7 @@ export default {
   position: absolute;
   left: 220px;
   top: 0;
-  /* display: none; */
+  display: none;
 }
 .vSubMenu {
   font-size: 14px;

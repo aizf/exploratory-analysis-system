@@ -33,7 +33,7 @@ export default {
   },
   computed: {},
   mounted() {
-    // console.log("Record", this);
+    console.log("Record", this);
     window.Record = this;
     this.father = this.root;
     this.$on("addRecord", (record) => {

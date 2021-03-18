@@ -24,7 +24,8 @@
     "vue-codemirror": "^4.0.6",
     "vue-router": "^3.4.7",
     "vue-virtual-scroller": "^1.0.10",
-    "vuex": "^3.5.1"
+    "vuex": "^3.5.1",
+    "wordcloud": "^1.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.2.3",

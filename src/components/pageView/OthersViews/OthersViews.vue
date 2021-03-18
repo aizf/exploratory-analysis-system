@@ -31,7 +31,15 @@
     >
       Tree
     </a-button>
-    <a-button style="margin: 0 0 0 5px"> Heat Map </a-button>
+    <a-button
+      @click="
+        updateSelectedNodes();
+        onWordCloud();
+      "
+      style="margin: 0 0 0 5px"
+    >
+      WordCloud
+    </a-button>
     <a-button @click="downJson" style="margin: 0 0 0 5px">
       Download .json
     </a-button>
@@ -59,11 +67,12 @@ import * as FileSaver from "file-saver";
 import ParallelCoordinate from "./ParallelCoordinate";
 import Scatter from "./Scatter";
 import Tree from "./Tree";
+import WordCloud from "./WordCloud";
 import eventBus from "./eventBus.js";
 
 export default {
   name: "OthersViews",
-  components: { ParallelCoordinate, Scatter, Tree },
+  components: { ParallelCoordinate, Scatter, Tree, WordCloud },
   inject: ["classificationPalette"],
   props: {
     refs: {},
@@ -123,6 +132,11 @@ export default {
       const name = "Tree";
       if (this.currentChart === name) this.currentChart = "";
       else this.currentChart = "Tree";
+    },
+    onWordCloud() {
+      const name = "WordCloud";
+      if (this.currentChart === name) this.currentChart = "";
+      else this.currentChart = "WordCloud";
     },
   },
 };

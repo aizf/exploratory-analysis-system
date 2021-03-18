@@ -150,9 +150,9 @@ export default {
         "node-link": (datasetPath) => {
           d3.json(datasetPath)
             .then((res) => {
-              store.commit("updateSourceData", JSON.stringify(res));
+              // store.commit("updateSourceData", JSON.stringify(res));
               visualData = res;
-              this.codeContent["SourceData"] = this.cmSourceData;
+              // this.codeContent["SourceData"] = this.cmSourceData;
               // this.codeContent["VisualData"] = JSON.stringify(
               //   visualData,
               //   null,
@@ -167,14 +167,14 @@ export default {
         hierarchical: (datasetPath) => {
           d3.json(datasetPath)
             .then((res) => {
-              store.commit("updateSourceData", JSON.stringify(res));
+              // store.commit("updateSourceData", JSON.stringify(res));
               visualData = hierarchical2nodeLink(res);
-              this.codeContent["SourceData"] = this.cmSourceData;
-              this.codeContent["VisualData"] = JSON.stringify(
-                visualData,
-                null,
-                "\t"
-              );
+              // this.codeContent["SourceData"] = this.cmSourceData;
+              // this.codeContent["VisualData"] = JSON.stringify(
+              //   visualData,
+              //   null,
+              //   "\t"
+              // );
               this.changeState(visualData);
             })
             .catch((err) => {
@@ -184,14 +184,14 @@ export default {
         node: (datasetPath) => {
           d3.json(datasetPath)
             .then((res) => {
-              store.commit("updateSourceData", JSON.stringify(res));
+              // store.commit("updateSourceData", JSON.stringify(res));
               visualData = { nodes: res, links: [] };
-              this.codeContent["SourceData"] = this.cmSourceData;
-              this.codeContent["VisualData"] = JSON.stringify(
-                visualData,
-                null,
-                "\t"
-              );
+              // this.codeContent["SourceData"] = this.cmSourceData;
+              // this.codeContent["VisualData"] = JSON.stringify(
+              //   visualData,
+              //   null,
+              //   "\t"
+              // );
               this.changeState(visualData);
             })
             .catch((err) => {
@@ -204,7 +204,7 @@ export default {
       this.$set(visualData, "marked", false);
       const uidNodeMap = new Array(visualData.nodes.length);
       const idNodeMap = {};
-      let maxSize = -Infinity;
+      // let maxSize = -Infinity;
       visualData.nodes.forEach((d, i) => {
         "group" in d || this.$set(d, "group", 0);
         this.$set(d, "current", false);
@@ -213,22 +213,22 @@ export default {
         d["brushing"] = false;
         d["invertBrushing"] = false;
         d["uid"] = i + "";
-        d["attentionTimes"] = 0;
+        // d["attentionTimes"] = 0;
         uidNodeMap[d.uid] = d;
         idNodeMap[d.id] = d;
-        if ("size" in d) maxSize = Math.max(maxSize, +d.size);
+        // if ("size" in d) maxSize = Math.max(maxSize, +d.size);
       });
-      if (maxSize > -Infinity) {
-        visualData.nodes.forEach((d) => (d.size /= maxSize));
-      } else {
-        visualData.nodes.forEach((d) => (d.size = 1));
-      }
-      visualData.nodes.sort(function () {
-        return 0.5 - Math.random();
-      });
+      // if (maxSize > -Infinity) {
+      //   visualData.nodes.forEach((d) => (d.size /= maxSize));
+      // } else {
+      //   visualData.nodes.forEach((d) => (d.size = 1));
+      // }
+      // visualData.nodes.sort(() => {
+      //   return 0.5 - Math.random();
+      // });
       // console.log(arr);
 
-      let maxWeight = -Infinity;
+      // let maxWeight = -Infinity;
       visualData.links.forEach((d, i) => {
         this.$set(d, "uid", i);
         this.$set(d, "mouseover_show", true);
@@ -259,10 +259,10 @@ export default {
         uidLinksMap,
         uidLinkedNodesMap,
       });
-      store.commit("ChartsNeedUpdate", {
-        force: true,
-        scatter: true,
-      });
+      // store.commit("ChartsNeedUpdate", {
+      //   force: true,
+      //   scatter: true,
+      // });
       // console.log("visualData", visualData);
       store.commit("updateVisualData", visualData);
       store.commit("updateSourceNum", visualData.nodes.length);
