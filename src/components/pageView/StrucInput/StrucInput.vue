@@ -91,10 +91,10 @@ export default {
 .container {
   color: var(--contrastColor);
   width: 450px;
-  height: 594px;
-  position: absolute;
-  top: 0;
-  left: 900px;
+  height: 564px;
+  // position: absolute;
+  // top: 0;
+  // left: 900px;
 }
 .draw {
   height: 50%;

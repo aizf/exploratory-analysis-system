@@ -91,11 +91,11 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-  width: 400px;
-  height: 594px;
-  position: absolute;
-  top: 0;
-  left: 500px;
+  width: 100%;
+  height: 564px;
+  // position: absolute;
+  // top: 0;
+  // left: 500px;
   padding: 5px;
   overflow-y: scroll;
 
@@ -104,7 +104,7 @@ export default {
   // align-items: baseline;
 }
 .text {
-  margin-bottom: 5px;
+  margin-bottom: 7px;
   cursor: pointer;
   // display: inline;
 }

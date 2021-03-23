@@ -119,9 +119,20 @@
               @changeChartOption="handleChartOption"
             ></component>
           </keep-alive>
+          <a-tabs class="input-part test-border">
+            <a-tab-pane v-for="type in inputType" :tab="type" :key="type">
+              <keep-alive>
+                <component
+                  class="input-part-sub"
+                  :ref="type"
+                  :is="type"
+                ></component>
+              </keep-alive>
+            </a-tab-pane>
+          </a-tabs>
           <Record ref="Record" />
-          <TextInput ref="TextInput" />
-          <StrucInput ref="StrucInput" />
+          <!-- <TextInput ref="TextInput" /> -->
+          <!-- <StrucInput ref="StrucInput" /> -->
           <!-- <SelectedInfoBoard class="view2" /> -->
           <NodesList class="view3" :refs="$refs" ref="NodesList" />
           <!-- <ParallelCoordinate class="view4" :chartOption="chartOption" /> -->
@@ -175,10 +186,6 @@ export default {
   },
   data() {
     return {
-      // interface
-      collapsed: false, // 侧边栏
-      rootSubmenuKeys: ["sub1", "sub2", "sub3"],
-      openKeys: ["sub1"],
       // view
       eventOption: {
         visClick: true,
@@ -203,6 +210,8 @@ export default {
 
       currentChart: "ForceChart",
       loadingUpdate: false,
+      inputType: ["TextInput", "StrucInput"],
+      currentInput: "TextInput",
     };
   },
   provide: {},
@@ -445,6 +454,17 @@ export default {
     position: absolute;
     top: 595px;
     left: 0;
+  }
+}
+.input-part {
+  width: 450px;
+  height: 594px;
+  position: absolute;
+  top: 0;
+  left: 900px;
+  color: var(--contrastColor);
+  &-sub {
+    margin-top: -16px;
   }
 }
 </style>

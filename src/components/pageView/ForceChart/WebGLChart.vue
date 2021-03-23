@@ -322,7 +322,8 @@ export default {
           .lineStyle({
             width: 100,
             color: this.lineColor,
-            alpha: mouseover_show ? 0.2 : 0.04,
+            alpha: mouseover_show ? 0.05 : 0.04,
+            // alpha: mouseover_show ? 0.2 : 0.04,
             // alpha: mouseover_show ? 1 : 0.04,
             native: true,
           })

@@ -18,6 +18,12 @@
         <a-menu-item key="4" @click="toCluster(4)">
           <a-icon type="desktop" />Isomap
         </a-menu-item>
+        <a-menu-item key="5" @click="toCluster(5)">
+          <a-icon type="desktop" />T-SNE_ASNE
+        </a-menu-item>
+        <a-menu-item key="6" @click="toCluster(6)">
+          <a-icon type="desktop" />T-SNE_SINE
+        </a-menu-item>
       </a-menu>
     </a-dropdown-button>
   </div>
@@ -47,6 +53,8 @@ export default {
         2: "pos_pca.json",
         3: "pos_umap.json",
         4: "pos_isomap.json",
+        5: "pos_tsne_asne.json",
+        6: "pos_tsne_sine.json",
       };
       this.disabled = true;
       axios({
