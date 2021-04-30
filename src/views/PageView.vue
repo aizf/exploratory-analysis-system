@@ -190,7 +190,7 @@ export default {
       eventOption: {
         visClick: true,
         visDrag: false,
-        visMouseover: true,
+        visMouseover: false,
         visBrush: false,
         brushKeep: false,
         visInvertBrush: false,
@@ -205,7 +205,7 @@ export default {
           centerStrength: 1,
         },
         node: { nodeSize: 4.5, borderColor: "red", chargeForce: -30 },
-        link: { color: "#aaa", width: 0.3, distance: 30 },
+        link: { color: "#aaaaaa", width: 100, alpha: 0.05 },
       },
 
       currentChart: "ForceChart",

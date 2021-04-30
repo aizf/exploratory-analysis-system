@@ -42,6 +42,7 @@ import {
   backgroundColor,
   contrastColor,
   classificationPalette,
+  classificationPalette1,
   classificationPalette2,
 } from "@/config/color";
 // import PageData from "@/components/PageData.vue";
@@ -61,6 +62,7 @@ export default {
     backgroundColor,
     contrastColor,
     classificationPalette,
+    classificationPalette1,
     classificationPalette2,
   },
   data() {

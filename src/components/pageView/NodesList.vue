@@ -52,6 +52,7 @@ export default {
   data() {
     return {
       keyword: "",
+      order: [],
     };
   },
   computed: {
@@ -64,9 +65,18 @@ export default {
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
     items() {
-      let nodes = this.nodes;
-      const mouseoverNodes = this.nodes.filter((d) => d.mouseover_show);
-      nodes = mouseoverNodes.length ? mouseoverNodes : this.nodes;
+      let nodes = [...this.nodes];
+      if (this.order.length !== 0) {
+        const obj_nodes = nodes.map((d, i) => ({
+          node: d,
+          score: this.order[i],
+        }));
+        obj_nodes.sort((a, b) => b.score - a.score);
+        nodes = obj_nodes.map((d) => d.node);
+      }
+
+      const mouseoverNodes = nodes.filter((d) => d.mouseover_show);
+      nodes = mouseoverNodes.length ? mouseoverNodes : nodes;
       const pattern = new RegExp(this.keyword, "i");
       // console.log(this.keyword);
       // console.log(pattern);
@@ -83,9 +93,9 @@ export default {
       node.selected = !node.selected;
     },
     infoInput() {
-      // console.log(1, this.$parent.$refs);
+      // console.log(1, this.refs.TextInput);
       // console.log(this.refs.StrucInput.$refs.Main);
-      const words = this.refs.TextInput.words.filter((d) => d.selected);
+      const words = this.refs.TextInput[0].words.filter((d) => d.selected);
       const _nodes = this.strucInputNodes;
       const _links = this.strucInputLinks;
       const { nodes, links } = dataDeepClone(
@@ -114,6 +124,7 @@ export default {
         source: d.source.id,
         target: d.target.id,
       }));
+      const target = _nodes.filter((d) => d.selected)[0].id;
       axios({
         method: "post",
         url: "//127.0.0.1:5000/recommendNodes",
@@ -121,10 +132,12 @@ export default {
           words,
           nodes,
           links,
+          target,
         },
       }).then((res) => {
         const { data } = res;
         console.log("list", data);
+        this.order = data.data;
       });
     },
     onSearch() {},

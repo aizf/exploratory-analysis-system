@@ -24,6 +24,7 @@ export default {
   },
   computed: {
     ...mapState({
+      datasetName: (state) => state.data.datasetName,
       idNodeMap: (state) => state.data.uidMaps.idNodeMap,
       isDirected: (state) => state.data.isDirected,
     }),
@@ -64,7 +65,7 @@ export default {
       axios({
         method: "get",
         // url: "//127.0.0.1:3000/p/network_centrality",
-        url: "/static/centrality.json",
+        url: `/static/${this.datasetName}/centrality.json`,
       }).then((res) => {
         const { data } = res;
         // this.avgC(data);

@@ -4,7 +4,7 @@
       <a-tag
         class="text"
         v-for="word in words"
-        :color="classificationPalette[word.topic]"
+        :color="classificationPalette1[word.topic]"
         :style="{ opacity: prob2opacity(word) }"
         :key="word.topic + word.text"
       >
@@ -35,7 +35,7 @@ import store from "@/store/";
 export default {
   name: "SubRecord",
   components: { SubForce },
-  inject: ["classificationPalette"],
+  inject: ["classificationPalette1"],
   props: {
     record: Object,
     words: Array,

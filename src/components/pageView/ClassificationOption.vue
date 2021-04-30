@@ -19,6 +19,13 @@
         >
           <a-icon type="cloud-download" />{{ func }}
         </a-menu-item>
+        <a-menu-item
+          v-for="func in onlineFunc"
+          :key="func + '32'"
+          @click="cluster32(func)"
+        >
+          <a-icon type="desktop" />{{ func }}
+        </a-menu-item>
       </a-menu>
     </a-dropdown-button>
     <!-- <a-button
@@ -43,7 +50,7 @@ export default {
       onlineFunc: [
         "KMeans",
         "MeanShift",
-        "DBSCAN",
+        "MeanShift",
         "AgglomerativeClustering",
         "AffinityPropagation",
       ],
@@ -51,6 +58,7 @@ export default {
   },
   computed: {
     ...mapState({
+      datasetName: (state) => state.data.datasetName,
       uidNodeMap: (state) => state.data.uidMaps.uidNodeMap,
     }),
     ...mapGetters(["nodes", "links", "nodesNumber"]),
@@ -68,7 +76,7 @@ export default {
       }
       this.loading = true;
       const data = {
-        0: "pos_force.json",
+        0: "",
         1: "communities_list.json",
         2: "target_list.json",
         // 3: "pos_umap.json",
@@ -76,7 +84,7 @@ export default {
       };
       axios({
         method: "get",
-        url: `/static/${data[index]}`,
+        url: `/static/${this.datasetName}/${data[index]}`,
       }).then((res) => {
         const { data } = res;
         this.nodes.forEach((node, i) => {
@@ -96,6 +104,28 @@ export default {
         .then((res) => {
           const { data } = res;
           const group = data.data;
+          // console.log(group);
+          this.nodes.forEach((node, i) => {
+            node.group = group[i];
+          });
+          this.loading = false;
+        })
+        .catch((err) => {
+          this.loading = false;
+          throw err;
+        });
+    },
+    cluster32(algorithm) {
+      if (algorithm === "AffinityPropagation") return;
+      this.loading = true;
+      // const pos = this.nodes.map((d) => [d.x, d.y]);
+      axios({
+        method: "get",
+        url: `/static/facebook/cluster_32/${algorithm}.json`,
+      })
+        .then((res) => {
+          const { data } = res;
+          const group = data;
           // console.log(group);
           this.nodes.forEach((node, i) => {
             node.group = group[i];

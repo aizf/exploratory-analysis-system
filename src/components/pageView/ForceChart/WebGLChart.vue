@@ -35,7 +35,7 @@ export default {
       "beforeEvent",
     ]),
     lineColor() {
-      return PIXI.utils.string2hex("#aaaaaa");
+      return PIXI.utils.string2hex(this.chartOption.link.color);
     },
     defaultCircleSize() {
       return +this.chartOption.node.nodeSize;
@@ -49,6 +49,8 @@ export default {
       width: this.width,
       height: this.height,
       antialias: !this.isStatic,
+      powerPreference: "high-performance",
+      autoStart: false,
     });
     this.app.renderer.backgroundColor = PIXI.utils.string2hex(
       this.backgroundColor
@@ -67,11 +69,10 @@ export default {
       this.nodesG.addChild(this.nodeG(node));
     });
     this.linksG.removeChildren();
-    this.links.forEach((link) => {
-      this.linksG.addChild(this.line(link));
-    });
+    // this.links.forEach((link) => {
+    //   this.linksG.addChild(this.line(link));
+    // });
     this.setPostion();
-
     // nodes数量变化时
     // this.$watch(
     //   () => this.nodes.map((d) => d.uid),
@@ -164,11 +165,13 @@ export default {
       });
     },
     zoom(transform) {
+      // console.log("zooming");
       const { k, x, y } = transform;
       this.vis.scale.x = k;
       this.vis.scale.y = k;
       this.vis.x = x;
       this.vis.y = y;
+      this.app.render();
     },
     brush() {
       this.nodesG.children.forEach((nodeG) => {
@@ -177,6 +180,7 @@ export default {
         if (brushing || selected) border.alpha = 1;
         else border.alpha = 0.1;
       });
+      this.app.render();
     },
     clickSelect(d) {
       if (!this.eventOption.visClick) return;
@@ -299,37 +303,46 @@ export default {
     },
     setPostion() {
       // console.log(this);
+      // this.app.start();
       this.nodesG.children.forEach((nodeG) => {
         const { x, y, mouseover_show } = nodeG.__data__;
         nodeG.x = x;
         nodeG.y = y;
         nodeG.alpha = mouseover_show ? 1 : 0.04;
       });
-      this.linksG.children.forEach((line) => {
-        const link = line.__data__;
-        const {
-          source: { x: x1 },
-          source: { y: y1 },
-          target: { x: x2 },
-          target: { y: y2 },
-          mouseover_show,
-          weight,
-        } = link;
-        line
-          .clear()
-          .beginFill()
-          .moveTo(x1, y1)
-          .lineStyle({
-            width: 100,
-            color: this.lineColor,
-            alpha: mouseover_show ? 0.05 : 0.04,
-            // alpha: mouseover_show ? 0.2 : 0.04,
-            // alpha: mouseover_show ? 1 : 0.04,
-            native: true,
-          })
-          .lineTo(x2, y2)
-          .endFill();
-      });
+      if (this.chartOption.link.alpha === 0) {
+        this.linksG.children.forEach((line) => {
+          line.clear();
+        });
+      } else {
+        this.linksG.children.forEach((line) => {
+          const link = line.__data__;
+          const {
+            source: { x: x1 },
+            source: { y: y1 },
+            target: { x: x2 },
+            target: { y: y2 },
+            mouseover_show,
+            weight,
+          } = link;
+          line
+            .clear()
+            .beginFill()
+            .moveTo(x1, y1)
+            .lineStyle({
+              width: this.chartOption.link.width,
+              color: this.lineColor,
+              alpha: this.chartOption.link.alpha,
+              // alpha: mouseover_show ? 0.2 : 0.04,
+              // alpha: mouseover_show ? 1 : 0.04,
+              native: true,
+            })
+            .lineTo(x2, y2)
+            .endFill();
+        });
+      }
+      // this.app.stop();
+      this.app.render();
     },
     circleSize(node) {
       if ("size" in node)
@@ -337,7 +350,16 @@ export default {
       return this.defaultCircleSize;
     },
   },
-  watch: {},
+  watch: {
+    // "chartOption.simulation.run": {
+    //   handler(val) {
+    //     if (!this.app) return;
+    //     if (val) this.app.start();
+    //     else this.app.stop();
+    //   },
+    //   immediate: true,
+    // },
+  },
 };
 </script>
 <style>

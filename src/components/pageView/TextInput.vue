@@ -14,7 +14,7 @@
       <a-tag
         class="tag"
         :class="{ tagSelected: word.selected }"
-        :color="classificationPalette[word.topic]"
+        :color="classificationPalette1[word.topic]"
         @click="word.selected = !word.selected"
         :style="{ opacity: prob2opacity(word) }"
       >
@@ -35,7 +35,7 @@ import axios from "axios";
 export default {
   name: "TextInput",
   components: {},
-  inject: ["classificationPalette"],
+  inject: ["classificationPalette1"],
   props: {},
   data() {
     return {

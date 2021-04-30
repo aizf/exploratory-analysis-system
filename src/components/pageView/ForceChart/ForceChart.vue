@@ -145,6 +145,7 @@ export default {
     if (!this.isStatic) {
       console.log("isStatic", this.isStatic);
       if (this.calcLayout) {
+        console.log("calcLayout", this.calcLayout);
         this.initWorker();
         this.$on("alterWorkerData", this.alterWorkerData);
       }
@@ -248,7 +249,7 @@ export default {
       };
       const brushing = ({ selection: extent }) => {
         if (extent === null) return;
-        console.log("brushing");
+        // console.log("brushing");
         const transform = d3.zoomTransform(zoomDom.node());
         let extentStart = transform.invert(extent[0]); // brush的开始坐标
         let extentEnd = transform.invert(extent[1]); // brush的结束坐标
@@ -270,7 +271,7 @@ export default {
       });
       const brushEnd = ({ selection }) => {
         if (selection === null) return;
-        console.log("brushed");
+        // console.log("brushed");
         let brushedNodes = this.nodes.filter((d) => d.brushing);
         brushedNodes.forEach((node) => {
           node.brushing = false;
@@ -423,9 +424,9 @@ export default {
       });
     },
     changeWorkerOption() {
-      this.worker.postMessage({
-        changeOption: this.chartOption,
-      });
+      // this.worker.postMessage({
+      //   changeOption: this.chartOption,
+      // });
     },
     fillColor(group) {
       return this.classificationPalette[group || 0];
@@ -459,7 +460,8 @@ export default {
     },
     "chartOption.simulation": {
       handler() {
-        this.changeWorkerOption();
+        // if (this.isStatic) return;
+        // this.changeWorkerOption();
       },
       deep: true,
     },

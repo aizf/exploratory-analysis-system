@@ -2,6 +2,7 @@ const data = {
     state: {
         sourceData: "",
         sourceNum: 0,
+        datasetName:"",
         visualData: {},
         nodeFields: {},
         uidMaps: {
@@ -19,6 +20,9 @@ const data = {
         },
         updateSourceNum: (state, data) => {
             state.sourceNum = data;
+        },
+        updateDatasetName: (state, data) => {
+            state.datasetName = data;
         },
         updateVisualData: (state, data) => {
             state.visualData = data;

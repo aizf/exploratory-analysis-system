@@ -58,22 +58,26 @@
       <span class="vSubTitle">link</span>
       <div>
         <span class="vSubMenu">color</span>
-        <a-input class="optionInput" v-model="chartOption.link.color" />
+        <a-input
+          class="optionInput"
+          type="color"
+          v-model="chartOption.link.color"
+        />
         <span class="vSubMenu">width</span>
         <a-input-number
           class="optionInput"
           :min="0"
-          :max="10"
-          :step="0.1"
+          :max="1000"
+          :step="1"
           v-model="chartOption.link.width"
         />
-        <span class="vSubMenu">distance</span>
+        <span class="vSubMenu">alpha</span>
         <a-input-number
           class="optionInput"
           :min="0"
-          :max="200"
-          :step="1"
-          v-model="chartOption.link.distance"
+          :max="1"
+          :step="0.1"
+          v-model="chartOption.link.alpha"
         />
       </div>
     </div>

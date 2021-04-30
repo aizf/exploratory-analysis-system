@@ -16,22 +16,22 @@ const classificationPalette = [
     "#BDD2FD",
     "#FF99C3",
 ];
-// const classificationPalette = [
-//     // 11类
-//     // 分组
-//     // 好看
-//     "#f49f42",
-//     "#759aa0",
-//     "#e69d87",
-//     "#8dc1a9",
-//     "#ea7e53",
-//     "#eedd78",
-//     "#73a373",
-//     "#73b9bc",
-//     "#7289ab",
-//     "#91ca8c",
-//     "#dd6b66",
-// ];
+const classificationPalette1 = [
+    // 11类
+    // 分组
+    // 好看
+    "#f49f42",
+    "#759aa0",
+    "#e69d87",
+    "#8dc1a9",
+    "#ea7e53",
+    "#eedd78",
+    "#73a373",
+    "#73b9bc",
+    "#7289ab",
+    "#91ca8c",
+    "#dd6b66",
+];
 const classificationPalette2 = [
     // 12类
     // 操作种类
@@ -44,5 +44,6 @@ export {
     backgroundColor,
     contrastColor,
     classificationPalette,
+    classificationPalette1,
     classificationPalette2
 }

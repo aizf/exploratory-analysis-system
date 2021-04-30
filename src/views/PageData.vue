@@ -134,6 +134,8 @@ export default {
       const datasetPath = "./static/" + dataset.fileName;
       if (event.key === this.selectedDataset) return;
       this.selectedDataset = event.key;
+      // TODO
+      store.commit("updateDatasetName", "facebook");
       const nodeFields = dataset.nodeFields;
       store.commit("updateNodeFields", nodeFields);
       if (dataset.static) store.commit("updateStatic");

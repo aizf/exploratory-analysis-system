@@ -16,12 +16,13 @@
       <circle
         v-for="node in nodes"
         class="node"
+        :class="{ selected: node.selected }"
         :cx="node.x"
         :cy="node.y"
         :r="5"
         :ref="'node' + node.strucID"
         :key="node.strucID"
-        @mouseover="clickSelect($event)"
+        @mouseover="clickSelect(node)"
       />
     </g>
   </svg>
@@ -260,12 +261,9 @@ export default {
         links: [...this.links, ...links],
       });
     },
-    clickSelect(e) {
-      // console.log(e);
-      const classList = e.currentTarget.classList;
-      classList.contains("selected")
-        ? classList.remove("selected")
-        : classList.add("selected");
+    clickSelect(node) {
+      this.nodes.forEach((d) => (d.selected = false));
+      node.selected = true;
     },
     getG() {
       return {

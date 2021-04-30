@@ -40,6 +40,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      datasetName: (state) => state.data.datasetName,
+    }),
     ...mapGetters(["nodes"]),
   },
   mounted() {
@@ -60,7 +63,7 @@ export default {
       axios({
         method: "get",
         // url: "//127.0.0.1:3000/p/cluster",
-        url: `/static/${data[index]}`,
+        url: `/static/${this.datasetName}/${data[index]}`,
       }).then((res) => {
         const { data } = res;
         // console.log(data);
