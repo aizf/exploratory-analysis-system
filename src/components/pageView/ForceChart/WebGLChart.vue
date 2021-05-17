@@ -44,7 +44,10 @@ export default {
   created() {},
   mounted() {
     console.log("WebGLChart", this);
+    window.WebGLChart = this;
     // console.log("WebGLChart", PIXI);
+    this.borderWidth = 2;
+    this.borderAlpha = 0;
     this.app = new PIXI.Application({
       width: this.width,
       height: this.height,
@@ -68,10 +71,11 @@ export default {
     this.nodes.forEach((node) => {
       this.nodesG.addChild(this.nodeG(node));
     });
+    console.log();
     this.linksG.removeChildren();
-    // this.links.forEach((link) => {
-    //   this.linksG.addChild(this.line(link));
-    // });
+    this.links.forEach((link) => {
+      this.linksG.addChild(this.line(link));
+    });
     this.setPostion();
     // nodes数量变化时
     // this.$watch(
@@ -154,7 +158,7 @@ export default {
         border.clear();
         border
           .beginFill(0xf03e3e)
-          .drawCircle(0, 0, this.circleSize(node) + 1.8)
+          .drawCircle(0, 0, this.circleSize(node) + this.borderWidth)
           .endFill();
         const circle = nodeG.children[1];
         circle.clear();
@@ -178,7 +182,7 @@ export default {
         const { selected, brushing } = nodeG.__data__;
         const border = nodeG.children[0];
         if (brushing || selected) border.alpha = 1;
-        else border.alpha = 0.1;
+        else border.alpha = this.borderAlpha;
       });
       this.app.render();
     },
@@ -187,17 +191,22 @@ export default {
       if (this.isDragged) return;
 
       // this.beforeEvent("click", this);
-      if (d.selected) {
-        d.selected = false;
-      } else {
-        d.selected = true;
-        // let operation = {
-        //   action: "click",
-        //   nodes: [d],
-        // };
-        // this.$store.dispatch("addOperation", operation);
-        console.log("click");
-      }
+      // if (d.selected) {
+      //   d.selected = false;
+      // } else {
+      //   d.selected = true;
+      //   // let operation = {
+      //   //   action: "click",
+      //   //   nodes: [d],
+      //   // };
+      //   // this.$store.dispatch("addOperation", operation);
+      // }
+      this.$parent.$emit("click-node", d);
+      this.app.render();
+      console.log("click");
+    },
+    emitClick(uid){
+      this.nodesG.children[uid].children[1].emit("click");
     },
     mouseover(node) {
       if (!this.eventOption.visMouseover || this.isDraging) return;
@@ -238,9 +247,9 @@ export default {
       const border = new PIXI.Graphics();
       border
         .beginFill(0xf03e3e)
-        .drawCircle(0, 0, this.circleSize(node) + 1.8)
+        .drawCircle(0, 0, this.circleSize(node) + this.borderWidth)
         .endFill();
-      border.alpha = 0.1;
+      border.alpha = this.borderAlpha;
 
       // const circle = new PIXI.Graphics();
       const circle = new PIXI.Graphics();
@@ -252,8 +261,9 @@ export default {
       circle.buttonMode = true;
       circle.on("click", function () {
         const node = this.parent.__data__;
+        node.selected = !node.selected;
+        this.parent.children[0].alpha = node.selected ? 1 : this.borderAlpha;
         that.clickSelect(node);
-        this.parent.children[0].alpha = node.selected ? 1 : 0;
       });
       circle.on("mouseover", function () {
         that.mouseover(this.parent.__data__);
@@ -308,7 +318,7 @@ export default {
         const { x, y, mouseover_show } = nodeG.__data__;
         nodeG.x = x;
         nodeG.y = y;
-        nodeG.alpha = mouseover_show ? 1 : 0.04;
+        nodeG.alpha = mouseover_show ? 1 : this.borderAlpha;
       });
       if (this.chartOption.link.alpha === 0) {
         this.linksG.children.forEach((line) => {

@@ -50,7 +50,6 @@ export default {
       onlineFunc: [
         "KMeans",
         "MeanShift",
-        "MeanShift",
         "AgglomerativeClustering",
         "AffinityPropagation",
       ],

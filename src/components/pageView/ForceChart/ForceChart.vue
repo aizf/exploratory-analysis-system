@@ -44,7 +44,7 @@
         v-show="eventOption.visZoom"
         ref="zoomDom"
       />
-      <!-- <g class="vis"> -->
+      <g class="vis">
       <!-- <Links :links="links" :chartOption="chartOption" ref="links" />
         <Nodes
           :nodes="nodes"
@@ -56,15 +56,23 @@
           @alterWorkerData="alterWorkerData"
           ref="nodes"
         /> -->
-      <!-- <Texts
+      <Texts
           :nodes="nodes"
           :visShowIds="eventOption.visShowIds"
           ref="texts"
-        /> -->
-      <!-- </g> -->
+        />
+      </g>
       <g class="base-brush brush" v-show="eventOption.visBrush" />
       <g class="base-brush invert-brush" v-show="eventOption.visInvertBrush" />
     </svg>
+    <div class="temp">
+      <a-tag>id: {{ displayNode.id }}</a-tag>
+      <a-tag>facebook_id: {{ displayNode.facebook_id }}</a-tag>
+      <a-tag>page_name: {{ displayNode.page_name }}</a-tag>
+      <a-tag>page_type: {{ displayNode.page_type }}</a-tag>
+      <a-tag>x: {{ displayNode.x }}</a-tag>
+      <a-tag>y: {{ displayNode.y }}</a-tag>
+    </div>
   </div>
 </template>
 <script>
@@ -102,6 +110,14 @@ export default {
       density: 0,
       average_degree: 0,
       calcLayout: false,
+      displayNode: {
+        id: null,
+        facebook_id: null,
+        page_name: null,
+        page_type: null,
+        x: null,
+        y: null,
+      },
     };
   },
   computed: {
@@ -127,6 +143,7 @@ export default {
     // console.log(_.VERSION);
     // console.log(d3);
     console.log("ForceChart", this);
+    window.ForceChart = this;
     const svg = d3
       .select(this.$refs.svg)
       .attr("viewBox", [0, 0, this.width, this.height]);
@@ -136,6 +153,7 @@ export default {
 
     this.initZoom(zoomDom);
     this.initBrush(svg, zoomDom);
+    this.$on("click-node", this.clickNode);
 
     // eventBus.$on("density", (density) => (this.density = density));
     // eventBus.$on(
@@ -205,7 +223,7 @@ export default {
         //   nodes: [],
         // };
         // this.$store.dispatch("addOperation", operation);
-        // console.log("zoom");
+        console.log("zoom", transform);
       };
       const zoomInstance = d3.zoom();
       zoomDom.call(zoomInstance).on("dblclick.zoom", null);
@@ -431,6 +449,29 @@ export default {
     fillColor(group) {
       return this.classificationPalette[group || 0];
     },
+    moveToNode(node) {
+      const conX = 900;
+      const conY = 594;
+
+      // this.vis.attr("transform", transform);
+      const { k } = this.$refs.zoomDom.__zoom;
+      let { x, y } = node;
+      x = -x * k + conX / 2;
+      y = -y * k + conY / 2;
+      this.$refs.WebGLChart.$emit("zoom", { k, x, y });
+      this.$refs.zoomDom.__zoom.x = x;
+      this.$refs.zoomDom.__zoom.y = y;
+      this.vis.attr("transform", this.$refs.zoomDom.__zoom);
+    },
+    clickNode(node) {
+      this.displayNode.id = node.id;
+      this.displayNode.facebook_id = node.facebook_id;
+      this.displayNode.page_name = node.page_name;
+      this.displayNode.page_type = node.page_type;
+      this.displayNode.x = node.x;
+      this.displayNode.y = node.y;
+      console.log(node);
+    },
     render() {
       // console.log("render");
 
@@ -485,6 +526,16 @@ export default {
   font-family: Avenir;
   fill: var(--contrastColor);
   transition: fill 0.6s ease, fill-opacity 0.3s ease;
+}
+.temp {
+  /* background: #fff; */
+  text-align: right;
+  width: 280px;
+  height: 100px;
+  position: absolute;
+  left: 620px;
+  top: 0;
+  /* display: none; */
 }
 </style>
 <style lang="scss" scope>

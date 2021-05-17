@@ -136,12 +136,6 @@
           <!-- <SelectedInfoBoard class="view2" /> -->
           <NodesList class="view3" :refs="$refs" ref="NodesList" />
           <!-- <ParallelCoordinate class="view4" :chartOption="chartOption" /> -->
-          <div class="temp">
-            <a-tag>id: 14659</a-tag>
-            <a-tag>facebook_id: 159444347067</a-tag>
-            <a-tag>page_name: XVIII Airborne Corps</a-tag>
-            <a-tag>page_type: government</a-tag>
-          </div>
         </div>
       </a-layout-content>
     </a-layout>
@@ -479,16 +473,6 @@ export default {
 }
 </style>
 <style>
-.temp {
-  /* background: #fff; */
-  text-align: right;
-  width: 280px;
-  height: 100px;
-  position: absolute;
-  left: 220px;
-  top: 0;
-  display: none;
-}
 .vSubMenu {
   font-size: 14px;
   font-weight: 400;

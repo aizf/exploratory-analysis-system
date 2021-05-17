@@ -90,7 +90,9 @@ export default {
   },
   methods: {
     clickSelect(node) {
-      node.selected = !node.selected;
+      // node.selected = !node.selected;
+      window.ForceChart.moveToNode(node);
+      window.WebGLChart.emitClick(node.uid);
     },
     infoInput() {
       // console.log(1, this.refs.TextInput);
